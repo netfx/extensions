@@ -1,0 +1,5 @@
+This file signals the root of the netfx repository.
+
+The netfx.sln is only used to keep global NuGet packages (such as the NuGet.CommandLine) available from the root of the project source tree.
+
+transform-all.ps1 transforms all T4 templates in all extensions, specifically the Release.tt which creates the proper batch file for testing out packages before release to NuGet online repository.

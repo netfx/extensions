@@ -1,0 +1,23 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>Source</Name>
+    <Description>
+    </Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Source</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Source.csproj" File="Source.csproj" ReplaceParameters="true" />
+  </TemplateContent>
+	<WizardExtension>
+		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetSolutionNameWizard</FullClassName>
+	</WizardExtension>
+</VSTemplate>

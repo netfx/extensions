@@ -1,0 +1,85 @@
+﻿<#@ Template Debug="true" Hostspecific="true" Language="C#" #>
+<#@ Output Extension=".cmd" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Import Namespace="System.IO" #>
+<#@ Import Namespace="System.Collections.Generic" #>
+<#@ Import Namespace="System.Linq" #>
+<#
+/*
+ * This template renders a current-path relative version of the batch file Release.cmd 
+ * that takes into account the location of the root netfx folder, as well as the location 
+ * of the currently installed version of NuGet command line tool package.
+*/
+
+var versionExpr = new System.Text.RegularExpressions.Regex(@"\d+.\d+.\d+.\d+");
+var currentDir = new DirectoryInfo(this.Host.ResolvePath(""));
+
+// First locate netfx root directory.
+var rootDir = TraverseUp(currentDir).FirstOrDefault(d => d.EnumerateFileSystemInfos("netfx.txt").Any());
+if (rootDir == null)
+    return LogError("Failed to locate file 'netfx.txt' from an ancestor folder of '" + currentDir.FullName + "'.", 12, 0);
+
+// Next, locate the NuGet command line package
+var packagesDir = rootDir.EnumerateDirectories("packages").FirstOrDefault();
+if (packagesDir == null)
+    return LogError("Failed to locate folder 'packages' under the root netfx folder '" + rootDir.FullName + "'.", 17, 0);
+
+var nugetCmd = packagesDir.EnumerateFiles("NuGet.exe", SearchOption.AllDirectories)
+        .Where(file => versionExpr.IsMatch(file.FullName))
+        .OrderByDescending(file => new Version(versionExpr.Match(file.FullName).Value))
+        .FirstOrDefault();
+if (nugetCmd == null)
+    return LogError("Failed to locate 'NuGet.exe' command tool under the folder '" + packagesDir.FullName + "'.", 24, 0);
+
+var packageBaseDir = MakeRelativePath(nugetCmd.Directory.FullName, Path.Combine(currentDir.FullName, "NuGet"));
+#>
+%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe /p:Configuration=Release
+pushd <#=MakeRelativePath(currentDir.FullName, nugetCmd.Directory.FullName) #>
+NuGet.exe pack <#=packageBaseDir #>\Package.nuspec -BasePath <#=packageBaseDir  #> -OutputDirectory <#=MakeRelativePath(nugetCmd.Directory.FullName, currentDir.FullName) #>\bin
+popd
+<#+
+// Utility methods
+IEnumerable<DirectoryInfo> TraverseUp(DirectoryInfo dir)
+{
+    var current = dir;
+    while (current != null)
+    {
+        yield return current;
+        current = current.Parent;
+    }
+}
+
+string LogError(string message, int line, int column)
+{
+    this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[] 
+    {
+        new System.CodeDom.Compiler.CompilerError(this.Host.TemplateFile, line, column, "0", message)
+    }));
+    return "";
+}
+
+string MakeRelativePath(string currentDir, string pathToConvert)
+{
+    var referencePath = new FileInfo(currentDir);
+    var toConvert = new FileInfo(pathToConvert);
+
+    if (referencePath.Directory.Root.Name != toConvert.Directory.Root.Name)
+        return toConvert.FullName;
+
+    var directory = referencePath.DirectoryName;
+    if (toConvert.FullName.StartsWith(directory))
+        return toConvert.FullName.Substring(directory.Length + 1);
+
+    var rootPaths = directory.Split(Path.DirectorySeparatorChar);
+    var convertPaths = toConvert.FullName.Split(Path.DirectorySeparatorChar);
+
+    // Find the count of paths that match between the two paths
+    var matching = Enumerable.Range(0, rootPaths.Length).TakeWhile(i => rootPaths[i] == convertPaths[i]).Count();
+    // Build the up-navigtion from the reference.
+    var result = String.Join(Path.DirectorySeparatorChar.ToString(), rootPaths.Skip(matching).Select(s => ".."));
+    // Build the down-navigation to the target.
+    result = String.Join(Path.DirectorySeparatorChar.ToString(), new[] { result }.Concat(convertPaths.Skip(matching)));
+
+    return result;
+}
+#>

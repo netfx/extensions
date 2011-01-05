@@ -1,0 +1,2 @@
+$transform = [System.Environment]::ExpandEnvironmentVariables("%programfiles(x86)%\Common Files\Microsoft Shared\TextTemplating\10.0\TextTransform.exe")
+Get-ChildItem -Recurse -Filter *.tt | %{ & $transform $_.FullName }
