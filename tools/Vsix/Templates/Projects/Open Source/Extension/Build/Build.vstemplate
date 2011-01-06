@@ -1,0 +1,41 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>Build</Name>
+    <Description>
+    </Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Build</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Build.csproj" File="Build.csproj" ReplaceParameters="true">
+      <Folder Name="NuGet" TargetFolderName="NuGet">
+        <Folder Name="content" TargetFolderName="content" />
+        <Folder Name="lib" TargetFolderName="lib" />
+        <ProjectItem ReplaceParameters="true" TargetFileName="Package.nuspec" OpenInEditor="true">Package.nuspec</ProjectItem>
+				<ProjectItem>License.txt</ProjectItem>
+				<Folder Name="tools" TargetFolderName="tools" />
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Readme.txt">Readme.txt</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Release.tt">Release.tt</ProjectItem>
+    </Project>
+  </TemplateContent>
+	<WizardExtension>
+		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetSolutionNameWizard</FullClassName>
+	</WizardExtension>
+	<WizardExtension>
+		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionIdentifierWizard</FullClassName>
+	</WizardExtension>
+	<WizardExtension>
+		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.AddSourceLinkWizard</FullClassName>
+	</WizardExtension>
+</VSTemplate>

@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{975AF04E-8559-4D58-9BD6-B6C81CB89018}"
 	ProjectSection(SolutionItems) = preProject
+		drop-all.ps1 = drop-all.ps1
 		netfx.txt = netfx.txt
 		transform-all.ps1 = transform-all.ps1
 	EndProjectSection

@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{BAB3DFB4-AF92-4247-959F-5E15CFF33866}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetFx</RootNamespace>
+    <AssemblyName>NetFx</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NetFx.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\AddSourceReferenceWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\AddSourceLinkWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionIdentifierWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\SetExtensionIdentifierWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\TransformAllTemplatesWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\GetSolutionNameWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\SetSolutionNameWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\SaveSolutionWizard.cs" />
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Tests\SourceSpec.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Source\Source.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EULA.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="NetFx.snk" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Code</SubType>
+    </None>
+    <Content Include="Large.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Small.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\Package.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Release.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="EnvDTE100, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\EnvDTE100.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\EnvDTE80.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\EnvDTE90.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.TemplateWizardInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
+  <PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartArguments>/rootSuffix Exp</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GetVsixSourceItemsDependsOn>$(GetVsixSourceItemsDependsOn);ZipProjectTemplates;ZipItemTemplates;IncludeTemplatesInVsix</GetVsixSourceItemsDependsOn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- If we don't make these invisible, they show up in VS as missing files :S -->
+    <AvailableItemName Include="ProjectTemplate">
+      <Visible>False</Visible>
+    </AvailableItemName>
+    <AvailableItemName Include="ItemTemplate">
+      <Visible>False</Visible>
+    </AvailableItemName>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Build.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Build.vstemplate">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Extension.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <ProjectTemplate Include="Templates\Projects\Open Source\Extension\Extension.vstemplate">
+      <SubType>Designer</SubType>
+    </ProjectTemplate>
+    <Content Include="Templates\Projects\Open Source\Extension\Source\Source.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Source\Source.vstemplate">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Tests\Tests.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Tests\Tests.vstemplate">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <Target Name="ZipProjectTemplates" Condition="'@(ProjectTemplate)' != ''">
+    <Message Text="Zipping project template for: %(ProjectTemplate.RelativeDir)%(ProjectTemplate.Filename)%(ProjectTemplate.Extension)" />
+    <!-- 
+			Need to copy the .vstemplates because the built-in tasks will not do the copying even if 
+			CopyAlways is specified, because the item does not have a Content build action
+		-->
+    <Copy SourceFiles="@(ProjectTemplate)" DestinationFolder="$(TargetDir)%(ProjectTemplate.RelativeDir)" />
+    <!-- 
+			We create as items all the items in the output directory under the template directory as relative paths.
+			That's why the item content has to have Content/CopyToOutput set, so that allows us to pick what we want 
+			included in the final zip. We associate the destination zipfile as metadata, which is used by the following 
+			task ZipItems to group items via the ZipFile property.
+		-->
+    <CreateItem Include="$(TargetDir)%(ProjectTemplate.RelativeDir)**\*.*" AdditionalMetadata="TemplateDir=$([System.IO.Directory]::GetParent($(TargetDir)%(ProjectTemplate.RelativeDir)).FullName)\;ZipFile=$([System.IO.Directory]::GetParent(%(ProjectTemplate.FullPath)).Name).zip">
+      <Output ItemName="_ProjectTemplateItem" TaskParameter="Include" />
+    </CreateItem>
+    <!--
+			The following VSSDK built-in task takes care of zipping a template. It doesn't do any pre or post-processing 
+			of the .vstemplate, which is exactly what we want as we may have links, etc. This is the opposite of what 
+			the built-in VSTemplate build action does, which mangles everything and breaks badly with linked files, 
+			multi-project templates, etc.
+		-->
+    <ZipItems Files="@(_ProjectTemplateItem)" Action="New" ProjectPath="$(TargetDir)" RootPath="%(_ProjectTemplateItem.TemplateDir)" ZipFile="$([System.IO.Directory]::GetParent(%(_ProjectTemplateItem.TemplateDir)).Parent.FullName)\%(_ProjectTemplateItem.ZipFile)">
+      <Output TaskParameter="ZipFile" ItemName="FileWrites" />
+    </ZipItems>
+  </Target>
+  <Target Name="ZipItemTemplates" Condition="'@(ItemTemplate)' != ''">
+    <!-- This target works exactly the same as the previous one, but for item templates -->
+    <Message Text="Zipping item template for: %(ItemTemplate.RelativeDir)%(ItemTemplate.Filename)%(ItemTemplate.Extension)" />
+    <CreateItem Include="$(TargetDir)%(ItemTemplate.RelativeDir)**\*.*" AdditionalMetadata="TemplateDir=$([System.IO.Directory]::GetParent($(TargetDir)%(ItemTemplate.RelativeDir)).FullName)\;ZipFile=$([System.IO.Directory]::GetParent(%(ItemTemplate.FullPath)).Name).zip">
+      <Output ItemName="_ItemTemplateItem" TaskParameter="Include" />
+    </CreateItem>
+    <ZipItems Files="@(_ItemTemplateItem)" Action="New" ProjectPath="$(TargetDir)" RootPath="%(_ItemTemplateItem.TemplateDir)" ZipFile="$([System.IO.Directory]::GetParent(%(_ItemTemplateItem.TemplateDir)).Parent.FullName)\%(_ItemTemplateItem.ZipFile)">
+      <Output TaskParameter="ZipFile" ItemName="FileWrites" />
+    </ZipItems>
+  </Target>
+  <Target Name="IncludeTemplatesInVsix">
+    <!-- 
+			By processing all IntermediateZipProject items, we also support the ZipProject and ZipItem build actions, 
+			which are for just including a previously zipped file in the target vsix. It's not clear why you'd do 
+			that as opposed to just setting it as Content/IncludeInVSIX=true, but we want to be compatible here just 
+			in case.
+		-->
+    <ItemGroup Condition="'@(ProjectTemplate)' != ''">
+      <VSIXSourceItem Include="$([System.IO.Directory]::GetParent($(TargetDir)%(ProjectTemplate.RelativeDir)).Parent.FullName)\$([System.IO.Directory]::GetParent(%(ProjectTemplate.FullPath)).Name).zip">
+        <!-- 
+					One thing we do here that the built-in DeployVSTemplates does, is that we honor the zip file actual 
+					relative path location as the vsix subpath, to streamline the modification of the template category.
+				-->
+        <VSIXSubPath>$([System.IO.Directory]::GetParent($(TargetDir)%(ProjectTemplate.RelativeDir)).Parent.FullName.Replace($(TargetDir), ''))</VSIXSubPath>
+        <!--<VSIXSubPath>%(ProjectTemplate.RelativeDir)</VSIXSubPath>-->
+      </VSIXSourceItem>
+    </ItemGroup>
+    <ItemGroup Condition="'@(ItemTemplate)' != ''">
+      <VSIXSourceItem Include="$([System.IO.Directory]::GetParent($(TargetDir)%(ItemTemplate.RelativeDir)).Parent.FullName)\$([System.IO.Directory]::GetParent(%(ItemTemplate.FullPath)).Name).zip">
+        <VSIXSubPath>$([System.IO.Directory]::GetParent($(TargetDir)%(ItemTemplate.RelativeDir)).Parent.FullName.Replace($(TargetDir), ''))</VSIXSubPath>
+      </VSIXSourceItem>
+    </ItemGroup>
+  </Target>
+</Project>
