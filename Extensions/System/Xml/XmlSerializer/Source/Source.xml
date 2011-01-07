@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:XmlSerializer`1">
+            <summary>
+            Serializes and deserializes objects into and from XML documents. 
+            </summary>
+            <typeparam name="TRoot">The type of the root object in the graph to serialize or deserialize.</typeparam>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:XmlSerializer`1"/> class.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.Type[])">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Type[])"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.String)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Type[])"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.Xml.Serialization.XmlAttributeOverrides)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Xml.Serialization.XmlAttributeOverrides)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.Xml.Serialization.XmlRootAttribute)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Xml.Serialization.XmlRootAttribute)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.Xml.Serialization.XmlAttributeOverrides,System.Type[],System.Xml.Serialization.XmlRootAttribute,System.String)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Xml.Serialization.XmlAttributeOverrides,System.Type[],System.Xml.Serialization.XmlRootAttribute,System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.#ctor(System.Xml.Serialization.XmlAttributeOverrides,System.Type[],System.Xml.Serialization.XmlRootAttribute,System.String,System.String)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.#ctor(System.Type,System.Xml.Serialization.XmlAttributeOverrides,System.Type[],System.Xml.Serialization.XmlRootAttribute,System.String,System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.String)">
+            <summary>
+            Deserializes the XML document contained in the specified file.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.IO.Stream)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.IO.Stream)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.IO.TextReader)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.IO.Stream)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.Xml.XmlReader)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.Xml.XmlReader)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.Xml.XmlReader,System.String)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.Xml.XmlReader,System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.Xml.XmlReader,System.Xml.Serialization.XmlDeserializationEvents)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.Xml.XmlReader,System.Xml.Serialization.XmlDeserializationEvents)"/>.
+            </summary>
+        </member>
+        <member name="M:XmlSerializer`1.Deserialize(System.Xml.XmlReader,System.String,System.Xml.Serialization.XmlDeserializationEvents)">
+            <summary>
+            See <see cref="M:System.Xml.Serialization.XmlSerializer.Deserialize(System.Xml.XmlReader,System.String,System.Xml.Serialization.XmlDeserializationEvents)"/>.
+            </summary>
+        </member>
+    </members>
+</doc>
