@@ -3,7 +3,7 @@
 	<Identifier Id="netfx.codeplex.com">
 		<Name>NETFx Contributor</Name>
 		<Author>Clarius Consulting</Author>
-		<Version>1.0</Version>
+		<Version>1.0.4</Version>
 		<Description xml:space="preserve">Templates for contributors to the open source and lightweight code reuse project NETFx.</Description>
 		<Locale>1033</Locale>
 		<MoreInfoUrl>http://netfx.codeplex.com</MoreInfoUrl>

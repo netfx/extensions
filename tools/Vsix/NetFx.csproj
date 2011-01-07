@@ -12,6 +12,7 @@
     <AssemblyName>NetFx</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <TargetVsixContainerName>NETFx.vsix</TargetVsixContainerName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,8 +41,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\AddSourceReferenceWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\AddSourceLinkWizard.cs" />
-    <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionIdentifierWizard.cs" />
-    <Compile Include="Templates\Projects\Open Source\Extension\SetExtensionIdentifierWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\ExtensionTitleSuggestion.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionMetadataWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\SetExtensionMetadataWizard.cs" />
+    <Content Include="Templates\Projects\Open Source\Extension\Source\Properties\AssemblyInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Templates\Projects\Open Source\Extension\TransformAllTemplatesWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\GetSolutionNameWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\SetSolutionNameWizard.cs" />
@@ -150,6 +155,7 @@
     </ProjectTemplate>
     <Content Include="Templates\Projects\Open Source\Extension\Source\Source.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Source\Source.vstemplate">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

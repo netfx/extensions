@@ -32,7 +32,7 @@
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
-		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionIdentifierWizard</FullClassName>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionMetadataWizard</FullClassName>
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>

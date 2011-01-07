@@ -13,11 +13,12 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 	/// <summary>
 	/// Gets the $extensionid$ dictionary replacement value, using the target location path as well as the extension name.
 	/// </summary>
-	public class GetExtensionIdentifierWizard : IWizard
+	public class GetExtensionMetadataWizard : IWizard
 	{
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
 			replacementsDictionary["$extensionid$"] = (string)CallContext.GetData("$extensionid$");
+			replacementsDictionary["$extensiontitle$"] = (string)CallContext.GetData("$extensiontitle$");
 		}
 
 		public void RunFinished()

@@ -13,7 +13,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 	/// <summary>
 	/// Adds the $extensionid$ dictionary replacement value, using the target location path as well as the extension name.
 	/// </summary>
-	public class SetExtensionIdentifierWizard : IWizard
+	public class SetExtensionMetadataWizard : IWizard
 	{
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
@@ -39,11 +39,15 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 				.Concat(new[] { replacementsDictionary["$projectname$"] }));
 
 			CallContext.SetData("$extensionid$", identifier);
+			CallContext.SetData("$extensiontitle$", ExtensionTitleSuggestion.Suggest(
+				targetDir.Parent.FullName.Replace(extensionsRoot.FullName, ""),
+				replacementsDictionary["$projectname$"]));
 		}
 
 		public void RunFinished()
 		{
 			CallContext.SetData("$extensionid$", null);
+			CallContext.SetData("$extensiontitle$", null);
 		}
 
 		public void BeforeOpeningFile(ProjectItem projectItem)
