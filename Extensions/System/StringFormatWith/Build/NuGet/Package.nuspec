@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.StringFormatWith</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx StringFormatWith</title>
 		<description>Formats strings with named parameters with a given object, like "Hello {FirstName} {LastName}".</description>
 		<authors>Henri Wiechers</authors>

@@ -33,6 +33,9 @@
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="NuGet\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Release.cmd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -45,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet\lib\" />
-    <Folder Include="NuGet\tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
