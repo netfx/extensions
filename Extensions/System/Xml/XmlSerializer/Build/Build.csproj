@@ -29,8 +29,12 @@
   <ItemGroup>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NuGet\License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NuGet\tools\install.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Release.cmd">
@@ -45,7 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet\lib\" />
-    <Folder Include="NuGet\tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
