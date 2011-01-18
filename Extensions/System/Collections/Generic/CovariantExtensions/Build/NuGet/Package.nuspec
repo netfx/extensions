@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Collections.Generic.CovariantExtensions</id>
+		<version>1.0.0.0</version>
+		<title>NETFx CovariantExtensions</title>
+		<description>Provides extension methods that allow to treat collections, enumerables and lists as covariant of a generic type other than their constructed type (i.e. for down-casting collections).</description>
+		<authors>Umbrella Project</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<tags>netfx generic covariant collection</tags>
+	</metadata>
+</package>
