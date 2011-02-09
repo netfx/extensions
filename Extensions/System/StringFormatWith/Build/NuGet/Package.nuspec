@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-System.StringFormatWith</id>
 		<version>1.0.0.1</version>
-		<title>NETFx StringFormatWith</title>
+		<title>String.FormatWith: readable formatting strings using named parameters</title>
 		<description>Formats strings with named parameters with a given object, like "Hello {FirstName} {LastName}".</description>
 		<authors>Henri Wiechers</authors>
 		<language>en-US</language>

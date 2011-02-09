@@ -27,6 +27,7 @@ foreach ($build in (Get-ChildItem Extensions -Recurse -Filter Build.csproj))
 
         Write-Progress -Activity "Deploying NETFx" -Status ("Compiling package " + $build.Directory.Parent.Name + "(id: " + $id + ")") -PercentComplete $progress
         &($nuget.FullName) "pack" $spec.FullName -BasePath $spec.Directory.FullName -OutputDirectory $dropDir.FullName | out-null
+        
     popd
 }
 

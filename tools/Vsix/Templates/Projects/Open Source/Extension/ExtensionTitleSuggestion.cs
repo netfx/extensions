@@ -30,10 +30,11 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 							select area.Value)
 						   .FirstOrDefault();
 
+			// Removed NETFx from the extension title.
 			if (areaName != null)
-				return "NETFx " + areaName + " " + projectName;
+				return areaName + " " + projectName;
 			else
-				return "NETFx " + projectName;
+				return projectName;
 		}
 	}
 }

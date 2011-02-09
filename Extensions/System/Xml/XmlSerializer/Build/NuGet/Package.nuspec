@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-System.Xml.XmlSerializer</id>
 		<version>1.0.0.1</version>
-		<title>NETFx XmlSerializer</title>
+		<title>XmlSerializer of T</title>
 		<description>Provides a generics version of XmlSerializer.</description>
 		<authors>Daniel Cazzulino</authors>
 		<language>en-US</language>

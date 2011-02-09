@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-Guard</id>
 		<version>1.2.0.0</version>
-		<title>NETFx Guard Argument Validation Class</title>
+		<title>Guard Argument Validation</title>
 		<description>The only argument validation file you need, with full refactoring support and strong-typing.
 
 Examples: 

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-IpsumGenerator</id>
-		<version>1.0.0.2</version>
-		<title>Ipsum Generator</title>
-		<description>Generates Lorem Ipsum words for use in tests.</description>
+		<id>netfx-System.Collections.Generic.KeyValuePair</id>
+		<version>1.0.0.0</version>
+		<title>KeyValuePair.Create with type inference</title>
+		<description>Provides the missing KeyValuePair.Create static method, following the same approach as the Tuple.Create one.</description>
 		<authors>Daniel Cazzulino</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
-		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
-		<tags>netfx test ipsum</tags>
+		<tags>netfx system collections generic</tags>
 	</metadata>
 </package>

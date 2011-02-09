@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.DateTimeEpochExtensions</id>
+		<version>1.0.0.0</version>
+		<title>DateTime and DateTimeOffset to Epoch time</title>
+		<description>Provides conversion of dates into an epoch-relative number value (total seconds).
+		
+See Unix Epoch in Wikipedia for more information on why this might be needed. 
+		
+Typical uses include using this simplified representation as an expiration time for a token, password or verification code.</description>
+		<authors>Daniel Cazzulino</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<tags>netfx datetime datetimeoffset epoch</tags>
+	</metadata>
+</package>

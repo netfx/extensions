@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-System.Windows.Input.DelegateCommand</id>
 		<version>1.0.0.0</version>
-		<title>NETFx WPF DelegateCommand</title>
+		<title>WPF DelegateCommand: lambda-powered</title>
 		<description>An implementation of WPF ICommand that allows passing delegates/lambdas for the implementation.</description>
 		<authors>Daniel Cazzulino</authors>
 		<language>en-US</language>
