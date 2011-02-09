@@ -5,7 +5,7 @@
 		<version>1.0.0.0</version>
 		<title>CovariantExtensions: easy down-casting collections</title>
 		<description>Provides extension methods that allow to treat collections, enumerables and lists as covariant of a generic type other than their constructed type (i.e. for down-casting collections).</description>
-		<authors>Umbrella Project</authors>
+		<authors>Umbrella Project, Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

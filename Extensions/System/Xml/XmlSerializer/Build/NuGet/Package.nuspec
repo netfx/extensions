@@ -5,7 +5,7 @@
 		<version>1.0.0.1</version>
 		<title>XmlSerializer of T</title>
 		<description>Provides a generics version of XmlSerializer.</description>
-		<authors>Daniel Cazzulino</authors>
+		<authors>Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

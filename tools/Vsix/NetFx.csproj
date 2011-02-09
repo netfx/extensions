@@ -80,6 +80,7 @@
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Build\Release.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

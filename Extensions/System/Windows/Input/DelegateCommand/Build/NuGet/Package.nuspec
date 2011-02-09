@@ -5,7 +5,7 @@
 		<version>1.0.0.0</version>
 		<title>WPF DelegateCommand: lambda-powered</title>
 		<description>An implementation of WPF ICommand that allows passing delegates/lambdas for the implementation.</description>
-		<authors>Daniel Cazzulino</authors>
+		<authors>Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

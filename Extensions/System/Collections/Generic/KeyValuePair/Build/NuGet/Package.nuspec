@@ -5,7 +5,7 @@
 		<version>1.0.0.0</version>
 		<title>KeyValuePair.Create with type inference</title>
 		<description>Provides the missing KeyValuePair.Create static method, following the same approach as the Tuple.Create one.</description>
-		<authors>Daniel Cazzulino</authors>
+		<authors>Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

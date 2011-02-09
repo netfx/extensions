@@ -9,7 +9,7 @@
 See Unix Epoch in Wikipedia for more information on why this might be needed. 
 		
 Typical uses include using this simplified representation as an expiration time for a token, password or verification code.</description>
-		<authors>Daniel Cazzulino</authors>
+		<authors>Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
