@@ -5,7 +5,7 @@
 		<version>1.0.0.2</version>
 		<title>Ipsum Generator</title>
 		<description>Generates Lorem Ipsum words for use in tests.</description>
-		<authors>Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

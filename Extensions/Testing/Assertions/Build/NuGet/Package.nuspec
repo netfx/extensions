@@ -7,7 +7,7 @@
 		<description>Use code snippet 'assertion' to get the declaration at the top of the file. 
 Then just use Assert.Equal(...) and the like.			
 </description>
-		<authors>Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
