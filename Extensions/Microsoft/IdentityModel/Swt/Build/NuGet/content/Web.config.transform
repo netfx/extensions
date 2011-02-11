@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<add key="SwtSigningKey" value="[your 256-bit symmetric key configured in the STS/ACS]" />
+	</appSettings>
+	<system.web>
+		<httpRuntime requestValidationMode="2.0" />
+	</system.web>
+	<microsoft.identityModel>
+		<service saveBootstrapTokens="true">
+			<securityTokenHandlers>
+				<add type="Microsoft.IdentityModel.Swt.SwtSecurityTokenHandler" />
+			</securityTokenHandlers>
+			<issuerTokenResolver type="Microsoft.IdentityModel.Swt.SwtIssuerTokenResolver" />
+		</service>
+	</microsoft.identityModel>
+</configuration>
