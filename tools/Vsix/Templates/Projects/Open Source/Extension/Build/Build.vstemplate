@@ -18,12 +18,17 @@
       <Folder Name="NuGet" TargetFolderName="NuGet">
         <Folder Name="content" TargetFolderName="content" />
         <Folder Name="lib" TargetFolderName="lib" />
-        <ProjectItem ReplaceParameters="true" TargetFileName="Package.nuspec" OpenInEditor="true">Package.nuspec</ProjectItem>
+				<Folder Name="tools" TargetFolderName="tools">
+					<ProjectItem ReplaceParameters="false" TargetFileName="init.ps1">init.ps1</ProjectItem>
+					<ProjectItem ReplaceParameters="false" TargetFileName="install.ps1">install.ps1</ProjectItem>
+					<ProjectItem ReplaceParameters="false" TargetFileName="uninstall.ps1">uninstall.ps1</ProjectItem>
+				</Folder>
+				<ProjectItem ReplaceParameters="true" TargetFileName="Package.tt" OpenInEditor="true">Package.tt</ProjectItem>
+				<ProjectItem ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
 				<ProjectItem>License.txt</ProjectItem>
-				<Folder Name="tools" TargetFolderName="tools" />
-      </Folder>
+			</Folder>
       <ProjectItem ReplaceParameters="true" TargetFileName="Readme.txt">Readme.txt</ProjectItem>
-      <ProjectItem ReplaceParameters="false" TargetFileName="Release.tt">Release.tt</ProjectItem>
+			<ProjectItem ReplaceParameters="false" TargetFileName="Pack.tt">Pack.tt</ProjectItem>
     </Project>
   </TemplateContent>
 	<WizardExtension>

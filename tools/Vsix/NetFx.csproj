@@ -78,13 +78,27 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\Package.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Templates\Projects\Open Source\Extension\Build\Release.tt">
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\tools\init.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\tools\uninstall.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Pack.tt">
+      <LastGenOutput>Pack.cmd</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\NuGet\Package.tt">
+      <LastGenOutput>Package1.txt</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Templates\Projects\Open Source\Extension\Build\NuGet\Package.nuspec">
+      <LastGenOutput>Package1.txt</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -27,21 +27,34 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-		<Content Include="NuGet\Package.nuspec">
+		<None Include="NuGet\Package.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>Package.nuspec</LastGenOutput>
+		</None>
+		<None Include="NuGet\Package.nuspec">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+			<DependentUpon>Package.tt</DependentUpon>
+		</None>
 		<Content Include="NuGet\License.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<None Include="Release.tt">
+		<Content Include="NuGet\tools\init.ps1">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="NuGet\tools\install.ps1">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="NuGet\tools\uninstall.ps1">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<None Include="Pack.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Release.cmd</LastGenOutput>
+      <LastGenOutput>Pack.cmd</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet\content\netfx" />
     <Folder Include="NuGet\lib\" />
-    <Folder Include="NuGet\tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

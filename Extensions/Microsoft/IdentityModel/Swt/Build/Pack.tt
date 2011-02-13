@@ -44,7 +44,6 @@ var pathToPackageBaseDir =
     currentDir.FullName.Replace(rootDir.FullName, "").Substring(1) + "\\bin";
 
 #>
-%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe /p:Configuration=Release /verbosity:minimal
 pushd <#=pathToNuGetCmd #>
 NuGet.exe pack <#=pathToPackageBaseDir #>\NuGet\Package.nuspec -BasePath <#=pathToPackageBaseDir#>\NuGet -OutputDirectory <#=pathToPackageBaseDir #>
 popd
