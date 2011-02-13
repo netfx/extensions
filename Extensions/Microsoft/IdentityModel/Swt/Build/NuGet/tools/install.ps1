@@ -21,6 +21,7 @@ param($installPath, $toolsPath, $package, $project)
 		{
 			write-warning "Please add an STS reference to your project before installing SWT support. Reinstall again after doing so."
 			uninstall-package netfx-Microsoft.IdentityModel.Swt
+			return
 		}
 		else
 		{
@@ -32,6 +33,7 @@ param($installPath, $toolsPath, $package, $project)
 	{
 		write-warning "Web.config file not found! The project must be a web application."
 		uninstall-package netfx-Microsoft.IdentityModel.Swt
+		return
 	}
 	
 	$project.Object.References.Add("System.Configuration")
