@@ -23,11 +23,24 @@ param($installPath, $toolsPath, $package, $project)
 			uninstall-package netfx-Microsoft.IdentityModel.Swt
 			return
 		}
-		else
-		{
-			$registry.type = "Microsoft.IdentityModel.Swt.SwtIssuerNameRegistry"
-			$xml.Save($web.FileNames(1))
-		}
+
+		$registry.type = "Microsoft.IdentityModel.Swt.SwtIssuerNameRegistry"
+
+		# $key = read-host Enter your SWT signing key
+		# if ($key.Length -eq 0)
+		# {
+		# 	write-warning "IMPORTANT: Please set the value of SwtSigningKey in your Web.config appSettings section."
+		# }
+		# else
+		# {
+		# 	$keyNode = $xml.SelectSingleNode("configuration/appSettings/add[@key = 'SwtSigningKey']")
+		# 	if ($keyNode -ne $null)
+		# 	{
+		# 		$keyNode.value = $key
+		# 	}
+		# }
+
+		$xml.Save($web.FileNames(1))
 	}
 	else
 	{
@@ -43,5 +56,3 @@ param($installPath, $toolsPath, $package, $project)
 	$project.Object.References.Add("System.Web")
 	$project.Object.References.Add("System.Xml")
 	$project.Object.References.Add("Microsoft.IdentityModel")
-
-	write-warning "IMPORTANT: Please set the value of SwtSigningKey in your Web.config appSettings section."
