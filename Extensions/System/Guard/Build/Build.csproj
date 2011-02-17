@@ -29,6 +29,7 @@
   <ItemGroup>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

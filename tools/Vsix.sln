@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFx", "NetFx.csproj", "{BAB3DFB4-AF92-4247-959F-5E15CFF33866}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFx", "Vsix\NetFx.csproj", "{BAB3DFB4-AF92-4247-959F-5E15CFF33866}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

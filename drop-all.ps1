@@ -7,7 +7,7 @@ $nuget = Get-ChildItem -Filter NuGet.exe -Recurse
 $msbuild = [System.Environment]::ExpandEnvironmentVariables("%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe")
 
 Write-Progress -Activity "Deploying NETFx" -Status "Cleaning drop location"
-Remove-Item -Path Drop -Force -Recurse -ErrorAction SilentlyContinue | out-null
+# Remove-Item -Path Drop -Force -Recurse -ErrorAction SilentlyContinue | out-null
 Remove-Item Drop -Recurse -ErrorAction SilentlyContinue | out-null
 $dropDir = [System.IO.Directory]::CreateDirectory("Drop") 
 

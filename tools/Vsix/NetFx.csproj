@@ -233,7 +233,6 @@
 					relative path location as the vsix subpath, to streamline the modification of the template category.
 				-->
         <VSIXSubPath>$([System.IO.Directory]::GetParent($(TargetDir)%(ProjectTemplate.RelativeDir)).Parent.FullName.Replace($(TargetDir), ''))</VSIXSubPath>
-        <!--<VSIXSubPath>%(ProjectTemplate.RelativeDir)</VSIXSubPath>-->
       </VSIXSourceItem>
     </ItemGroup>
     <ItemGroup Condition="'@(ItemTemplate)' != ''">
