@@ -21,28 +21,27 @@
 	</metadata>
 </package>
 <#+
-	private Version IncrementCurrentVersion()
-                                                                                                          {
+private Version IncrementCurrentVersion()
+{
+	var currentSpec = this.Host.ResolvePath(".\\Package.nuspec");
+	var version = new Version("1.0.0.0");
+	try
+	{
+		var spec = XDocument.Load(currentSpec);
+		var ns = XNamespace.Get("http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
+		version = new Version(spec.Root.Element(ns + "metadata").Element(ns + "version").Value);
+	}
+	catch (XmlException e)
+	{
+		this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[]
+		{
+			new System.CodeDom.Compiler.CompilerError(this.Host.ResolvePath("."), 20, 9, "0", 
+				"There was an error trying to read the existing nuspec version to increment it: " + e.ToString()) 															
+		}));
+	}
 
-	                                                                                                        var currentSpec = this.Host.ResolvePath(".\\Package.nuspec");
-                                                                                                            var version = new Version("1.0.0.0");
-                                                                                                            try
-                                                                                                            {
-	                                                                                                           var spec = XDocument.Load(currentSpec);
-	                                                                                                          var ns = XNamespace.Get("http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
-	                                                                                                         version = new Version(spec.Root.Element(ns + "metadata").Element(ns + "version").Value);
-                                                                                                        }
-                                                                                                            catch (XmlException e)
-                                                                                                            {
-	                                                                                                           this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[]
-    {
-	    new System.CodeDom.Compiler.CompilerError(this.Host.ResolvePath("."), 20, 9, "0", 
-	       "There was an error trying to read the existing nuspec version to increment it: " + e.ToString()) 															
-    }));
-                                                                                                      }
+	version = new Version(version.Major, version.Minor, version.Build, version.Revision + 1);
 
-                                                                                                            version = new Version(version.Major, version.Minor, version.Build, version.Revision + 1);
-
-                                                                                                            return version;
-                                                                                      }
+	return version;
+}
 #>
