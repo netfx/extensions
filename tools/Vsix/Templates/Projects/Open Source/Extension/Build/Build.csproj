@@ -31,10 +31,10 @@
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>Package.nuspec</LastGenOutput>
 		</None>
-		<None Include="NuGet\Package.nuspec">
+		<Content Include="NuGet\Package.nuspec">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<DependentUpon>Package.tt</DependentUpon>
-		</None>
+		</Content>
 		<Content Include="NuGet\License.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -77,5 +77,6 @@
 			<Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
 		</AssignTargetPath>
 		<Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
+		<Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
 	</Target>
 </Project>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.DynamicXml</id>
-		<version>1.0.0.17</version>
+		<version>1.0.0.18</version>
 		<title>Dynamic XLinq</title>
 		<description>Provides a dynamic API over XLinq:
 
@@ -17,7 +17,7 @@ DateTime pubDate = rss.channel.pubDate;
 // using indexer notation 
 int port = rss.channel.cloud["port"]
 		</description>
-		<authors>Daniel Cazzulino, Clarius</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
