@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Xml.DynamicXml</id>
+		<version>1.0.0.17</version>
+		<title>Dynamic XLinq</title>
+		<description>Provides a dynamic API over XLinq:
+
+var xdoc = XDocument.Load("rss.xml");
+var rss = doc.Root.ToDynamic();
+
+// Type conversion, element traversal 
+// using dotted path notation
+DateTime pubDate = rss.channel.pubDate;
+
+// Type conversion, attribute navigation 
+// using indexer notation 
+int port = rss.channel.cloud["port"]
+		</description>
+		<authors>Daniel Cazzulino, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx xml dynamic linq xlinq</tags>
+	</metadata>
+</package>
