@@ -5,6 +5,7 @@ using System.Text;
 using Xunit;
 using System.Xml.Linq;
 using System.Xml;
+using System.Collections;
 
 internal class DynamicXmlSpec
 {
@@ -150,4 +151,46 @@ internal class DynamicXmlSpec
 		Assert.Equal("baz", (string)dyn["system.web"].handler[2]["name"]);
 	}
 
+	[Fact]
+	public void WhenMultipleElements_ThenCanIterate()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var elements = doc.Root.ToDynamic()["system.web"].handler;
+
+		foreach (var element in elements)
+		{
+			Assert.NotNull(element["name"]);
+		}
+	}
+
+	[Fact]
+	public void WhenIteratingElement_ThenIteratesAllChildren()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var elements = doc.Root.ToDynamic()["system.web"];
+
+		foreach (var element in elements)
+		{
+			Assert.NotNull(element);
+		}
+	}
+
+	[Fact]
+	public void WhenIteratingElement_ThenCanCastToXElement()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var elements = ((IEnumerable)doc.Root.ToDynamic()["system.web"]).Cast<XElement>();
+
+		Assert.True(elements.Any(e => e.Name.LocalName == "compilation"));
+		Assert.True(elements.Any(e => e.Name.LocalName == "handler"));
+	}
+
+	[Fact]
+	public void WhenIteratingElements_ThenCanConvertToElements()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var elements = (IEnumerable<XElement>)doc.Root.ToDynamic()["system.web"];
+
+		Assert.Equal(4, elements.Count());
+	}
 }

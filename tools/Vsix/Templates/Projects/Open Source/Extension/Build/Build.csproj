@@ -17,7 +17,8 @@
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
     <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
-  </PropertyGroup>
+		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+	</PropertyGroup>
   <!-- VS requires these -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
   </PropertyGroup>

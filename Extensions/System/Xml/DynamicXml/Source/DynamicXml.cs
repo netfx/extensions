@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Dynamic;
+using System.Collections;
 
 namespace System.Xml.Linq
 {
@@ -104,7 +105,7 @@ namespace System.Xml.Linq
 			return false;
 		}
 
-		private class DynamicXmlElement : DynamicObject
+		private class DynamicXmlElement : DynamicObject, IEnumerable<XElement>, IEnumerable<DynamicObject>
 		{
 			private XElement xml;
 
@@ -172,12 +173,32 @@ namespace System.Xml.Linq
 					result = this.xml;
 					return true;
 				}
+				else if (binder.ReturnType == typeof(IEnumerable))
+				{
+					result = this.xml.Elements().Select(el => new DynamicXmlElement(el)).ToList();
+					return true;
+				}
 				else if (TryXmlConvert(this.xml.Value, binder.ReturnType, out result))
 				{
 					return true;
 				}
 
 				return base.TryConvert(binder, out result);
+			}
+
+			public IEnumerator<XElement> GetEnumerator()
+			{
+				return this.xml.Elements().GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return this.GetEnumerator();
+			}
+
+			IEnumerator<DynamicObject> IEnumerable<DynamicObject>.GetEnumerator()
+			{
+				return this.xml.Elements().Select(el => new DynamicXmlElement(el)).GetEnumerator();
 			}
 		}
 
@@ -211,13 +232,24 @@ namespace System.Xml.Linq
 			}
 		}
 
-		private class DynamicXmlElements : DynamicObject
+		private class DynamicXmlElements : DynamicObject, IEnumerable<XElement>, IEnumerable<DynamicObject>
 		{
 			private List<XElement> elements;
 
 			public DynamicXmlElements(IEnumerable<XElement> elements)
 			{
 				this.elements = elements.ToList();
+			}
+
+			public override bool TryConvert(ConvertBinder binder, out object result)
+			{
+				if (binder.ReturnType == typeof(IEnumerable))
+				{
+					result = elements.Select(el => new DynamicXmlElement(el)).ToList();
+					return true;
+				}
+
+				return base.TryConvert(binder, out result);
 			}
 
 			public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
@@ -229,6 +261,21 @@ namespace System.Xml.Linq
 				}
 
 				return base.TryGetIndex(binder, indexes, out result);
+			}
+
+			public IEnumerator<XElement> GetEnumerator()
+			{
+				return this.elements.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return this.GetEnumerator();
+			}
+
+			IEnumerator<DynamicObject> IEnumerable<DynamicObject>.GetEnumerator()
+			{
+				return this.elements.Select(el => new DynamicXmlElement(el)).GetEnumerator();
 			}
 		}
 	}
