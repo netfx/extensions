@@ -8,4 +8,10 @@
 			hello world
 		</baz>
 	</bar>
+	<system.web>
+		<compilation debug="true"/>
+		<handler name="foo"/>
+		<handler name="bar"/>
+		<handler name="baz"/>
+	</system.web>
 </foo>

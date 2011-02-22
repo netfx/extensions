@@ -127,4 +127,27 @@ internal class DynamicXmlSpec
 		First,
 		Second,
 	}
+
+	[Fact]
+	public void WhenElementNameHasDot_ThenCanUseIndexerNotation()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var dyn = doc.Root.ToDynamic();
+
+		XElement web = dyn["system.web"];
+
+		Assert.NotNull(web);
+	}
+
+	[Fact]
+	public void WhenMultipleElements_ThenCanUseElementIndex()
+	{
+		var doc = XDocument.Load("simple.xml");
+		var dyn = doc.Root.ToDynamic();
+
+		Assert.Equal("foo", (string)dyn["system.web"].handler[0]["name"]);
+		Assert.Equal("bar", (string)dyn["system.web"].handler[1]["name"]);
+		Assert.Equal("baz", (string)dyn["system.web"].handler[2]["name"]);
+	}
+
 }

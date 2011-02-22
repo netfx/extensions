@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.DynamicXml</id>
-		<version>1.0.0.18</version>
+		<version>1.0.0.19</version>
 		<title>Dynamic XLinq</title>
 		<description>Provides a dynamic API over XLinq:
 

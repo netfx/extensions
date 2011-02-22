@@ -22,6 +22,11 @@ using System.Dynamic;
 
 namespace System.Xml.Linq
 {
+	/// <summary>
+	/// Provides the <see cref="ToDynamic"/> extension method for 
+	/// <see cref="XElement"/>, allowing read-only dynamic API
+	/// access over the underlying XML.
+	/// </summary>
 	internal static class DynamicXmlExtensions
 	{
 		private static Dictionary<Type, Func<string, object>> xmlConverters;
@@ -50,6 +55,12 @@ namespace System.Xml.Linq
 			};
 		}
 
+		/// <summary>
+		/// Converts the element into a dynamic object to use 
+		/// dotted and indexer notation for elements and attribtes, 
+		/// with built-in support for <see cref="XmlConvert"/> when 
+		/// casting the resulting values.
+		/// </summary>
 		public static dynamic ToDynamic(this XElement xml)
 		{
 			return new DynamicXmlElement(xml);
@@ -111,6 +122,24 @@ namespace System.Xml.Linq
 							  select new DynamicXmlAttribute(attr))
 							 .FirstOrDefault();
 
+					if (result == null)
+					{
+						// Try element name.
+						var matches = this.xml.Elements().Where(x => x.Name.LocalName.Equals(indexes[0]));
+
+						// If we have more than one, return the collection.
+						if (matches.Skip(1).Any())
+						{
+							result = new DynamicXmlElements(matches);
+						}
+						else
+						{
+							result = matches
+								.Select(x => new DynamicXmlElement(x))
+								.FirstOrDefault();
+						}
+					}
+
 					return true;
 				}
 
@@ -119,11 +148,20 @@ namespace System.Xml.Linq
 
 			public override bool TryGetMember(GetMemberBinder binder, out object result)
 			{
-				result = (from el in this.xml.Elements()
-						  where el.Name.LocalName == binder.Name
-						  select new DynamicXmlElement(el))
-						 .FirstOrDefault();
+				var matches = this.xml.Elements().Where(x => x.Name.LocalName.Equals(binder.Name));
 
+				// If we have more than one, return the collection.
+				if (matches.Skip(1).Any())
+				{
+					result = new DynamicXmlElements(matches);
+				}
+				else
+				{
+					result = matches
+						.Select(x => new DynamicXmlElement(x))
+						.FirstOrDefault();
+				}
+				
 				return true;
 			}
 
@@ -170,6 +208,27 @@ namespace System.Xml.Linq
 			public override string ToString()
 			{
 				return this.xml.Value;
+			}
+		}
+
+		private class DynamicXmlElements : DynamicObject
+		{
+			private List<XElement> elements;
+
+			public DynamicXmlElements(IEnumerable<XElement> elements)
+			{
+				this.elements = elements.ToList();
+			}
+
+			public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
+			{
+				if (indexes.Length == 1 && indexes[0] is int)
+				{
+					result = new DynamicXmlElement(this.elements[(int)indexes[0]]);
+					return true;
+				}
+
+				return base.TryGetIndex(binder, indexes, out result);
 			}
 		}
 	}
