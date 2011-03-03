@@ -39,10 +39,10 @@
       <Link>NuGet\content\netfx\System\Reflection\TargetFramework.ttinclude</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="NuGet\Package.tt">
+    <None Include="NuGet\Package.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
-    </Compile>
+    </None>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>
