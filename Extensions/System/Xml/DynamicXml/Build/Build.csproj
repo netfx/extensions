@@ -17,8 +17,8 @@
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
     <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
-		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-	</PropertyGroup>
+    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+  </PropertyGroup>
   <!-- VS requires these -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
   </PropertyGroup>
@@ -62,6 +62,15 @@
     <Folder Include="NuGet\lib\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Push.ps1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Push.tt</DependentUpon>
+    </None>
+    <Compile Include="Push.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Push.ps1</LastGenOutput>
+    </Compile>
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

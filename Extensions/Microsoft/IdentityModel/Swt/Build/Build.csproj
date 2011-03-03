@@ -24,6 +24,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
   </PropertyGroup>
+  <!-- Add the Push.ps1 generation -->
+  <PropertyGroup>
+    <NETFxRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), netfx.sln))\</NETFxRoot>
+  </PropertyGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
@@ -48,6 +52,7 @@
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>
@@ -63,6 +68,15 @@
     <Folder Include="NuGet\lib\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Push.ps1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Push.tt</DependentUpon>
+    </None>
+    <Compile Include="Push.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Push.ps1</LastGenOutput>
+    </Compile>
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

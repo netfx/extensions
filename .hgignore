@@ -4,3 +4,4 @@ glob:*.suo
 glob:*.user
 glob:Drop/
 glob:*.t4properties
+glob:apikey.txt

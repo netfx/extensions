@@ -29,6 +29,7 @@
   <ItemGroup>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -36,6 +37,15 @@
     <Content Include="NuGet\tools\install.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Push.ps1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Push.tt</DependentUpon>
+    </None>
+    <Compile Include="Push.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Push.ps1</LastGenOutput>
+    </Compile>
     <None Include="Release.cmd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

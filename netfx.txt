@@ -2,4 +2,11 @@ This file signals the root of the netfx repository.
 
 The netfx.sln is only used to keep global NuGet packages (such as the NuGet.CommandLine) available from the root of the project source tree.
 
-transform-all.ps1 transforms all T4 templates in all extensions, specifically the Release.tt which creates the proper batch file for testing out packages before release to NuGet online repository.
+Drop-All.ps1: builds all extensions and copies the packages to the Drop folder, which can be used for local testing before pushing to the gallery.
+
+Push-All.ps1: pushes all packages found in the Drop folder to the gallery, using the API Key in the file apikey.txt (which should never be committed to the source control repository.
+
+Push.tt: linked from Build projects for each extension, to allow easy pushing of a single one.
+
+Transform-All.ps1: only needs to be run if the NuGet command line nuget version changed. Transforms all T4 templates in all extensions, forcing an update of package versions when configured so, and updating the path for the batch file for packing packages before release to NuGet online repository.
+
