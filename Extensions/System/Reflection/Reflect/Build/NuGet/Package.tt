@@ -10,20 +10,8 @@
 	<metadata>
 		<id>netfx-System.Reflection.Reflect</id>
 		<version><#= version #></version>
-		<title>Strong-typed static reflection</title>
-		<description xml:space="preserve">Static reflection via Reflect:
-// Void static method
-MethodInfo cw = Reflect.GetMethod(
-  () =&gt; Console.WriteLine);
-
-// Instance void method
-MethodInfo mi = 
-  Reflect&lt;IView&gt;.GetMethod(v =&gt; v.Show);
-
-// Boolean returning instance method
-MethodInfo pi = Reflect&lt;IViewModel&gt;
-  .GetMethod&lt;bool&gt;(v =&gt; v.Save);
-</description>
+		<title>Obsolete: use netx-Reflector</title>
+		<description xml:space="preserve">This package has been renamed to netfx-Reflector</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
