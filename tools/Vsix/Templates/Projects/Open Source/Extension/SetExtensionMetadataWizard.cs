@@ -32,6 +32,13 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 				throw new InvalidOperationException(string.Format(
 					"Selected target path '{0}' is not located under the root NETFx Extensions repository folder.", targetDir));
 
+			var pathToRoot = targetDir.FullName
+				.Replace(extensionsRoot.FullName, "")
+				.Split(Path.DirectorySeparatorChar)
+				.Aggregate("..\\", (result, current) => result + "..\\");
+
+			CallContext.SetData("$pathtoroot$", pathToRoot);
+
 			var identifier = "netfx-" + string.Join(".", targetDir.Parent.FullName
 				// We start from the parent directory, as we'll use the $safeprojectname$ to build the identifier later
 				.Replace(extensionsRoot.FullName, "")

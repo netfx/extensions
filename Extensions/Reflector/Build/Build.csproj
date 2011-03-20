@@ -27,19 +27,33 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuGet\content\Readme.txt" />
+    <Content Include="..\Source\Reflect.cs">
+      <Link>NuGet\content\netfx\System\Reflection\Reflect.cs</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Source\Reflect.Overloads.tt">
+      <Link>NuGet\content\netfx\System\Reflection\Reflect.Overloads.tt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Source\TargetFramework.ttinclude">
+      <Link>NuGet\content\netfx\System\Reflection\TargetFramework.ttinclude</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="NuGet\Package.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Package.nuspec</LastGenOutput>
+    </Compile>
+    <Content Include="NuGet\Package.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <DependentUpon>Package.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="NuGet\Package.nuspec">
-      <DependentUpon>Package.tt</DependentUpon>
-      <SubType>Designer</SubType>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Content Include="NuGet\tools\install.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="NuGet\tools\install.ps1" />
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,12 +86,6 @@
     <Reference Include="System" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="NuGet\Package.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Package.nuspec</LastGenOutput>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\TextTemplating\v10.0\Microsoft.TextTemplating.targets" />

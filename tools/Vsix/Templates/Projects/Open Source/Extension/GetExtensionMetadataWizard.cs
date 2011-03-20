@@ -19,6 +19,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 		{
 			replacementsDictionary["$extensionid$"] = (string)CallContext.GetData("$extensionid$");
 			replacementsDictionary["$extensiontitle$"] = (string)CallContext.GetData("$extensiontitle$");
+			replacementsDictionary["$pathtoroot$"] = (string)CallContext.GetData("$pathtoroot$");
 		}
 
 		public void RunFinished()

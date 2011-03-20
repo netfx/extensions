@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Microsoft.IdentityModel.Swt</id>
-		<version>1.1.1.44</version>
+		<version>1.1.1.45</version>
 		<title>SWT Token Support for WIF/ACS</title>
 		<description>Adds the required source code and Web.config changes to support SWT tokens.
 

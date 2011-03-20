@@ -8,18 +8,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Reflection.Reflect</id>
+		<id>netfx-Reflector</id>
 		<version><#= version #></version>
-		<title>Obsolete: use netx-Reflector</title>
-		<description xml:space="preserve">This package has been renamed to netfx-Reflector, and installing it will actually install netfx-Reflector package.
+		<title>Reflector: strong-typed static reflection</title>
+		<description xml:space="preserve">Static reflection via Reflect:
+// Void static method
+MethodInfo cw = Reflect.GetMethod(
+  () =&gt; Console.WriteLine);
 
-This package is for backwards compatibility with existing dependencies.</description>
+// Instance void method
+MethodInfo mi = 
+  Reflect&lt;IView&gt;.GetMethod(v =&gt; v.Show);
+
+// Boolean returning instance method
+MethodInfo pi = Reflect&lt;IViewModel&gt;
+  .GetMethod&lt;bool&gt;(v =&gt; v.Save);
+</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx reflection</tags>
+		<dependencies>
+			<dependency id="netfx-Guard" version="1.0.0.0"/>
+		</dependencies>
 	</metadata>
 </package>
 <#+

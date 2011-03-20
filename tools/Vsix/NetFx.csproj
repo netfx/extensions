@@ -99,6 +99,9 @@
       <LastGenOutput>Package1.txt</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Templates\Projects\Open Source\Extension\Build\Push.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -156,6 +159,7 @@
   <ItemGroup>
     <Content Include="Templates\Projects\Open Source\Extension\Build\Build.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Build\Build.vstemplate">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
