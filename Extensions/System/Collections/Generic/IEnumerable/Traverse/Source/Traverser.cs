@@ -14,6 +14,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
+#pragma warning disable 0436
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,30 +31,28 @@ internal static class Traverser
 	/// Traverses a tree using the given traversal <paramref name="kind"/>.
 	/// </summary>
 	/// <typeparam name="T">Type of the items to traverse, which can be inferred by the compiler so it's not necessary to specify it.</typeparam>
-	/// <param name="item">The item root for the traversal, which is always returned as the first result of the traversal.</param>
+	/// <param name="source">The root items for the traversal, which are always included in the result of the traversal.</param>
 	/// <param name="traverser">The traversing function that is applied to the current item of the type <typeparamref name="T"/>.</param>
 	/// <returns>A flattened enumeration of the traversal, lazily evaluated.</returns>
-	/// <example>
-	/// In order to skip the <paramref name="source"/> item from the result, just skip the 
-	/// first element from the results:
-	/// <code>
-	/// var dirs = new DirectoryInfo(path)
-	///		.Traverse(TraverseKind.BreadthFirst, dir => dir.EnumerateDirectories())
-	///		.Skip(1);
-	/// </code>
-	/// </example>
-	public static IEnumerable<T> Traverse<T>(this T source, TraverseKind kind, Func<T, IEnumerable<T>> traverser)
+	public static IEnumerable<T> Traverse<T>(this IEnumerable<T> source, TraverseKind kind, Func<T, IEnumerable<T>> traverser)
 	{
+		Guard.NotNull(() => source, source);
+		Guard.NotNull(() => traverser, traverser);
+
 		if (kind == TraverseKind.BreadthFirst)
 			return source.TraverseBreadthFirst(traverser);
 		else
 			return source.TraverseDepthFirst(traverser);
 	}
 
-	private static IEnumerable<T> TraverseBreadthFirst<T>(this T source, Func<T, IEnumerable<T>> traverser)
+	private static IEnumerable<T> TraverseBreadthFirst<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> traverser)
 	{
 		var queue = new Queue<T>();
-		queue.Enqueue(source);
+
+		foreach (var item in source)
+		{
+			queue.Enqueue(item);
+		}
 
 		while (queue.Count > 0)
 		{
@@ -71,10 +70,14 @@ internal static class Traverser
 		}
 	}
 
-	private static IEnumerable<T> TraverseDepthFirst<T>(this T source, Func<T, IEnumerable<T>> traverser)
+	private static IEnumerable<T> TraverseDepthFirst<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> traverser)
 	{
 		var stack = new Stack<T>();
-		stack.Push(source);
+
+		foreach (var item in source)
+		{
+			stack.Push(item);
+		}
 
 		while (stack.Count > 0)
 		{
@@ -92,3 +95,4 @@ internal static class Traverser
 		}
 	}
 }
+#pragma warning restore 0436

@@ -27,13 +27,18 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Source\Traverser.cs">
+    <Content Include="..\Source\TraverseKind.cs">
+      <Link>NuGet\content\netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Source\Traverser.cs">
       <Link>NuGet\content\netfx\System\Collections\Generic\IEnumerable\Traverser.cs</Link>
-    </Compile>
-    <None Include="NuGet\Package.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="NuGet\Package.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
-    </None>
+    </Compile>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>Guard</id>
+		<version>1.1.3</version>
+		<title>Obsolete: use netfx-Guard</title>
+		<description xml:space="preserve">This package has been renamed to netfx-Guard, and installing it will actually install netfx-Guard package.
+
+This package is for backwards compatibility with existing dependencies.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx guard</tags>
+	</metadata>
+</package>

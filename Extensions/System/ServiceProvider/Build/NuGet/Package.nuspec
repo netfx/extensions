@@ -10,6 +10,6 @@
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
-		<tags>netfx [other]</tags>
+		<tags>netfx serviceprovider</tags>
 	</metadata>
 </package>
