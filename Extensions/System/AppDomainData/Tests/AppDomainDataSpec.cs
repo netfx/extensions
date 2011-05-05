@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Xunit;
+
+internal class AppDomainDataSpec
+{
+	[Fact]
+	public void WhenDataIsSet_ThenCanRetrieveIt()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (AppDomain.CurrentDomain.SetData(data))
+		{
+			var saved = AppDomain.CurrentDomain.GetData<Foo>();
+
+			Assert.Same(data, saved);
+		}
+	}
+
+	[Fact]
+	public void WhenDisposableIsDisposed_ThenDataIsRemoved()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (AppDomain.CurrentDomain.SetData(data))
+		{
+		}
+
+		var saved = AppDomain.CurrentDomain.GetData<Foo>();
+
+		Assert.Null(saved);
+	}
+
+	public class Foo
+	{
+		public int Id { get; set; }
+	}
+}
