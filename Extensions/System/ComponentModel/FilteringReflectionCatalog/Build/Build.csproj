@@ -32,10 +32,10 @@
       <Link>NuGet\content\netfx\System\ComponentModel\FilteringReflectionCatalog.cs</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="NuGet\Package.tt">
+    <Compile Include="NuGet\Package.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
-    </None>
+    </Compile>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>

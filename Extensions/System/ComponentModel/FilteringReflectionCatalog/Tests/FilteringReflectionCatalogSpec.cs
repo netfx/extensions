@@ -14,7 +14,8 @@ internal class FilteringReflectionCatalogSpec
 		var catalog = new TypeCatalog(typeof(Foo));
 		var filtered = new FilteringReflectionCatalog(catalog)
 		{
-			PartFilter = part => part.PartType != typeof(Foo),
+			//PartFilter = part => part.PartType != typeof(Foo),
+			PartFilter = part => part.PartDefinition.Metadata.ContainsKey("IsPublic"),
 		};
 
 		var container = new CompositionContainer(filtered);
