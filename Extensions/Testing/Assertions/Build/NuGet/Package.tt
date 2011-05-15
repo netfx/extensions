@@ -8,25 +8,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.ComponentModel.FilteringReflectionCatalog</id>
+		<id>netfx-Assertions</id>
 		<version><#= version #></version>
-		<title>Filtering Reflection Catalog</title>
-		<description>Provides dinamic filtering of parts and exports from an underlying reflection-based catalog using a simple lambda expression that can inspect the export, its metadata and its exporting reflected type (part).
-
-Example: var filtered = new FilteringReflectionCatalog(innerCatalog)
-{
-	// Filter all parts that don't have an "IsPublic" metadata
-	PartFilter = part =>
-	part.PartDefinition.Metadata.ContainsKey("IsPublic")
-};
+		<title>xUnit-like assertion for MSTest.</title>
+		<description>Use code snippet 'assertion' to get the declaration at the top of the file. 
+Then just use Assert.Equal(...) and the like.			
 </description>
-		<summary>catalog.PartFilter = part => part.PartDefinition.Metadata.ContainsKey("IsPublic")</summary>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
-		<tags>netfx MEF System.ComponentModel FilteringReflectionCatalog</tags>
+		<tags>netfx testing assertion mstest</tags>
 	</metadata>
 </package>
 <#+

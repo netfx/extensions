@@ -115,7 +115,7 @@ internal static class MSTestAssertions
 
 	public static void NotSame(this IAssertion assertion, object notExpected, object actual)
 	{
-		NotSame(assertion, notExpected, actual);
+		Assert.AreNotSame(notExpected, actual);
 	}
 
 	public static void NotSame(this IAssertion assertion, object notExpected, object actual, string message, params object[] args)
@@ -125,7 +125,7 @@ internal static class MSTestAssertions
 
 	public static void Fail(this IAssertion assertion)
 	{
-		Fail(assertion);
+		Assert.Fail();
 	}
 
 	public static void Fail(this IAssertion assertion, string message, params object[] args)

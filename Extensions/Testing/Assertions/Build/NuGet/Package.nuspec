@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Assertions</id>
-		<version>1.0.0.3</version>
+		<version>1.0.0.5</version>
 		<title>xUnit-like assertion for MSTest.</title>
 		<description>Use code snippet 'assertion' to get the declaration at the top of the file. 
 Then just use Assert.Equal(...) and the like.			
@@ -11,6 +11,7 @@ Then just use Assert.Equal(...) and the like.
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx testing assertion mstest</tags>
 	</metadata>
 </package>
