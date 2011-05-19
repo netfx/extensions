@@ -58,6 +58,9 @@
     <Reference Include="Microsoft.ServiceModel.Web.jQuery">
       <HintPath>..\packages\JsonValue.0.3.0\lib\40\Microsoft.ServiceModel.Web.jQuery.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpEntityClientSpec.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>

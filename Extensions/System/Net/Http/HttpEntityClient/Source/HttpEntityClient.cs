@@ -19,21 +19,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
+/// <summary>
+/// A client API that communicates with REST services implemented 
+/// using standard REST methods and WCF Web API for querying.
+/// </summary>
 internal class HttpEntityClient
 {
 	private HttpClient http;
 	private IEntityFormatter formatter;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="HttpEntityClient"/> class.
+	/// </summary>
+	/// <param name="baseAddress">The base address of the service.</param>
+	/// <param name="formatter">The formatter that translates service responses into entitites.</param>
 	public HttpEntityClient(string baseAddress, IEntityFormatter formatter)
+		: this(new Uri(baseAddress), formatter)
 	{
-		this.http = new HttpClient(baseAddress);
-		this.formatter = formatter;
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="HttpEntityClient"/> class.
+	/// </summary>
+	/// <param name="baseAddress">The base address of the service.</param>
+	/// <param name="formatter">The formatter that translates service responses into entitites.</param>
 	public HttpEntityClient(Uri baseAddress, IEntityFormatter formatter)
 	{
 		this.http = new HttpClient(baseAddress);
+		this.http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(formatter.ContentType));
 		this.formatter = formatter;
 	}
 
@@ -47,10 +62,10 @@ internal class HttpEntityClient
 		var entity = default(T);
 		var response = TryGet<T>(requestUri, out entity);
 
-		if (response.IsSuccessStatusCode)
-			return this.formatter.FromContent<T>(response.Content);
+		if (!response.IsSuccessStatusCode)
+			throw new HttpResponseException(response);
 
-		throw new HttpResponseException(response);
+		return entity;
 	}
 
 	public HttpResponseMessage TryGet<T>(string requestUri, out T entity)
@@ -64,9 +79,21 @@ internal class HttpEntityClient
 		entity = default(T);
 
 		if (response.IsSuccessStatusCode)
+		{
+			ThrowIfUnsupportedContentType(response);
 			entity = this.formatter.FromContent<T>(response.Content);
+		}
 
 		return response;
+	}
+
+	private void ThrowIfUnsupportedContentType(HttpResponseMessage response)
+	{
+		if (response.Content.Headers.ContentType.MediaType != this.formatter.ContentType)
+			throw new NotSupportedException(string.Format(
+				"Received reponse with content type '{0}' but formatter supports '{1}'.",
+				response.Content.Headers.ContentType,
+				this.formatter.ContentType));
 	}
 
 	private Uri AsUri(string requestUri)

@@ -2,14 +2,17 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Threading.ThreadData</id>
-		<version>1.0.0.4</version>
-		<title>Thread Data of T</title>
-		<description>Provides strong-typed persistence of data in Thread local storage, which can also be transient and automatically removed on dispose.</description>
+		<version>1.0.0.8</version>
+		<title>Thread Data&lt;T&gt;</title>
+		<description>Provides strong-typed persistence of data in Thread local storage, which can also be transient and automatically removed on dispose.
+
+Usage: Thread.CurrentThread.SetData&lt;Foo&gt;(foo);
+var saved = Thread.CurrentThread.GetData&lt;Foo&gt;();</description>
 		<authors>Clarius, Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
-		<tags>netfx Thread</tags>
+		<tags>netfx Thread threading</tags>
 	</metadata>
 </package>

@@ -2,9 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.AppDomainData</id>
-		<version>1.0.0.7</version>
-		<title>AppDomain Data of T</title>
-		<description>Provides strong-typed persistence of data in an AppDomain, which can also be transient and automatically removed on dispose.</description>
+		<version>1.0.0.12</version>
+		<title>AppDomain Data&lt;T&gt;</title>
+		<description xml:space="preserve">Provides strong-typed persistence of data in an AppDomain, which can also be transient and automatically removed on dispose.  
+
+Usage: AppDomain.CurrentDomain.SetData&lt;Foo&gt;(foo);
+var saved = AppDomain.CurrentDomain.GetData&lt;Foo&gt;();</description>
 		<authors>Clarius, Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

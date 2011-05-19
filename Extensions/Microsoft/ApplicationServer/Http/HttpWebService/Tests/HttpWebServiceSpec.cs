@@ -13,13 +13,19 @@ internal class HttpWebServiceSpec
 	[Fact]
 	public void WhenHostingService_ThenCanInvokeIt()
 	{
-		using (var webservice = new HttpWebService<TestService>("http://localhost:20000", "test", HttpHostConfiguration.Create()))
+		using (var webservice = new HttpWebService<TestService>(
+			serviceBaseUrl: "http://localhost:20000",
+			serviceResourcePath: "test",
+			serviceConfiguration: HttpHostConfiguration.Create()))
 		{
 			var client = new HttpClient(webservice.BaseUri);
 
-			var response = client.Get(webservice.Uri(""));
+			// Builds: http://localhost:2000/test/23
+			var uri = webservice.Uri("23");
+			var response = client.Get(uri);
 
 			Assert.True(response.IsSuccessStatusCode, response.ToString());
+			Assert.True(response.Content.ReadAsString().Contains("23"));
 		}
 	}
 }
@@ -27,9 +33,9 @@ internal class HttpWebServiceSpec
 [ServiceContract]
 public class TestService
 {
-	[WebGet(UriTemplate = "")]
-	public DateTime Time()
+	[WebGet(UriTemplate = "{id}")]
+	public string Echo(string id)
 	{
-		return DateTime.Now;
+		return id;
 	}
 }

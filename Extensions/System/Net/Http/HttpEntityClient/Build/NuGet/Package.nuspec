@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
-		<version>1.0.0.3</version>
+		<version>1.0.0.6</version>
 		<title>HttpEntityClient</title>
 		<description>HttpEntityClient</description>
 		<authors>Daniel</authors>
@@ -13,6 +13,8 @@
 		<tags>netfx http wcf webapi</tags>
 		<dependencies>
 			<dependency id="HttpClient" version="0.3.0"/>
+			<dependency id="Newtonsoft.Json" version="4.0.2" />
+			<dependency id="netfx-Guard" version="1.2.0.0" />
 		</dependencies>
 	</metadata>
 </package>

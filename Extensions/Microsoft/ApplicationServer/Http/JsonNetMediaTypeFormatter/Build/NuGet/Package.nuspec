@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Microsoft.ApplicationServer.Http.JsonNetMediaTypeFormatter</id>
-		<version>1.0.0.1</version>
+		<version>1.0.0.2</version>
 		<title>WebApi Json.NET MediaTypeFormatter</title>
 		<description>A Json.NET-based MediaTypeFormatter for the WebApi. To use: 
 var config = HttpHostConfiguration.Create();

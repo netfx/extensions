@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="HttpResponseException.cs" />
     <Compile Include="IEntityFormatter.cs" />
+    <Compile Include="JsonNetEntityFormatter.cs" />
+    <Compile Include="JsonNetFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HttpEntityClient.cs" />
   </ItemGroup>
