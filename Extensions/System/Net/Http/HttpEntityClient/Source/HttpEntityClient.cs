@@ -75,6 +75,17 @@ namespace System.Net.Http.Entity
 		public Uri BaseAddress { get; private set; }
 
 		/// <summary>
+		/// Deletes the specified entity.
+		/// </summary>
+		public void Delete<T>(string id)
+		{
+			var response = TryDelete<T>(id);
+
+			if (!response.IsSuccessStatusCode)
+				throw new HttpResponseException(response);
+		}
+
+		/// <summary>
 		/// Gets the entity with the given id.
 		/// </summary>
 		/// <exception cref="HttpResponseException">The request did not succeed.</exception>
@@ -159,13 +170,23 @@ namespace System.Net.Http.Entity
 		}
 
 		/// <summary>
-		/// Puts the specified entity to the service.
+		/// Tries to put the specified entity to the service.
 		/// </summary>
 		public HttpResponseMessage TryPut<T>(string id, T entity)
 		{
 			var resource = this.convention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource + "/" + id);
 			return this.http.Put(uri, this.formatter.ToContent(entity));
+		}
+
+		/// <summary>
+		/// Tries to delete the specified entity.
+		/// </summary>
+		public HttpResponseMessage TryDelete<T>(string id)
+		{
+			var resource = this.convention.GetResourceName(typeof(T));
+			var uri = new Uri(this.BaseAddress, resource + "/" + id);
+			return this.http.Delete(uri);
 		}
 
 		/// <summary>

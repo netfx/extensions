@@ -50,6 +50,33 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenDeletingEntity_ThenGetFails()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+
+				client.Delete<Product>("1");
+				var exception = Assert.Throws<HttpResponseException>(() => client.Get<Product>("25"));
+
+				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+			}
+		}
+
+		[Fact]
+		public void WhenDeleteFails_ThenThrows()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+
+				var exception = Assert.Throws<HttpResponseException>(() => client.Delete<Product>("25"));
+
+				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+			}
+		}
+
+		[Fact]
 		public void WhenPostFails_ThenThrows()
 		{
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
@@ -86,7 +113,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-
+				// We're putting a null which is invalid.
 				var exception = Assert.Throws<HttpResponseException>(() => client.Put<Product>("25", null));
 
 				Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);

@@ -59,18 +59,18 @@ public class TestService
 		return new HttpResponseMessage<Product>(product);
 	}
 
-	//[WebInvoke(Method = "DELETE", UriTemplate = "{id}")]
-	//public HttpResponseMessage Delete(int id)
-	//{
-	//    var product = this.products.FirstOrDefault(x => x.Id == id);
+	[WebInvoke(Method = "DELETE", UriTemplate = "{id}")]
+	public HttpResponseMessage Delete(int id)
+	{
+		var product = this.products.FirstOrDefault(x => x.Id == id);
 
-	//    if (product == null)
-	//        return new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.NotFound, "Not found");
+		if (product == null)
+			return new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.NotFound, "Not found");
 
-	//    this.products.Remove(product);
+		this.products.Remove(product);
 
-	//    return new HttpResponseMessage(System.Net.HttpStatusCode.OK, "Deleted");
-	//}
+		return new HttpResponseMessage(System.Net.HttpStatusCode.OK, "Deleted");
+	}
 
 	[WebInvoke(Method = "POST", UriTemplate = "")]
 	public HttpResponseMessage Create(Product product)
