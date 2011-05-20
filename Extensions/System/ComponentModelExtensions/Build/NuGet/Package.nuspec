@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.ComponentModelExtensions</id>
-		<version>1.0.0.2</version>
+		<version>1.0.0.4</version>
 		<title>ComponentModelExtensions</title>
 		<description>ComponentModelExtensions</description>
 		<authors>Daniel</authors>
@@ -12,7 +12,6 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx [other]</tags>
 		<dependencies>
-			<dependency id="netfx-System.ServiceProvider" version="1.0.0.6"/>
 		</dependencies>
 	</metadata>
 </package>
