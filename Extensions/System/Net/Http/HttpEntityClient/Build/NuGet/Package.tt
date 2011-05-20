@@ -10,9 +10,9 @@
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
 		<version><#= version #></version>
-		<title>HttpEntityClient</title>
-		<description>HttpEntityClient</description>
-		<authors>Daniel</authors>
+		<title>HttpEntityClient: strong-typed REST HTTP</title>
+		<description>Builds on top of HttpClient and the HttpClientQuery&lt;T&gt; nugets to provide the easiest way to interface with typed REST services that are modeled around entities.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
@@ -21,32 +21,32 @@
 		<dependencies>
 			<dependency id="HttpClient" version="0.3.0"/>
 			<dependency id="Newtonsoft.Json" version="4.0.2" />
-			<dependency id="netfx-Guard" version="1.2.0.0" />
+			<dependency id="netfx-System.Net.Http.HttpClientQuery" version="1.0.0.3" />
 		</dependencies>
 	</metadata>
 </package>
 <#+
-private Version IncrementCurrentVersion()
-{
-	var currentSpec = this.Host.ResolvePath(".\\Package.nuspec");
-	var version = new Version("1.0.0.0");
-	try
-	{
-		var spec = XDocument.Load(currentSpec);
-		var ns = XNamespace.Get("http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
-		version = new Version(spec.Root.Element(ns + "metadata").Element(ns + "version").Value);
-	}
-	catch (XmlException e)
-	{
-		this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[]
+	private Version IncrementCurrentVersion()
+                                                                                                          {
+	                                                                                                         var currentSpec = this.Host.ResolvePath(".\\Package.nuspec");
+	                                                                                                        var version = new Version("1.0.0.0");
+	                                                                                                       try
+	                                                                                                      {
+		                                                                                                    var spec = XDocument.Load(currentSpec);
+		                                                                                                  var ns = XNamespace.Get("http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
+		                                                                                                version = new Version(spec.Root.Element(ns + "metadata").Element(ns + "version").Value);
+	                                                                                              }
+	                                                                                                 catch (XmlException e)
+	                                                                                                {
+		                                                                                              this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[]
 		{
 			new System.CodeDom.Compiler.CompilerError(this.Host.ResolvePath("."), 20, 9, "0", 
 				"There was an error trying to read the existing nuspec version to increment it: " + e.ToString()) 															
 		}));
-	}
+	                                                                                    }
 
-	version = new Version(version.Major, version.Minor, version.Build, version.Revision + 1);
+	                                                                                        version = new Version(version.Major, version.Minor, version.Build, version.Revision + 1);
 
-	return version;
-}
+	                                                                                      return version;
+                                                                                     }
 #>

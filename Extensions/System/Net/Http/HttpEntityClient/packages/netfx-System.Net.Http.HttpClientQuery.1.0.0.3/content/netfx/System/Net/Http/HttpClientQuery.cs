@@ -22,25 +22,22 @@ using System.Net.Http;
 using System.Linq.Expressions;
 using System.Data.Services.Client;
 
-namespace System.Net.Http
+/// <summary>
+/// Provides the Query{T} extension method to retrieve 
+/// a response from a filter query over HTTP client.
+/// </summary>
+internal static class HttpClientQuery
 {
 	/// <summary>
-	/// Provides the Query{T} extension method to retrieve 
-	/// a response from a filter query over HTTP client.
+	/// Returns the response from querying the given resource with the given filter.
 	/// </summary>
-	internal static class HttpClientQuery
+	public static HttpResponseMessage Query<T>(this HttpClient client, string resourcePath, Expression<Func<T, bool>> filter)
 	{
-		/// <summary>
-		/// Returns the response from querying the given resource with the given filter.
-		/// </summary>
-		public static HttpResponseMessage Query<T>(this HttpClient client, string resourcePath, Expression<Func<T, bool>> filter)
-		{
-			var context = new DataServiceContext(client.BaseAddress);
-			var query = (DataServiceQuery)context.CreateQuery<T>(resourcePath).Where(filter);
+		var context = new DataServiceContext(client.BaseAddress);
+		var query = (DataServiceQuery)context.CreateQuery<T>(resourcePath).Where(filter);
 
-			var uri = new Uri(query.RequestUri.ToString().Replace("()?$", "?$"));
+		var uri = new Uri(query.RequestUri.ToString().Replace("()?$", "?$"));
 
-			return client.Get(uri);
-		}
+		return client.Get(uri);
 	}
 }

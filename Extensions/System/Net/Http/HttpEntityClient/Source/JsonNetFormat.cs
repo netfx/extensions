@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-/// <summary>
-/// Json format to use with <see cref="JsonNetEntityFormatter"/>.
-/// </summary>
-internal enum JsonNetFormat
+namespace System.Net.Http.Entity
 {
 	/// <summary>
-	/// Json Text.
+	/// Json format to use with <see cref="JsonNetEntityFormatter"/>.
 	/// </summary>
-	Json,
+	internal enum JsonNetFormat
+	{
+		/// <summary>
+		/// Json text, that translates to a "text/json" content type.
+		/// </summary>
+		Json,
 
-	/// <summary>
-	/// Binary Json.
-	/// </summary>
-	Bson,
+		/// <summary>
+		/// Binary json, that translates to a "application/bson" content type.
+		/// </summary>
+		Bson,
+	}
 }

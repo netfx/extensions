@@ -64,6 +64,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Web" />
@@ -76,6 +78,8 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\Net\Http\HttpClientQuery.cs" />
+    <Compile Include="PluralizerSpec.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>

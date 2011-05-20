@@ -8,7 +8,7 @@
     <ProjectGuid>{F079DBE1-527A-4710-BFF3-05562FF4156E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Source</RootNamespace>
+    <RootNamespace>System.Net.Http.Entity</RootNamespace>
     <AssemblyName>Source</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -40,15 +40,21 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.Services.Client" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpEntityQuery.cs" />
     <Compile Include="HttpResponseException.cs" />
     <Compile Include="IEntityFormatter.cs" />
+    <Compile Include="IEntityResourceConvention.cs" />
     <Compile Include="JsonNetEntityFormatter.cs" />
     <Compile Include="JsonNetFormat.cs" />
+    <Compile Include="netfx\System\Net\Http\HttpClientQuery.cs" />
+    <Compile Include="PluralizerResourceConvention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HttpEntityClient.cs" />
+    <Compile Include="PluralizerResourceFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
