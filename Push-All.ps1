@@ -1,6 +1,4 @@
-# Locate the nuget command line
-$nuget = Get-ChildItem -Filter NuGet.exe -Recurse
-
+$nuget = Get-ChildItem NuGet.exe
 $dropDir = [System.IO.Directory]::CreateDirectory("Drop") 
 $apiKey = $apiKey = Get-Content apikey.txt
 
@@ -10,7 +8,7 @@ foreach ($package in (Get-ChildItem Drop -Filter *.nupkg))
 	$progress++
 
 	Write-Progress -Activity "Publishing NETFx" -Status ("uploading package " + $package.Name) -PercentComplete $progress
-	&($nuget.FullName) "push" "-source" $package.FullName $apiKey
+	&($nuget.FullName) "push" -source http://packages.nuget.org/v1/ $package.FullName $apiKey
 }
 
 Write-Progress -Activity "Publishing NETFx" -Status "Completed" -Completed $true

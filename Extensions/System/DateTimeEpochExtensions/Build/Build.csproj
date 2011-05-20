@@ -27,13 +27,28 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuGet\Package.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="NuGet\Package.nuspec">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Package.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NuGet\Package.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Package.nuspec</LastGenOutput>
+    </None>
+    <None Include="Pack.cmd">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pack.tt</DependentUpon>
+    </None>
+    <None Include="Pack.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pack.cmd</LastGenOutput>
+    </None>
     <None Include="Push.ps1">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -43,15 +58,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Push.ps1</LastGenOutput>
     </Compile>
-    <None Include="Release.cmd">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Release.tt</DependentUpon>
-    </None>
-    <None Include="Release.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Release.cmd</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet\lib\" />
@@ -84,5 +90,6 @@
       <Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
     </AssignTargetPath>
     <Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
+    <Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 </Project>

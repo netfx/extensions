@@ -67,6 +67,15 @@
     <Folder Include="NuGet\lib\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Push.ps1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Push.tt</DependentUpon>
+    </None>
+    <None Include="Push.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Push.ps1</LastGenOutput>
+    </None>
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Assertions</id>
-		<version>1.0.0.5</version>
+		<version>1.0.0.7</version>
 		<title>xUnit-like assertion for MSTest.</title>
 		<description>Use code snippet 'assertion' to get the declaration at the top of the file. 
 Then just use Assert.Equal(...) and the like.			

@@ -27,7 +27,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuGet\content\Readme.txt" />
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -51,6 +50,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NuGet\content\" />
     <Folder Include="NuGet\lib\" />
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +63,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Push.ps1</LastGenOutput>
     </None>
-    <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0">

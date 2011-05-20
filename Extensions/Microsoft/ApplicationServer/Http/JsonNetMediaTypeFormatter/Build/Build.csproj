@@ -42,6 +42,7 @@
     <Content Include="NuGet\Package.nuspec">
       <DependentUpon>Package.tt</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>

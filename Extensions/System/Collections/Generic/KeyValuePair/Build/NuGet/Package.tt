@@ -1,0 +1,17 @@
+﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
+<#@ Output Extension=".nuspec" #>
+<#@ Include File="..\..\..\..\..\..\..\Package.ttinclude" #>
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Collections.Generic.KeyValuePair</id>
+		<version><#= version #></version>
+		<title>KeyValuePair.Create with type inference</title>
+		<description>Provides the missing KeyValuePair.Create static method, following the same approach as the Tuple.Create one.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<tags>netfx system collections generic</tags>
+	</metadata>
+</package>

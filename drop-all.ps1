@@ -3,7 +3,7 @@
 $ns = [System.Xml.Linq.XNamespace]::Get("http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd")
 
 # Locate the nuget command line
-$nuget = Get-ChildItem -Filter NuGet.exe -Recurse
+$nuget = Get-ChildItem NuGet.exe
 $msbuild = [System.Environment]::ExpandEnvironmentVariables("%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe")
 
 Write-Progress -Activity "Deploying NETFx" -Status "Cleaning drop location"

@@ -53,6 +53,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>
       <SubType>Designer</SubType>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Content>
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>

@@ -48,11 +48,3 @@ param($installPath, $toolsPath, $package, $project)
 		uninstall-package netfx-Microsoft.IdentityModel.Swt
 		return
 	}
-	
-	$project.Object.References.Add("System.Configuration")
-	$project.Object.References.Add("System.IdentityModel")
-	$project.Object.References.Add("System.ServiceModel")
-	$project.Object.References.Add("System.ServiceModel.Web")
-	$project.Object.References.Add("System.Web")
-	$project.Object.References.Add("System.Xml")
-	$project.Object.References.Add("Microsoft.IdentityModel")

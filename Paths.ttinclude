@@ -1,0 +1,60 @@
+<#@ Assembly Name="System.Core" #>
+<#@ Import Namespace="System.IO" #>
+<#@ Import Namespace="System.Collections.Generic" #>
+<#@ Import Namespace="System.Linq" #>
+<#
+/*
+ * This template renders a current-path relative version of the batch file Release.cmd 
+ * that takes into account the location of the root netfx folder, as well as the location 
+ * of the currently installed version of NuGet command line tool package.
+*/
+currentDir = new DirectoryInfo(this.Host.ResolvePath(""));
+
+// First locate netfx root directory.
+rootDir = TraverseUp(currentDir).FirstOrDefault(d => d.EnumerateFileSystemInfos("netfx.txt").Any());
+if (rootDir == null)
+    return LogError("Failed to locate file 'netfx.txt' from an ancestor folder of '" + currentDir.FullName + "'.", 18, 0);
+
+// Next, locate the NuGet command line package
+nugetCmd = new FileInfo(Path.Combine(rootDir.FullName, "NuGet.exe"));
+
+pathToRoot = currentDir.FullName
+    .Replace(rootDir.FullName, "")
+    .Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+    .Aggregate("", (path, current) => path += "..\\");
+
+pathToNuGetCmd = pathToRoot;
+pathToPackageBaseDir =
+    nugetCmd.Directory.FullName.Replace(rootDir.FullName, "")
+    .Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+    .Aggregate("", (path, current) => path += "..\\") +
+    currentDir.FullName.Replace(rootDir.FullName, "").Substring(1) + "\\bin";
+#>
+<#+
+	DirectoryInfo currentDir;
+    FileSystemInfo rootDir;
+    FileInfo nugetCmd;
+    string pathToRoot;
+    string pathToNuGetCmd;
+    string pathToPackageBaseDir;
+    
+// Utility methods
+IEnumerable<DirectoryInfo> TraverseUp(DirectoryInfo dir)
+{
+    var current = dir;
+    while (current != null)
+    {
+        yield return current;
+        current = current.Parent;
+    }
+}
+
+string LogError(string message, int line, int column)
+{
+    this.Host.LogErrors(new System.CodeDom.Compiler.CompilerErrorCollection(new[] 
+    {
+        new System.CodeDom.Compiler.CompilerError(this.Host.TemplateFile, line, column, "0", message)
+    }));
+    return "";
+}
+#>

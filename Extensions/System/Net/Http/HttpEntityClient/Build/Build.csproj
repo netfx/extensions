@@ -41,11 +41,9 @@
       <DependentUpon>Package.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NuGet\License.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NuGet\tools\install.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Pack.cmd">
@@ -69,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet\lib\" />
+    <Folder Include="NuGet\tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
