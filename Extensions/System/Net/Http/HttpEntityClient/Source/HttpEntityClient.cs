@@ -101,18 +101,18 @@ namespace System.Net.Http.Entity
 		}
 
 		/// <summary>
-		/// Posts the specified entity and retrieves the new id 
-		/// that was assigned by the service from the Location header, if any.
+		/// Posts the specified entity and returns the state 
+		/// persisted by the service.
 		/// </summary>
-		public string Post<T>(T entity)
+		public T Post<T>(T entity)
 		{
-			var id = default(string);
-			var response = TryPost<T>(entity, out id);
+			var saved = default(T);
+			var response = TryPost<T>(entity, out saved);
 
 			if (response.StatusCode != HttpStatusCode.Created)
 				throw new HttpResponseException(response);
 
-			return id;
+			return saved;
 		}
 
 		/// <summary>
@@ -149,22 +149,15 @@ namespace System.Net.Http.Entity
 		/// Tries to posts the specified entity and retrieves the new id 
 		/// that was assigned by the service from the Location header, if any.
 		/// </summary>
-		public HttpResponseMessage TryPost<T>(T entity, out string id)
+		public HttpResponseMessage TryPost<T>(T entity, out T saved)
 		{
 			var resource = this.convention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource);
 			var response = this.http.Post(uri, this.formatter.ToContent(entity));
-			id = default(string);
+			saved = default(T);
 
 			if (response.StatusCode == HttpStatusCode.Created)
-			{
-				if (response.Headers.Location.OriginalString.StartsWith(resource) &&
-					response.Headers.Location.OriginalString.Length > resource.Length)
-					id = response.Headers.Location.OriginalString.Substring(resource.Length + 1);
-				else
-					// Can't determine new Id.
-					id = string.Empty;
-			}
+				saved = this.formatter.FromContent<T>(response.Content);
 
 			return response;
 		}

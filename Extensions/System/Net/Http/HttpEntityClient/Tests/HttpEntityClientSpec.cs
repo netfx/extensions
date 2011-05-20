@@ -37,13 +37,10 @@ namespace Tests
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Owner = new User { Id = 1, Name = "kzu" } };
 
-				var id = client.Post(product);
+				var saved = client.Post(product);
 
-				Assert.Equal("4", id);
+				Assert.Equal(4, saved.Id);
 
-				var saved = client.Get<Product>("4");
-
-				Assert.Equal(saved.Id, int.Parse(id));
 				Assert.Equal(saved.Owner.Id, product.Owner.Id);
 				Assert.Equal(saved.Owner.Name, product.Owner.Name);
 			}

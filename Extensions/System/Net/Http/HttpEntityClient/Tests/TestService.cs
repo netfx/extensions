@@ -80,7 +80,7 @@ public class TestService
 
 		this.products.Add(product);
 
-		var response = new HttpResponseMessage(System.Net.HttpStatusCode.Created, "Created");
+		var response = new HttpResponseMessage<Product>(product, System.Net.HttpStatusCode.Created);
 		response.Headers.Location = new Uri(resourceName + "/" + id.ToString(), UriKind.Relative);
 
 		return response;
