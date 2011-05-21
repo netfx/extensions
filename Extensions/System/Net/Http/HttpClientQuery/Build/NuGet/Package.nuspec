@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpClientQuery</id>
-		<version>1.0.0.13</version>
+		<version>1.0.0.14</version>
 		<title>HttpClient.Query&lt;T&gt;</title>
 		<description>Allows querying WCF Web Api endpoints that expose IQueryable&lt;T&gt;, with full query support for nested relationships, etc.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

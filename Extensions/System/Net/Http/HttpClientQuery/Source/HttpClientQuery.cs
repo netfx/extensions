@@ -33,10 +33,13 @@ namespace System.Net.Http
 		/// <summary>
 		/// Returns the response from querying the given resource with the given filter.
 		/// </summary>
-		public static HttpResponseMessage Query<T>(this HttpClient client, string resourcePath, Expression<Func<T, bool>> filter)
+		public static HttpResponseMessage Query<T>(this HttpClient client, string resourcePath, Expression<Func<T, bool>> predicate, int skip = 0, int take = 25)
 		{
 			var context = new DataServiceContext(client.BaseAddress);
-			var query = (DataServiceQuery)context.CreateQuery<T>(resourcePath).Where(filter);
+			var query = (DataServiceQuery)context.CreateQuery<T>(resourcePath)
+				.Where(predicate)
+				.Skip(skip)
+				.Take(take);
 
 			var uri = new Uri(query.RequestUri.ToString().Replace("()?$", "?$"));
 

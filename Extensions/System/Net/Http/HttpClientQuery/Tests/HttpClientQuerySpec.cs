@@ -33,6 +33,28 @@ internal class HttpClientQuerySpec
 	}
 
 	[Fact]
+	public void WhenPaging_ThenGetsResponse()
+	{
+		var config = HttpHostConfiguration.Create();
+		config.Configuration.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
+
+		using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", config))
+		{
+			var client = new HttpClient("http://localhost:20000");
+			client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/json"));
+
+			var response = client.Query<Product>("products", x => x.Id <= 2, skip: 1, take: 1);
+
+			Assert.True(response.IsSuccessStatusCode);
+
+			var products = new JsonSerializer().Deserialize<List<Product>>(new JsonTextReader(new StreamReader(response.Content.ContentReadStream)));
+
+			Assert.Equal(1, products.Count);
+			Assert.Equal(2, products[0].Id);
+		}
+	}
+
+	[Fact]
 	public void WhenQueryingSubEntity_ThenGetsResponse()
 	{
 		var config = HttpHostConfiguration.Create();
