@@ -3,8 +3,10 @@
 	<Identifier Id="netfx.codeplex.com">
 		<Name>NETFx Contributor</Name>
 		<Author>Clarius Consulting</Author>
-		<Version>1.3</Version>
-		<Description xml:space="preserve">Templates for contributors to the open source and lightweight code reuse project NETFx.</Description>
+		<Version>1.4</Version>
+		<Description xml:space="preserve">Templates for contributors to the open source and lightweight code reuse project NETFx. 
+		
+Requires the VSSDK as it uses T4 templates.</Description>
 		<Locale>1033</Locale>
 		<MoreInfoUrl>http://netfx.codeplex.com</MoreInfoUrl>
 		<License>EULA.rtf</License>
@@ -14,7 +16,6 @@
 		<SupportedProducts>
 			<VisualStudio Version="10.0">
 				<Edition>Pro</Edition>
-				<Edition>VCSExpress</Edition>
 			</VisualStudio>
 		</SupportedProducts>
 		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />

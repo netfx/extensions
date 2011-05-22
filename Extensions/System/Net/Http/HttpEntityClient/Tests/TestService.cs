@@ -20,6 +20,7 @@ public class TestService
 		{
 			new Product
 			{
+				Title = "A",
 				Id = 1,
 				Owner = new User
 				{
@@ -29,6 +30,7 @@ public class TestService
 			}, 
 			new Product
 			{
+				Title = "D",
 				Id = 2,
 				Owner = new User
 				{
@@ -38,6 +40,7 @@ public class TestService
 			}, 
 			new Product
 			{
+				Title = "B",
 				Id = 3,
 				Owner = new User
 				{
@@ -86,21 +89,6 @@ public class TestService
 		return response;
 	}
 
-	//[WebInvoke(Method = "POST", UriTemplate = "{id}")]
-	//public HttpResponseMessage Update(int id, Product product)
-	//{
-	//    var existing = this.products.FirstOrDefault(x => x.Id == id);
-
-	//    if (existing == null)
-	//        return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound, "Not found");
-
-	//    product.Id = id;
-	//    this.products.Remove(existing);
-	//    this.products.Add(product);
-
-	//    return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted, "Updated");
-	//}
-
 	[WebInvoke(Method = "PUT", UriTemplate = "{id}")]
 	public HttpResponseMessage CreateOrUpdate(int id, Product product)
 	{
@@ -121,7 +109,7 @@ public class TestService
 	}
 
 	[WebGet(UriTemplate = "")]
-	public IQueryable<Product> All()
+	public IQueryable<Product> Query()
 	{
 		return this.products.AsQueryable();
 	}
@@ -129,6 +117,7 @@ public class TestService
 
 public class Product
 {
+	public string Title { get; set; }
 	public int Id { get; set; }
 	public User Owner { get; set; }
 }

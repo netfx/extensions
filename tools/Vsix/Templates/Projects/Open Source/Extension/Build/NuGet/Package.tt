@@ -1,6 +1,6 @@
 ﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
 <#@ Output Extension=".nuspec" #>
-<#@ Include File="$pathtoroot$Package.ttinclude" #>
+<#@ Include File="$pathtoroot$..\Package.ttinclude" #>
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>

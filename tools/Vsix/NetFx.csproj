@@ -40,7 +40,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\AddSourceReferenceWizard.cs" />
-    <Compile Include="Templates\Projects\Open Source\Extension\AddSourceLinkWizard.cs" />
+    <Compile Include="Templates\Projects\Open Source\Extension\MoveSourceToPathWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionTitleSuggestion.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionMetadataWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\SetExtensionMetadataWizard.cs" />

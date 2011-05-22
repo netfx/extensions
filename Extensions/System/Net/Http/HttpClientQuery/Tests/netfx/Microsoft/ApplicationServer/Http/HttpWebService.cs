@@ -21,6 +21,24 @@ using System.Text;
 using Microsoft.ApplicationServer.Http.Description;
 using Microsoft.ApplicationServer.Http;
 using Microsoft.ApplicationServer.Http.Activation;
+using System.Net.Http;
+using System.Collections.Concurrent;
+
+/// <summary>
+/// Factory class for HTTP web services.
+/// </summary>
+internal static class HttpWebService
+{
+	/// <summary>
+	/// Creates an HTTP web service using the given instance to run it, and the specified 
+	/// service configuration.
+	/// </summary>
+	public static HttpWebService<TService> Create<TService>(TService serviceInstance, string serviceBaseUrl, string serviceResourcePath, IHttpHostConfigurationBuilder serviceConfiguration = null)
+		where TService : class
+	{
+		return new HttpWebService<TService>(serviceBaseUrl, serviceResourcePath, serviceConfiguration, serviceInstance);
+	}
+}
 
 /// <summary>
 /// Instantiates the host for the given service, and closes it on Dispose.
@@ -33,7 +51,8 @@ using Microsoft.ApplicationServer.Http.Activation;
 /// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
 /// </code>
 /// </remarks>
-public class HttpWebService<TService> : IDisposable
+internal class HttpWebService<TService> : IDisposable
+	where TService : class
 {
 	private HttpServiceHost serviceHost;
 	private Uri serviceUri;
@@ -43,13 +62,51 @@ public class HttpWebService<TService> : IDisposable
 	/// </summary>
 	/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
 	/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
-	/// <param name="configuration">The configuration for the service.</param>
-	public HttpWebService(string serviceBaseUrl, string serviceResourcePath, IHttpHostConfigurationBuilder configuration)
+	/// <param name="serviceConfiguration">The configuration for the service.</param>
+	/// <param name="cacheServiceInstance">Whether to cache the service instance created by the configured 
+	/// resource factory across HTTP requests.</param>
+	public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
+		bool cacheServiceInstance,
+		IHttpHostConfigurationBuilder serviceConfiguration = null)
+		: this(serviceBaseUrl, serviceResourcePath, cacheServiceInstance, serviceConfiguration, null)
+	{
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="HttpWebService&lt;TService&gt;"/> class.
+	/// </summary>
+	/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
+	/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
+	/// <param name="serviceConfiguration">The configuration for the service.</param>
+	/// <param name="serviceInstance">The optional service instance. If not specified, the default resource factory 
+	/// on the configuration will be invoked. Otherwise, a single-instance resource factory will be setup automatically 
+	/// to return this instance to satisfy HTTP requests.</param>
+	public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
+		IHttpHostConfigurationBuilder serviceConfiguration = null,
+		TService serviceInstance = null)
+		: this(serviceBaseUrl, serviceResourcePath, false, serviceConfiguration, serviceInstance)
+	{
+	}
+
+	private HttpWebService(
+		string serviceBaseUrl,
+		string serviceResourcePath,
+		bool cacheServiceInstance,
+		IHttpHostConfigurationBuilder serviceConfiguration,
+		TService serviceInstance)
 	{
 		this.BaseUri = new Uri(serviceBaseUrl);
 		this.serviceUri = new Uri(new Uri(serviceBaseUrl), serviceResourcePath);
 
-		this.serviceHost = new HttpConfigurableServiceHost(typeof(TService), configuration, this.serviceUri);
+		if (serviceConfiguration == null)
+			serviceConfiguration = HttpHostConfiguration.Create();
+
+		if (serviceInstance != null)
+			serviceConfiguration.SetResourceFactory(new SingletonResourceFactory(serviceInstance));
+		else if (cacheServiceInstance)
+			serviceConfiguration.SetResourceFactory(new CachingResourceFactory(serviceConfiguration.Configuration.InstanceFactory));
+
+		this.serviceHost = new HttpConfigurableServiceHost(typeof(TService), serviceConfiguration, this.serviceUri);
 		this.serviceHost.Open();
 	}
 
@@ -68,5 +125,45 @@ public class HttpWebService<TService> : IDisposable
 	public void Dispose()
 	{
 		this.serviceHost.Close();
+	}
+
+	public class CachingResourceFactory : IResourceFactory
+	{
+		private ConcurrentDictionary<Type, object> cachedTypes = new ConcurrentDictionary<Type, object>();
+		private IResourceFactory originalFactory;
+
+		public CachingResourceFactory(IResourceFactory originalFactory)
+		{
+			this.originalFactory = originalFactory;
+		}
+
+		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
+		{
+			return cachedTypes.GetOrAdd(serviceType, type => this.originalFactory.GetInstance(serviceType, instanceContext, request));
+		}
+
+		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
+		{
+			// We never release, as we're caching it.
+		}
+	}
+
+	private class SingletonResourceFactory : IResourceFactory
+	{
+		private object serviceInstance;
+
+		public SingletonResourceFactory(object serviceInstance)
+		{
+			this.serviceInstance = serviceInstance;
+		}
+
+		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
+		{
+			return this.serviceInstance;
+		}
+
+		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
+		{
+		}
 	}
 }

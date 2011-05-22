@@ -54,7 +54,7 @@ namespace Tests
 				var client = new HttpEntityClient(ws.BaseUri);
 
 				client.Delete<Product>("1");
-				var exception = Assert.Throws<HttpResponseException>(() => client.Get<Product>("25"));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>("25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -67,7 +67,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpResponseException>(() => client.Delete<Product>("25"));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Delete<Product>("25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -80,7 +80,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpResponseException>(() => client.Post<Product>(null));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Post<Product>(null));
 
 				Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
 			}
@@ -111,7 +111,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				// We're putting a null which is invalid.
-				var exception = Assert.Throws<HttpResponseException>(() => client.Put<Product>("25", null));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Put<Product>("25", null));
 
 				Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
 			}
@@ -140,7 +140,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpResponseException>(() => client.Get<Product>("25"));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>("25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -198,6 +198,33 @@ namespace Tests
 				var products = client.Query<Product>().Where(x => x.Owner.Name == "foo").ToList();
 
 				Assert.Equal(0, products.Count);
+			}
+		}
+
+		[Fact]
+		public void WhenSkipTakeOnly_ThenReturnsSingleElement()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+				var products = client.Query<Product>().Skip(1).Take(1).ToList();
+
+				Assert.Equal(1, products.Count);
+				Assert.Equal(2, products[0].Id);
+			}
+		}
+
+		[Fact]
+		public void WhenOrderByTake_ThenReturnsOrdered()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+				var products = client.Query<Product>().OrderBy(x => x.Title).Take(2).ToList();
+
+				Assert.Equal(2, products.Count);
+				Assert.Equal("A", products[0].Title);
+				Assert.Equal("B", products[1].Title);
 			}
 		}
 

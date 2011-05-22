@@ -6,8 +6,17 @@
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
 		<version><#= version #></version>
-		<title>HttpEntityClient: strong-typed Linq to REST</title>
-		<description>Builds on top of HttpClient and the HttpClientQuery&lt;T&gt; nugets to provide the easiest way to interface with typed REST services that are modeled around entities.</description>
+		<title>HttpEntityClient: strong-typed Linq to Web API</title>
+		<description xml:space="preserve">Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
+
+Example:
+var products = client
+	.Query&lt;Product&gt;()
+	.OrderBy(x => x.Downloads)
+	.Skip(25)
+	.Take(25)
+	.ToList();	
+</description>
 		<summary>Simple CRUD + Query typed HTTP client</summary>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -18,7 +27,7 @@
 		<dependencies>
 			<dependency id="HttpClient" version="0.3.0"/>
 			<dependency id="Newtonsoft.Json" version="4.0.2" />
-			<dependency id="netfx-System.Net.Http.HttpClientQuery" version="1.0.0.3" />
+			<dependency id="netfx-Reflector" version="1.0.0.7" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Data.Services.Client" targetFramework="net40"/>

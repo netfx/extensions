@@ -1,23 +1,23 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
-  <TemplateData>
-    <Name>Build</Name>
-    <Description>
-    </Description>
-    <ProjectType>CSharp</ProjectType>
-    <ProjectSubType>
-    </ProjectSubType>
-    <SortOrder>1000</SortOrder>
-    <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>Build</DefaultName>
-    <ProvideDefaultName>true</ProvideDefaultName>
-    <LocationField>Enabled</LocationField>
-    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
-  </TemplateData>
-  <TemplateContent>
-    <Project TargetFileName="Build.csproj" File="Build.csproj" ReplaceParameters="true">
-      <Folder Name="NuGet" TargetFolderName="NuGet">
-        <Folder Name="content" TargetFolderName="content" />
-        <Folder Name="lib" TargetFolderName="lib" />
+	<TemplateData>
+		<Name>Build</Name>
+		<Description>
+		</Description>
+		<ProjectType>CSharp</ProjectType>
+		<ProjectSubType>
+		</ProjectSubType>
+		<SortOrder>1000</SortOrder>
+		<CreateNewFolder>true</CreateNewFolder>
+		<DefaultName>Build</DefaultName>
+		<ProvideDefaultName>true</ProvideDefaultName>
+		<LocationField>Enabled</LocationField>
+		<EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+	</TemplateData>
+	<TemplateContent>
+		<Project TargetFileName="Build.csproj" File="Build.csproj" ReplaceParameters="true">
+			<Folder Name="NuGet" TargetFolderName="NuGet">
+				<Folder Name="content" TargetFolderName="content" />
+				<Folder Name="lib" TargetFolderName="lib" />
 				<Folder Name="tools" TargetFolderName="tools">
 					<ProjectItem ReplaceParameters="false" TargetFileName="init.ps1">init.ps1</ProjectItem>
 					<ProjectItem ReplaceParameters="false" TargetFileName="install.ps1">install.ps1</ProjectItem>
@@ -27,11 +27,11 @@
 				<ProjectItem ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
 				<ProjectItem>License.txt</ProjectItem>
 			</Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="Readme.txt">Readme.txt</ProjectItem>
-			<ProjectItem ReplaceParameters="false" TargetFileName="Pack.tt">Pack.tt</ProjectItem>
+			<ProjectItem ReplaceParameters="true" TargetFileName="Readme.txt">Readme.txt</ProjectItem>
+			<ProjectItem ReplaceParameters="true" TargetFileName="Pack.tt">Pack.tt</ProjectItem>
 			<ProjectItem ReplaceParameters="true" TargetFileName="Push.tt">Push.tt</ProjectItem>
 		</Project>
-  </TemplateContent>
+	</TemplateContent>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetSolutionNameWizard</FullClassName>
@@ -39,9 +39,5 @@
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionMetadataWizard</FullClassName>
-	</WizardExtension>
-	<WizardExtension>
-		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
-		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.AddSourceLinkWizard</FullClassName>
 	</WizardExtension>
 </VSTemplate>

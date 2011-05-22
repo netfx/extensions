@@ -17,6 +17,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 	{
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
+			replacementsDictionary["$targetnamespace$"] = (string)CallContext.GetData("$targetnamespace$");
 			replacementsDictionary["$extensionid$"] = (string)CallContext.GetData("$extensionid$");
 			replacementsDictionary["$extensiontitle$"] = (string)CallContext.GetData("$extensiontitle$");
 			replacementsDictionary["$pathtoroot$"] = (string)CallContext.GetData("$pathtoroot$");

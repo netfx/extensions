@@ -38,6 +38,7 @@
 	<ItemGroup>
 		<Compile Include="Properties\AssemblyInfo.cs"/>
 		<Compile Include="$solutionname$.cs"/>
+		<Folder Include="content"/>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

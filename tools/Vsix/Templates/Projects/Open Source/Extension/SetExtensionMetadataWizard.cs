@@ -39,12 +39,14 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 
 			CallContext.SetData("$pathtoroot$", pathToRoot);
 
-			var identifier = "netfx-" + string.Join(".", targetDir.Parent.FullName
+			var ns = string.Join(".", targetDir.Parent.FullName
 				// We start from the parent directory, as we'll use the $safeprojectname$ to build the identifier later
 				.Replace(extensionsRoot.FullName, "")
 				.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
 				.Concat(new[] { replacementsDictionary["$projectname$"] }));
+			var identifier = "netfx-" + ns;
 
+			CallContext.SetData("$targetnamespace$", ns.Substring(0, ns.LastIndexOf('.')));
 			CallContext.SetData("$extensionid$", identifier);
 			CallContext.SetData("$extensiontitle$", ExtensionTitleSuggestion.Suggest(
 				targetDir.Parent.FullName.Replace(extensionsRoot.FullName, ""),
