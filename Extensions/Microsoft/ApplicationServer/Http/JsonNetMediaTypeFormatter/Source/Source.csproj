@@ -37,6 +37,9 @@
     <Reference Include="Microsoft.ApplicationServer.Http">
       <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Http.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ApplicationServer.HttpEnhancements">
+      <HintPath>..\packages\WebApi.Enhancements.0.3.0\lib\40\Microsoft.ApplicationServer.HttpEnhancements.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ApplicationServer.Serialization">
       <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Serialization.dll</HintPath>
     </Reference>
@@ -66,9 +69,10 @@
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="JsonNetMediaTypeFormatter.cs" />
+    <Compile Include="content\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

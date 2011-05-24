@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Microsoft.ApplicationServer.Http.HttpWebService</id>
-		<version>1.1.0.3</version>
+		<version>1.1.0.8</version>
 		<title>HttpWebService&lt;TService&gt; for Testing Services</title>
 		<description>Provides an HttpWebService&lt;TService&gt; disposable class to use in tests to host WebApi services and unit test them</description>
 		<authors>Clarius, Daniel Cazzulino, kzu</authors>
@@ -14,5 +14,9 @@
 		<dependencies>
 			<dependency id="WebApi.Enhancements" version="0.3.0" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40"/>
+			<frameworkAssembly assemblyName="System.ServiceModel.Web" targetFramework="net40"/>
+		</frameworkAssemblies>
 	</metadata>
 </package>

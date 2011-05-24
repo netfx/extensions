@@ -32,8 +32,7 @@ internal class JsonNetMediaTypeFormatterSpec
 
 	private static void TestWithContentType(string contentType, Func<HttpContent, JsonReader> readerFactory)
 	{
-		var config = HttpHostConfiguration.Create();
-		config.Configuration.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
+		var config = HttpHostConfiguration.Create().UseJsonNet();
 
 		using (var webservice = new HttpWebService<TestService>("http://localhost:20000", "test", config))
 		{

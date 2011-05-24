@@ -7,10 +7,9 @@
 		<id>netfx-Microsoft.ApplicationServer.Http.JsonNetMediaTypeFormatter</id>
 		<version><#= version #></version>
 		<title>WebApi Json.NET MediaTypeFormatter</title>
-		<description>A Json.NET-based MediaTypeFormatter for the WebApi. To use: 
-var config = HttpHostConfiguration.Create();
-config.Configuration.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());</description>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<description xml:space="preserve">A Json.NET-based MediaTypeFormatter for the WebApi that can handle text-based Json as well as binary Json (Bson). 
+To use: var config = HttpHostConfiguration.Create().UseJsonNet();</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
@@ -18,6 +17,7 @@ config.Configuration.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMed
 		<tags>netfx wcf webapi http json</tags>
 		<dependencies>
 			<dependency id="WebApi.Core" version="0.3.0" />
+			<dependency id="WebApi.Enhancements" version="0.3.0" />
 			<dependency id="Newtonsoft.Json" version="4.0.2"/>
 			<dependency id="netfx-Guard" version="1.2.0.0" />
 		</dependencies>

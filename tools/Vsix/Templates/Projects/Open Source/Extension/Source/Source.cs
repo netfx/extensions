@@ -19,9 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace $targetnamespace$
+internal static partial class $safesolutionname$
 {
-	internal class $safesolutionname$
-	{
-	}
 }

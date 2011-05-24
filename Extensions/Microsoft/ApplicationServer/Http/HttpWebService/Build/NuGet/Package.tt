@@ -17,5 +17,9 @@
 		<dependencies>
 			<dependency id="WebApi.Enhancements" version="0.3.0" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40"/>
+			<frameworkAssembly assemblyName="System.ServiceModel.Web" targetFramework="net40"/>
+		</frameworkAssemblies>
 	</metadata>
 </package>

@@ -1,0 +1,3 @@
+﻿<#@ Template Debug="true" Hostspecific="true" Language="C#" #>
+<#@ Output Extension=".cmd" Encoding="ASCII" #>
+<#@ Include File="..\..\..\..\..\Pack.ttinclude" #>

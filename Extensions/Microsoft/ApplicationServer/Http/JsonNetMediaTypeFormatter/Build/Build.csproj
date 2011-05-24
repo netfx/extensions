@@ -28,10 +28,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Source\JsonNetMediaTypeFormatter.cs">
-      <Link>NuGet\content\netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="NuGet\Package.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
@@ -43,6 +39,8 @@
       <DependentUpon>Package.tt</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Content>
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>
@@ -64,6 +62,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NuGet\content\" />
     <Folder Include="NuGet\lib\" />
     <Folder Include="NuGet\tools\" />
   </ItemGroup>
@@ -84,12 +83,22 @@
     <Exec Command="RmDir /S /Q $(OutputPath)" ContinueOnError="false" />
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean;Build;" />
-  <Target Name="Build" DependsOnTargets="Clean">
-    <CallTarget Targets="TransformAll" />
-    <AssignTargetPath Files="@(Content)" RootFolder="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
-    </AssignTargetPath>
-    <Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
-    <Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
-  </Target>
+	<Target Name="Build" DependsOnTargets="Clean">
+		<!-- Transforms T4 templates to update versions, package definition, etc. -->
+		<CallTarget Targets="TransformAll" />
+		<!-- Copy these files to the output directory. -->
+		<AssignTargetPath Files="@(Content)" RootFolder="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
+		</AssignTargetPath>
+		<ItemGroup>
+			<DynamicContent Include="..\Source\content\**\*.*" />
+		</ItemGroup>
+		<!-- Bring in as content files everything in the content folder of the Source project. -->
+		<CreateItem Include="@(DynamicContent)" AdditionalMetadata="TargetPath=$([System.Text.RegularExpressions.Regex]::Replace('%(DynamicContent.RelativeDir)', '..\\Source\\content\\', 'NuGet\\content\netfx\\', System.Text.RegularExpressions.RegexOptions.IgnoreCase))%(DynamicContent.Filename)%(DynamicContent.Extension)">
+			<Output ItemName="ContentFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Message Importance="high" Text="TargetPath: %(ContentFiles.TargetPath) - RelativeDir: %(ContentFiles.RelativeDir)" />
+		<Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
+		<Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
+	</Target>
 </Project>

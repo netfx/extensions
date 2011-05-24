@@ -3,7 +3,7 @@
 	<Identifier Id="netfx.codeplex.com">
 		<Name>NETFx Contributor</Name>
 		<Author>Clarius Consulting</Author>
-		<Version>1.4</Version>
+		<Version>1.5.1</Version>
 		<Description xml:space="preserve">Templates for contributors to the open source and lightweight code reuse project NETFx. 
 		
 Requires the VSSDK as it uses T4 templates.</Description>
