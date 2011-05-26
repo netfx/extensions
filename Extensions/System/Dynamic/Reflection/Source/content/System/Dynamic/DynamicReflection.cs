@@ -31,28 +31,28 @@ namespace System.Dynamic
 	/// This class provides the extension methods <see cref="AsReflectionDynamic{object}"/> 
 	/// and <see cref="AsReflectionDynamic{Type}"/> as entry points.
 	/// </summary>
-	internal static class ReflectionDynamic
+	internal static class DynamicReflection
 	{
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given object members.
 		/// </summary>
-		public static dynamic AsReflectionDynamic(this object obj)
+		public static dynamic AsDynamicReflection(this object obj)
 		{
 			if (obj == null)
 				return null;
 
-			return new ReflectionDynamicObject(obj);
+			return new DynamicReflectionObject(obj);
 		}
 
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given type members.
 		/// </summary>
-		public static dynamic AsReflectionDynamic(this Type type)
+		public static dynamic AsDynamicReflection(this Type type)
 		{
 			if (type == null)
 				return null;
 
-			return new ReflectionDynamicObject(type);
+			return new DynamicReflectionObject(type);
 		}
 
 		/// <summary>
@@ -65,20 +65,20 @@ namespace System.Dynamic
 			return new TypeParameter(type);
 		}
 
-		private class ReflectionDynamicObject : DynamicObject
+		private class DynamicReflectionObject : DynamicObject
 		{
 			private static readonly BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
-			private static readonly MethodInfo castMethod = typeof(ReflectionDynamicObject).GetMethod("Cast", BindingFlags.Static | BindingFlags.NonPublic);
+			private static readonly MethodInfo castMethod = typeof(DynamicReflectionObject).GetMethod("Cast", BindingFlags.Static | BindingFlags.NonPublic);
 			private object target;
 			private Type targetType;
 
-			public ReflectionDynamicObject(object target)
+			public DynamicReflectionObject(object target)
 			{
 				this.target = target;
 				this.targetType = target.GetType();
 			}
 
-			public ReflectionDynamicObject(Type type)
+			public DynamicReflectionObject(Type type)
 			{
 				this.target = null;
 				this.targetType = type;
@@ -99,7 +99,7 @@ namespace System.Dynamic
 								instance = FormatterServices.GetSafeUninitializedObject(this.targetType);
 
 							result = Invoke(method, instance, args);
-							result = instance.AsReflectionDynamic();
+							result = instance.AsDynamicReflection();
 						}
 						else
 						{
@@ -116,14 +116,15 @@ namespace System.Dynamic
 
 			private static object Invoke(IInvocable method, object instance, object[] args)
 			{
+				var finalArgs = args.Where(x => !(x is TypeParameter)).ToArray();
 				var refArgs = new Dictionary<int, RefValue>();
 				var outArgs = new Dictionary<int, OutValue>();
 				for (int i = 0; i < method.Parameters.Count; i++)
 				{
 					if (method.Parameters[i].ParameterType.IsByRef)
 					{
-						var refArg = args[i] as RefValue;
-						var outArg = args[i] as OutValue;
+						var refArg = finalArgs[i] as RefValue;
+						var outArg = finalArgs[i] as OutValue;
 						if (refArg != null)
 							refArgs[i] = refArg;
 						else if (outArg != null)
@@ -133,22 +134,22 @@ namespace System.Dynamic
 
 				foreach (var refArg in refArgs)
 				{
-					args[refArg.Key] = refArg.Value.Value;
+					finalArgs[refArg.Key] = refArg.Value.Value;
 				}
 				foreach (var outArg in outArgs)
 				{
-					args[outArg.Key] = null;
+					finalArgs[outArg.Key] = null;
 				}
 
-				var result = method.Invoke(instance, args.Where(x => !(x is TypeParameter)).ToArray());
+				var result = method.Invoke(instance, finalArgs);
 
 				foreach (var refArg in refArgs)
 				{
-					refArg.Value.Value = args[refArg.Key];
+					refArg.Value.Value = finalArgs[refArg.Key];
 				}
 				foreach (var outArg in outArgs)
 				{
-					outArg.Value.Value = args[outArg.Key];
+					outArg.Value.Value = finalArgs[outArg.Key];
 				}
 
 				return result;
@@ -263,7 +264,7 @@ namespace System.Dynamic
 
 				if (binder is InvokeBinder || binder is InvokeMemberBinder)
 				{
-					IEnumerable typeArgs = binder.AsReflectionDynamic().TypeArguments;
+					IEnumerable typeArgs = binder.AsDynamicReflection().TypeArguments;
 					genericTypeArgs.AddRange(typeArgs.Cast<Type>());
 					genericTypeArgs.AddRange(args.OfType<TypeParameter>().Select(x => x.Type));
 				}
@@ -303,7 +304,7 @@ namespace System.Dynamic
 
 			private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, int genericArgs, IEnumerable<IInvocable> candidates)
 			{
-				dynamic dynamicBinder = binder.AsReflectionDynamic();
+				dynamic dynamicBinder = binder.AsDynamicReflection();
 				for (int i = 0; i < args.Length; i++)
 				{
 					var index = i;
@@ -312,7 +313,7 @@ namespace System.Dynamic
 
 					IEnumerable enumerable = dynamicBinder.ArgumentInfo;
 					// The binder has the extra argument info for the "this" parameter at the beginning.
-					if (enumerable.Cast<object>().ToList()[index + 1].AsReflectionDynamic().IsByRef)
+					if (enumerable.Cast<object>().ToList()[index + 1].AsDynamicReflection().IsByRef)
 						candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsByRef);
 
 					if (genericArgs > 0)
@@ -326,9 +327,6 @@ namespace System.Dynamic
 			{
 				if (arg is RefValue || arg is OutValue)
 					return arg.GetType().GetGenericArguments()[0].MakeByRefType();
-				//else if (arg is RefValue)
-				//    return arg.GetType().GetGenericArguments()[0].MakeByRefType();
-
 				return arg.GetType();
 			}
 
@@ -339,7 +337,7 @@ namespace System.Dynamic
 
 				var type = value.GetType();
 				if (type.IsClass && type != typeof(string))
-					return value.AsReflectionDynamic();
+					return value.AsDynamicReflection();
 
 				return value;
 			}

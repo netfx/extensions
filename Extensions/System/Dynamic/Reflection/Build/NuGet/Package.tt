@@ -4,9 +4,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Dynamic.ReflectionDynamic</id>
+		<id>netfx-System.Dynamic.Reflection</id>
 		<version><#= version #></version>
-		<title>Reflection Dynamic: dynamic syntax for reflection code</title>
+		<title>Dynamic Reflection: dynamic syntax for reflection code</title>
 		<description>Provides full reflection capabilities using C# 4.0 dynamic syntax, including invoking and accessing public, internal or private, instance or static members including constructors.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
