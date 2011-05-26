@@ -36,7 +36,10 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\System\Dynamic\OutValue.cs" />
     <Compile Include="content\System\Dynamic\ReflectionDynamic.cs" />
+    <Compile Include="content\System\Dynamic\RefValue.cs" />
+    <Compile Include="content\System\Dynamic\TypeParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

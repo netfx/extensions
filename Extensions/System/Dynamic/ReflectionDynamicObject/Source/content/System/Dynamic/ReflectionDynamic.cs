@@ -31,7 +31,7 @@ namespace System.Dynamic
 	/// This class provides the extension methods <see cref="AsReflectionDynamic{object}"/> 
 	/// and <see cref="AsReflectionDynamic{Type}"/> as entry points.
 	/// </summary>
-	public static class ReflectionDynamic
+	internal static class ReflectionDynamic
 	{
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given object members.
@@ -53,6 +53,16 @@ namespace System.Dynamic
 				return null;
 
 			return new ReflectionDynamicObject(type);
+		}
+
+		/// <summary>
+		/// Converts the type to a <see cref="TypeParameter"/> that 
+		/// the reflection dynamic must use to make a generic 
+		/// method invocation.
+		/// </summary>
+		public static TypeParameter AsGenericParameter(this Type type)
+		{
+			return new TypeParameter(type);
 		}
 
 		private class ReflectionDynamicObject : DynamicObject
@@ -88,12 +98,12 @@ namespace System.Dynamic
 							if (instance == null)
 								instance = FormatterServices.GetSafeUninitializedObject(this.targetType);
 
-							method.Invoke(instance, args);
+							result = Invoke(method, instance, args);
 							result = instance.AsReflectionDynamic();
 						}
 						else
 						{
-							result = AsDynamicIfNecessary(method.Invoke(this.target, args));
+							result = AsDynamicIfNecessary(Invoke(method, this.target, args));
 						}
 
 						return true;
@@ -102,6 +112,46 @@ namespace System.Dynamic
 
 				result = default(object);
 				return false;
+			}
+
+			private static object Invoke(IInvocable method, object instance, object[] args)
+			{
+				var refArgs = new Dictionary<int, RefValue>();
+				var outArgs = new Dictionary<int, OutValue>();
+				for (int i = 0; i < method.Parameters.Count; i++)
+				{
+					if (method.Parameters[i].ParameterType.IsByRef)
+					{
+						var refArg = args[i] as RefValue;
+						var outArg = args[i] as OutValue;
+						if (refArg != null)
+							refArgs[i] = refArg;
+						else if (outArg != null)
+							outArgs[i] = outArg;
+					}
+				}
+
+				foreach (var refArg in refArgs)
+				{
+					args[refArg.Key] = refArg.Value.Value;
+				}
+				foreach (var outArg in outArgs)
+				{
+					args[outArg.Key] = null;
+				}
+
+				var result = method.Invoke(instance, args.Where(x => !(x is TypeParameter)).ToArray());
+
+				foreach (var refArg in refArgs)
+				{
+					refArg.Value.Value = args[refArg.Key];
+				}
+				foreach (var outArg in outArgs)
+				{
+					outArg.Value.Value = args[outArg.Key];
+				}
+
+				return result;
 			}
 
 			public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -208,26 +258,36 @@ namespace System.Dynamic
 
 			private IInvocable FindBestMatch(DynamicMetaObjectBinder binder, string memberName, object[] args)
 			{
-				var method = FindBestMatchImpl(binder, args, this.targetType
+				var finalArgs = args.Where(x => !(x is TypeParameter)).ToArray();
+				var genericTypeArgs = new List<Type>();
+
+				if (binder is InvokeBinder || binder is InvokeMemberBinder)
+				{
+					IEnumerable typeArgs = binder.AsReflectionDynamic().TypeArguments;
+					genericTypeArgs.AddRange(typeArgs.Cast<Type>());
+					genericTypeArgs.AddRange(args.OfType<TypeParameter>().Select(x => x.Type));
+				}
+
+				var method = FindBestMatchImpl(binder, finalArgs, genericTypeArgs.Count, this.targetType
 					.GetMethods(flags)
-					.Where(x => x.Name == memberName && x.GetParameters().Length == args.Length)
+					.Where(x => x.Name == memberName && x.GetParameters().Length == finalArgs.Length)
 					.Select(x => new MethodInvocable(x)));
 
 				if (method == null)
 				{
 					// Fallback to explicitly implemented members.
-					method = FindBestMatchImpl(binder, args, this.targetType
+					method = FindBestMatchImpl(binder, finalArgs, genericTypeArgs.Count, this.targetType
 						.GetInterfaces()
 						.SelectMany(
 							iface => this.targetType
 								.GetInterfaceMap(iface)
 								.TargetMethods.Select(x => new { Interface = iface, Method = x }))
 						.Where(x =>
-							x.Method.GetParameters().Length == args.Length &&
+							x.Method.GetParameters().Length == finalArgs.Length &&
 							x.Method.Name.Replace(x.Interface.FullName.Replace('+', '.') + ".", "") == memberName)
 						.Select(x => (IInvocable)new MethodInvocable(x.Method))
 						.Concat(this.targetType.GetConstructors(flags)
-							.Where(x => x.Name == memberName && x.GetParameters().Length == args.Length)
+							.Where(x => x.Name == memberName && x.GetParameters().Length == finalArgs.Length)
 							.Select(x => new ConstructorInvocable(x)))
 						.Distinct());
 				}
@@ -235,32 +295,41 @@ namespace System.Dynamic
 				var methodInvocable = method as MethodInvocable;
 				if (method != null && methodInvocable != null && methodInvocable.Method.IsGenericMethodDefinition)
 				{
-					IEnumerable typeArgs = binder.AsReflectionDynamic().TypeArguments;
-					method = new MethodInvocable(methodInvocable.Method.MakeGenericMethod(typeArgs.Cast<Type>().ToArray()));
+					method = new MethodInvocable(methodInvocable.Method.MakeGenericMethod(genericTypeArgs.ToArray()));
 				}
 
 				return method;
 			}
 
-			private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, IEnumerable<IInvocable> candidates)
+			private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, int genericArgs, IEnumerable<IInvocable> candidates)
 			{
 				dynamic dynamicBinder = binder.AsReflectionDynamic();
 				for (int i = 0; i < args.Length; i++)
 				{
 					var index = i;
 					if (args[index] != null)
-						candidates = candidates.Where(x => x.Parameters[index].ParameterType == args[index].GetType());
+						candidates = candidates.Where(x => x.Parameters[index].ParameterType == GetArgumentType(args[index]));
 
-					if (dynamicBinder.IsStandardBinder)
-					{
-						IEnumerable enumerable = dynamicBinder.ArgumentInfo;
-						// The binder has the extra argument info for the "this" parameter at the beginning.
-						if (enumerable.Cast<object>().ToList()[index + 1].AsReflectionDynamic().IsByRef)
-							candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsByRef);
-					}
+					IEnumerable enumerable = dynamicBinder.ArgumentInfo;
+					// The binder has the extra argument info for the "this" parameter at the beginning.
+					if (enumerable.Cast<object>().ToList()[index + 1].AsReflectionDynamic().IsByRef)
+						candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsByRef);
+
+					if (genericArgs > 0)
+						candidates = candidates.Where(x => x.IsGeneric && x.GenericParameters == genericArgs);
 				}
 
 				return candidates.FirstOrDefault();
+			}
+
+			private static Type GetArgumentType(object arg)
+			{
+				if (arg is RefValue || arg is OutValue)
+					return arg.GetType().GetGenericArguments()[0].MakeByRefType();
+				//else if (arg is RefValue)
+				//    return arg.GetType().GetGenericArguments()[0].MakeByRefType();
+
+				return arg.GetType();
 			}
 
 			private object AsDynamicIfNecessary(object value)
@@ -282,6 +351,8 @@ namespace System.Dynamic
 
 			private interface IInvocable
 			{
+				bool IsGeneric { get; }
+				int GenericParameters { get; }
 				IList<ParameterInfo> Parameters { get; }
 				object Invoke(object obj, object[] parameters);
 			}
@@ -308,6 +379,10 @@ namespace System.Dynamic
 				}
 
 				public MethodInfo Method { get { return this.method; } }
+
+				public bool IsGeneric { get { return this.method.IsGenericMethodDefinition; } }
+
+				public int GenericParameters { get { return this.method.GetGenericArguments().Length; } }
 			}
 
 			private class ConstructorInvocable : IInvocable
@@ -330,6 +405,10 @@ namespace System.Dynamic
 				{
 					get { return this.parameters.Value; }
 				}
+
+				public bool IsGeneric { get { return false; } }
+
+				public int GenericParameters { get { return 0; } }
 			}
 		}
 	}

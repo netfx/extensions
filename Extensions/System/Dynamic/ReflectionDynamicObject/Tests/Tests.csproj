@@ -39,7 +39,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrivateDynamicObjectSpec.cs" />
+    <Compile Include="ReflectionDynamicObjectSpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">

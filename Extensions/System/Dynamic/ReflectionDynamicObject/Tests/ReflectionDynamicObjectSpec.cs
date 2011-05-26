@@ -69,16 +69,49 @@ internal class PrivateDynamicObjectSpec
 		Assert.True(result);
 	}
 
-	[Fact(Skip = "Ref/Out arguments are not supported by C# 4.0 dynamic. See Connect bug http://connect.microsoft.com/VisualStudio/feedback/details/543101/net-4-0s-dynamicobject-doesn-t-set-ref-out-arguments")]
+	[Fact]
 	public void WhenInvokingMethodWithRef_ThenReturnsRefValue()
 	{
 		dynamic target = new PrivateObject().AsReflectionDynamic();
 		var value = default(string);
 
-		var result = target.Echo("hello ", ref value);
+		var r1 = RefValue.Create(() => value, s => value = s);
+
+		var result = target.Echo("hello ", r1);
 
 		Assert.True(result);
 		Assert.Equal("hello world", value);
+	}
+
+	[Fact]
+	public void WhenInvokingMethodWithOut_ThenReturnsOutValue()
+	{
+		dynamic target = new PrivateObject().AsReflectionDynamic();
+		var value = default(string);
+
+		var r1 = OutValue.Create<string>(s => value = s);
+
+		var result = target.Echo("hello ", true, ref r1);
+
+		Assert.True(result);
+		Assert.Equal("hello world", value);
+	}
+
+	[Fact]
+	public void WhenInvokingMethodWithTwoOut_ThenReturnsOutValue()
+	{
+		dynamic target = new PrivateObject().AsReflectionDynamic();
+		var value = default(string);
+		var i = 0;
+
+		var out1 = OutValue.Create<string>(s => value = s);
+		var out2 = OutValue.Create<int>(x => i = x);
+
+		var result = target.Echo("hello ", true, out1, out2);
+
+		Assert.True(result);
+		Assert.Equal("hello world", value);
+		Assert.Equal(25, i);
 	}
 
 	[Fact]
@@ -304,6 +337,40 @@ internal class PrivateDynamicObjectSpec
 		Assert.Throws<RuntimeBinderException>(() => converted = target);
 	}
 
+	[Fact]
+	public void WhenPassingTypeParameter_ThenResolves()
+	{
+		var foo = new PrivateObject().AsReflectionDynamic();
+		var type = typeof(IFormattable);
+
+		var result = foo.Get(typeof(IFormattable).AsGenericParameter(), 5);
+
+		Assert.Equal(10, result);
+	}
+
+	[Fact]
+	public void WhenPassingTypeParameterAtEnd_ThenResolves()
+	{
+		var foo = new PrivateObject().AsReflectionDynamic();
+		var type = typeof(IFormattable);
+
+		var result = foo.Get(5, typeof(IFormattable).AsGenericParameter());
+
+		Assert.Equal("IFormattable", result);
+	}
+
+
+	[Fact]
+	public void WhenPassingMultipleTypeParameterCanMixGenericAndTypeParam_ThenResolves()
+	{
+		var foo = new PrivateObject().AsReflectionDynamic();
+		var type = typeof(IFormattable);
+
+		var result = foo.Get<IFormattable>(5, typeof(bool).AsGenericParameter());
+
+		Assert.Equal("IFormattable|Boolean", result);
+	}
+
 	private class PrivateObject : ICloneable, IPrivate
 	{
 		static PrivateObject()
@@ -362,6 +429,14 @@ internal class PrivateDynamicObjectSpec
 			return true;
 		}
 
+		private bool Echo(string value, bool valid, out string result, out int count)
+		{
+			result = value + "world";
+			count = 25;
+
+			return true;
+		}
+
 		private string this[int index]
 		{
 			get { return index.ToString(); }
@@ -378,9 +453,14 @@ internal class PrivateDynamicObjectSpec
 			get { return value.Substring(index); }
 		}
 
-		private T Get<T>(int id)
+		private string Get<T>(int id)
 		{
-			return default(T);
+			return typeof(T).Name;
+		}
+
+		private string Get<T, R>(int id)
+		{
+			return typeof(T).Name + "|" + typeof(R).Name;
 		}
 
 		object ICloneable.Clone()
