@@ -36,8 +36,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Dynamic\PrivateDynamicObject.cs" />
-    <Compile Include="content\System\Dynamic\PrivateDynamicObjectExtensions.cs" />
+    <Compile Include="content\System\Dynamic\ReflectionDynamic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

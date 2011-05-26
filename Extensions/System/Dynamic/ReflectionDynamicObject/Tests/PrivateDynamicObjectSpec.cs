@@ -11,7 +11,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenAccessingPrivateField_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		target.field = 5;
 
@@ -21,7 +21,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenAccessingPrivateProperty_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		target.Property = "hello";
 
@@ -31,7 +31,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingMethod_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target.Echo("hello");
 
@@ -41,7 +41,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingMethod2_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target.Echo("hello {0}", "world");
 
@@ -51,7 +51,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingMethod_ThenResolvesOverload()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target.Echo("hello", 2);
 
@@ -61,7 +61,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingMethodWithRef_ThenResolvesOverload()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 		var value = default(string);
 
 		var result = target.Echo("hello ", ref value);
@@ -72,7 +72,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact(Skip = "Ref/Out arguments are not supported by C# 4.0 dynamic. See Connect bug http://connect.microsoft.com/VisualStudio/feedback/details/543101/net-4-0s-dynamicobject-doesn-t-set-ref-out-arguments")]
 	public void WhenInvokingMethodWithRef_ThenReturnsRefValue()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 		var value = default(string);
 
 		var result = target.Echo("hello ", ref value);
@@ -84,7 +84,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingIndexerOverload1_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target[9];
 
@@ -94,7 +94,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingIndexerOverload2_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target["9"];
 
@@ -104,7 +104,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenSettingIndexedProperty_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		target[9] = "kzu";
 	}
@@ -112,7 +112,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenSettingNonExistingIndexedProperty_ThenThrows()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		Assert.Throws<RuntimeBinderException>(() => target[Guid.NewGuid()] = 23);
 	}
@@ -120,7 +120,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingIndexerTwoArgs_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var result = target["hello", 2];
 
@@ -132,13 +132,13 @@ internal class PrivateDynamicObjectSpec
 	{
 		var target = default(object);
 
-		Assert.Null(target.AsPrivateDynamic());
+		Assert.Null(target.AsReflectionDynamic());
 	}
 
 	[Fact]
 	public void WhenInvokingExplicitlyImplementedMethod_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var clone = target.Clone();
 
@@ -148,7 +148,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingExplicitlyImplementedProperty_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		target.Name = "foo";
 
@@ -158,7 +158,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingNonExistingMethod_ThenFails()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		Assert.Throws<RuntimeBinderException>(() => target.Do());
 	}
@@ -166,7 +166,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenGettingNonExistingProperty_ThenFails()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		Assert.Throws<RuntimeBinderException>(() => target.Blah);
 	}
@@ -174,7 +174,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenGettingNonExistingIndex_ThenFails()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		Assert.Throws<RuntimeBinderException>(() => target[true, 24]);
 	}
@@ -182,7 +182,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenSettingNonExistingProperty_ThenFails()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		Assert.Throws<RuntimeBinderException>(() => target.Blah = true);
 	}
@@ -191,7 +191,7 @@ internal class PrivateDynamicObjectSpec
 	public void WhenConverting_ThenConvertsTargetObject()
 	{
 		var inner = new PrivateObject();
-		dynamic target = new PrivateDynamicObject(inner);
+		dynamic target = inner.AsReflectionDynamic();
 
 		PrivateObject obj = target;
 
@@ -202,7 +202,7 @@ internal class PrivateDynamicObjectSpec
 	public void WhenConvertingToImplementedInterface_ThenConvertsTargetObject()
 	{
 		var inner = new PrivateObject();
-		dynamic target = new PrivateDynamicObject(inner);
+		dynamic target = inner.AsReflectionDynamic();
 
 		ICloneable obj = target;
 
@@ -212,7 +212,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingGenericMethod_ThenSucceeds()
 	{
-		dynamic target = new PrivateDynamicObject(new PrivateObject());
+		dynamic target = new PrivateObject().AsReflectionDynamic();
 
 		var value = target.Get<ICloneable>(23);
 	}
@@ -222,7 +222,7 @@ internal class PrivateDynamicObjectSpec
 	{
 		var inner = new PrivateObject();
 		var id = inner.Id;
-		dynamic target = new PrivateDynamicObject(inner);
+		dynamic target = inner.AsReflectionDynamic();
 
 		target.ctor();
 
@@ -232,7 +232,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingStaticMembers_ThenSucceeds()
 	{
-		var target = (dynamic)new PrivateDynamicObject(typeof(PrivateObject));
+		var target = typeof(PrivateObject).AsReflectionDynamic();
 		var value1 = target.StaticProp;
 		target.cctor();
 
@@ -257,7 +257,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenInvokingCtorForType_ThenSucceeds()
 	{
-		var target = (dynamic)new PrivateDynamicObject(typeof(PrivateObject));
+		var target = typeof(PrivateObject).AsReflectionDynamic();
 		var id = Guid.NewGuid();
 		var obj = target.ctor(id);
 
@@ -267,7 +267,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenConvertingToIncompatible_ThenThrows()
 	{
-		var target = new PrivateObject().AsPrivateDynamic();
+		var target = new PrivateObject().AsReflectionDynamic();
 
 		int id = 0;
 
@@ -277,7 +277,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenConvertingToIConvertibleCompatibleBuiltInType_ThenSucceeds()
 	{
-		var target = new ConvertibleObject().AsPrivateDynamic();
+		var target = new ConvertibleObject().AsReflectionDynamic();
 
 		int id = target;
 
@@ -287,7 +287,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenConvertingToIConvertibleCompatibleCustomType_ThenSucceeds()
 	{
-		var target = new ConvertibleObject().AsPrivateDynamic();
+		var target = new ConvertibleObject().AsReflectionDynamic();
 
 		PrivateObject converted = target;
 
@@ -297,7 +297,7 @@ internal class PrivateDynamicObjectSpec
 	[Fact]
 	public void WhenConvertingToIConvertibleIncompatibleCustomType_ThenSucceeds()
 	{
-		var target = new ConvertibleObject().AsPrivateDynamic();
+		var target = new ConvertibleObject().AsReflectionDynamic();
 
 		ICloneable converted = null;
 
