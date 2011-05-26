@@ -309,7 +309,7 @@ namespace System.Dynamic
 				{
 					var index = i;
 					if (args[index] != null)
-						candidates = candidates.Where(x => x.Parameters[index].ParameterType == GetArgumentType(args[index]));
+						candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsAssignableFrom(GetArgumentType(args[index])));
 
 					IEnumerable enumerable = dynamicBinder.ArgumentInfo;
 					// The binder has the extra argument info for the "this" parameter at the beginning.
