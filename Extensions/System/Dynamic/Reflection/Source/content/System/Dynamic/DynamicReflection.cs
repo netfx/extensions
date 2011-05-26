@@ -60,7 +60,7 @@ namespace System.Dynamic
 		/// the reflection dynamic must use to make a generic 
 		/// method invocation.
 		/// </summary>
-		public static TypeParameter AsGenericParameter(this Type type)
+		public static TypeParameter AsGenericTypeParameter(this Type type)
 		{
 			return new TypeParameter(type);
 		}

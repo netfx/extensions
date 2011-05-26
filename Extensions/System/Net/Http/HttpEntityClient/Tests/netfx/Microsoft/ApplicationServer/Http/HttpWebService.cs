@@ -27,7 +27,7 @@ using System.Collections.Concurrent;
 /// <summary>
 /// Factory class for HTTP web services.
 /// </summary>
-internal static class HttpWebService
+internal static partial class HttpWebService
 {
 	/// <summary>
 	/// Creates an HTTP web service using the given instance to run it, and the specified 
@@ -51,7 +51,7 @@ internal static class HttpWebService
 /// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
 /// </code>
 /// </remarks>
-internal class HttpWebService<TService> : IDisposable
+internal partial class HttpWebService<TService> : IDisposable
 	where TService : class
 {
 	private HttpServiceHost serviceHost;

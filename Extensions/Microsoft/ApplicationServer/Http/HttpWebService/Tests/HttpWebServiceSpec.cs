@@ -52,6 +52,7 @@ internal class HttpWebServiceSpec
 	public void WhenHostingCachedServiceInstance_ThenGetsSameResultAlways()
 	{
 		using (var webservice = new HttpWebService<TestService>(
+			cacheServiceInstance: true,
 			serviceBaseUrl: "http://localhost:20000",
 			serviceResourcePath: "test",
 			serviceConfiguration: HttpHostConfiguration.Create()))

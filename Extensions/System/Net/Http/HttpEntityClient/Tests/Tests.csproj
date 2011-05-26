@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="HttpEntityClientSpec.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />

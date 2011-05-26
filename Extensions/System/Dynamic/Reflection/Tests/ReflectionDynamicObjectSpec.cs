@@ -355,7 +355,7 @@ internal class PrivateDynamicObjectSpec
 		var foo = new PrivateObject().AsDynamicReflection();
 		var type = typeof(IFormattable);
 
-		var result = foo.Get(typeof(IFormattable).AsGenericParameter(), 5);
+		var result = foo.Get(typeof(IFormattable).AsGenericTypeParameter(), 5);
 
 		Assert.Equal(typeof(IFormattable).Name, result);
 	}
@@ -366,7 +366,7 @@ internal class PrivateDynamicObjectSpec
 		var foo = new PrivateObject().AsDynamicReflection();
 		var type = typeof(IFormattable);
 
-		var result = foo.Get(5, typeof(IFormattable).AsGenericParameter());
+		var result = foo.Get(5, typeof(IFormattable).AsGenericTypeParameter());
 
 		Assert.Equal("IFormattable", result);
 	}
@@ -377,7 +377,7 @@ internal class PrivateDynamicObjectSpec
 		var foo = new PrivateObject().AsDynamicReflection();
 		var type = typeof(IFormattable);
 
-		var result = foo.Get<IFormattable>(5, typeof(bool).AsGenericParameter());
+		var result = foo.Get<IFormattable>(5, typeof(bool).AsGenericTypeParameter());
 
 		Assert.Equal("IFormattable|Boolean", result);
 	}

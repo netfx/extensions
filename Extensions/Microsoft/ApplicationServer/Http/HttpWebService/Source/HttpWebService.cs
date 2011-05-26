@@ -127,14 +127,14 @@ internal partial class HttpWebService<TService> : IDisposable
 		this.serviceHost.Close();
 	}
 
-	public class CachingResourceFactory : IResourceFactory
+	private class CachingResourceFactory : IResourceFactory
 	{
 		private ConcurrentDictionary<Type, object> cachedTypes = new ConcurrentDictionary<Type, object>();
 		private IResourceFactory originalFactory;
 
 		public CachingResourceFactory(IResourceFactory originalFactory)
 		{
-			this.originalFactory = originalFactory;
+			this.originalFactory = originalFactory ?? (IResourceFactory)new ActivatorResourceFactory();
 		}
 
 		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
@@ -145,6 +145,24 @@ internal partial class HttpWebService<TService> : IDisposable
 		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
 		{
 			// We never release, as we're caching it.
+		}
+	}
+
+	private class ActivatorResourceFactory : IResourceFactory
+	{
+		public ActivatorResourceFactory()
+		{
+		}
+
+		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
+		{
+			return Activator.CreateInstance(serviceType);
+		}
+
+		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
+		{
+			if (service is IDisposable)
+				((IDisposable)service).Dispose();
 		}
 	}
 

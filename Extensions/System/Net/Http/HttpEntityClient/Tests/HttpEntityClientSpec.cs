@@ -89,7 +89,7 @@ namespace Tests
 		[Fact]
 		public void WhenPutNew_ThenSaves()
 		{
-			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", true, new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Owner = new User { Id = 1, Name = "kzu" } };
@@ -120,7 +120,7 @@ namespace Tests
 		[Fact]
 		public void WhenPutUpdate_ThenSaves()
 		{
-			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", true, new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Id = 1, Owner = new User { Id = 1, Name = "vga" } };
@@ -235,21 +235,6 @@ namespace Tests
 				this.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
 				this.AddMessageHandlers(typeof(LoggingChannel));
 				this.SetErrorHandler<ErrorHandler>();
-				this.Configure.SetResourceFactory(new CachingResourceFactory());
-			}
-		}
-
-		public class CachingResourceFactory : IResourceFactory
-		{
-			private ConcurrentDictionary<Type, object> cachedTypes = new ConcurrentDictionary<Type, object>();
-
-			public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
-			{
-				return cachedTypes.GetOrAdd(serviceType, type => Activator.CreateInstance(type));
-			}
-
-			public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
-			{
 			}
 		}
 
