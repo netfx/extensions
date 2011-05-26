@@ -298,6 +298,20 @@ internal class PrivateDynamicObjectSpec
 
 		Assert.Equal("hello", value);
 	}
+	
+    [Fact]
+    public void WhenInvokingStaticMembersWithDerivedTypeArgument_ThenSucceeds()
+    {
+        var target = typeof(PrivateObject).AsDynamicReflection();
+        target.cctor();
+
+        List<int> d = new List<int>();
+
+        List<int> value = target.StaticMethod(d);
+
+        Assert.Equal(d, value);
+    }
+	
 
 	[Fact]
 	public void WhenInvokingCtorForType_ThenSucceeds()
@@ -405,6 +419,11 @@ internal class PrivateDynamicObjectSpec
 		{
 			return value;
 		}
+
+        public static IEnumerable<int> StaticMethod(IEnumerable<int> value)
+        {
+            return value;
+        }
 
 		public static string StaticMethod(string value, ref string refstring)
 		{
