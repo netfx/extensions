@@ -20,48 +20,53 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Dynamic;
+using System.Collections;
+using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace System.Dynamic
 {
 	internal class PrivateDynamicObject : DynamicObject
 	{
 		private static readonly BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+		private static readonly MethodInfo castMethod = typeof(PrivateDynamicObject).GetMethod("Cast", BindingFlags.Static | BindingFlags.NonPublic);
 		private object target;
+		private Type targetType;
 
 		public PrivateDynamicObject(object target)
 		{
 			this.target = target;
+			this.targetType = target.GetType();
+		}
+
+		public PrivateDynamicObject(Type type)
+		{
+			this.target = null;
+			this.targetType = type;
 		}
 
 		public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
 		{
 			if (!base.TryInvokeMember(binder, args, out result))
 			{
-				var method = FindBestMatch(binder, this.target.GetType()
-					.GetMethods(flags)
-					.Where(x => x.Name == binder.Name && x.GetParameters().Length == args.Length),
-					args);
-
-				if (method == null)
-				{
-					// Try explicit interface implemetation next. 
-					// Non-explicit have higher priority.
-					method = FindBestMatch(binder, this.target.GetType()
-						.GetInterfaces()
-						.SelectMany(
-							iface => this.target.GetType()
-								.GetInterfaceMap(iface)
-								.TargetMethods.Select(x => new { Interface = iface, Method = x }))
-						.Where(x => x.Method.Name.Replace(x.Interface.FullName.Replace('+', '.') + ".", "") == binder.Name &&
-							x.Method.GetParameters().Length == args.Length)
-						.Select(x => x.Method)
-						.Distinct(),
-						args);
-				}
-
+				var memberName = (binder.Name == "ctor" || binder.Name == "cctor") ? "." + binder.Name : binder.Name;
+				var method = FindBestMatch(binder, memberName, args);
 				if (method != null)
 				{
-					result = AsDynamicIfNecessary(method.Invoke(this.target, args));
+					if (binder.Name == "ctor")
+					{
+						var instance = this.target;
+						if (instance == null)
+							instance = FormatterServices.GetSafeUninitializedObject(this.targetType);
+
+						method.Invoke(instance, args);
+						result = instance.AsPrivateDynamic();
+					}
+					else
+					{
+						result = AsDynamicIfNecessary(method.Invoke(this.target, args));
+					}
+
 					return true;
 				}
 			}
@@ -74,34 +79,17 @@ namespace System.Dynamic
 		{
 			if (!base.TryGetMember(binder, out result))
 			{
-				var property = target.GetType().GetProperty(binder.Name, flags);
-
-				if (property != null)
-				{
-					result = AsDynamicIfNecessary(property.GetValue(target, null));
-					return true;
-				}
-
-				var field = target.GetType().GetField(binder.Name, flags);
+				var field = targetType.GetField(binder.Name, flags);
 				if (field != null)
 				{
 					result = AsDynamicIfNecessary(field.GetValue(target));
 					return true;
 				}
 
-				var explicitGetter = this.target.GetType()
-					.GetInterfaces()
-					.SelectMany(
-						iface => this.target.GetType()
-							.GetInterfaceMap(iface)
-							.TargetMethods
-							.Where(method => method.Name.StartsWith(iface.FullName.Replace('+', '.')) &&
-								method.Name.Replace(iface.FullName.Replace('+', '.') + ".get_", "") == binder.Name))
-					.FirstOrDefault();
-
-				if (explicitGetter != null)
+				var getter = FindBestMatch(binder, "get_" + binder.Name, new object[0]);
+				if (getter != null)
 				{
-					result = AsDynamicIfNecessary(explicitGetter.Invoke(this.target, null));
+					result = AsDynamicIfNecessary(getter.Invoke(this.target, null));
 					return true;
 				}
 			}
@@ -114,34 +102,17 @@ namespace System.Dynamic
 		{
 			if (!base.TrySetMember(binder, value))
 			{
-				var property = target.GetType().GetProperty(binder.Name, flags);
-
-				if (property != null)
-				{
-					property.SetValue(target, value, null);
-					return true;
-				}
-
-				var field = target.GetType().GetField(binder.Name, flags);
+				var field = targetType.GetField(binder.Name, flags);
 				if (field != null)
 				{
 					field.SetValue(target, value);
 					return true;
 				}
 
-				var explicitSetter = this.target.GetType()
-					.GetInterfaces()
-					.SelectMany(
-						iface => this.target.GetType()
-							.GetInterfaceMap(iface)
-							.TargetMethods
-							.Where(method => method.Name.StartsWith(iface.FullName.Replace('+', '.')) &&
-								method.Name.Replace(iface.FullName.Replace('+', '.') + ".set_", "") == binder.Name))
-					.FirstOrDefault();
-
-				if (explicitSetter != null)
+				var setter = FindBestMatch(binder, "set_" + binder.Name, new[] { value });
+				if (setter != null)
 				{
-					explicitSetter.Invoke(this.target, new[] { value });
+					setter.Invoke(this.target, new[] { value });
 					return true;
 				}
 			}
@@ -153,14 +124,10 @@ namespace System.Dynamic
 		{
 			if (!base.TryGetIndex(binder, indexes, out result))
 			{
-				var indexers = this.target.GetType()
-					.GetMethods(flags)
-					.Where(x => x.Name == "get_Item" && x.GetParameters().Length == indexes.Length);
-
-				var method = FindBestMatch(binder, indexers, indexes);
-				if (method != null)
+				var indexer = FindBestMatch(binder, "get_Item", indexes);
+				if (indexer != null)
 				{
-					result = AsDynamicIfNecessary(method.Invoke(this.target, indexes));
+					result = AsDynamicIfNecessary(indexer.Invoke(this.target, indexes));
 					return true;
 				}
 			}
@@ -169,16 +136,99 @@ namespace System.Dynamic
 			return false;
 		}
 
-		private MethodInfo FindBestMatch(DynamicMetaObjectBinder binder, IEnumerable<MethodInfo> candidates, object[] args)
+		public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+		{
+			if (!base.TrySetIndex(binder, indexes, value))
+			{
+				var args = indexes.Concat(new[] { value }).ToArray();
+				var indexer = FindBestMatch(binder, "set_Item", args);
+				if (indexer != null)
+				{
+					indexer.Invoke(this.target, args);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public override bool TryConvert(ConvertBinder binder, out object result)
+		{
+			try
+			{
+				result = castMethod.MakeGenericMethod(binder.Type).Invoke(null, new[] { this.target });
+				return true;
+			}
+			catch (Exception) { }
+
+			var convertible = this.target as IConvertible;
+			if (convertible != null)
+			{
+				try
+				{
+					result = Convert.ChangeType(convertible, binder.Type);
+					return true;
+				}
+				catch (Exception) { }
+			}
+
+
+			result = default(object);
+			return false;
+		}
+
+		private IInvocable FindBestMatch(DynamicMetaObjectBinder binder, string memberName, object[] args)
+		{
+			var method = FindBestMatchImpl(binder, args, this.targetType
+				.GetMethods(flags)
+				.Where(x => x.Name == memberName && x.GetParameters().Length == args.Length)
+				.Select(x => new MethodInvocable(x)));
+
+			if (method == null)
+			{
+				// Fallback to explicitly implemented members.
+				method = FindBestMatchImpl(binder, args, this.targetType
+					.GetInterfaces()
+					.SelectMany(
+						iface => this.targetType
+							.GetInterfaceMap(iface)
+							.TargetMethods.Select(x => new { Interface = iface, Method = x }))
+					.Where(x =>
+						x.Method.GetParameters().Length == args.Length &&
+						x.Method.Name.Replace(x.Interface.FullName.Replace('+', '.') + ".", "") == memberName)
+					.Select(x => (IInvocable)new MethodInvocable(x.Method))
+					.Concat(this.targetType.GetConstructors(flags)
+						.Where(x => x.Name == memberName && x.GetParameters().Length == args.Length)
+						.Select(x => new ConstructorInvocable(x)))
+					.Distinct());
+			}
+
+			var methodInvocable = method as MethodInvocable;
+			if (method != null && methodInvocable != null && methodInvocable.Method.IsGenericMethodDefinition)
+			{
+				IEnumerable typeArgs = binder.AsPrivateDynamic().TypeArguments;
+				method = new MethodInvocable(methodInvocable.Method.MakeGenericMethod(typeArgs.Cast<Type>().ToArray()));
+			}
+
+			return method;
+		}
+
+		private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, IEnumerable<IInvocable> candidates)
 		{
 			dynamic dynamicBinder = binder.AsPrivateDynamic();
 			for (int i = 0; i < args.Length; i++)
 			{
 				var index = i;
-				if (args[i] != null)
-					candidates = candidates.Where(x => x.GetParameters()[index].ParameterType == args[index].GetType());
-				else if (dynamicBinder.IsStandardBinder && dynamicBinder.ArgumentInfo[i + 1].IsByRef)
-					candidates = candidates.Where(x => x.GetParameters()[index].ParameterType.IsByRef);
+				if (args[index] != null)
+					candidates = candidates.Where(x => x.Parameters[index].ParameterType == args[index].GetType());
+
+				if (dynamicBinder.IsStandardBinder)
+				{
+					IEnumerable enumerable = dynamicBinder.ArgumentInfo;
+					// The binder has the extra argument info for the "this" parameter at the beginning.
+					if (enumerable.Cast<object>().ToList()[index + 1].AsPrivateDynamic().IsByRef)
+						candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsByRef);
+				}
 			}
 
 			return candidates.FirstOrDefault();
@@ -194,6 +244,63 @@ namespace System.Dynamic
 				return value.AsPrivateDynamic();
 
 			return value;
+		}
+
+		private static T Cast<T>(object target)
+		{
+			return (T)target;
+		}
+
+		private interface IInvocable
+		{
+			IList<ParameterInfo> Parameters { get; }
+			object Invoke(object obj, object[] parameters);
+		}
+
+		private class MethodInvocable : IInvocable
+		{
+			private MethodInfo method;
+			private Lazy<IList<ParameterInfo>> parameters;
+
+			public MethodInvocable(MethodInfo method)
+			{
+				this.method = method;
+				this.parameters = new Lazy<IList<ParameterInfo>>(() => this.method.GetParameters());
+			}
+
+			public object Invoke(object obj, object[] parameters)
+			{
+				return this.method.Invoke(obj, parameters);
+			}
+
+			public IList<ParameterInfo> Parameters
+			{
+				get { return this.parameters.Value; }
+			}
+
+			public MethodInfo Method { get { return this.method; } }
+		}
+
+		private class ConstructorInvocable : IInvocable
+		{
+			private ConstructorInfo ctor;
+			private Lazy<IList<ParameterInfo>> parameters;
+
+			public ConstructorInvocable(ConstructorInfo ctor)
+			{
+				this.ctor = ctor;
+				this.parameters = new Lazy<IList<ParameterInfo>>(() => this.ctor.GetParameters());
+			}
+
+			public object Invoke(object obj, object[] parameters)
+			{
+				return this.ctor.Invoke(obj, parameters);
+			}
+
+			public IList<ParameterInfo> Parameters
+			{
+				get { return this.parameters.Value; }
+			}
 		}
 	}
 }

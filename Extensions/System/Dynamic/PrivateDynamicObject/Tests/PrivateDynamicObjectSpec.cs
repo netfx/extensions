@@ -102,6 +102,22 @@ internal class PrivateDynamicObjectSpec
 	}
 
 	[Fact]
+	public void WhenSettingIndexedProperty_ThenSucceeds()
+	{
+		dynamic target = new PrivateDynamicObject(new PrivateObject());
+
+		target[9] = "kzu";
+	}
+
+	[Fact]
+	public void WhenSettingNonExistingIndexedProperty_ThenThrows()
+	{
+		dynamic target = new PrivateDynamicObject(new PrivateObject());
+
+		Assert.Throws<RuntimeBinderException>(() => target[Guid.NewGuid()] = 23);
+	}
+
+	[Fact]
 	public void WhenInvokingIndexerTwoArgs_ThenSucceeds()
 	{
 		dynamic target = new PrivateDynamicObject(new PrivateObject());
@@ -171,11 +187,150 @@ internal class PrivateDynamicObjectSpec
 		Assert.Throws<RuntimeBinderException>(() => target.Blah = true);
 	}
 
+	[Fact]
+	public void WhenConverting_ThenConvertsTargetObject()
+	{
+		var inner = new PrivateObject();
+		dynamic target = new PrivateDynamicObject(inner);
+
+		PrivateObject obj = target;
+
+		Assert.Same(inner, obj);
+	}
+
+	[Fact]
+	public void WhenConvertingToImplementedInterface_ThenConvertsTargetObject()
+	{
+		var inner = new PrivateObject();
+		dynamic target = new PrivateDynamicObject(inner);
+
+		ICloneable obj = target;
+
+		Assert.Same(inner, obj);
+	}
+
+	[Fact]
+	public void WhenInvokingGenericMethod_ThenSucceeds()
+	{
+		dynamic target = new PrivateDynamicObject(new PrivateObject());
+
+		var value = target.Get<ICloneable>(23);
+	}
+
+	[Fact]
+	public void WhenInvokingConstructorSecondTime_ThenChangesId()
+	{
+		var inner = new PrivateObject();
+		var id = inner.Id;
+		dynamic target = new PrivateDynamicObject(inner);
+
+		target.ctor();
+
+		Assert.NotEqual(id, inner.Id);
+	}
+
+	[Fact]
+	public void WhenInvokingStaticMembers_ThenSucceeds()
+	{
+		var target = (dynamic)new PrivateDynamicObject(typeof(PrivateObject));
+		var value1 = target.StaticProp;
+		target.cctor();
+
+		var value2 = target.StaticProp;
+
+		Assert.NotEqual(value1, value2);
+
+		target.StaticField = "foo";
+
+		Assert.Equal("foo", target.StaticField);
+
+		var value = target.StaticMethod("hello");
+
+		Assert.Equal("hello", value);
+
+		var refvalue = default(string);
+		value = target.StaticMethod("hello", ref refvalue);
+
+		Assert.Equal("hello", value);
+	}
+
+	[Fact]
+	public void WhenInvokingCtorForType_ThenSucceeds()
+	{
+		var target = (dynamic)new PrivateDynamicObject(typeof(PrivateObject));
+		var id = Guid.NewGuid();
+		var obj = target.ctor(id);
+
+		Assert.Equal(id, obj.Id);
+	}
+
+	[Fact]
+	public void WhenConvertingToIncompatible_ThenThrows()
+	{
+		var target = new PrivateObject().AsPrivateDynamic();
+
+		int id = 0;
+
+		Assert.Throws<RuntimeBinderException>(() => id = target);
+	}
+
+	[Fact]
+	public void WhenConvertingToIConvertibleCompatibleBuiltInType_ThenSucceeds()
+	{
+		var target = new ConvertibleObject().AsPrivateDynamic();
+
+		int id = target;
+
+		Assert.Equal(25, id);
+	}
+
+	[Fact]
+	public void WhenConvertingToIConvertibleCompatibleCustomType_ThenSucceeds()
+	{
+		var target = new ConvertibleObject().AsPrivateDynamic();
+
+		PrivateObject converted = target;
+
+		Assert.NotNull(converted);
+	}
+
+	[Fact]
+	public void WhenConvertingToIConvertibleIncompatibleCustomType_ThenSucceeds()
+	{
+		var target = new ConvertibleObject().AsPrivateDynamic();
+
+		ICloneable converted = null;
+
+		Assert.Throws<RuntimeBinderException>(() => converted = target);
+	}
+
 	private class PrivateObject : ICloneable, IPrivate
 	{
+		static PrivateObject()
+		{
+			StaticProp = Guid.NewGuid().ToString();
+		}
+
+		private PrivateObject(Guid id)
+		{
+			this.Id = id;
+		}
+
 		public PrivateObject()
 		{
 			this.Id = Guid.NewGuid();
+		}
+
+		public static string StaticProp { get; set; }
+		public static string StaticField;
+		public static string StaticMethod(string value)
+		{
+			return value;
+		}
+
+		public static string StaticMethod(string value, ref string refstring)
+		{
+			return value;
 		}
 
 		public Guid Id { get; set; }
@@ -210,6 +365,7 @@ internal class PrivateDynamicObjectSpec
 		private string this[int index]
 		{
 			get { return index.ToString(); }
+			set { }
 		}
 
 		private int this[string index]
@@ -222,12 +378,108 @@ internal class PrivateDynamicObjectSpec
 			get { return value.Substring(index); }
 		}
 
+		private T Get<T>(int id)
+		{
+			return default(T);
+		}
+
 		object ICloneable.Clone()
 		{
 			return this;
 		}
 
 		string IPrivate.Name { get; set; }
+	}
+
+	private class ConvertibleObject : IConvertible
+	{
+		public TypeCode GetTypeCode()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool ToBoolean(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public byte ToByte(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public char ToChar(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public DateTime ToDateTime(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public decimal ToDecimal(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double ToDouble(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public short ToInt16(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int ToInt32(IFormatProvider provider)
+		{
+			return 25;
+		}
+
+		public long ToInt64(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public sbyte ToSByte(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public float ToSingle(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public string ToString(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public object ToType(Type conversionType, IFormatProvider provider)
+		{
+			if (conversionType == typeof(PrivateObject))
+				return new PrivateObject();
+
+			throw new NotSupportedException();
+		}
+
+		public ushort ToUInt16(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public uint ToUInt32(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ulong ToUInt64(IFormatProvider provider)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	public interface IPrivate
