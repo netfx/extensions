@@ -5,6 +5,7 @@ using System.Text;
 using Xunit;
 using System.Dynamic;
 using Microsoft.CSharp.RuntimeBinder;
+using System.Globalization;
 
 internal class PrivateDynamicObjectSpec
 {
@@ -382,6 +383,24 @@ internal class PrivateDynamicObjectSpec
 		Assert.Equal("IFormattable|Boolean", result);
 	}
 
+	[Fact]
+	public void WhenInvokingWithAssignableType_ThenSucceeds()
+	{
+		var foo = new PrivateObject().AsDynamicReflection();
+
+		var result = foo.Echo("foo", (byte)2);
+
+		Assert.Equal("foofoo", result);
+
+		result = foo.Echo("foo", (double)2);
+
+		Assert.Equal("foofoo", result);
+
+		result = foo.Echo("foo", (decimal)2);
+
+		Assert.Equal("foofoo", result);
+	}
+
 	private class PrivateObject : ICloneable, IPrivate
 	{
 		static PrivateObject()
@@ -430,6 +449,12 @@ internal class PrivateDynamicObjectSpec
 		private string Echo(string value, int count)
 		{
 			return Enumerable.Range(0, count)
+				.Aggregate("", (s, i) => s += value);
+		}
+
+		private string Echo(string value, IConvertible convertible)
+		{
+			return Enumerable.Range(0, convertible.ToInt32(CultureInfo.CurrentCulture))
 				.Aggregate("", (s, i) => s += value);
 		}
 

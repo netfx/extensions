@@ -269,7 +269,7 @@ namespace System.Dynamic
 					genericTypeArgs.AddRange(args.OfType<TypeParameter>().Select(x => x.Type));
 				}
 
-				var method = FindBestMatchImpl(binder, finalArgs, genericTypeArgs.Count, this.targetType
+				var method = FindBestMatch(binder, finalArgs, genericTypeArgs.Count, this.targetType
 					.GetMethods(flags)
 					.Where(x => x.Name == memberName && x.GetParameters().Length == finalArgs.Length)
 					.Select(x => new MethodInvocable(x)));
@@ -277,7 +277,7 @@ namespace System.Dynamic
 				if (method == null)
 				{
 					// Fallback to explicitly implemented members.
-					method = FindBestMatchImpl(binder, finalArgs, genericTypeArgs.Count, this.targetType
+					method = FindBestMatch(binder, finalArgs, genericTypeArgs.Count, this.targetType
 						.GetInterfaces()
 						.SelectMany(
 							iface => this.targetType
@@ -302,14 +302,36 @@ namespace System.Dynamic
 				return method;
 			}
 
-			private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, int genericArgs, IEnumerable<IInvocable> candidates)
+			private IInvocable FindBestMatch(DynamicMetaObjectBinder binder, object[] args, int genericArgs, IEnumerable<IInvocable> candidates)
+			{
+				var result = FindBestMatchImpl(binder, args, genericArgs, candidates, false);
+				if (result == null)
+					result = FindBestMatchImpl(binder, args, genericArgs, candidates, true);
+
+				return result;
+			}
+
+			/// <summary>
+			/// Finds the best match among the candidates.
+			/// </summary>
+			/// <param name="binder">The binder that is requesting the match.</param>
+			/// <param name="args">The args passed in to the invocation.</param>
+			/// <param name="genericArgs">The generic args if any.</param>
+			/// <param name="candidates">The candidate methods to use for the match..</param>
+			/// <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+			private IInvocable FindBestMatchImpl(DynamicMetaObjectBinder binder, object[] args, int genericArgs, IEnumerable<IInvocable> candidates, bool assignableFrom)
 			{
 				dynamic dynamicBinder = binder.AsDynamicReflection();
 				for (int i = 0; i < args.Length; i++)
 				{
 					var index = i;
 					if (args[index] != null)
-						candidates = candidates.Where(x => x.Parameters[index].ParameterType == GetArgumentType(args[index]));
+					{
+						if (assignableFrom)
+							candidates = candidates.Where(x => x.Parameters[index].ParameterType.IsAssignableFrom(GetArgumentType(args[index])));
+						else
+							candidates = candidates.Where(x => x.Parameters[index].ParameterType == GetArgumentType(args[index]));
+					}
 
 					IEnumerable enumerable = dynamicBinder.ArgumentInfo;
 					// The binder has the extra argument info for the "this" parameter at the beginning.
