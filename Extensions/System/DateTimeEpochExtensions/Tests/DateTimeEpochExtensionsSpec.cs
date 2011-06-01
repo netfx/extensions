@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 internal class DateTimeEpochExtensionsSpec
@@ -25,5 +22,29 @@ internal class DateTimeEpochExtensionsSpec
 		var roundtrip = offset.ToEpochTime().ToDateTimeOffsetFromEpoch();
 
 		Assert.Equal(offset, roundtrip);
+	}
+
+	[Fact]
+	public void WhenConvertingEpochTime_ThenReturnsZero()
+	{
+		var date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+		Assert.Equal(0, date.ToEpochTime());
+	}
+
+	[Fact]
+	public void WhenConvertingEpochTimePlus10Seconds_ThenReturns10()
+	{
+		var date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(10);
+
+		Assert.Equal(10, date.ToEpochTime());
+	}
+
+	[Fact]
+	public void WhenConvertingEpochTimeMinus10Seconds_ThenReturnsMinus10()
+	{
+		var date = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(-10);
+
+		Assert.Equal(-10, date.ToEpochTime());
 	}
 }
