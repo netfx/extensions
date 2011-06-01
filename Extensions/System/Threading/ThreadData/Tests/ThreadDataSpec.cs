@@ -34,6 +34,33 @@ internal class ThreadDataSpec
 		Assert.Null(saved);
 	}
 
+	[Fact]
+	public void WhenCurrentDataIsSet_ThenCanRetrieveIt()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (ThreadData.SetData(data))
+		{
+			var saved = ThreadData.GetData<Foo>();
+
+			Assert.Same(data, saved);
+		}
+	}
+
+	[Fact]
+	public void WhenCurrentDisposableIsDisposed_ThenDataIsRemoved()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (ThreadData.SetData(data))
+		{
+		}
+
+		var saved = ThreadData.GetData<Foo>();
+
+		Assert.Null(saved);
+	}
+
 	public class Foo
 	{
 		public int Id { get; set; }

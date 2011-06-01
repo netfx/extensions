@@ -29,6 +29,26 @@ internal static class AppDomainData
 	/// <see cref="IDisposable"/> can be used to remove the state 
 	/// when disposed.
 	/// </summary>
+	public static IDisposable SetData<T>(T data)
+		where T : class
+	{
+		return AppDomain.CurrentDomain.SetData(data);
+	}
+
+	/// <summary>
+	/// Gets the data from the <see cref="AppDomain"/> storage.
+	/// </summary>
+	public static T GetData<T>()
+		where T : class
+	{
+		return AppDomain.CurrentDomain.GetData<T>();
+	}
+
+	/// <summary>
+	/// Sets the given data in the <see cref="AppDomain"/> storage. The returned 
+	/// <see cref="IDisposable"/> can be used to remove the state 
+	/// when disposed.
+	/// </summary>
 	public static IDisposable SetData<T>(this AppDomain domain, T data)
 		where T : class
 	{

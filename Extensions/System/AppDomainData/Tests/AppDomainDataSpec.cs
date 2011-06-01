@@ -33,6 +33,34 @@ internal class AppDomainDataSpec
 		Assert.Null(saved);
 	}
 
+	[Fact]
+	public void WhenCurrentDataIsSet_ThenCanRetrieveIt()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (AppDomainData.SetData(data))
+		{
+			var saved = AppDomainData.GetData<Foo>();
+
+			Assert.Same(data, saved);
+		}
+	}
+
+	[Fact]
+	public void WhenCurrentDisposableIsDisposed_ThenDataIsRemoved()
+	{
+		var data = new Foo { Id = 5 };
+
+		using (AppDomainData.SetData(data))
+		{
+		}
+
+		var saved = AppDomainData.GetData<Foo>();
+
+		Assert.Null(saved);
+	}
+
+
 	public class Foo
 	{
 		public int Id { get; set; }

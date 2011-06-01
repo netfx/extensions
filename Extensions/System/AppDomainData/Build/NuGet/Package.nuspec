@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.AppDomainData</id>
-		<version>1.0.0.19</version>
+		<version>1.0.0.20</version>
 		<title>AppDomain Data&lt;T&gt;</title>
 		<description xml:space="preserve">Provides strong-typed persistence of data in an AppDomain, which can also be transient and automatically removed on dispose.  
 

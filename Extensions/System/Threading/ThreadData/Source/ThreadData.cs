@@ -26,6 +26,26 @@ using System.Threading;
 internal static class ThreadData
 {
 	/// <summary>
+	/// Sets the given data in the <see cref="Thread.CurrentThread"/> storage. The returned 
+	/// <see cref="IDisposable"/> can be used to remove the state 
+	/// when disposed.
+	/// </summary>
+	public static IDisposable SetData<T>(T data)
+		where T : class
+	{
+		return Thread.CurrentThread.SetData(data);
+	}
+
+	/// <summary>
+	/// Gets the data from the <see cref="Thread.CurrentThread"/> storage.
+	/// </summary>
+	public static T GetData<T>()
+		where T : class
+	{
+		return Thread.CurrentThread.GetData<T>();
+	}
+
+	/// <summary>
 	/// Sets the given data in the <see cref="Thread"/> storage. The returned 
 	/// <see cref="IDisposable"/> can be used to remove the state 
 	/// when disposed.

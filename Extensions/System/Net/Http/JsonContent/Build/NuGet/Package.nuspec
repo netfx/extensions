@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Net.Http.JsonContent</id>
+		<version>1.0.0.3</version>
+		<title>JsonContent: A Json.NET HttpContent class</title>
+		<description>Provides a Json.NET json content serialization.</description>
+		<authors>Daniel Cazzulino, Julian Dominguez, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx wcf</tags>
+		<dependencies>
+			<dependency id="netfx-Microsoft.ApplicationServer.Http.JsonNetMediaTypeFormatter" version="1.0.0.28" />
+		</dependencies>
+	</metadata>
+</package>

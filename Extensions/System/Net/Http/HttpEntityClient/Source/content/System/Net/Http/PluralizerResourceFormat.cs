@@ -10,7 +10,7 @@ namespace System.Net.Http.Entity
 	/// <see cref="PluralizerResourceConvention"/> convention to discover 
 	/// the resource name corresponding to an entity type.
 	/// </summary>
-	public enum PluralizerResourceFormat
+	internal enum PluralizerResourceFormat
 	{
 		/// <summary>
 		/// Example: turns 'customerAddress' into 'CustomerAddress'.
