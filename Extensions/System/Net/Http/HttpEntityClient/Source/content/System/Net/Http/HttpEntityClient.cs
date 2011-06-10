@@ -23,6 +23,8 @@ using System.Net.Http.Headers;
 using System.Linq.Expressions;
 using System.Data.Services.Client;
 using System.Reflection;
+using System.Diagnostics;
+using System.Web;
 
 namespace System.Net.Http.Entity
 {
@@ -53,11 +55,10 @@ namespace System.Net.Http.Entity
 	/// automatic after a Select.
 	/// </para>
 	/// </remarks>
-	internal class HttpEntityClient
+	internal class HttpEntityClient : IDisposable
 	{
+		private bool disposed;
 		private HttpClient http;
-		private IEntityFormatter formatter;
-		private IEntityResourceConvention convention;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HttpEntityClient"/> class with 
@@ -85,19 +86,27 @@ namespace System.Net.Http.Entity
 		/// <param name="baseAddress">The base address of the service.</param>
 		/// <param name="formatter">The formatter that translates service responses into entitites.</param>
 		/// <param name="convention">The convention to discover the resource name (or path) for the entities.</param>
-		public HttpEntityClient(Uri baseAddress, IEntityFormatter formatter, IEntityResourceConvention convention)
+		public HttpEntityClient(Uri baseAddress, IEntityFormatter formatter, IEntityResourceNameConvention convention)
 		{
 			this.BaseAddress = baseAddress;
 			this.http = new HttpClient(baseAddress);
 			this.http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(formatter.ContentType));
-			this.formatter = formatter;
-			this.convention = convention;
+			this.EntityFormatter = formatter;
+			this.ResourceNameConvention = convention;
 		}
+
+		public IEntityResourceNameConvention ResourceNameConvention { get; private set; }
+		public IEntityFormatter EntityFormatter { get; set; }
 
 		/// <summary>
 		/// Gets the base address for this client.
 		/// </summary>
 		public Uri BaseAddress { get; private set; }
+
+		/// <summary>
+		/// Gets the underlying HTTP client that is used to perform requests.
+		/// </summary>
+		public HttpClient Http { get { return this.http; } }
 
 		/// <summary>
 		/// Deletes the specified entity.
@@ -157,7 +166,7 @@ namespace System.Net.Http.Entity
 		/// </summary>
 		public HttpResponseMessage TryGet<T>(string id, out T entity)
 		{
-			var resource = this.convention.GetResourceName(typeof(T));
+			var resource = this.ResourceNameConvention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource + "/" + id);
 			var response = this.http.Get(uri);
 			entity = default(T);
@@ -165,7 +174,7 @@ namespace System.Net.Http.Entity
 			if (response.IsSuccessStatusCode)
 			{
 				ThrowIfUnsupportedContentType(response);
-				entity = this.formatter.FromContent<T>(response.Content);
+				entity = this.EntityFormatter.FromContent<T>(response.Content);
 			}
 
 			return response;
@@ -177,13 +186,13 @@ namespace System.Net.Http.Entity
 		/// </summary>
 		public HttpResponseMessage TryPost<T>(T entity, out T saved)
 		{
-			var resource = this.convention.GetResourceName(typeof(T));
+			var resource = this.ResourceNameConvention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource);
-			var response = this.http.Post(uri, this.formatter.ToContent(entity));
+			var response = this.http.Post(uri, this.EntityFormatter.ToContent(entity));
 			saved = default(T);
 
 			if (response.StatusCode == HttpStatusCode.Created)
-				saved = this.formatter.FromContent<T>(response.Content);
+				saved = this.EntityFormatter.FromContent<T>(response.Content);
 
 			return response;
 		}
@@ -193,9 +202,9 @@ namespace System.Net.Http.Entity
 		/// </summary>
 		public HttpResponseMessage TryPut<T>(string id, T entity)
 		{
-			var resource = this.convention.GetResourceName(typeof(T));
+			var resource = this.ResourceNameConvention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource + "/" + id);
-			return this.http.Put(uri, this.formatter.ToContent(entity));
+			return this.http.Put(uri, this.EntityFormatter.ToContent(entity));
 		}
 
 		/// <summary>
@@ -203,26 +212,61 @@ namespace System.Net.Http.Entity
 		/// </summary>
 		public HttpResponseMessage TryDelete<T>(string id)
 		{
-			var resource = this.convention.GetResourceName(typeof(T));
+			var resource = this.ResourceNameConvention.GetResourceName(typeof(T));
 			var uri = new Uri(this.BaseAddress, resource + "/" + id);
 			return this.http.Delete(uri);
 		}
 
 		/// <summary>
-		/// Creates a query for the given entity type.
+		/// Creates a query for the given entity type, that will be
+		/// executed when the queryable is enumerated.
 		/// </summary>
-		public IQueryable<T> Query<T>()
+		/// <typeparam name="T">Type of entity being queried.</typeparam>
+		/// <param name="criteria">Optional search criteria to be applied by the service, 
+		/// sent as a "q=" query string parameter. Useful to overcome limitations 
+		/// in the underlying query support in WCF.</param>
+		public IQueryable<T> Query<T>(string criteria = null)
 		{
-			return new HttpQuery<T>(this);
+			return new HttpQuery<T>(this, criteria);
+		}
+
+		/// <summary>
+		/// Releases the underlying <see cref="Http"/> client.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Releases the underlying <see cref="Http"/> client.
+		/// </summary>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					this.http.Dispose();
+				}
+
+				disposed = true;
+			}
+		}
+
+		~HttpEntityClient()
+		{
+			Dispose(false);
 		}
 
 		private void ThrowIfUnsupportedContentType(HttpResponseMessage response)
 		{
-			if (response.Content.Headers.ContentType.MediaType != this.formatter.ContentType)
+			if (response.Content.Headers.ContentType.MediaType != this.EntityFormatter.ContentType)
 				throw new NotSupportedException(string.Format(
 					"Received reponse with content type '{0}' but formatter supports '{1}'.",
 					response.Content.Headers.ContentType,
-					this.formatter.ContentType));
+					this.EntityFormatter.ContentType));
 		}
 
 		#region HttpQuery
@@ -299,11 +343,27 @@ namespace System.Net.Http.Entity
 				var elementType = TypeSystem.GetElementType(typeof(TResult));
 				var uri = BuildRequestUri(expression, elementType);
 
+				// http://localhost:20000/products?$skip=1&$top=1
+				// Append &q={query}
+				if (!string.IsNullOrEmpty(this.query.Criteria))
+				{
+					var builder = new UriBuilder(uri);
+					var querystring = HttpUtility.ParseQueryString(builder.Query);
+					querystring.Add("q", this.query.Criteria);
+					builder.Query = querystring.ToString();
+
+					uri = builder.Uri;
+				}
+
+#if DEBUG
+				Debug.WriteLine("Query uri: " + uri);
+#endif
+
 				var response = this.query.EntityClient.http.Get(uri);
 				if (!response.IsSuccessStatusCode)
 					throw new HttpEntityException(response);
 
-				return this.query.EntityClient.formatter.FromContent<TResult>(response.Content);
+				return this.query.EntityClient.EntityFormatter.FromContent<TResult>(response.Content);
 			}
 
 			/// <summary>
@@ -320,7 +380,7 @@ namespace System.Net.Http.Entity
 					.GetMethod(x => x.CreateQuery<string>(null))
 					.GetGenericMethodDefinition()
 					.MakeGenericMethod(elementType)
-					.Invoke(context, new object[] { this.query.EntityClient.convention.GetResourceName(elementType) });
+					.Invoke(context, new object[] { this.query.EntityClient.ResourceNameConvention.GetResourceName(elementType) });
 
 				// Replace entity query expression with the resource set expression from the CreateQuery above
 				var replaced = new HttpQueryVisitor(this.query, query.Expression).Visit(expression);
@@ -405,28 +465,30 @@ namespace System.Net.Http.Entity
 		/// </summary>
 		private abstract class HttpQuery
 		{
-			public HttpQuery(HttpEntityClient client)
+			public HttpQuery(HttpEntityClient client, string criteria)
 			{
 				this.EntityClient = client;
+				this.Criteria = criteria;
 				this.Provider = new HttpQueryProvider(this);
 				this.Expression = Expression.Constant(this);
 			}
 
+			public string Criteria { get; private set; }
 			public IQueryProvider Provider { get; protected set; }
 			public Expression Expression { get; protected set; }
-			public HttpEntityClient EntityClient { get; set; }
+			public HttpEntityClient EntityClient { get; private set; }
 			public abstract Type ElementType { get; }
 		}
 
 		private class HttpQuery<T> : HttpQuery, IOrderedQueryable<T>
 		{
-			public HttpQuery(HttpEntityClient client)
-				: base(client)
+			public HttpQuery(HttpEntityClient client, string criteria = null)
+				: base(client, criteria)
 			{
 			}
 
-			internal HttpQuery(HttpEntityClient client, HttpQueryProvider provider, Expression expression)
-				: base(client)
+			internal HttpQuery(HttpEntityClient client, HttpQueryProvider provider, Expression expression, string query = null)
+				: base(client, query)
 			{
 				if (!typeof(IQueryable<T>).IsAssignableFrom(expression.Type))
 					throw new ArgumentOutOfRangeException("expression");

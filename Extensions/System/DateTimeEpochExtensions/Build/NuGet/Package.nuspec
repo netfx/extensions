@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.DateTimeEpochExtensions</id>
-		<version>1.0.0.6</version>
+		<version>1.0.0.7</version>
 		<title>DateTime and DateTimeOffset to Epoch time</title>
 		<description>Provides conversion of dates into an epoch-relative number value (total seconds).
 		

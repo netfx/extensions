@@ -30,6 +30,7 @@ var products = client
 			<dependency id="netfx-Reflector" version="1.0.0.7" />
 		</dependencies>
 		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Data.Services.Client" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Data.Entity.Design" targetFramework="net40"/>
 		</frameworkAssemblies>

@@ -11,7 +11,7 @@ namespace System.Net.Http.Entity
 	/// entity types to make the resource name. If the entity type 
 	/// is already a plural name, returns it as-is.
 	/// </summary>
-	internal class PluralizerResourceConvention : IEntityResourceConvention
+	internal class PluralizerResourceConvention : IEntityResourceNameConvention
 	{
 		private PluralizationService pluralizer;
 		private PluralizerResourceFormat format;

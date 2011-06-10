@@ -10,6 +10,8 @@ using System.Net;
 using System.Net.Http.Entity;
 using System.Collections.Concurrent;
 using System.IO;
+using Microsoft.ApplicationServer.Http.Dispatcher;
+using System.Web;
 
 namespace Tests
 {
@@ -228,6 +230,18 @@ namespace Tests
 			}
 		}
 
+		[Fact]
+		public void WhenQueryingWithExtraCriteria_ThenPopulatesMatchingEntities()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+				var products = client.Query<Product>("kzu").ToList();
+
+				Assert.True(products.All(x => x.Owner.Name == "kzu"));
+			}
+		}
+
 		public class ServiceConfiguration : HttpHostConfiguration
 		{
 			public ServiceConfiguration()
@@ -235,6 +249,38 @@ namespace Tests
 				this.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
 				this.AddMessageHandlers(typeof(LoggingChannel));
 				this.SetErrorHandler<ErrorHandler>();
+				this.AddRequestHandlers(
+					handlers =>
+					{
+						handlers.Add(new QueryOperationHandler("q"));
+						handlers.Add(new QueryOperationHandler("query"));
+						handlers.Add(new QueryOperationHandler("criteria"));
+						handlers.Add(new QueryOperationHandler("search"));
+					},
+					(endpoint, operation) => QueryOperationHandler.AppliesTo(operation));
+			}
+		}
+
+		public class QueryOperationHandler : HttpOperationHandler<HttpRequestMessage, string>
+		{
+			public QueryOperationHandler(string parameterName)
+				: base(parameterName)
+			{
+			}
+
+			public override string OnHandle(HttpRequestMessage input)
+			{
+				return HttpUtility.ParseQueryString(input.RequestUri.Query)["q"];
+			}
+
+			public static bool AppliesTo(HttpOperationDescription operation)
+			{
+				return IsQueryable(operation.ReturnValue.Type);
+			}
+
+			private static bool IsQueryable(Type type)
+			{
+				return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IQueryable<>);
 			}
 		}
 

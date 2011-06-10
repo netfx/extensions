@@ -12,7 +12,7 @@ namespace System.Net.Http.Entity
 	/// requests for the given entity by appending it to the 
 	/// <see cref="HttpEntityClient.BaseAddress"/>.
 	/// </summary>
-	internal interface IEntityResourceConvention
+	internal interface IEntityResourceNameConvention
 	{
 		/// <summary>
 		/// Gets the name of the resource corresponding to the 

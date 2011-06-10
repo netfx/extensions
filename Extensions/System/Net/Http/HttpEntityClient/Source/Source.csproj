@@ -42,11 +42,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\System\Net\Http\HttpEntityException.cs" />
     <Compile Include="content\System\Net\Http\IEntityFormatter.cs" />
-    <Compile Include="content\System\Net\Http\IEntityResourceConvention.cs" />
+    <Compile Include="content\System\Net\Http\IEntityResourceNameConvention.cs" />
     <Compile Include="content\System\Net\Http\JsonNetEntityFormatter.cs" />
     <Compile Include="content\System\Net\Http\JsonNetFormat.cs" />
     <Compile Include="netfx\System\Guard.cs" />
@@ -71,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
