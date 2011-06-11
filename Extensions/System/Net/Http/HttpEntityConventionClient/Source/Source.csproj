@@ -62,6 +62,8 @@
     <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
     <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
     <Compile Include="netfx\System\Net\Http\IEntityFormatter.cs" />
+    <Compile Include="netfx\System\Net\Http\IHttpEntityQuery.cs" />
+    <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
     <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
     <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />

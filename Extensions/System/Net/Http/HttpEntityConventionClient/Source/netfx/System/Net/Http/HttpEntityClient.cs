@@ -25,6 +25,7 @@ using System.Data.Services.Client;
 using System.Reflection;
 using System.Diagnostics;
 using System.Web;
+using System.Collections;
 
 namespace System.Net.Http.Entity
 {
@@ -57,6 +58,12 @@ namespace System.Net.Http.Entity
 	/// </remarks>
 	internal class HttpEntityClient : IDisposable
 	{
+		/// <summary>
+		/// Optional header emitted by the service that allows client-side 
+		/// paging by retrieving the server-side total count of entities in a given query.
+		/// </summary>
+		public const string TotalCountHeader = "X-TotalCount";
+
 		private bool disposed;
 		private HttpClient http;
 
@@ -247,7 +254,7 @@ namespace System.Net.Http.Entity
 		/// sent as a "search=" query string parameter. Useful to overcome limitations
 		/// in the underlying query support in WCF.</param>
 		/// <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc.</returns>
-		public IQueryable<T> Query<T>(string resourcePath, string criteria = null)
+		public IHttpEntityQuery<T> Query<T>(string resourcePath, string criteria = null)
 		{
 			return new HttpQuery<T>(this, resourcePath, criteria);
 		}
@@ -359,9 +366,9 @@ namespace System.Net.Http.Entity
 					.Invoke(this, new[] { expression });
 			}
 
-			// Queryable's "single value" standard query operators call this method.
-			public TResult Execute<TResult>(Expression expression)
+			public HttpResponseMessage TryExecute<TResult>(Expression expression, out TResult result)
 			{
+				result = default(TResult);
 				var elementType = TypeSystem.GetElementType(typeof(TResult));
 				var uri = BuildRequestUri(expression, elementType);
 
@@ -382,10 +389,21 @@ namespace System.Net.Http.Entity
 #endif
 
 				var response = this.query.EntityClient.http.Get(uri);
+				if (response.IsSuccessStatusCode)
+					result = this.query.EntityClient.EntityFormatter.FromContent<TResult>(response.Content);
+
+				return response;
+			}
+
+			// Queryable's "single value" standard query operators call this method.
+			public TResult Execute<TResult>(Expression expression)
+			{
+				var result = default(TResult);
+				var response = this.TryExecute(expression, out result);
 				if (!response.IsSuccessStatusCode)
 					throw new HttpEntityException(response);
 
-				return this.query.EntityClient.EntityFormatter.FromContent<TResult>(response.Content);
+				return result;
 			}
 
 			/// <summary>
@@ -504,7 +522,7 @@ namespace System.Net.Http.Entity
 			public abstract Type ElementType { get; }
 		}
 
-		private class HttpQuery<T> : HttpQuery, IOrderedQueryable<T>
+		private class HttpQuery<T> : HttpQuery, IOrderedQueryable<T>, IHttpEntityQuery<T>
 		{
 			public HttpQuery(HttpEntityClient client, string resourcePath, string search = null)
 				: base(client, resourcePath, search)
@@ -525,13 +543,54 @@ namespace System.Net.Http.Entity
 
 			public IEnumerator<T> GetEnumerator()
 			{
-				var result = this.Provider.Execute<IEnumerable<T>>(Expression);
+				var result = this.Provider.Execute<IEnumerable<T>>(this.Expression);
 				return result == null ? Enumerable.Empty<T>().GetEnumerator() : result.GetEnumerator();
 			}
 
 			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 			{
-				return (Provider.Execute<System.Collections.IEnumerable>(Expression)).GetEnumerator();
+				return (this.Provider.Execute<System.Collections.IEnumerable>(this.Expression)).GetEnumerator();
+			}
+
+			public IHttpEntityQueryResponse<T> Execute()
+			{
+				var result = default(IEnumerable<T>);
+				var response = ((HttpQueryProvider)this.Provider).TryExecute(this.Expression, out result);
+
+				return new HttpQueryResponse<T>(response, result ?? Enumerable.Empty<T>());
+			}
+		}
+
+		private class HttpQueryResponse<T> : IHttpEntityQueryResponse<T>
+		{
+			private IEnumerable<T> result;
+
+			public HttpQueryResponse(HttpResponseMessage response, IEnumerable<T> result)
+			{
+				// Cache the results to avoid multiple queries once the response is executed.
+				this.result = result.ToList();
+				this.Response = response;
+
+				var countValues = Enumerable.Empty<string>();
+				// Grab the optional count header.
+				if (response.Headers.TryGetValues(HttpEntityClient.TotalCountHeader, out countValues) &&
+					countValues.Any())
+				{
+					this.TotalCount = long.Parse(countValues.First());
+				}
+			}
+
+			public HttpResponseMessage Response { get; private set; }
+			public long? TotalCount { get; private set; }
+
+			public IEnumerator<T> GetEnumerator()
+			{
+				return this.result.GetEnumerator();
+			}
+
+			Collections.IEnumerator Collections.IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
 			}
 		}
 

@@ -254,7 +254,7 @@ namespace System.Net.Http.Entity
 		/// sent as a "search=" query string parameter. Useful to overcome limitations
 		/// in the underlying query support in WCF.</param>
 		/// <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc.</returns>
-		public IQueryable<T> Query<T>(string resourcePath, string criteria = null)
+		public IHttpEntityQuery<T> Query<T>(string resourcePath, string criteria = null)
 		{
 			return new HttpQuery<T>(this, resourcePath, criteria);
 		}

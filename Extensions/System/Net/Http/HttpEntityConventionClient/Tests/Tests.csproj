@@ -70,19 +70,30 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="Tracer">
+      <HintPath>..\packages\Tracer.0.9.0.0\lib\NET40\Tracer.dll</HintPath>
+    </Reference>
     <Reference Include="xunit">
       <HintPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), netfx.txt))\packages\xUnit\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpEntityConventionClientSpec.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\ActivatorResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\CachingResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpQueryableServiceHost.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpQueryableServiceHostFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
-    <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
     <Compile Include="PluralizerSpec.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
@@ -95,5 +106,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

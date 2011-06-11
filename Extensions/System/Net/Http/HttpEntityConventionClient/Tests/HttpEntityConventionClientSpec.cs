@@ -12,6 +12,8 @@ using System.Collections.Concurrent;
 using System.IO;
 using Microsoft.ApplicationServer.Http.Dispatcher;
 using System.Web;
+using Microsoft.ApplicationServer.Http;
+using Microsoft.ApplicationServer.Http.Activation;
 
 namespace Tests
 {
@@ -242,12 +244,30 @@ namespace Tests
 			}
 		}
 
+		[Fact]
+		public void WhenQueryingWithExtraCriteria_ThenGetsTotalCount()
+		{
+			using (new SafeHostDisposer(
+				new HttpQueryableServiceHost(typeof(TestService),
+					25, new ServiceConfiguration(),
+					new Uri("http://localhost:20000/products"))))
+			{
+				var client = new HttpEntityConventionClient("http://localhost:20000");
+				var query = (IHttpEntityQuery<Product>)client.Query<Product>("kzu").Take(1);
+
+				var result = query.Execute();
+
+				Assert.Equal(2, result.TotalCount);
+				Assert.Equal(1, result.Count());
+			}
+		}
+
 		public class ServiceConfiguration : HttpHostConfiguration
 		{
 			public ServiceConfiguration()
 			{
 				this.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
-				this.AddMessageHandlers(typeof(LoggingChannel));
+				this.AddMessageHandlers(typeof(TracingChannel));
 				this.SetErrorHandler<ErrorHandler>();
 			}
 		}
@@ -263,34 +283,6 @@ namespace Tests
 			protected override HttpResponseMessage OnProvideResponse(Exception error)
 			{
 				return new HttpResponseMessage(HttpStatusCode.InternalServerError, error.Message);
-			}
-		}
-
-		public class LoggingChannel : DelegatingChannel
-		{
-			public LoggingChannel(HttpMessageChannel handler)
-				: base(handler)
-			{
-			}
-
-			protected override System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
-			{
-				var body = "";
-				if (request.Content != null)
-					body = request.Content.ReadAsString();
-				System.Diagnostics.Trace.TraceInformation("Begin Request: {0} {1}\r\n{2}", request.Method, request.RequestUri, body);
-
-				return base.SendAsync(request, cancellationToken)
-					.ContinueWith(task =>
-					{
-						if (task.Result.Content != null)
-						{
-							var responseBody = task.Result.Content.ReadAsString();
-							System.Diagnostics.Trace.TraceInformation("Begin Response: {0} (Reason: {1})\r\n{2}", task.Result.StatusCode, task.Result.ReasonPhrase, responseBody);
-						}
-
-						return task.Result;
-					}, cancellationToken);
 			}
 		}
 	}

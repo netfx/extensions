@@ -24,172 +24,117 @@ using Microsoft.ApplicationServer.Http.Activation;
 using System.Net.Http;
 using System.Collections.Concurrent;
 
-/// <summary>
-/// Factory class for HTTP web services.
-/// </summary>
-/// <remarks>
-/// If VS is run without elevated permissions, you need to run the 
-/// following command from an elevated command prompt ONCE for the 
-/// port you plan to use as the base Url:
-/// <code>
-/// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
-/// </code>
-/// </remarks>
-internal static partial class HttpWebService
+namespace Microsoft.ApplicationServer.Http
 {
 	/// <summary>
-	/// Creates an HTTP web service using the given instance to run it, and the specified 
-	/// service configuration.
+	/// Factory class for HTTP web services.
 	/// </summary>
-	public static HttpWebService<TService> Create<TService>(TService serviceInstance, string serviceBaseUrl, string serviceResourcePath, IHttpHostConfigurationBuilder serviceConfiguration = null)
+	/// <remarks>
+	/// If VS is run without elevated permissions, you need to run the 
+	/// following command from an elevated command prompt ONCE for the 
+	/// port you plan to use as the base Url:
+	/// <code>
+	/// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
+	/// </code>
+	/// </remarks>
+	internal static partial class HttpWebService
+	{
+		/// <summary>
+		/// Creates an HTTP web service using the given instance to run it, and the specified 
+		/// service configuration.
+		/// </summary>
+		public static HttpWebService<TService> Create<TService>(TService serviceInstance, string serviceBaseUrl, string serviceResourcePath, IHttpHostConfigurationBuilder serviceConfiguration = null)
+			where TService : class
+		{
+			return new HttpWebService<TService>(serviceBaseUrl, serviceResourcePath, serviceConfiguration, serviceInstance);
+		}
+	}
+
+	/// <summary>
+	/// Instantiates the host for the given service, and closes it on Dispose.
+	/// </summary>
+	/// <remarks>
+	/// If VS is run without elevated permissions, you need to run the 
+	/// following command from an elevated command prompt ONCE for the 
+	/// port you plan to use as the base Url:
+	/// <code>
+	/// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
+	/// </code>
+	/// </remarks>
+	internal partial class HttpWebService<TService> : IDisposable
 		where TService : class
 	{
-		return new HttpWebService<TService>(serviceBaseUrl, serviceResourcePath, serviceConfiguration, serviceInstance);
-	}
-}
+		private HttpServiceHost serviceHost;
+		private Uri serviceUri;
 
-/// <summary>
-/// Instantiates the host for the given service, and closes it on Dispose.
-/// </summary>
-/// <remarks>
-/// If VS is run without elevated permissions, you need to run the 
-/// following command from an elevated command prompt ONCE for the 
-/// port you plan to use as the base Url:
-/// <code>
-/// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
-/// </code>
-/// </remarks>
-internal partial class HttpWebService<TService> : IDisposable
-	where TService : class
-{
-	private HttpServiceHost serviceHost;
-	private Uri serviceUri;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="HttpWebService&lt;TService&gt;"/> class.
-	/// </summary>
-	/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
-	/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
-	/// <param name="serviceConfiguration">The configuration for the service.</param>
-	/// <param name="cacheServiceInstance">Whether to cache the service instance created by the configured 
-	/// resource factory across HTTP requests.</param>
-	public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
-		bool cacheServiceInstance,
-		IHttpHostConfigurationBuilder serviceConfiguration = null)
-		: this(serviceBaseUrl, serviceResourcePath, cacheServiceInstance, serviceConfiguration, null)
-	{
-	}
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="HttpWebService&lt;TService&gt;"/> class.
-	/// </summary>
-	/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
-	/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
-	/// <param name="serviceConfiguration">The configuration for the service.</param>
-	/// <param name="serviceInstance">The optional service instance. If not specified, the default resource factory 
-	/// on the configuration will be invoked. Otherwise, a single-instance resource factory will be setup automatically 
-	/// to return this instance to satisfy HTTP requests.</param>
-	public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
-		IHttpHostConfigurationBuilder serviceConfiguration = null,
-		TService serviceInstance = null)
-		: this(serviceBaseUrl, serviceResourcePath, false, serviceConfiguration, serviceInstance)
-	{
-	}
-
-	private HttpWebService(
-		string serviceBaseUrl,
-		string serviceResourcePath,
-		bool cacheServiceInstance,
-		IHttpHostConfigurationBuilder serviceConfiguration,
-		TService serviceInstance)
-	{
-		this.BaseUri = new Uri(serviceBaseUrl);
-		this.serviceUri = new Uri(new Uri(serviceBaseUrl), serviceResourcePath);
-
-		if (serviceConfiguration == null)
-			serviceConfiguration = HttpHostConfiguration.Create();
-
-		if (serviceInstance != null)
-			serviceConfiguration.SetResourceFactory(new SingletonResourceFactory(serviceInstance));
-		else if (cacheServiceInstance)
-			serviceConfiguration.SetResourceFactory(new CachingResourceFactory(serviceConfiguration.Configuration.InstanceFactory ?? new ActivatorResourceFactory()));
-
-		this.serviceHost = new HttpConfigurableServiceHost(typeof(TService), serviceConfiguration, this.serviceUri);
-		this.serviceHost.Open();
-	}
-
-	public Uri BaseUri { get; private set; }
-
-	public Uri Uri(object id)
-	{
-		return this.Uri(id.ToString());
-	}
-
-	public Uri Uri(string relativeUri)
-	{
-		return new Uri(this.serviceUri + "/" + relativeUri);
-	}
-
-	public void Dispose()
-	{
-		this.serviceHost.Close();
-	}
-
-	private class CachingResourceFactory : IResourceFactory
-	{
-		private ConcurrentDictionary<Type, object> cachedTypes = new ConcurrentDictionary<Type, object>();
-		private IResourceFactory originalFactory;
-
-		public CachingResourceFactory(IResourceFactory originalFactory)
-		{
-			this.originalFactory = originalFactory ?? (IResourceFactory)new ActivatorResourceFactory();
-		}
-
-		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
-		{
-			return cachedTypes.GetOrAdd(serviceType, type => this.originalFactory.GetInstance(serviceType, instanceContext, request));
-		}
-
-		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
-		{
-			// We never release, as we're caching it.
-		}
-	}
-
-	private class ActivatorResourceFactory : IResourceFactory
-	{
-		public ActivatorResourceFactory()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HttpWebService&lt;TService&gt;"/> class.
+		/// </summary>
+		/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
+		/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
+		/// <param name="serviceConfiguration">The configuration for the service.</param>
+		/// <param name="cacheServiceInstance">Whether to cache the service instance created by the configured 
+		/// resource factory across HTTP requests.</param>
+		public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
+			bool cacheServiceInstance,
+			IHttpHostConfigurationBuilder serviceConfiguration = null)
+			: this(serviceBaseUrl, serviceResourcePath, cacheServiceInstance, serviceConfiguration, null)
 		{
 		}
 
-		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HttpWebService&lt;TService&gt;"/> class.
+		/// </summary>
+		/// <param name="serviceBaseUrl">The service base URL without the resource path, such as "http://localhost:2000".</param>
+		/// <param name="serviceResourcePath">The service resource path, such as "products".</param>
+		/// <param name="serviceConfiguration">The configuration for the service.</param>
+		/// <param name="serviceInstance">The optional service instance. If not specified, the default resource factory 
+		/// on the configuration will be invoked. Otherwise, a single-instance resource factory will be setup automatically 
+		/// to return this instance to satisfy HTTP requests.</param>
+		public HttpWebService(string serviceBaseUrl, string serviceResourcePath,
+			IHttpHostConfigurationBuilder serviceConfiguration = null,
+			TService serviceInstance = null)
+			: this(serviceBaseUrl, serviceResourcePath, false, serviceConfiguration, serviceInstance)
 		{
-			return Activator.CreateInstance(serviceType);
 		}
 
-		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
+		private HttpWebService(
+			string serviceBaseUrl,
+			string serviceResourcePath,
+			bool cacheServiceInstance,
+			IHttpHostConfigurationBuilder serviceConfiguration,
+			TService serviceInstance)
 		{
-			if (service is IDisposable)
-				((IDisposable)service).Dispose();
+			this.BaseUri = new Uri(serviceBaseUrl);
+			this.serviceUri = new Uri(new Uri(serviceBaseUrl), serviceResourcePath);
+
+			if (serviceConfiguration == null)
+				serviceConfiguration = HttpHostConfiguration.Create();
+
+			if (serviceInstance != null)
+				serviceConfiguration.SetResourceFactory(new SingletonResourceFactory(serviceInstance));
+			else if (cacheServiceInstance)
+				serviceConfiguration.SetResourceFactory(new CachingResourceFactory(serviceConfiguration.Configuration.InstanceFactory ?? new ActivatorResourceFactory()));
+
+			this.serviceHost = new HttpConfigurableServiceHost(typeof(TService), serviceConfiguration, this.serviceUri);
+			this.serviceHost.Open();
 		}
-	}
 
-	private class SingletonResourceFactory : IResourceFactory
-	{
-		private object serviceInstance;
+		public Uri BaseUri { get; private set; }
 
-		public SingletonResourceFactory(object serviceInstance)
+		public Uri Uri(object id)
 		{
-			this.serviceInstance = serviceInstance;
+			return this.Uri(id.ToString());
 		}
 
-		public object GetInstance(Type serviceType, System.ServiceModel.InstanceContext instanceContext, HttpRequestMessage request)
+		public Uri Uri(string relativeUri)
 		{
-			return this.serviceInstance;
+			return new Uri(this.serviceUri + "/" + relativeUri);
 		}
 
-		public void ReleaseInstance(System.ServiceModel.InstanceContext instanceContext, object service)
+		public void Dispose()
 		{
+			this.serviceHost.Close();
 		}
 	}
 }

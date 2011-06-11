@@ -69,6 +69,7 @@
     <Compile Include="content\Microsoft\ApplicationServer\Http\ActivatorResourceFactory.cs" />
     <Compile Include="content\Microsoft\ApplicationServer\Http\CachingResourceFactory.cs" />
     <Compile Include="content\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
+    <Compile Include="content\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
     <Compile Include="content\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -57,9 +57,6 @@ namespace System.Net.Http.Entity
 	/// </remarks>
 	internal class HttpEntityConventionClient : HttpEntityClient
 	{
-		private bool disposed;
-		private HttpClient http;
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HttpEntityConventionClient"/> class with 
 		/// the default formatter <see cref="JsonNetEntityFormatter"/> and convention 
@@ -170,7 +167,7 @@ namespace System.Net.Http.Entity
 		/// <param name="search">Optional search criteria to be applied by the service, 
 		/// sent as a "q=" query string parameter. Useful to overcome limitations 
 		/// in the underlying query support in WCF.</param>
-		public IQueryable<T> Query<T>(string search = null)
+		public IHttpEntityQuery<T> Query<T>(string search = null)
 		{
 			return base.Query<T>(ResourceFor<T>(), search);
 		}
