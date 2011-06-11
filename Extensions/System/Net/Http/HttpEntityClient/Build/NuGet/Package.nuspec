@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
-		<version>1.1.1.17</version>
+		<version>1.1.1.20</version>
 		<title>HttpEntityClient: strong-typed Linq to Web API</title>
 		<description xml:space="preserve">Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
 

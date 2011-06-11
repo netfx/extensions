@@ -245,6 +245,22 @@ namespace Tests
 			}
 		}
 
+		[Fact]
+		public void WhenQuerying_ThenCanGetTotalCount()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+				var products = client.Query<Product>(resourceName, "kzu").Skip(5).Take(10);
+
+				var query = products as IHttpEntityQuery<Product>;
+				var response = query.Execute();
+
+				Assert.Equal(3, response.TotalCount);
+				Assert.True(response.Response.IsSuccessStatusCode);
+			}
+		}
+
 		public class ServiceConfiguration : HttpHostConfiguration
 		{
 			public ServiceConfiguration()

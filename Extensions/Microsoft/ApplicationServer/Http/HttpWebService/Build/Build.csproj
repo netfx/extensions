@@ -28,10 +28,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Source\HttpWebService.cs">
-      <Link>NuGet\content\netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="NuGet\Package.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
@@ -46,6 +42,7 @@
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="NuGet\tools\install.ps1" />
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -65,13 +62,7 @@
       <LastGenOutput>Push.ps1</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NuGet\lib\" />
-    <Folder Include="NuGet\tools\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Readme.txt" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0">
       <HintPath>$(VSSDK100Install)VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll</HintPath>

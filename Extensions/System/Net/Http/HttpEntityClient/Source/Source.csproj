@@ -45,9 +45,11 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\System\Net\Http\IHttpEntityQueryResponse.cs" />
     <Compile Include="content\System\Net\Http\HttpEntityClient.cs" />
     <Compile Include="content\System\Net\Http\HttpEntityException.cs" />
     <Compile Include="content\System\Net\Http\IEntityFormatter.cs" />
+    <Compile Include="content\System\Net\Http\IHttpEntityQuery.cs" />
     <Compile Include="content\System\Net\Http\JsonNetEntityFormatter.cs" />
     <Compile Include="content\System\Net\Http\JsonNetFormat.cs" />
     <Compile Include="netfx\System\Guard.cs" />

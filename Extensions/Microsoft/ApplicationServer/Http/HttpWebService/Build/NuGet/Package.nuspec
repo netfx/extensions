@@ -2,21 +2,16 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Microsoft.ApplicationServer.Http.HttpWebService</id>
-		<version>1.1.0.13</version>
-		<title>HttpWebService&lt;TService&gt; for Testing Services</title>
-		<description>Provides an HttpWebService&lt;TService&gt; disposable class to use in tests to host WebApi services and unit test them</description>
+		<version>1.1.0.20</version>
+		<title>HttpWebService&lt;TService&gt; has been renamed to netfx-WebApi.Testing</title>
+		<description>Installing this package actually installs netfx-WebApi.Testing.
+
+This package is provided for backwards compatibility with existing dependencies and to provide an upgrade path.</description>
 		<authors>Clarius, Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx wcf webapi testing tdd</tags>
-		<dependencies>
-			<dependency id="WebApi.Enhancements" version="0.3.0" />
-		</dependencies>
-		<frameworkAssemblies>
-			<frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40"/>
-			<frameworkAssembly assemblyName="System.ServiceModel.Web" targetFramework="net40"/>
-		</frameworkAssemblies>
 	</metadata>
 </package>
