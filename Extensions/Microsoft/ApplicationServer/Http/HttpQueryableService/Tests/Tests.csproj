@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3D08B2C6-2E94-4EB8-80D7-1343EC858A4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ApplicationServer.Common">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Http">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.HttpEnhancements">
+      <HintPath>..\packages\WebApi.Enhancements.0.3.0\lib\40\Microsoft.ApplicationServer.HttpEnhancements.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Serialization">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.ServiceModel">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Net.Http">
+      <HintPath>..\packages\HttpClient.0.3.0\lib\40\Microsoft.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.QueryComposition">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.QueryComposition.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Runtime.Serialization.Json">
+      <HintPath>..\packages\JsonValue.0.3.0\lib\40\Microsoft.Runtime.Serialization.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ServiceModel.Web.jQuery">
+      <HintPath>..\packages\JsonValue.0.3.0\lib\40\Microsoft.ServiceModel.Web.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="Tracer">
+      <HintPath>..\packages\Tracer.0.9.0.0\lib\NET40\Tracer.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit">
+      <HintPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), netfx.txt))\packages\xUnit\xunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HttpQueryableServiceSpec.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\ActivatorResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\CachingResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\Reflection\Reflect.cs" />
+    <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reflect.Overloads.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Source\Source.csproj">
+      <Project>{1929A294-C74F-4122-8675-E910A91B6701}</Project>
+      <Name>Source</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
+    </None>
+    <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

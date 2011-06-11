@@ -1,0 +1,21 @@
+﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
+<#@ Output Extension=".nuspec" #>
+<#@ Include File="..\..\..\..\..\..\..\Package.ttinclude" #>
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-Microsoft.ApplicationServer.Http.HttpQueryableService</id>
+		<version><#= version #></version>
+		<title>HttpQueryableService: provides support for paging and query limits for services that expose IQueryable&lt;T&gt; resources.</title>
+		<description>Allows HTTP clients to retrieve the server-side count for a given query, as well as specify limits on queries on the service.</description>
+		<authors>Daniel</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx webapi http wcf</tags>
+		<dependencies>
+			<dependency id="netfx-System.Net.Http.HttpEntityClient" version="1.1.1.19" />
+		</dependencies>
+	</metadata>
+</package>
