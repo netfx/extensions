@@ -1,0 +1,35 @@
+﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
+<#@ Output Extension=".nuspec" #>
+<#@ Include File="..\..\..\..\..\..\..\Package.ttinclude" #>
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Net.Http.HttpEntityConventionClient</id>
+		<version><#= version #></version>
+		<title>HttpEntityConventionClient: strong-typed Linq to Web API with resource names conventions</title>
+		<description xml:space="preserve">Builds on top of HttpEntityClient and HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
+
+Example:
+var products = client
+	// Note: resource path inferred from Product type
+	.Query&lt;Product&gt;()
+	.OrderBy(x => x.Downloads)
+	.Skip(25)
+	.Take(25)
+	.ToList();	
+</description>
+		<summary>Simple CRUD + Query typed conventions HTTP client</summary>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx http wcf webapi</tags>
+		<dependencies>
+			<dependency id="netfx-System.Net.Http.HttpEntityClient" version="1.1.1.16"/>
+		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Data.Entity.Design" targetFramework="net40"/>
+		</frameworkAssemblies>
+	</metadata>
+</package>
