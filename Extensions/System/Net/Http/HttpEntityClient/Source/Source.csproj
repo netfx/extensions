@@ -45,9 +45,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\System\Net\Http\HttpEntityClient.cs" />
     <Compile Include="content\System\Net\Http\HttpEntityException.cs" />
     <Compile Include="content\System\Net\Http\IEntityFormatter.cs" />
-    <Compile Include="content\System\Net\Http\IEntityResourceNameConvention.cs" />
     <Compile Include="content\System\Net\Http\JsonNetEntityFormatter.cs" />
     <Compile Include="content\System\Net\Http\JsonNetFormat.cs" />
     <Compile Include="netfx\System\Guard.cs" />
@@ -57,10 +57,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reflect.Overloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="content\System\Net\Http\PluralizerResourceConvention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="content\System\Net\Http\HttpEntityClient.cs" />
-    <Compile Include="content\System\Net\Http\PluralizerResourceFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">

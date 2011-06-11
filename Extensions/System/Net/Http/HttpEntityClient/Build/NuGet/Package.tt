@@ -11,7 +11,7 @@
 
 Example:
 var products = client
-	.Query&lt;Product&gt;()
+	.Query&lt;Product&gt;("products")
 	.OrderBy(x => x.Downloads)
 	.Skip(25)
 	.Take(25)
@@ -32,7 +32,6 @@ var products = client
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Data.Services.Client" targetFramework="net40"/>
-			<frameworkAssembly assemblyName="System.Data.Entity.Design" targetFramework="net40"/>
 		</frameworkAssemblies>
 	</metadata>
 </package>

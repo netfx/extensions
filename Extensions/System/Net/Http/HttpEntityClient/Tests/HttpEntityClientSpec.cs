@@ -12,11 +12,14 @@ using System.Collections.Concurrent;
 using System.IO;
 using Microsoft.ApplicationServer.Http.Dispatcher;
 using System.Web;
+using Microsoft.ApplicationServer.Http;
 
 namespace Tests
 {
 	public class HttpEntityClientSpec
 	{
+		private const string resourceName = "products";
+
 		[Fact]
 		public void WhenGetting_ThenRetrieves()
 		{
@@ -24,7 +27,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var product = client.Get<Product>("1");
+				var product = client.Get<Product>(resourceName, "1");
 
 				Assert.NotNull(product);
 				Assert.Equal("kzu", product.Owner.Name);
@@ -39,7 +42,7 @@ namespace Tests
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Owner = new User { Id = 1, Name = "kzu" } };
 
-				var saved = client.Post(product);
+				var saved = client.Post(resourceName, product);
 
 				Assert.Equal(4, saved.Id);
 
@@ -55,8 +58,8 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				client.Delete<Product>("1");
-				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>("25"));
+				client.Delete(resourceName, "1");
+				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>(resourceName, "25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -69,7 +72,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpEntityException>(() => client.Delete<Product>("25"));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Delete(resourceName, "25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -82,7 +85,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpEntityException>(() => client.Post<Product>(null));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Post<Product>(resourceName, null));
 
 				Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
 			}
@@ -96,9 +99,9 @@ namespace Tests
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Owner = new User { Id = 1, Name = "kzu" } };
 
-				client.Put("4", product);
+				client.Put(resourceName, "4", product);
 
-				var saved = client.Get<Product>("4");
+				var saved = client.Get<Product>(resourceName, "4");
 
 				Assert.Equal(saved.Id, 4);
 				Assert.Equal(saved.Owner.Id, product.Owner.Id);
@@ -113,7 +116,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				// We're putting a null which is invalid.
-				var exception = Assert.Throws<HttpEntityException>(() => client.Put<Product>("25", null));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Put<Product>(resourceName, "25", null));
 
 				Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
 			}
@@ -127,9 +130,9 @@ namespace Tests
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = new Product { Id = 1, Owner = new User { Id = 1, Name = "vga" } };
 
-				client.Put("1", product);
+				client.Put(resourceName, "1", product);
 
-				var saved = client.Get<Product>("1");
+				var saved = client.Get<Product>(resourceName, "1");
 
 				Assert.Equal(saved.Owner.Name, product.Owner.Name);
 			}
@@ -142,7 +145,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 
-				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>("25"));
+				var exception = Assert.Throws<HttpEntityException>(() => client.Get<Product>(resourceName, "25"));
 
 				Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
 			}
@@ -155,7 +158,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = default(Product);
-				var response = client.TryGet<Product>("25", out product);
+				var response = client.TryGet<Product>(resourceName, "25", out product);
 
 				Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 				Assert.Null(product);
@@ -169,7 +172,7 @@ namespace Tests
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
 				var product = default(Product);
-				var response = client.TryGet<Product>("1", out product);
+				var response = client.TryGet<Product>(resourceName, "1", out product);
 
 				Assert.True(response.IsSuccessStatusCode);
 				Assert.NotNull(product);
@@ -183,8 +186,8 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var ids = client.Query<Product>().Where(x => x.Owner.Name == "kzu").Select(x => x.Id).ToList();
-				var products = client.Query<Product>().Where(x => x.Owner.Name == "kzu").ToList();
+				var ids = client.Query<Product>(resourceName).Where(x => x.Owner.Name == "kzu").Select(x => x.Id).ToList();
+				var products = client.Query<Product>(resourceName).Where(x => x.Owner.Name == "kzu").ToList();
 
 				Assert.Equal(2, ids.Count);
 				Assert.True(products.All(x => x.Owner.Name == "kzu"));
@@ -197,7 +200,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>().Where(x => x.Owner.Name == "foo").ToList();
+				var products = client.Query<Product>(resourceName).Where(x => x.Owner.Name == "foo").ToList();
 
 				Assert.Equal(0, products.Count);
 			}
@@ -209,7 +212,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>().Skip(1).Take(1).ToList();
+				var products = client.Query<Product>(resourceName).Skip(1).Take(1).ToList();
 
 				Assert.Equal(1, products.Count);
 				Assert.Equal(2, products[0].Id);
@@ -222,7 +225,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>().OrderBy(x => x.Title).Take(2).ToList();
+				var products = client.Query<Product>(resourceName).OrderBy(x => x.Title).Take(2).ToList();
 
 				Assert.Equal(2, products.Count);
 				Assert.Equal("A", products[0].Title);
@@ -236,7 +239,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>("kzu").ToList();
+				var products = client.Query<Product>(resourceName, "kzu").ToList();
 
 				Assert.True(products.All(x => x.Owner.Name == "kzu"));
 			}
@@ -247,40 +250,8 @@ namespace Tests
 			public ServiceConfiguration()
 			{
 				this.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
-				this.AddMessageHandlers(typeof(LoggingChannel));
+				this.AddMessageHandlers(typeof(TracingChannel));
 				this.SetErrorHandler<ErrorHandler>();
-				this.AddRequestHandlers(
-					handlers =>
-					{
-						handlers.Add(new QueryOperationHandler("q"));
-						handlers.Add(new QueryOperationHandler("query"));
-						handlers.Add(new QueryOperationHandler("criteria"));
-						handlers.Add(new QueryOperationHandler("search"));
-					},
-					(endpoint, operation) => QueryOperationHandler.AppliesTo(operation));
-			}
-		}
-
-		public class QueryOperationHandler : HttpOperationHandler<HttpRequestMessage, string>
-		{
-			public QueryOperationHandler(string parameterName)
-				: base(parameterName)
-			{
-			}
-
-			public override string OnHandle(HttpRequestMessage input)
-			{
-				return HttpUtility.ParseQueryString(input.RequestUri.Query)["q"];
-			}
-
-			public static bool AppliesTo(HttpOperationDescription operation)
-			{
-				return IsQueryable(operation.ReturnValue.Type);
-			}
-
-			private static bool IsQueryable(Type type)
-			{
-				return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IQueryable<>);
 			}
 		}
 
@@ -295,34 +266,6 @@ namespace Tests
 			protected override HttpResponseMessage OnProvideResponse(Exception error)
 			{
 				return new HttpResponseMessage(HttpStatusCode.InternalServerError, error.Message);
-			}
-		}
-
-		public class LoggingChannel : DelegatingChannel
-		{
-			public LoggingChannel(HttpMessageChannel handler)
-				: base(handler)
-			{
-			}
-
-			protected override System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
-			{
-				var body = "";
-				if (request.Content != null)
-					body = request.Content.ReadAsString();
-				System.Diagnostics.Trace.TraceInformation("Begin Request: {0} {1}\r\n{2}", request.Method, request.RequestUri, body);
-
-				return base.SendAsync(request, cancellationToken)
-					.ContinueWith(task =>
-					{
-						if (task.Result.Content != null)
-						{
-							var responseBody = task.Result.Content.ReadAsString();
-							System.Diagnostics.Trace.TraceInformation("Begin Response: {0} (Reason: {1})\r\n{2}", task.Result.StatusCode, task.Result.ReasonPhrase, responseBody);
-						}
-
-						return task.Result;
-					}, cancellationToken);
 			}
 		}
 	}

@@ -70,6 +70,9 @@
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
+    <Reference Include="Tracer">
+      <HintPath>..\packages\Tracer.0.9.0.0\lib\NET40\Tracer.dll</HintPath>
+    </Reference>
     <Reference Include="xunit">
       <HintPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), netfx.txt))\packages\xUnit\xunit.dll</HintPath>
     </Reference>
@@ -79,6 +82,7 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
@@ -86,7 +90,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reflect.Overloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="PluralizerSpec.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>

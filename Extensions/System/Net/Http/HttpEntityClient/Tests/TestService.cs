@@ -108,13 +108,13 @@ public class TestService
 		}
 	}
 
-	[WebGet(UriTemplate = "")]
-	public IQueryable<Product> Query(string criteria = null)
+	[WebGet(UriTemplate = "?search={search}")]
+	public IQueryable<Product> Query(string search = null)
 	{
-		if (string.IsNullOrEmpty(criteria))
+		if (string.IsNullOrEmpty(search))
 			return this.products.AsQueryable();
 		else
-			return this.products.Where(x => x.Title.Contains(criteria) || x.Owner.Name.Contains(criteria)).AsQueryable();
+			return this.products.Where(x => x.Title.Contains(search) || x.Owner.Name.Contains(search)).AsQueryable();
 	}
 }
 
