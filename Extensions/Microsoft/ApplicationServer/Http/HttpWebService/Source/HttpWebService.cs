@@ -27,6 +27,14 @@ using System.Collections.Concurrent;
 /// <summary>
 /// Factory class for HTTP web services.
 /// </summary>
+/// <remarks>
+/// If VS is run without elevated permissions, you need to run the 
+/// following command from an elevated command prompt ONCE for the 
+/// port you plan to use as the base Url:
+/// <code>
+/// netsh http add urlacl http://+:[port]/ user=[DOMAIN\USER]
+/// </code>
+/// </remarks>
 internal static partial class HttpWebService
 {
 	/// <summary>
@@ -104,7 +112,7 @@ internal partial class HttpWebService<TService> : IDisposable
 		if (serviceInstance != null)
 			serviceConfiguration.SetResourceFactory(new SingletonResourceFactory(serviceInstance));
 		else if (cacheServiceInstance)
-			serviceConfiguration.SetResourceFactory(new CachingResourceFactory(serviceConfiguration.Configuration.InstanceFactory));
+			serviceConfiguration.SetResourceFactory(new CachingResourceFactory(serviceConfiguration.Configuration.InstanceFactory ?? new ActivatorResourceFactory()));
 
 		this.serviceHost = new HttpConfigurableServiceHost(typeof(TService), serviceConfiguration, this.serviceUri);
 		this.serviceHost.Open();
