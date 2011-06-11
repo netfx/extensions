@@ -37,12 +37,54 @@ namespace Microsoft.ApplicationServer.Http
 
 		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
+			TraceRequest(request);
+
+			return base.SendAsync(request, cancellationToken)
+				.ContinueWith(task =>
+				{
+					TraceResponse(task.Result);
+
+					return task.Result;
+				}, cancellationToken);
+		}
+
+		protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+		{
+			TraceRequest(request);
+
+			var response = base.Send(request, cancellationToken);
+
+			TraceResponse(response);
+
+			return response;
+		}
+
+		private void TraceResponse(HttpResponseMessage response)
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine();
+			builder.AppendFormat("HTTP/{0}.{1} {2} {3}", response.Version.Major, response.Version.Minor, (int)response.StatusCode, response.ReasonPhrase);
+			builder.AppendLine();
+			builder.AppendLine("Date: " + DateTime.Now.ToString("r"));
+
+			AddHeaders(builder, response.Headers);
+			AddHeaders(builder, response.Content.Headers);
+
+			tracer.TraceInformation(builder.ToString());
+
+			if (response.Content != null)
+				tracer.TraceVerbose(Environment.NewLine + response.Content.ReadAsString());
+		}
+
+		private void TraceRequest(HttpRequestMessage request)
+		{
 			var body = "";
 			if (request.Content != null)
 				body = request.Content.ReadAsString();
 
-
 			var builder = new StringBuilder();
+			builder.AppendLine();
+			builder.AppendLine();
 			builder.AppendFormat("{0} {1} HTTP/{2}.{3}", request.Method, request.RequestUri, request.Version.Major, request.Version.Minor);
 			builder.AppendLine();
 			AddHeaders(builder, request.Headers);
@@ -51,27 +93,6 @@ namespace Microsoft.ApplicationServer.Http
 			tracer.TraceInformation(builder.ToString());
 			if (!string.IsNullOrEmpty(body))
 				tracer.TraceVerbose(body);
-
-			return base.SendAsync(request, cancellationToken)
-				.ContinueWith(task =>
-				{
-					if (task.Result.Content != null)
-					{
-						builder = new StringBuilder();
-						builder.AppendFormat("HTTP/{0}.{1} {2} {3}", task.Result.Version.Major, task.Result.Version.Minor, (int)task.Result.StatusCode, task.Result.ReasonPhrase);
-						builder.AppendLine();
-						builder.AppendLine("Date: " + DateTime.Now.ToString("r"));
-
-						AddHeaders(builder, task.Result.Headers);
-						AddHeaders(builder, task.Result.Content.Headers);
-
-						tracer.TraceInformation(builder.ToString());
-
-						tracer.TraceVerbose(task.Result.Content.ReadAsString());
-					}
-
-					return task.Result;
-				}, cancellationToken);
 		}
 
 		private void AddHeaders(StringBuilder builder, HttpHeaders headers)
