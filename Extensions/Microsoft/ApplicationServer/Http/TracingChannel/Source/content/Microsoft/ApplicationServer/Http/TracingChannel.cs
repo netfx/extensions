@@ -68,7 +68,9 @@ namespace Microsoft.ApplicationServer.Http
 			builder.AppendLine("Date: " + DateTime.Now.ToString("r"));
 
 			AddHeaders(builder, response.Headers);
-			AddHeaders(builder, response.Content.Headers);
+
+			if (response.Content != null)
+				AddHeaders(builder, response.Content.Headers);
 
 			tracer.TraceInformation(builder.ToString());
 
