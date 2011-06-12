@@ -26,7 +26,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Web;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// A client API that communicates with REST services implemented 

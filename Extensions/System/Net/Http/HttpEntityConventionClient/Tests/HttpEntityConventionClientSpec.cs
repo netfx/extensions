@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using Microsoft.ApplicationServer.Http.Description;
 using System.Net;
-using System.Net.Http.Entity;
 using System.Collections.Concurrent;
 using System.IO;
 using Microsoft.ApplicationServer.Http.Dispatcher;

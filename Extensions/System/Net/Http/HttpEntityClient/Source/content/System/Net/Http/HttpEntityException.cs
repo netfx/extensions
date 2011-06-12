@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Http;
 using System.Net;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// Exception that occurs when the response static is not 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// Json format to use with <see cref="JsonNetEntityFormatter"/>.

@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Http;
 using System.IO;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// Formatter that reads and writes <see cref="HttpContent"/> 

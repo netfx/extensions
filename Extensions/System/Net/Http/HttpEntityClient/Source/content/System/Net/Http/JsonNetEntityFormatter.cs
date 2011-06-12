@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using Newtonsoft.Json.Bson;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// An entity formatter that serializes to and from Json.

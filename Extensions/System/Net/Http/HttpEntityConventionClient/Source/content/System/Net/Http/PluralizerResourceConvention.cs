@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Entity.Design.PluralizationServices;
 
-namespace System.Net.Http.Entity
+namespace System.Net.Http
 {
 	/// <summary>
 	/// Entity resource convention that pluralizes singular-named 
