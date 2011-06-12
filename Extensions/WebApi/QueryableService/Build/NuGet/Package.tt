@@ -15,7 +15,10 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx webapi http wcf</tags>
 		<dependencies>
-			<dependency id="netfx-System.Net.Http.HttpEntityClient" version="1.1.1.19" />
+			<dependency id="WebApi.Enhancements" version="0.3.0" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" targetFramework="net40"/>
+		</frameworkAssemblies>
 	</metadata>
 </package>

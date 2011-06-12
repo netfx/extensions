@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-WebApi.QueryableService</id>
-		<version>1.0.0.26</version>
+		<version>1.0.0.33</version>
 		<title>WebApi IQueryable Service</title>
 		<description>Provides support for client-side paging (TotalCount header) and server-side query limits for services that expose IQueryable&lt;T&gt; resources.</description>
 		<authors>Daniel</authors>
@@ -12,7 +12,10 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx webapi http wcf</tags>
 		<dependencies>
-			<dependency id="netfx-System.Net.Http.HttpEntityClient" version="1.1.1.19" />
+			<dependency id="WebApi.Enhancements" version="0.3.0" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" targetFramework="net40"/>
+		</frameworkAssemblies>
 	</metadata>
 </package>
