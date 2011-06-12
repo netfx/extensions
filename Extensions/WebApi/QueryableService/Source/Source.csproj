@@ -74,13 +74,6 @@
     <Compile Include="content\Microsoft\ApplicationServer\Http\HttpQueryableServiceHost.cs" />
     <Compile Include="content\Microsoft\ApplicationServer\Http\HttpQueryableServiceHostFactory.cs" />
     <Compile Include="netfx\System\Guard.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
-    <Compile Include="netfx\System\Net\Http\IEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQuery.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
       <AutoGen>True</AutoGen>

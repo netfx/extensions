@@ -34,7 +34,6 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
 using System.Runtime.Remoting.Messaging;
-using System.Net.Http.Entity;
 using Microsoft.ApplicationServer.Http.Channels;
 using System.Net;
 
@@ -47,6 +46,12 @@ namespace Microsoft.ApplicationServer.Http.Activation
 	/// </summary>
 	internal class HttpQueryableServiceHost : HttpConfigurableServiceHost
 	{
+		/// <summary>
+		/// Header emitted by the service that allows client-side 
+		/// paging by retrieving the server-side total count of entities in a given query.
+		/// </summary>
+		public const string TotalCountHeader = "X-TotalCount";
+
 		private const string QueryLimitData = "QueryLimit";
 
 		/// <summary>
@@ -161,10 +166,10 @@ namespace Microsoft.ApplicationServer.Http.Activation
 
 				private void AddPagingHeaders(HttpResponseMessage response)
 				{
-					var count = CallContext.LogicalGetData(HttpEntityClient.TotalCountHeader);
+					var count = CallContext.LogicalGetData(TotalCountHeader);
 
 					if (count != null)
-						response.Headers.AddWithoutValidation(HttpEntityClient.TotalCountHeader, count.ToString());
+						response.Headers.AddWithoutValidation(TotalCountHeader, count.ToString());
 				}
 			}
 		}
@@ -241,7 +246,7 @@ namespace Microsoft.ApplicationServer.Http.Activation
 
 					var result = urlComposer.ComposeQuery(rootedQuery, sanitizedUri.Uri.AbsoluteUri);
 
-					CallContext.LogicalSetData(HttpEntityClient.TotalCountHeader, count.ToString());
+					CallContext.LogicalSetData(TotalCountHeader, count.ToString());
 
 					return result;
 				}

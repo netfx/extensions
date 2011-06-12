@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Microsoft.ApplicationServer.Http.TracingChannel</id>
-		<version>1.0.0.11</version>
-		<title>Tracing Channel for WebApi</title>
+		<id>netfx-WebApi.TracingChannel</id>
+		<version>1.0.0.19</version>
+		<title>WebApi Tracing Channel</title>
 		<description>TracingChannel</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
