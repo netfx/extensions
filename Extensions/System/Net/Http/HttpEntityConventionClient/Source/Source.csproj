@@ -31,8 +31,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.ApplicationServer.Common">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Http">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.HttpEnhancements">
+      <HintPath>..\packages\WebApi.Enhancements.0.3.0\lib\40\Microsoft.ApplicationServer.HttpEnhancements.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Serialization">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.ServiceModel">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.ServiceModel.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Net.Http">
       <HintPath>..\packages\HttpClient.0.3.0\lib\40\Microsoft.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.QueryComposition">
+      <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.QueryComposition.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Runtime.Serialization.Json">
       <HintPath>..\packages\JsonValue.0.3.0\lib\40\Microsoft.Runtime.Serialization.Json.dll</HintPath>
@@ -58,6 +76,8 @@
     <Compile Include="content\System\Net\Http\IEntityResourceNameConvention.cs" />
     <Compile Include="content\System\Net\Http\PluralizerResourceConvention.cs" />
     <Compile Include="content\System\Net\Http\PluralizerResourceFormat.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
+    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
     <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
@@ -66,6 +86,7 @@
     <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
     <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
     <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
+    <Compile Include="netfx\System\Net\Http\QueryableExtension.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
       <AutoGen>True</AutoGen>

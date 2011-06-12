@@ -89,11 +89,17 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpQueryableServiceHost.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpQueryableServiceHostFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
-    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
-    <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
+    <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
+    <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
+    <Compile Include="netfx\System\Net\Http\IEntityFormatter.cs" />
+    <Compile Include="netfx\System\Net\Http\IHttpEntityQuery.cs" />
+    <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
+    <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
+    <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
+    <Compile Include="netfx\System\Net\Http\QueryableExtension.cs" />
     <Compile Include="PluralizerSpec.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
