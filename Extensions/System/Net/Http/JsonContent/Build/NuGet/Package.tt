@@ -15,7 +15,7 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx wcf</tags>
 		<dependencies>
-			<dependency id="netfx-Microsoft.ApplicationServer.Http.JsonNetMediaTypeFormatter" version="1.0.0.28" />
+			<dependency id="netfx-WebApi.JsonNetFormatter" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

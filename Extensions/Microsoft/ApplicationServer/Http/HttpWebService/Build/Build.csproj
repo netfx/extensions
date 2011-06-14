@@ -32,6 +32,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Package.nuspec</LastGenOutput>
     </None>
+    <Content Include="NuGet\content\netfx-Microsoft.ApplicationServer.Http.HttpWebService.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="NuGet\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Package.tt</DependentUpon>
@@ -42,7 +45,9 @@
     <Content Include="NuGet\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="NuGet\tools\install.ps1" />
+    <Content Include="NuGet\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Pack.cmd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

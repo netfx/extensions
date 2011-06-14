@@ -61,9 +61,6 @@
     <Reference Include="Microsoft.ServiceModel.Web.jQuery">
       <HintPath>..\packages\JsonValue.0.3.0\lib\40\Microsoft.ServiceModel.Web.jQuery.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -92,14 +89,6 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
-    <Compile Include="netfx\System\Net\Http\IEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQuery.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
-    <Compile Include="netfx\System\Net\Http\QueryableExtension.cs" />
     <Compile Include="PluralizerSpec.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
