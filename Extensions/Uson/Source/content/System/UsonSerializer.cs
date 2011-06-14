@@ -13,6 +13,7 @@ using Newtonsoft.Json.Converters;
 
 internal class UsonSerializer
 {
+	private static Dictionary<Type, string> defaultPropertyMap = new Dictionary<Type, string>();
 	private JsonSerializer serializer;
 
 	public static UsonSerializer Create(JsonSerializerSettings settings)
@@ -47,6 +48,15 @@ internal class UsonSerializer
 	{
 		var writer = new StringWriter();
 		var uson = new UsonWriter(writer);
+
+		uson.DefaultProperty = defaultPropertyMap.GetOrAdd(typeof(T), key =>
+		{
+			return typeof(T)
+				.GetCustomAttributes(true)
+				.OfType<DefaultPropertyAttribute>()
+				.Select(x => x.Name)
+				.FirstOrDefault() ?? "";
+		});
 
 		this.serializer.Serialize(uson, value);
 

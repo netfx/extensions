@@ -111,6 +111,16 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenSerializingDefaultPropertyName_ThenDoesNotRenderIt()
+		{
+			var serializer = new UsonSerializer();
+
+			var json = serializer.Serialize(new QueryOptions { Content = { "foo", "bar" } });
+
+			Assert.False(json.Contains("Content"));
+		}
+
+		[Fact]
 		public void WhenSerializing_ThenRoundrips()
 		{
 			var options = new QueryOptions
@@ -134,8 +144,6 @@ namespace Tests
 			Assert.Equal(options.Max, value.Max);
 			Assert.Equal(options.Owner.Id, value.Owner.Id);
 			Assert.Equal(options.Owner.Name, value.Owner.Name);
-
-			Console.WriteLine(json);
 		}
 
 		public class Options

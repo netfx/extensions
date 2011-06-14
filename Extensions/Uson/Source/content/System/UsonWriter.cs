@@ -19,6 +19,12 @@ internal class UsonWriter : JsonWriter
 	}
 
 	/// <summary>
+	/// Gets or sets the optional default property at the root level object 
+	/// that can be omitted from serialization.
+	/// </summary>
+	public string DefaultProperty { get; set; }
+
+	/// <summary>
 	/// Closes this stream and the underlying stream.
 	/// </summary>
 	public override void Close()
@@ -65,8 +71,14 @@ internal class UsonWriter : JsonWriter
 
 	private void WriteValueInternal(string value, JsonToken token)
 	{
-		this.writer.Write(string.Join(".", this.path.Reverse()));
-		this.writer.Write(':');
+		var property = string.Join(".", this.path.Reverse());
+
+		if (!property.Equals(this.DefaultProperty, StringComparison.OrdinalIgnoreCase))
+		{
+			this.writer.Write(property);
+			this.writer.Write(':');
+		}
+
 		this.writer.Write(value);
 		if (!this.isArray)
 			this.path.Pop();
