@@ -1,0 +1,1 @@
+﻿This package has been renamed to netfx-WebApi.Testing
