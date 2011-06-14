@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFx", "Vsix\NetFx.csproj", "{BAB3DFB4-AF92-4247-959F-5E15CFF33866}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{55D16012-606C-41E0-9FD6-1CA48DA81A1B}"
+	ProjectSection(SolutionItems) = preProject
+		..\NuGet.properties = ..\NuGet.properties
+		..\NuGet.targets = ..\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -34,10 +34,10 @@ The project name becomes your extension class name. Also, make sure you UNCHECK 
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.SetExtensionMetadataWizard</FullClassName>
 	</WizardExtension>
-	<WizardExtension>
+	<!--<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.TransformAllTemplatesWizard</FullClassName>
-	</WizardExtension>
+	</WizardExtension>-->
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.SaveSolutionWizard</FullClassName>

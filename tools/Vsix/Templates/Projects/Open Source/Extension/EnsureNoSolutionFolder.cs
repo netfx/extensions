@@ -21,7 +21,11 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 
 			var paths = destinationDirectory.Split(Path.DirectorySeparatorChar).Reverse().ToList();
 			if (paths[0].Equals(paths[1]))
+			{
+				MessageBox.Show("Please uncheck the 'Create directory for solution' option in the dialog", "NETFx Contributor", MessageBoxButton.OK, MessageBoxImage.Stop);
+				Directory.Delete(new DirectoryInfo(destinationDirectory).Parent.FullName, true);
 				throw new WizardBackoutException();
+			}
 		}
 
 		public void RunFinished()
