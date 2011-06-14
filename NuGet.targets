@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<CleanDependsOn>$(CleanDependsOn);NuGetClean</CleanDependsOn>
+		<BuildDependsOn>$(BuildDependsOn);NuGetBuild</BuildDependsOn>
+	</PropertyGroup>
+	<Target Name="NuGetClean">
+		<Exec Command="RmDir /S /Q $(OutputPath)" ContinueOnError="false" />
+	</Target>
+	<Target Name="NuGetBuild">
+		<!-- Transforms T4 templates to update versions, package definition, etc. -->
+		<CallTarget Targets="TransformAll" />
+		<!-- Copy these files to the output directory. -->
+		<AssignTargetPath Files="@(Content)" RootFolder="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
+		</AssignTargetPath>
+		<ItemGroup>
+			<DynamicContent Include="..\Source\content\**\*.*" />
+		</ItemGroup>
+		<!-- Bring in as content files everything in the content folder of the Source project. -->
+		<CreateItem Include="@(DynamicContent)"
+					AdditionalMetadata="TargetPath=$([System.Text.RegularExpressions.Regex]::Replace('%(DynamicContent.RelativeDir)', '..\\Source\\content\\', 'NuGet\\content\netfx\\', System.Text.RegularExpressions.RegexOptions.IgnoreCase))%(DynamicContent.Filename)%(DynamicContent.Extension)">
+			<Output ItemName="ContentFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
+		<Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
+	</Target>
+</Project>
