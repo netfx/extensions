@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-Uson</id>
+		<version>1.0.0.27</version>
+		<title>Uson: user string object notation. Serialize and parse objects from user authored and readable strings</title>
+		<description>Useful for providing flexible search options for example: foo product:vspro tag:wcf downloads:2000+ author:clarius</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx search</tags>
+		<dependencies>
+		  <dependency id="Newtonsoft.Json" version="4.0.2" />
+		  <dependency id="netfx-System.Collections.Generic.DictionaryGetOrAdd" version="1.0.0.6" />
+		</dependencies>
+	</metadata>
+</package>
