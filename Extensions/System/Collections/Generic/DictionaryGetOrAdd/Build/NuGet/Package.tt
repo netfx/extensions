@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.Collections.Generic.DictionaryGetOrAdd</id>
 		<version><#= version #></version>
-		<title>Dictionary.GetOrAdd Extension Method</title>
+		<title>NETFx IDictionary&lt;TKey, TValue&gt;.GetOrAdd Extension Method</title>
 		<description>Provides the GetOrAdd extension method for generic dictionaries, borrowed from the ConcurrentDictionary class.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

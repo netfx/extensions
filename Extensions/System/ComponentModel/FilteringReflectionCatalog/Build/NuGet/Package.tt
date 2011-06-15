@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.ComponentModel.FilteringReflectionCatalog</id>
 		<version><#= version #></version>
-		<title>Filtering Reflection Catalog</title>
+		<title>NETFx Filtering Reflection Catalog</title>
 		<description>Provides dinamic filtering of parts and exports from an underlying reflection-based catalog using a simple lambda expression that can inspect the export, its metadata and its exporting reflected type (part).
 
 Example: var filtered = new FilteringReflectionCatalog(innerCatalog)

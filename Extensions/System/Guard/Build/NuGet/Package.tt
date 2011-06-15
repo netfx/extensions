@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-Guard</id>
 		<version><#= version #></version>
-		<title>Guard Argument Validation</title>
+		<title>NETFx Guard</title>
 		<description>The only argument validation file you need, with full refactoring support and strong-typing.
 
 Examples: 

@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.IO.StreamWriteTo</id>
-		<version>1.0.0.7</version>
-		<title>Stream.WriteTo buffered stream copy</title>
-		<description>Copies an arbitrary stream to another stream or an output file.</description>
+		<version>1.0.0.11</version>
+		<title>NETFx Stream.WriteTo Extension Method</title>
+		<description>Copies an arbitrary stream to another stream or an output file (buffered).</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

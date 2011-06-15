@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.TypeInheritance</id>
 		<version><#= version #></version>
-		<title>Type Inheritance Tree</title>
+		<title>NETFx Type Inheritance Tree</title>
 		<description>Allows inspecting the exact type inheritance tree as declared in source, rather than the flattened view that reflection provides (for implemented interfaces, for example).
 
 Enables code to determine what are the interfaces implemented directly by a type rather than a base class, as well as determine the "distance" in the hierarchy to those implementations.

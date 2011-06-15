@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Collections.Generic.DictionaryGetOrAdd</id>
-		<version>1.0.0.6</version>
-		<title>Dictionary.GetOrAdd Extension Method</title>
+		<version>1.0.0.12</version>
+		<title>NETFx IDictionary&lt;TKey, TValue&gt;.GetOrAdd Extension Method</title>
 		<description>Provides the GetOrAdd extension method for generic dictionaries, borrowed from the ConcurrentDictionary class.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

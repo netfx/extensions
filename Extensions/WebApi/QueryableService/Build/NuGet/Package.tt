@@ -6,9 +6,9 @@
 	<metadata>
 		<id>netfx-WebApi.QueryableService</id>
 		<version><#= version #></version>
-		<title>WebApi IQueryable Service</title>
+		<title>NETFx WebApi IQueryable Service</title>
 		<description>Provides support for client-side paging (TotalCount header) and server-side query limits for services that expose IQueryable&lt;T&gt; resources.</description>
-		<authors>Daniel</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

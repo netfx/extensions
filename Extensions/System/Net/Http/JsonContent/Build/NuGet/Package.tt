@@ -6,8 +6,8 @@
 	<metadata>
 		<id>netfx-System.Net.Http.JsonContent</id>
 		<version><#= version #></version>
-		<title>JsonContent: A Json.NET HttpContent class</title>
-		<description>Provides a Json.NET json content serialization.</description>
+		<title>NETFx JsonContent</title>
+		<description>A Json.NET-based HttpContent class for content serialization.</description>
 		<authors>Daniel Cazzulino, Julian Dominguez, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

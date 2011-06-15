@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-WebApi.JsonNetFormatter</id>
 		<version><#= version #></version>
-		<title>WebApi Json.NET MediaTypeFormatter</title>
+		<title>NETFx WebApi Json.NET MediaTypeFormatter</title>
 		<description xml:space="preserve">A Json.NET-based MediaTypeFormatter for the WebApi that can handle text-based Json as well as binary Json (Bson). 
 To use: var config = HttpHostConfiguration.Create().UseJsonNet();</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

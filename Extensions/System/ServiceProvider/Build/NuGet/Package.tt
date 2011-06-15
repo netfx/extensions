@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.ServiceProvider</id>
 		<version><#= version #></version>
-		<title>ServiceProvider generic overloads</title>
+		<title>NETFx ServiceProvider Generics Extension Methods</title>
 		<description>Generic overloads to System.IServiceProvider.GetService.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

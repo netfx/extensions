@@ -18,7 +18,7 @@
     <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
     <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-	  <DefineConstants>NuGet</DefineConstants>
+    <DefineConstants>NuGet</DefineConstants>
   </PropertyGroup>
   <!-- VS requires these -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

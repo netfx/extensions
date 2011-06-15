@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.JsonContent</id>
-		<version>1.0.0.10</version>
-		<title>JsonContent: A Json.NET HttpContent class</title>
-		<description>Provides a Json.NET json content serialization.</description>
+		<version>1.0.0.15</version>
+		<title>NETFx JsonContent</title>
+		<description>A Json.NET-based HttpContent class for content serialization.</description>
 		<authors>Daniel Cazzulino, Julian Dominguez, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

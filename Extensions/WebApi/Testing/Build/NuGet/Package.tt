@@ -6,9 +6,9 @@
 	<metadata>
 		<id>netfx-WebApi.Testing</id>
 		<version><#= version #></version>
-		<title>WebApi Testing Helpers</title>
+		<title>NETFx WebApi Testing Helpers</title>
 		<description>Provides an HttpWebService&lt;TService&gt; disposable class to use in tests to host WebApi services and unit test them, SingletonResourceFactory, CachingResourceFactory, etc.</description>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

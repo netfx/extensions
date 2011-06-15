@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.Threading.ThreadData</id>
 		<version><#= version #></version>
-		<title>Thread Data&lt;T&gt;</title>
+		<title>NETFx Thread Data&lt;T&gt;</title>
 		<description>Provides strong-typed persistence of data in Thread local storage, which can also be transient and automatically removed on dispose.
 
 Usage: Thread.CurrentThread.SetData&lt;Foo&gt;(foo);

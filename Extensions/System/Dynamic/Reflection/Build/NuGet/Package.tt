@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.Dynamic.Reflection</id>
 		<version><#= version #></version>
-		<title>Dynamic Reflection: dynamic syntax for reflection code</title>
+		<title>NETFx Dynamic Reflection</title>
 		<description>Provides full reflection capabilities using C# 4.0 dynamic syntax, including invoking and accessing public, internal or private, instance or static members including constructors.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

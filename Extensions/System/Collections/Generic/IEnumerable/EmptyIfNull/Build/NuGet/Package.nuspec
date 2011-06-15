@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Collections.Generic.IEnumerable.EmptyIfNull</id>
-		<version>1.0.0.8</version>
-		<title>EmptyIfNull: convert null enumerables into empty ones</title>
+		<version>1.0.0.12</version>
+		<title>NETFx IEnumerable&lt;T&gt;.EmptyIfNull Extension Method</title>
 		<description xml:space="preserve">Hate checking for nulls in Linq queries? Turn any null enumerable into an empty one as needed! 
 
 var id = schema.Elements.EmptyIfNull().FirstOrDefault(x => x == "Id")</description>

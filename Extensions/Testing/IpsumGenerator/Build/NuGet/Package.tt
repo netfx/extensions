@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-IpsumGenerator</id>
 		<version><#= version #></version>
-		<title>Ipsum Generator</title>
+		<title>NETFx Ipsum Generator</title>
 		<description>Generates Lorem Ipsum words for use in tests.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

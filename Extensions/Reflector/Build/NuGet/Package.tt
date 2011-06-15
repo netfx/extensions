@@ -6,8 +6,8 @@
 	<metadata>
 		<id>netfx-Reflector</id>
 		<version><#= version #></version>
-		<title>Reflector: strong-typed static reflection</title>
-		<description xml:space="preserve">Static reflection via Reflect:
+		<title>NETFx Reflector</title>
+		<description xml:space="preserve">Strong-typed static reflection via Reflect:
 // Void static method
 MethodInfo cw = Reflect.GetMethod(
   () =&gt; Console.WriteLine);

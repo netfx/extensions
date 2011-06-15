@@ -6,8 +6,8 @@
 	<metadata>
 		<id>netfx-System.IO.StreamWriteTo</id>
 		<version><#= version #></version>
-		<title>Stream.WriteTo buffered stream copy</title>
-		<description>Copies an arbitrary stream to another stream or an output file.</description>
+		<title>NETFx Stream.WriteTo Extension Method</title>
+		<description>Copies an arbitrary stream to another stream or an output file (buffered).</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

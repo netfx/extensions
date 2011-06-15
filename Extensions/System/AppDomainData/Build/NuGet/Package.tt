@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.AppDomainData</id>
 		<version><#= version #></version>
-		<title>AppDomain Data&lt;T&gt;</title>
+		<title>NETFx AppDomain Data&lt;T&gt;</title>
 		<description xml:space="preserve">Provides strong-typed persistence of data in an AppDomain, which can also be transient and automatically removed on dispose.  
 
 Usage: AppDomain.CurrentDomain.SetData&lt;Foo&gt;(foo);

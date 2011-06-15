@@ -25,6 +25,7 @@ using System.Data.Services.Client;
 using System.Reflection;
 using System.Diagnostics;
 using System.Web;
+using System.Collections.Specialized;
 
 namespace System.Net.Http
 {
@@ -164,12 +165,45 @@ namespace System.Net.Http
 		/// executed when the queryable is enumerated.
 		/// </summary>
 		/// <typeparam name="T">Type of entity being queried.</typeparam>
-		/// <param name="search">Optional search criteria to be applied by the service, 
-		/// sent as a "q=" query string parameter. Useful to overcome limitations 
-		/// in the underlying query support in WCF.</param>
-		public IHttpEntityQuery<T> Query<T>(string search = null)
+		/// <param name="resourcePath">The resource path.</param>
+		/// <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+		/// run on the server side when it's enumerated.</returns>
+		public IHttpEntityQuery<T> Query<T>()
 		{
-			return base.Query<T>(ResourceFor<T>(), search);
+			return base.Query<T>(ResourceFor<T>(), default(HttpNameValueCollection));
+		}
+
+		/// <summary>
+		/// Creates a query for the given entity type, that will be
+		/// executed when the queryable is enumerated.
+		/// </summary>
+		/// <typeparam name="T">Type of entity being queried.</typeparam>
+		/// <param name="resourcePath">The resource path.</param>
+		/// <param name="options">Additional query options expressed as an anonymous type 
+		/// where the property names and their values are used to populate a <see cref="NameValueCollection"/> 
+		/// automatically and are sent as query string parameters. Useful to overcome limitations
+		/// in the underlying query support in WCF.</param>
+		/// <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+		/// run on the server side when it's enumerated.</returns>
+		public IHttpEntityQuery<T> Query<T>(object options)
+		{
+			return base.Query<T>(ResourceFor<T>(), options);
+		}
+
+		/// <summary>
+		/// Creates a query for the given entity type, that will be
+		/// executed when the queryable is enumerated.
+		/// </summary>
+		/// <typeparam name="T">Type of entity being queried.</typeparam>
+		/// <param name="resourcePath">The resource path.</param>
+		/// <param name="options">Additional query options to be applied by the service,
+		/// sent as query string parameters. Useful to overcome limitations
+		/// in the underlying query support in WCF.</param>
+		/// <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+		/// run on the server side when it's enumerated.</returns>
+		public IHttpEntityQuery<T> Query<T>(HttpNameValueCollection options)
+		{
+			return base.Query<T>(ResourceFor<T>(), options);
 		}
 
 		/// <summary>

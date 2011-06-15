@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Reflector</id>
-		<version>1.0.0.7</version>
-		<title>Reflector: strong-typed static reflection</title>
-		<description xml:space="preserve">Static reflection via Reflect:
+		<version>1.0.0.10</version>
+		<title>NETFx Reflector</title>
+		<description xml:space="preserve">Strong-typed static reflection via Reflect:
 // Void static method
 MethodInfo cw = Reflect.GetMethod(
   () =&gt; Console.WriteLine);

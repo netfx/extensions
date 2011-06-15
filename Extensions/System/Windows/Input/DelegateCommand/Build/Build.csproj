@@ -90,6 +90,6 @@
       <Output TaskParameter="AssignedFiles" ItemName="ContentFiles" />
     </AssignTargetPath>
     <Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(OutputPath)\%(TargetPath)')" />
-	  <Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="Pack.cmd" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 </Project>

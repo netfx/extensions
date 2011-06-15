@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Reflection.Reflect</id>
-		<version>1.0.0.29</version>
+		<version>1.0.0.34</version>
 		<title>Obsolete: use netx-Reflector</title>
 		<description xml:space="preserve">This package has been renamed to netfx-Reflector, and installing it will actually install netfx-Reflector package.
 
@@ -13,5 +13,8 @@ This package is for backwards compatibility with existing dependencies.</descrip
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx reflection</tags>
+		<dependencies>
+			<dependency id="netx-Reflector" version="1.0.0.7" />
+		</dependencies>
 	</metadata>
 </package>

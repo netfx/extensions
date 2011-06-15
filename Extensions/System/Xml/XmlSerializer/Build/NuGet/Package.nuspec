@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.XmlSerializer</id>
-		<version>1.0.0.5</version>
-		<title>XmlSerializer of T</title>
+		<version>1.0.0.9</version>
+		<title>NETFx XmlSerializer&lt;T&gt;</title>
 		<description>Provides a generics version of XmlSerializer.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -13,6 +13,8 @@
 		<tags>netfx xmlserializer xml</tags>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xml" targetFramework="net40"/>
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net35"/>
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net20"/>
 		</frameworkAssemblies>
 	</metadata>
 </package>

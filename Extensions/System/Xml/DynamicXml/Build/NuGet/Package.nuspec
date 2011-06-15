@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.DynamicXml</id>
-		<version>1.0.0.35</version>
-		<title>Dynamic Xml</title>
+		<version>1.0.0.37</version>
+		<title>NETFx Dynamic Xml</title>
 		<description>Provides a dynamic API over XLinq:
 
 var xdoc = XDocument.Load("rss.xml");

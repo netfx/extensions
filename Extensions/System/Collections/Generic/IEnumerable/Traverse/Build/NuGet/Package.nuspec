@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Collections.Generic.IEnumerable.Traverse</id>
-		<version>1.0.0.15</version>
-		<title>Traverse</title>
+		<version>1.0.0.17</version>
+		<title>NETFx IEnumerable&lt;T&gt;.Traverse Extension Method</title>
 		<description xml:space="preserve">Traverse an enumerable tree, depth or breadth first. 
 Example:
 

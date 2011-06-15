@@ -6,8 +6,8 @@
 	<metadata>
 		<id>netfx-System.DateTimeEpochExtensions</id>
 		<version><#= version #></version>
-		<title>DateTime and DateTimeOffset to Epoch time</title>
-		<description>Provides conversion of dates into an epoch-relative number value (total seconds).
+		<title>NETFx Epoch Time Extension Methods</title>
+		<description>Provides conversion of DateTime and DateTimeOffset into an epoch-relative number value (total seconds).
 		
 See Unix Epoch in Wikipedia for more information on why this might be needed. 
 		

@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.IO.StreamGetBytes</id>
 		<version><#= version #></version>
-		<title>Stream.GetBytes extension method</title>
+		<title>NETFx Stream.GetBytes Extension Method</title>
 		<description>Easily get all bytes that make up an arbitrary stream.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

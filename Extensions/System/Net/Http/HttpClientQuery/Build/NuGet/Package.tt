@@ -6,8 +6,9 @@
 	<metadata>
 		<id>netfx-System.Net.Http.HttpClientQuery</id>
 		<version><#= version #></version>
-		<title>HttpClient.Query&lt;T&gt;</title>
-		<description>Allows querying WCF Web Api endpoints that expose IQueryable&lt;T&gt;, with full query support for nested relationships, etc.</description>
+		<title>NETFx HttpClient.Query&lt;T&gt;</title>
+		<description>Allows querying WCF Web Api endpoints that expose IQueryable&lt;T&gt;, with full query support for nested relationships, etc.
+Does not deal with response deserialization. Look for HttpEntityClient for that.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

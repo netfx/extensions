@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Windows.Input.DelegateCommand</id>
-		<version>1.0.0.3</version>
-		<title>WPF DelegateCommand: lambda-powered</title>
+		<version>1.0.0.9</version>
+		<title>NETFx DelegateCommand</title>
 		<description>An implementation of WPF ICommand that allows passing delegates/lambdas for the implementation.</description>
 		<authors>Julian Dominguez, Mariano Rodriguez, Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

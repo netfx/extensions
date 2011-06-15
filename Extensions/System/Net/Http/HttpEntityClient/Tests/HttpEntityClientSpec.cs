@@ -12,6 +12,7 @@ using System.IO;
 using Microsoft.ApplicationServer.Http.Dispatcher;
 using System.Web;
 using Microsoft.ApplicationServer.Http;
+using Microsoft.ApplicationServer.Http.Activation;
 
 namespace Tests
 {
@@ -238,7 +239,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>(resourceName, "kzu").ToList();
+				var products = client.Query<Product>(resourceName, new { search = "kzu" }).ToList();
 
 				Assert.True(products.All(x => x.Owner.Name == "kzu"));
 			}
@@ -247,26 +248,34 @@ namespace Tests
 		[Fact]
 		public void WhenQuerying_ThenCanGetTotalCount()
 		{
-			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			var baseUri = new Uri("http://localhost:20000");
+			var service = new TestService();
+			var config = new ServiceConfiguration(service);
+
+			using (new SafeHostDisposer(
+				new HttpQueryableServiceHost(typeof(TestService), 25, config, new Uri(baseUri, "products"))))
 			{
-				var client = new HttpEntityClient(ws.BaseUri);
-				var products = client.Query<Product>(resourceName, "kzu").Skip(5).Take(10);
+				var client = new HttpEntityClient(baseUri);
+				var products = client.Query<Product>(resourceName, new { search = "kzu" }).Skip(5).Take(10);
 
 				var query = products as IHttpEntityQuery<Product>;
 				var response = query.Execute();
 
-				Assert.Equal(3, response.TotalCount);
+				Assert.Equal(2, response.TotalCount);
+				Assert.Equal(0, response.Count());
 				Assert.True(response.Response.IsSuccessStatusCode);
 			}
 		}
 
 		public class ServiceConfiguration : HttpHostConfiguration
 		{
-			public ServiceConfiguration()
+			public ServiceConfiguration(object serviceInstance = null)
 			{
 				this.OperationHandlerFactory.Formatters.Insert(0, new JsonNetMediaTypeFormatter());
 				this.AddMessageHandlers(typeof(TracingChannel));
 				this.SetErrorHandler<ErrorHandler>();
+				if (serviceInstance != null)
+					this.Configure.SetResourceFactory(new SingletonResourceFactory(serviceInstance));
 			}
 		}
 

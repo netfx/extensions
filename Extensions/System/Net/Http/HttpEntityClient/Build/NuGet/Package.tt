@@ -6,8 +6,8 @@
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
 		<version><#= version #></version>
-		<title>HttpEntityClient: strong-typed Linq to Web API</title>
-		<description xml:space="preserve">Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
+		<title>NETFx HttpEntityClient</title>
+		<description xml:space="preserve">Strong-typed Linq to Web API. Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
 
 Example:
 var products = client
@@ -28,6 +28,7 @@ var products = client
 			<dependency id="HttpClient" version="0.3.0"/>
 			<dependency id="Newtonsoft.Json" version="4.0.2" />
 			<dependency id="netfx-Reflector" version="1.0.0.7" />
+			<dependency id="netfx-System.Net.Http.HttpNameValueCollection" version="1.0.0.23" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" targetFramework="net40"/>

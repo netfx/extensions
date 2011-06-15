@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-WebApi.JsonNetFormatter</id>
-		<version>1.0.0.9</version>
-		<title>WebApi Json.NET MediaTypeFormatter</title>
+		<version>1.0.0.11</version>
+		<title>NETFx WebApi Json.NET MediaTypeFormatter</title>
 		<description xml:space="preserve">A Json.NET-based MediaTypeFormatter for the WebApi that can handle text-based Json as well as binary Json (Bson). 
 To use: var config = HttpHostConfiguration.Create().UseJsonNet();</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

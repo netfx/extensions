@@ -237,7 +237,7 @@ namespace Tests
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
 			{
 				var client = new HttpEntityConventionClient(ws.BaseUri);
-				var products = client.Query<Product>("kzu").ToList();
+				var products = client.Query<Product>(new { search = "kzu" }).ToList();
 
 				Assert.True(products.All(x => x.Owner.Name == "kzu"));
 			}
@@ -252,7 +252,7 @@ namespace Tests
 					new Uri("http://localhost:20000/products"))))
 			{
 				var client = new HttpEntityConventionClient("http://localhost:20000");
-				var query = (IHttpEntityQuery<Product>)client.Query<Product>("kzu").Take(1);
+				var query = (IHttpEntityQuery<Product>)client.Query<Product>(new { search = "kzu" }).Take(1);
 
 				var result = query.Execute();
 

@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.Collections.Generic.CovariantExtensions</id>
 		<version><#= version #></version>
-		<title>CovariantExtensions: easy down-casting collections</title>
+		<title>NETFx CovariantExtensions</title>
 		<description>Provides extension methods that allow to treat collections, enumerables and lists as covariant of a generic type other than their constructed type (i.e. for down-casting collections).</description>
 		<authors>Umbrella Project, Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

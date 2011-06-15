@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.IO.StreamGetBytes</id>
-		<version>1.0.0.7</version>
-		<title>Stream.GetBytes extension method</title>
+		<version>1.0.0.9</version>
+		<title>NETFx Stream.GetBytes Extension Method</title>
 		<description>Easily get all bytes that make up an arbitrary stream.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-Microsoft.IdentityModel.Swt</id>
 		<version><#= version #></version>
-		<title>SWT Token Support for WIF/ACS</title>
+		<title>NETFx SWT Token Support for WIF/ACS</title>
 		<description>Adds the required source code and Web.config changes to support SWT tokens.
 
 Just configure SWT token format in Azure ACS/STS, and add your SwtSigningKey value to the Web.config!

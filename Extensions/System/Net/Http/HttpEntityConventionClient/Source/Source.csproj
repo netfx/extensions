@@ -79,14 +79,15 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityClient.cs" />
-    <Compile Include="netfx\System\Net\Http\HttpEntityException.cs" />
-    <Compile Include="netfx\System\Net\Http\IEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQuery.cs" />
-    <Compile Include="netfx\System\Net\Http\IHttpEntityQueryResponse.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetEntityFormatter.cs" />
-    <Compile Include="netfx\System\Net\Http\JsonNetFormat.cs" />
-    <Compile Include="netfx\System\Net\Http\QueryableExtension.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\HttpEntityClient.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\HttpEntityException.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\IEntityFormatter.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\IHttpEntityQuery.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\IHttpEntityQueryResponse.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\JsonNetEntityFormatter.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\JsonNetFormat.cs" />
+    <Compile Include="netfx\System\Net\Http\EntityClient\QueryableExtension.cs" />
+    <Compile Include="netfx\System\Net\Http\HttpNameValueCollection.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
       <AutoGen>True</AutoGen>

@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.IO.Packaging.StreamUnpack</id>
-		<version>1.0.0.10</version>
-		<title>Stream.Unpack extension for Open Packaging Conventions</title>
+		<version>1.0.0.14</version>
+		<title>NETFx Stream.Unpack Extension Method</title>
 		<description>Allows easy unpacking of contents from an Open Packaging Conventions (OPC) stream such as OOXML, VSIX, NuGet nupkg, etc.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

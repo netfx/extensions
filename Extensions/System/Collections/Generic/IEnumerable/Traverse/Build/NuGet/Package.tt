@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-System.Collections.Generic.IEnumerable.Traverse</id>
 		<version><#= version #></version>
-		<title>Traverse</title>
+		<title>NETFx IEnumerable&lt;T&gt;.Traverse Extension Method</title>
 		<description xml:space="preserve">Traverse an enumerable tree, depth or breadth first. 
 Example:
 

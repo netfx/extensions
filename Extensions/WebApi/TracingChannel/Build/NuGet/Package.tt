@@ -6,7 +6,7 @@
 	<metadata>
 		<id>netfx-WebApi.TracingChannel</id>
 		<version><#= version #></version>
-		<title>WebApi Tracing Channel</title>
+		<title>NETFx WebApi Tracing Channel</title>
 		<description>TracingChannel</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
