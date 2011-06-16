@@ -36,6 +36,8 @@ using System.ServiceModel.Web;
 using System.Runtime.Remoting.Messaging;
 using Microsoft.ApplicationServer.Http.Channels;
 using System.Net;
+using System.Globalization;
+using System.Collections.ObjectModel;
 
 namespace Microsoft.ApplicationServer.Http.Activation
 {
@@ -58,7 +60,7 @@ namespace Microsoft.ApplicationServer.Http.Activation
 		/// Initializes a new instance of the <see cref="HttpQueryableServiceHost"/> class.
 		/// </summary>
 		public HttpQueryableServiceHost(object singletonInstance, int queryLimit, IHttpHostConfigurationBuilder builder, params Uri[] baseAddresses)
-			: base(singletonInstance, AddQueryMessageHandler(builder, queryLimit), baseAddresses)
+			: base(singletonInstance, Configure(builder, queryLimit), baseAddresses)
 		{
 		}
 
@@ -66,13 +68,14 @@ namespace Microsoft.ApplicationServer.Http.Activation
 		/// Initializes a new instance of the <see cref="HttpQueryableServiceHost"/> class.
 		/// </summary>
 		public HttpQueryableServiceHost(Type serviceType, int queryLimit, IHttpHostConfigurationBuilder builder, params Uri[] baseAddresses)
-			: base(serviceType, AddQueryMessageHandler(builder, queryLimit), baseAddresses)
+			: base(serviceType, Configure(builder, queryLimit), baseAddresses)
 		{
 		}
 
-		private static IHttpHostConfigurationBuilder AddQueryMessageHandler(IHttpHostConfigurationBuilder builder, int queryLimit)
+		private static IHttpHostConfigurationBuilder Configure(IHttpHostConfigurationBuilder builder, int queryLimit)
 		{
 			builder.SetMessageHandlerFactory(new HttpQueryMessageHandlerFactory(queryLimit, builder.Configuration.MessageHandlerFactory));
+			builder.SetOperationHandlerFactory(new HttpQueryOperationHandlerFactory(builder.Configuration.OperationHandlerFactory));
 
 			return builder;
 		}
@@ -94,10 +97,118 @@ namespace Microsoft.ApplicationServer.Http.Activation
 						{
 							// Replace with our behavior.
 							serviceEndpoint.Behaviors.Remove(behavior);
-							serviceEndpoint.Behaviors.Add(new HttpQueryableBehavior());
+							serviceEndpoint.Behaviors.Add(new HttpQueryableBehavior
+							{
+								HelpEnabled = behavior.HelpEnabled,
+								OperationHandlerFactory = behavior.OperationHandlerFactory,
+								TrailingSlashMode = behavior.TrailingSlashMode
+							});
 						}
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// Factory that wraps any existing operation factory with ours that 
+		/// adds support for multi-value uri query parameters.
+		/// </summary>
+		private class HttpQueryOperationHandlerFactory : HttpOperationHandlerFactory
+		{
+			private HttpOperationHandlerFactory innerFactory;
+
+			public HttpQueryOperationHandlerFactory(HttpOperationHandlerFactory innerFactory = null)
+				: base(innerFactory != null ? innerFactory.Formatters : new MediaTypeFormatterCollection())
+			{
+				this.innerFactory = innerFactory;
+			}
+
+			protected override Collection<HttpOperationHandler> OnCreateRequestHandlers(ServiceEndpoint endpoint, HttpOperationDescription operation)
+			{
+				var handlers = this.innerFactory != null ?
+					this.innerFactory.CreateRequestHandlers(endpoint, operation) :
+					base.OnCreateRequestHandlers(endpoint, operation);
+
+				handlers.Add(new UriMultiValueTemplateHandler(endpoint.Address.Uri, operation.GetUriTemplate()));
+
+				return handlers;
+			}
+
+			protected override Collection<HttpOperationHandler> OnCreateResponseHandlers(ServiceEndpoint endpoint, HttpOperationDescription operation)
+			{
+				if (this.innerFactory != null)
+					return this.innerFactory.CreateResponseHandlers(endpoint, operation);
+
+				return base.OnCreateResponseHandlers(endpoint, operation);
+			}
+		}
+
+		/// <summary>
+		/// Adds built-in support for query string arrays if needed. No conversion 
+		/// to other types of arrays are implemented.
+		/// </summary>
+		private class UriMultiValueTemplateHandler : HttpOperationHandler
+		{
+			public UriMultiValueTemplateHandler(Uri baseAddress, UriTemplate uriTemplate)
+			{
+				this.BaseAddress = baseAddress;
+				this.UriTemplate = uriTemplate;
+			}
+
+			public Uri BaseAddress { get; private set; }
+			public UriTemplate UriTemplate { get; private set; }
+
+			protected override sealed IEnumerable<HttpParameter> OnGetInputParameters()
+			{
+				return new HttpParameter[] { HttpParameter.RequestMessage };
+			}
+
+			protected override sealed IEnumerable<HttpParameter> OnGetOutputParameters()
+			{
+				var numberOfVariables = this.UriTemplate.PathSegmentVariableNames.Count + this.UriTemplate.QueryValueVariableNames.Count;
+
+				var parameters = new List<HttpParameter>(numberOfVariables);
+				parameters.AddRange(this.UriTemplate
+					.PathSegmentVariableNames
+					.Select(name => new HttpParameter(name, typeof(string))));
+
+				parameters.AddRange(this.UriTemplate
+					.QueryValueVariableNames
+					.Select(name => new HttpParameter(name, typeof(string[]))));
+
+				return parameters;
+			}
+
+			protected override sealed object[] OnHandle(object[] input)
+			{
+				var requestMessage = input[0] as HttpRequestMessage;
+				var uri = requestMessage.RequestUri;
+				var numberOfParameters = this.OutputParameters.Count;
+				var output = new object[numberOfParameters];
+				if (uri != null)
+				{
+					var match = this.UriTemplate.Match(this.BaseAddress, uri);
+					if (match == null)
+					{
+						throw new InvalidOperationException(string.Format(
+							CultureInfo.CurrentCulture,
+							"Template '{0}' does not match '{1}.",
+							this.UriTemplate.ToString(),
+							uri));
+					}
+
+					// Wrong handling here by the UriTemplateMatch, as it always concatenates 
+					// the multiple query values in a uri.
+					for (int i = 0; i < numberOfParameters; i++)
+					{
+						var key = match.BoundVariables.Keys[i];
+						// We access by key as the index will be different if there are 
+						// extra query string arguments that haven't been matched.
+						output[i] = match.QueryParameters.GetValues(key);
+					}
+				}
+
+				return output;
 			}
 		}
 
@@ -236,8 +347,16 @@ namespace Microsoft.ApplicationServer.Http.Activation
 					queryString = HttpUtility.ParseQueryString(new Uri(url).Query);
 					var topLimit = (int)CallContext.LogicalGetData(QueryLimitData);
 					var top = topLimit;
-					if (int.TryParse(queryString["$top"], out top) && top > topLimit)
+
+					if (int.TryParse(queryString["$top"], out top))
+					{
+						if (top > topLimit)
+							top = topLimit;
+					}
+					else
+					{
 						top = topLimit;
+					}
 
 					queryString["$top"] = top.ToString();
 
