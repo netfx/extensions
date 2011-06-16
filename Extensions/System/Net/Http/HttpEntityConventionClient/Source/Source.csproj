@@ -72,10 +72,10 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Net\Http\HttpEntityConventionClient.cs" />
-    <Compile Include="content\System\Net\Http\IEntityResourceNameConvention.cs" />
-    <Compile Include="content\System\Net\Http\PluralizerResourceConvention.cs" />
-    <Compile Include="content\System\Net\Http\PluralizerResourceFormat.cs" />
+    <Compile Include="content\System\Net\Http\Entity\HttpEntityConventionClient.cs" />
+    <Compile Include="content\System\Net\Http\Entity\IEntityResourceNameConvention.cs" />
+    <Compile Include="content\System\Net\Http\Entity\PluralizerResourceConvention.cs" />
+    <Compile Include="content\System\Net\Http\Entity\PluralizerResourceFormat.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />

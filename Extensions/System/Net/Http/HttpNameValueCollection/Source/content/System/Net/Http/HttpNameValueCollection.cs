@@ -35,6 +35,16 @@ namespace System.Net.Http
 		protected HttpNameValueCollection(SerializationInfo info, StreamingContext context)
 			: base(info, context) { }
 
+		public HttpNameValueCollection Add(string name, params string[] values)
+		{
+			foreach (var value in values)
+			{
+				base.Add(name, value);
+			}
+
+			return this;
+		}
+
 		public override string ToString()
 		{
 			var http = HttpUtility.ParseQueryString("");

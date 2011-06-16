@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpNameValueCollection</id>
-		<version>1.0.0.23</version>
+		<version>1.0.0.25</version>
 		<title>NETFx HttpNameValueCollection</title>
 		<description>A simpler NameValueCollection-derived class that uses HTTP query string semantics and renders to a query string when ToString is invoked.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
