@@ -142,10 +142,4 @@ internal class UsonReader<T> : JsonTextReader
 		public string Name { get; set; }
 		public string Value { get; set; }
 	}
-
-	private class InterfacePropertyMap
-	{
-		public PropertyInfo InterfaceProperty { get; set; }
-		public MethodInfo TargetMethod { get; set; }
-	}
 }

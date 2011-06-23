@@ -84,6 +84,19 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenParsingSingleValueWithEquals_ThenRetrievesNameValueGroups()
+		{
+			var value = "tag=foo";
+			var match = new UsonPattern().Matches(value).OfType<Match>().FirstOrDefault();
+
+			Assert.NotNull(match);
+			Assert.True(match.Groups[UsonPattern.NameGroup].Success);
+			Assert.True(match.Groups[UsonPattern.ValueGroup].Success);
+			Assert.Equal("tag", match.Groups[UsonPattern.NameGroup].Value);
+			Assert.Equal("foo", match.Groups[UsonPattern.ValueGroup].Value);
+		}
+
+		[Fact]
 		public void WhenParsingDoubleQuotedPropertyValue_ThenRetrievesNameValueGroups()
 		{
 			var value = "tag:\"hello world\"";
@@ -109,5 +122,17 @@ namespace Tests
 			Assert.Equal("vspro", matches[1].Groups[UsonPattern.ValueGroup].Value);
 		}
 
+		[Fact]
+		public void WhenParsingQuotedTimespanValue_ThenRetrievesNameValueGroups()
+		{
+			var value = "timeout:\"10:00:00\"";
+			var match = new UsonPattern().Matches(value).OfType<Match>().FirstOrDefault();
+
+			Assert.NotNull(match);
+			Assert.True(match.Groups[UsonPattern.NameGroup].Success);
+			Assert.True(match.Groups[UsonPattern.ValueGroup].Success);
+			Assert.Equal("timeout", match.Groups[UsonPattern.NameGroup].Value);
+			Assert.Equal("\"10:00:00\"", match.Groups[UsonPattern.ValueGroup].Value);
+		}
 	}
 }

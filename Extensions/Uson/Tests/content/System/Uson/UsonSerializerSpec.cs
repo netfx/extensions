@@ -146,6 +146,19 @@ namespace Tests
 			Assert.Equal(options.Owner.Name, value.Owner.Name);
 		}
 
+		[Fact]
+		public void WhenDeserializingTimespan_ThenParsesValue()
+		{
+			var serializer = new UsonSerializer();
+			var uson = "timeout:\"00:05:00\"";
+
+			var json = serializer.Deserialize<QueryOptions>(uson);
+
+			json.Timeout = TimeSpan.FromMinutes(5);
+
+			Assert.Equal(TimeSpan.FromMinutes(5), json.Timeout);
+		}
+
 		public class Options
 		{
 			[DefaultValue(10)]
@@ -169,6 +182,7 @@ namespace Tests
 			public int Max { get; set; }
 			public int? Take { get; set; }
 			public DateTimeOffset When { get; set; }
+			public TimeSpan Timeout { get; set; }
 			public User Owner { get; set; }
 			public User Parent { get; set; }
 		}

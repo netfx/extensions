@@ -16,7 +16,7 @@ internal class UsonPattern : Regex
 	private static readonly RegexPart Value = Group(QuotedValue | NonWhitespace);
 
 	// ((?<name>[\S]+)[:=])?(?<value>(["'][^"']+["']|[\S]+))
-	private static readonly RegexPart Expression = Group(Group(NameGroup, NonWhitespace) + "[:=]") + "?" + Group(ValueGroup, Value);
+	private static readonly RegexPart Expression = Group(Group(NameGroup, NonWhitespace + "?") + "[:=]") + "?" + Group(ValueGroup, Value);
 
 	/// <summary>
 	/// Name of the "name" group/part of a value, i.e. "tag" in "tag:wpf".

@@ -4,7 +4,7 @@
 <#@ Import Namespace="System.Linq" #>
 <#
 /*
- * This template renders a current-path relative version of the batch file Release.cmd 
+ * This template renders a current-path relative version of the batch file Pack.cmd 
  * that takes into account the location of the root netfx folder, as well as the location 
  * of the currently installed version of NuGet command line tool package.
 */
@@ -28,7 +28,7 @@ pathToPackageBaseDir =
     nugetCmd.Directory.FullName.Replace(rootDir.FullName, "")
     .Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
     .Aggregate("", (path, current) => path += "..\\") +
-    currentDir.FullName.Replace(rootDir.FullName, "").Substring(1) + "\\bin";
+    currentDir.FullName.Replace(rootDir.FullName, "").Substring(1) + "\\bin\\Release";
 #>
 <#+
 	DirectoryInfo currentDir;
