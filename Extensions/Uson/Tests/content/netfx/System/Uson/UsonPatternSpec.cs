@@ -64,6 +64,13 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenUnquotingContent_ThenRemovesSingleQuotes()
+		{
+			var value = "'hello world'";
+			Assert.Equal("hello world", UsonPattern.Unquote(value));
+		}
+
+		[Fact]
 		public void WhenUnquotingContent_ThenPreservesMiddleQuotes()
 		{
 			var value = "\"Joe's house\"";
@@ -110,6 +117,19 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenParsingSingleQuotedPropertyValue_ThenRetrievesNameValueGroups()
+		{
+			var value = "tag:'hello world'";
+			var match = new UsonPattern().Matches(value).OfType<Match>().FirstOrDefault();
+
+			Assert.NotNull(match);
+			Assert.True(match.Groups[UsonPattern.NameGroup].Success);
+			Assert.True(match.Groups[UsonPattern.ValueGroup].Success);
+			Assert.Equal("tag", match.Groups[UsonPattern.NameGroup].Value);
+			Assert.Equal("'hello world'", match.Groups[UsonPattern.ValueGroup].Value);
+		}
+
+		[Fact]
 		public void WhenParsingMultiplePropertyValues_ThenRetrievesNameValueGroups()
 		{
 			var value = "tag:wpf platform:vspro";
@@ -133,6 +153,20 @@ namespace Tests
 			Assert.True(match.Groups[UsonPattern.ValueGroup].Success);
 			Assert.Equal("timeout", match.Groups[UsonPattern.NameGroup].Value);
 			Assert.Equal("\"10:00:00\"", match.Groups[UsonPattern.ValueGroup].Value);
+		}
+
+		[Fact]
+		public void WhenParsingSingleQuotedValueWithSpaces_ThenRetrievesFullValue()
+		{
+			//AnalysisConsole.exe Source:"C:\Data\Message1.txt" Source:"C:\Data\Message2.txt" Database:"Data Source=.\\SQLExpress;Initial Catalog=AnalysisDatabase;Integrated Security=True;" Assembly:"C:\Temp\MyQueries1.dll" Assembly:"C:\Temp\MyQueries2.dll"
+			var value = "Database:'Data Source=.\\SQLExpress;Initial Catalog=AnalysisDatabase;Integrated Security=True;'";
+			var match = new UsonPattern().Matches(value).OfType<Match>().FirstOrDefault();
+
+			Assert.NotNull(match);
+			Assert.True(match.Groups[UsonPattern.NameGroup].Success);
+			Assert.True(match.Groups[UsonPattern.ValueGroup].Success);
+			Assert.Equal("Database", match.Groups[UsonPattern.NameGroup].Value);
+			Assert.True(match.Groups[UsonPattern.ValueGroup].Value.Contains("Integrated Security"), "Failed to find 'Integrated Security' in " + match.Groups[UsonPattern.ValueGroup].Value);
 		}
 	}
 }

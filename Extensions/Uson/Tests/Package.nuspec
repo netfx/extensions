@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Uson.Tests</id>
-		<version>1.1.0.0</version>
+		<version>1.1.1.2</version>
 		<title>NETFx Uson Tests</title>
 		<description>xUnit tests for netfx-Uson</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

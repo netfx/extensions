@@ -53,9 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Uson\UsonPatternSpec.cs" />
-    <Compile Include="content\System\Uson\UsonSerializerSpec.cs" />
-    <Compile Include="content\System\Uson\UsonWriterSpecs.cs" />
+    <Compile Include="content\netfx\System\Uson\UsonPatternSpec.cs" />
+    <Compile Include="content\netfx\System\Uson\UsonSerializerSpec.cs" />
+    <Compile Include="content\netfx\System\Uson\UsonWriterSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">

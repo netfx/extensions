@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Uson</id>
-		<version>1.1.0.0</version>
+		<version>1.1.1.2</version>
 		<title>NETFx Uson</title>
 		<description>User String Object Notation. Serialize and parse objects from user authored and readable strings. Useful for providing flexible search options for example: foo product:vspro tag:wcf downloads:2000+ author:clarius</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
