@@ -19,6 +19,7 @@
 				<ProjectItem>AssemblyInfo.cs</ProjectItem>
 			</Folder>
 			<ProjectItem OpenInEditor="true" ReplaceParameters="true" TargetFileName="$solutionname$.cs">Source.cs</ProjectItem>
+			<ProjectItem OpenInEditor="false" ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
 		</Project>
   </TemplateContent>
 	<WizardExtension>
@@ -27,7 +28,7 @@
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
-		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionMetadataWizard</FullClassName>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionInformationWizard</FullClassName>
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>

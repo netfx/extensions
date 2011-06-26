@@ -16,6 +16,7 @@
 	<TemplateContent>
 		<Project TargetFileName="Tests.csproj" File="Tests.csproj" ReplaceParameters="true">
 			<ProjectItem OpenInEditor="true" ReplaceParameters="true" TargetFileName="$solutionname$Spec.cs">SourceSpec.cs</ProjectItem>
+			<ProjectItem OpenInEditor="false" ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
 		</Project>
 	</TemplateContent>
 	<WizardExtension>
@@ -24,10 +25,14 @@
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
-		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionMetadataWizard</FullClassName>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.GetExtensionInformationWizard</FullClassName>
 	</WizardExtension>
 	<WizardExtension>
 		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
 		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.AddSourceReferenceWizard</FullClassName>
+	</WizardExtension>
+	<WizardExtension>
+		<Assembly>NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=97e29b2abc034295</Assembly>
+		<FullClassName>NetFx.Templates.Projects.OpenSource.Extension.MoveSourceToPathWizard</FullClassName>
 	</WizardExtension>
 </VSTemplate>

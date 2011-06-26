@@ -11,9 +11,9 @@ using System.Runtime.Remoting.Messaging;
 namespace NetFx.Templates.Projects.OpenSource.Extension
 {
 	/// <summary>
-	/// Adds the $extensionid$ dictionary replacement value, using the target location path as well as the extension name.
+	/// Prompts for and populates the extension information replacement dictionary.
 	/// </summary>
-	public class SetExtensionMetadataWizard : IWizard
+	public class ExtensionInformationWizard : IWizard
 	{
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
@@ -29,15 +29,16 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 								 .FirstOrDefault();
 
 			if (extensionsRoot == null)
-				throw new InvalidOperationException(string.Format(
+			{
+				targetDir.Delete(true);
+				Backout(string.Format(
 					"Selected target path '{0}' is not located under the root NETFx Extensions repository folder.", targetDir));
+			}
 
 			var pathToRoot = targetDir.FullName
 				.Replace(extensionsRoot.FullName, "")
 				.Split(Path.DirectorySeparatorChar)
 				.Aggregate("..\\", (result, current) => result + "..\\");
-
-			CallContext.SetData("$pathtoroot$", pathToRoot);
 
 			var ns = string.Join(".", targetDir.Parent.FullName
 				// We start from the parent directory, as we'll use the $safeprojectname$ to build the identifier later
@@ -46,17 +47,42 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 				.Concat(new[] { replacementsDictionary["$projectname$"] }));
 			var identifier = "netfx-" + ns;
 
-			CallContext.SetData("$targetnamespace$", ns.Substring(0, ns.LastIndexOf('.')));
-			CallContext.SetData("$extensionid$", identifier);
-			CallContext.SetData("$extensiontitle$", ExtensionTitleSuggestion.Suggest(
+			var view = new ExtensionInformationView();
+			view.Model.Identifier = identifier;
+			view.Model.Title = "NETFx " + ExtensionTitleSuggestion.Suggest(
 				targetDir.Parent.FullName.Replace(extensionsRoot.FullName, ""),
-				replacementsDictionary["$projectname$"]));
+				replacementsDictionary["$projectname$"]);
+			view.Model.PathToRoot = pathToRoot;
+			view.Model.TargetNamespace = ns.Substring(0, ns.LastIndexOf('.'));
+			view.Model.Authors = replacementsDictionary["$username$"] + ", Clarius";
+			view.Model.Tags = "netfx foo bar";
+
+			if (view.ShowDialog().GetValueOrDefault())
+			{
+				foreach (var property in typeof(ExtensionInformationModel).GetProperties())
+				{
+					CallContext.SetData("$" + property.Name + "$", property.GetValue(view.Model, null));
+				}
+			}
+			else
+			{
+				targetDir.Delete(true);
+				throw new WizardBackoutException();
+			}
+		}
+
+		private void Backout(string message)
+		{
+			MessageBox.Show(message, "NETFx Extension", MessageBoxButton.OK, MessageBoxImage.Stop);
+			throw new WizardBackoutException(message);
 		}
 
 		public void RunFinished()
 		{
-			CallContext.SetData("$extensionid$", null);
-			CallContext.SetData("$extensiontitle$", null);
+			foreach (var property in typeof(ExtensionInformationModel).GetProperties())
+			{
+				CallContext.SetData("$" + property.Name + "$", null);
+			}
 		}
 
 		public void BeforeOpeningFile(ProjectItem projectItem)

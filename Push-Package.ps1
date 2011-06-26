@@ -9,5 +9,5 @@ function Push-Package
 
 	$packageFile = (Get-ChildItem -Filter *.nupkg -Path $relativePath -Recurse).FullName
 	$apiKey = Get-Content apikey.txt
-	Lib\NuGet.exe push -source http://packages.nuget.org/v1/ "$packageFile" $apiKey
+	Lib\NuGet.exe Push -source http://packages.nuget.org/v1/ "$packageFile" $apiKey
 }

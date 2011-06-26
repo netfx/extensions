@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\NuGet.properties = ..\NuGet.properties
 		..\NuGet.targets = ..\NuGet.targets
+		..\NuGet.Tests.properties = ..\NuGet.Tests.properties
+		..\Push-Package.ps1 = ..\Push-Package.ps1
+		..\Push.ps1 = ..\Push.ps1
+		..\Readme.txt = ..\Readme.txt
 	EndProjectSection
 EndProject
 Global

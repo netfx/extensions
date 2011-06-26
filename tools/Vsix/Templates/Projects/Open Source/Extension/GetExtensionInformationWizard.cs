@@ -6,28 +6,26 @@ using Microsoft.VisualStudio.TemplateWizard;
 using EnvDTE;
 using System.Windows;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 
 namespace NetFx.Templates.Projects.OpenSource.Extension
 {
 	/// <summary>
-	/// Saves the solution with the same name as the unfolded project parent directory, 
-	/// under that directory.
+	/// Gets all context information for the extension.
 	/// </summary>
-	public class TransformAllTemplatesWizard : IWizard
+	public class GetExtensionInformationWizard : IWizard
 	{
-		private DTE dte;
-
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
-			this.dte = automationObject as DTE;
+			foreach (var property in typeof(ExtensionInformationModel).GetProperties())
+			{
+				var key = "$" + property.Name + "$";
+				replacementsDictionary[key] = (string)CallContext.GetData(key);
+			}
 		}
 
 		public void RunFinished()
 		{
-			if (this.dte != null)
-			{
-				this.dte.ExecuteCommand("TextTransformation.TransformAllTemplates");
-			}
 		}
 
 		public void BeforeOpeningFile(ProjectItem projectItem)

@@ -23,7 +23,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
 			this.dte = automationObject as DTE;
-			this.extensionNamespace = replacementsDictionary["$targetnamespace$"];
+			this.extensionNamespace = replacementsDictionary[Replacement.Key(x => x.TargetNamespace)];
 		}
 
 		public void RunFinished()
@@ -41,9 +41,14 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 					// Locate the content folder in the source project.
 					var targetFolder = this.project.ProjectItems
 						.OfType<ProjectItem>()
-						.FirstOrDefault(item =>
+						.First(item =>
 							item.Kind == Constants.vsProjectItemKindPhysicalFolder &&
-							item.Name == "content");
+							item.Name == "content")
+						.ProjectItems
+						.OfType<ProjectItem>()
+						.First(item =>
+							item.Kind == Constants.vsProjectItemKindPhysicalFolder &&
+							item.Name == "netfx");
 
 					if (targetFolder != null)
 					{
