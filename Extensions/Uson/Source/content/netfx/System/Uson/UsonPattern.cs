@@ -11,11 +11,11 @@ internal class UsonPattern : Regex
 {
 	// extracting component patterns to make it explicit what they match
 	private static readonly RegexPart NonWhitespace = "[\\S]+";
-	private static readonly RegexPart QuotedValue = "\"[^\"]+\"";
+	private static readonly RegexPart DoubleQuotedValue = "\"[^\"]+\"";
+	private static readonly RegexPart SingleQuotedValue = "'[^\']+'";
 
-	private static readonly RegexPart Value = Group(QuotedValue | NonWhitespace);
+	private static readonly RegexPart Value = Group(DoubleQuotedValue | SingleQuotedValue | NonWhitespace);
 
-	// ((?<name>[\S]+)[:=])?(?<value>(["'][^"']+["']|[\S]+))
 	private static readonly RegexPart Expression = Group(Group(NameGroup, NonWhitespace + "?") + "[:=]") + "?" + Group(ValueGroup, Value);
 
 	/// <summary>
@@ -43,13 +43,13 @@ internal class UsonPattern : Regex
 		if (string.IsNullOrEmpty(value))
 			return value;
 
-		if (value[0] == '\"')
+		if (value[0] == '\"' || value[0] == '\'')
 			value = value.Substring(1);
 
 		if (string.IsNullOrEmpty(value))
 			return value;
 
-		if (value[value.Length - 1] == '\"')
+		if (value[value.Length - 1] == '\"' || value[value.Length - 1] == '\'')
 			value = value.Substring(0, value.Length - 1);
 
 		return value;
