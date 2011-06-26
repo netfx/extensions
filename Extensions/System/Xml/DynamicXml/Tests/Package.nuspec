@@ -1,21 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Xml.DynamicXml</id>
-		<version>1.0.0.38</version>
-		<title>NETFx Dynamic Xml</title>
-		<description>Provides a dynamic API over XLinq:
-
-var xdoc = XDocument.Load("rss.xml");
-var rss = doc.Root.ToDynamic();
-
-// Type conversion, element traversal 
-// using dotted path notation
-DateTime pubDate = rss.channel.pubDate;
-
-// Type conversion, attribute navigation 
-// using indexer notation 
-int port = rss.channel.cloud["port"]
+		<id>netfx-System.Xml.DynamicXml.Tests</id>
+		<version>1.1.0.1</version>
+		<title>NETFx Dynamic Xml Tests</title>
+		<description>Provides unit tests for DynamicXml package.
 		</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -24,6 +13,7 @@ int port = rss.channel.cloud["port"]
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx xml dynamic linq xlinq</tags>
 		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Xml" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net40"/>
 		</frameworkAssemblies>

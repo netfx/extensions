@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.DynamicXml</id>
-		<version>1.0.0.38</version>
+		<version>1.1.0.1</version>
 		<title>NETFx Dynamic Xml</title>
 		<description>Provides a dynamic API over XLinq:
 
@@ -24,6 +24,7 @@ int port = rss.channel.cloud["port"]
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx xml dynamic linq xlinq</tags>
 		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Xml" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net40"/>
 		</frameworkAssemblies>

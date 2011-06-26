@@ -116,35 +116,82 @@ namespace System.Xml.Linq
 
 			public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
 			{
-				if (indexes.Length == 1 && indexes[0] is string)
+				var name = GetNameIndex(indexes);
+				var existingAttr = this.xml.Attribute(name);
+				if (existingAttr == null)
 				{
-					result = (from attr in this.xml.Attributes()
-							  where attr.Name.LocalName.Equals(indexes[0])
-							  select new DynamicXmlAttribute(attr))
-							 .FirstOrDefault();
+					// Try element name.
+					var matches = this.xml.Elements(name);
 
-					if (result == null)
+					// If we have more than one, return the collection.
+					if (matches.Skip(1).Any())
 					{
-						// Try element name.
-						var matches = this.xml.Elements().Where(x => x.Name.LocalName.Equals(indexes[0]));
-
-						// If we have more than one, return the collection.
-						if (matches.Skip(1).Any())
-						{
-							result = new DynamicXmlElements(matches);
-						}
-						else
-						{
-							result = matches
-								.Select(x => new DynamicXmlElement(x))
-								.FirstOrDefault();
-						}
+						result = new DynamicXmlElements(matches);
+					}
+					else
+					{
+						result = matches
+							.Select(x => new DynamicXmlElement(x))
+							.FirstOrDefault();
 					}
 
 					return true;
 				}
+				else
+				{
+					result = new DynamicXmlAttribute(existingAttr);
+					return true;
+				}
+			}
 
-				return base.TryGetIndex(binder, indexes, out result);
+			public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+			{
+				var name = GetNameIndex(indexes);
+				var existingAttr = this.xml.Attribute(name);
+				var existingEl = this.xml.Element(name);
+
+				var attrValue = value as XAttribute;
+				var stringValue = value as string;
+
+				if (existingAttr == null)
+				{
+					if (existingEl != null)
+					{
+						existingEl.SetValue(value);
+					}
+					else
+					{
+						if (stringValue != null)
+							attrValue = new XAttribute(name, value);
+
+						this.xml.Add(attrValue);
+					}
+				}
+				else
+				{
+					if (attrValue != null)
+						stringValue = attrValue.Value;
+
+					existingAttr.SetValue(stringValue);
+				}
+
+				return true;
+			}
+
+			private XName GetNameIndex(object[] indexes)
+			{
+				if (indexes.Length != 1)
+					throw new NotSupportedException("Attributes can only be accessed using a single index of type string or XName");
+
+				var result = default(XName);
+				if (indexes[0] is string)
+					result = XName.Get((string)indexes[0]);
+				else if (indexes[0] is XName)
+					result = (XName)indexes[0];
+				else
+					throw new NotSupportedException("Attribute index can only be a simple attribute name, an expanded XML name string, or an XName");
+
+				return result;
 			}
 
 			public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -162,7 +209,7 @@ namespace System.Xml.Linq
 						.Select(x => new DynamicXmlElement(x))
 						.FirstOrDefault();
 				}
-				
+
 				return true;
 			}
 
@@ -243,9 +290,16 @@ namespace System.Xml.Linq
 
 			public override bool TryConvert(ConvertBinder binder, out object result)
 			{
-				if (binder.ReturnType == typeof(IEnumerable))
+				if (binder.ReturnType.IsAssignableFrom(typeof(IEnumerable)) ||
+					binder.ReturnType.IsAssignableFrom(typeof(IEnumerable<object>)) ||
+					binder.ReturnType.IsAssignableFrom(typeof(IEnumerable<DynamicObject>)))
 				{
 					result = elements.Select(el => new DynamicXmlElement(el)).ToList();
+					return true;
+				}
+				else if (binder.ReturnType == typeof(object[]))
+				{
+					result = elements.Select(el => (object)new DynamicXmlElement(el)).ToArray();
 					return true;
 				}
 
@@ -270,7 +324,8 @@ namespace System.Xml.Linq
 
 			IEnumerator IEnumerable.GetEnumerator()
 			{
-				return this.GetEnumerator();
+				// Untyped enumeration goes through the dynamic route.
+				return ((IEnumerable<DynamicObject>)this).GetEnumerator();
 			}
 
 			IEnumerator<DynamicObject> IEnumerable<DynamicObject>.GetEnumerator()
