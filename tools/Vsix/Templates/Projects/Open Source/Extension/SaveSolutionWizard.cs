@@ -28,10 +28,21 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 
 		public void RunFinished()
 		{
-			this.dte.Solution.SaveAs(Path.Combine(targetDir.FullName, this.projectName + ".sln"));
+			var sln = Path.Combine(targetDir.FullName, this.projectName + ".sln");
+			this.dte.Solution.SaveAs(sln);
 
 			// Delete if any, the old files.
 			this.targetDir.Parent.GetFiles(projectName + ".*").ToList().ForEach(f => f.Delete());
+
+			// Close and reopen to cause all project to refresh links and what-not.
+			foreach (var project in this.dte.Solution.Projects.OfType<Project>())
+			{
+				project.SaveAs(project.FullName);
+			}
+
+			this.dte.Solution.SaveAs(sln);
+			this.dte.Solution.Close(true);
+			this.dte.Solution.Open(sln);
 		}
 
 		public void BeforeOpeningFile(ProjectItem projectItem)
