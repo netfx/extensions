@@ -56,6 +56,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 			view.Model.TargetNamespace = ns.Substring(0, ns.LastIndexOf('.'));
 			view.Model.Authors = replacementsDictionary["$username$"] + ", Clarius";
 			view.Model.Tags = "netfx foo bar";
+			view.Owner = Application.Current.MainWindow;
 
 			if (view.ShowDialog().GetValueOrDefault())
 			{

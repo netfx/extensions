@@ -3,8 +3,8 @@
 	<metadata>
 		<id>$Identifier$.Tests</id>
 		<version>1.0.0.0</version>
-		<title>$Title$</title>
-		<description>$Description$</description>
+		<title>$Title$ Tests</title>
+		<description>Tests for $Identifier$</description>
 		<authors>$Authors$</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
