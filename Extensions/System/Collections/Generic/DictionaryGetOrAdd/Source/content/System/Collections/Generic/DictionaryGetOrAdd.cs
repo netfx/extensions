@@ -29,6 +29,10 @@ internal static partial class DictionaryGetOrAdd
 	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
 	/// concurrency assurances, use a concurrent dictionary instead.
 	/// </summary>
+	/// <nuget packageId="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
+	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+	/// <param name="key">The key to be added to the dictionary</param>
+	/// <param name="valueFactory">The value factory</param>
 	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
 	{
 		var value = default(TValue);
