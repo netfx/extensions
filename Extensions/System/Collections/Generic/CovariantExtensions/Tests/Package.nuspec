@@ -1,13 +1,10 @@
-﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
-<#@ Output Extension=".nuspec" #>
-<#@ Include File="..\..\..\..\..\..\..\Package.ttinclude" #>
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Collections.Generic.CovariantExtensions</id>
-		<version><#= version #></version>
+		<id>netfx-System.Collections.Generic.CovariantExtensions.Tests</id>
+		<version>1.1.0.0</version>
 		<title>NETFx CovariantExtensions</title>
-		<description>Provides extension methods that allow to treat collections, enumerables and lists as covariant of a generic type other than their constructed type (i.e. for down-casting collections).</description>
+		<description>Tests for netfx-System.Collections.Generic.CovariantExtensions</description>
 		<authors>Umbrella Project, Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
