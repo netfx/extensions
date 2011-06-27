@@ -1,11 +1,8 @@
-﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
-<#@ Output Extension=".nuspec" #>
-<#@ Include File="..\..\..\..\..\..\..\..\Package.ttinclude" #>
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Collections.Generic.IEnumerable.EmptyIfNull</id>
-		<version><#= version #></version>
+		<version>1.1.0.0</version>
 		<title>NETFx IEnumerable&lt;T&gt;.EmptyIfNull Extension Method</title>
 		<description xml:space="preserve">Hate checking for nulls in Linq queries? Turn any null enumerable into an empty one as needed! 
 
