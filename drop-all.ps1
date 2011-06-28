@@ -17,18 +17,18 @@ foreach ($build in (Get-ChildItem Extensions -Recurse -Filter *.sln))
     pushd $build.DirectoryName
 
         $progress++
+        Write-Progress -Activity "Cleaning " -Status ("Cleaning extension " + $build.Directory.Parent.Name) -PercentComplete $progress
+        &$msbuild /target:Clean /verbosity:quiet /p:Configuration=Debug | out-null
+        &$msbuild /target:Clean /verbosity:quiet /p:Configuration=Release | out-null
+
         Write-Progress -Activity "Building " -Status ("Building extension " + $build.Directory.Parent.Name) -PercentComplete $progress
         Write-Progress -Activity "Deploying NETFx" -Status ("Building extension " + $build.Directory.Parent.Name) -PercentComplete $progress
-        &$msbuild "/verbosity:quiet /p:Configuration=Release" | out-null
+        &$msbuild /verbosity:quiet /p:Configuration=Release
+   
     
-        cd bin\NuGet
-        $spec = Get-ChildItem "Package.nuspec"
-        $doc = [System.Xml.Linq.XDocument]::Load($spec.FullName)
-        $id = $doc.Root.Element($ns + "metadata").Element($ns + "id").Value
-
-        Write-Progress -Activity "Deploying NETFx" -Status ("Compiling package " + $build.Directory.Parent.Name + "(id: " + $id + ")") -PercentComplete $progress
-        &($nuget.FullName) "pack" $spec.FullName -BasePath $spec.Directory.FullName -OutputDirectory $dropDir.FullName | out-null
-        
+		# At this point there should only be one nupkg
+		gci -filter *.nupkg -recurse | Where-Object { $_.directoryname.endswith("bin\Release") }  | %{ write-host $_.MoveTo("$dropDir.FullName\\$_") }
+         
     popd
 }
 
