@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Net.Http.HttpClientQuery">
+            <summary>
+            Provides the Query{T} extension method to retrieve 
+            a response from a filter query over HTTP client.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpClientQuery.Query``1(System.Net.Http.HttpClient,System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Int32,System.Int32)">
+            <summary>
+            Returns the response from querying the given resource with the given filter.
+            </summary>
+            <nuget id="netfx-System.Net.Http.HttpClientQuery" />
+            <param name="client" this="true">The client where execute the query</param>
+            <param name="resourcePath">The path of the resource</param>
+            <param name="predicate">The predicate for filtering</param>
+            <param name="skip">The number of elements to skip</param>
+            <param name="take">The number of elements to take</param>
+        </member>
+    </members>
+</doc>

@@ -33,6 +33,12 @@ namespace System.Net.Http
 		/// <summary>
 		/// Returns the response from querying the given resource with the given filter.
 		/// </summary>
+		/// <nuget id="netfx-System.Net.Http.HttpClientQuery" />
+		/// <param name="client" this="true">The client where execute the query</param>
+		/// <param name="resourcePath">The path of the resource</param>
+		/// <param name="predicate">The predicate for filtering</param>
+		/// <param name="skip">The number of elements to skip</param>
+		/// <param name="take">The number of elements to take</param>
 		public static HttpResponseMessage Query<T>(this HttpClient client, string resourcePath, Expression<Func<T, bool>> predicate = null, int skip = 0, int take = 25)
 		{
 			var context = new DataServiceContext(client.BaseAddress);
