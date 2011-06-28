@@ -1,18 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.ComponentModel.FilteringReflectionCatalog</id>
-		<version>1.0.0.33</version>
-		<title>NETFx Filtering Reflection Catalog</title>
-		<description>Provides dinamic filtering of parts and exports from an underlying reflection-based catalog using a simple lambda expression that can inspect the export, its metadata and its exporting reflected type (part).
-
-Example: var filtered = new FilteringReflectionCatalog(innerCatalog)
-{
-	// Filter all parts that don't have an "IsPublic" metadata
-	PartFilter = part =>
-	part.PartDefinition.Metadata.ContainsKey("IsPublic")
-};
-</description>
+		<id>netfx-System.ComponentModel.FilteringReflectionCatalog.Tests</id>
+		<version>1.1.0.0</version>
+		<title>NETFx Filtering Reflection Catalog Tests</title>
+		<description>Tests for netfx-System.ComponentModel.FilteringReflectionCatalog</description>
 		<summary>catalog.PartFilter = part => part.PartDefinition.Metadata.ContainsKey("IsPublic")</summary>
 		<authors>Clarius, Daniel Cazzulino, kzu</authors>
 		<language>en-US</language>
