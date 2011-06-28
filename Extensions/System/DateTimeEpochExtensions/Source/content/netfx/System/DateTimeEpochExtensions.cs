@@ -22,6 +22,8 @@ namespace System
 		/// <summary>
 		/// Converts the given date value to epoch time.
 		/// </summary>
+		/// <nuget id="netfx-System.DateTimeEpochExtensions" />
+		/// <param name="dateTime" this="true">The data to convert</param>
 		public static long ToEpochTime(this DateTime dateTime)
 		{
 			var date = dateTime.ToUniversalTime();
@@ -33,6 +35,8 @@ namespace System
 		/// <summary>
 		/// Converts the given date value to epoch time.
 		/// </summary>
+		/// <nuget id="netfx-System.DateTimeEpochExtensions" />
+		/// <param name="dateTime" this="true">The data to convert</param>
 		public static long ToEpochTime(this DateTimeOffset dateTime)
 		{
 			var date = dateTime.ToUniversalTime();
@@ -44,6 +48,8 @@ namespace System
 		/// <summary>
 		/// Converts the given epoch time to a <see cref="DateTime"/> with <see cref="DateTimeKind.Utc"/> kind.
 		/// </summary>
+		/// <nuget id="netfx-System.DateTimeEpochExtensions" />
+		/// <param name="secondsSince1970" this="true">The seconds to convert</param>
 		public static DateTime ToDateTimeFromEpoch(this long secondsSince1970)
 		{
 			return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(secondsSince1970);
@@ -52,6 +58,8 @@ namespace System
 		/// <summary>
 		/// Converts the given epoch time to a UTC <see cref="DateTimeOffset"/>.
 		/// </summary>
+		/// <nuget id="netfx-System.DateTimeEpochExtensions" />
+		/// <param name="secondsSince1970" this="true">The seconds to convert</param>
 		public static DateTimeOffset ToDateTimeOffsetFromEpoch(this long secondsSince1970)
 		{
 			return new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(secondsSince1970);
