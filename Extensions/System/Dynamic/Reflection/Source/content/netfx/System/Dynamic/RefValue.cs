@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ namespace System.Dynamic
 		/// to be used by reference when invoking the 
 		/// dynamic object.
 		/// </summary>
+		/// <param name="value">The value to pass by-ref to the dynamic invocation.</param>
 		public static RefValue<T> Create<T>(Func<T> getter, Action<T> setter)
 		{
 			return new RefValue<T>(getter, setter);

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="M:System.DateTimeEpochExtensions.ToEpochTime(System.DateTime)">
+            <summary>
+            Converts the given date value to epoch time.
+            </summary>
+            <nuget id="netfx-System.DateTimeEpochExtensions" />
+            <param name="dateTime" this="true">The data to convert</param>
+        </member>
+        <member name="M:System.DateTimeEpochExtensions.ToEpochTime(System.DateTimeOffset)">
+            <summary>
+            Converts the given date value to epoch time.
+            </summary>
+            <nuget id="netfx-System.DateTimeEpochExtensions" />
+            <param name="dateTime" this="true">The data to convert</param>
+        </member>
+        <member name="M:System.DateTimeEpochExtensions.ToDateTimeFromEpoch(System.Int64)">
+            <summary>
+            Converts the given epoch time to a <see cref="T:System.DateTime"/> with <see cref="F:System.DateTimeKind.Utc"/> kind.
+            </summary>
+            <nuget id="netfx-System.DateTimeEpochExtensions"/>
+            <param name="secondsSince1970" this="true">The seconds to convert</param>
+        </member>
+        <member name="M:System.DateTimeEpochExtensions.ToDateTimeOffsetFromEpoch(System.Int64)">
+            <summary>
+            Converts the given epoch time to a UTC <see cref="T:System.DateTimeOffset"/>.
+            </summary>
+            <nuget id="netfx-System.DateTimeEpochExtensions"/>
+            <param name="secondsSince1970" this="true">The seconds to convert</param>
+        </member>
+    </members>
+</doc>

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>tools\netfx-System.IO.StreamWriteTo.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,16 +30,29 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>tools\netfx-System.IO.StreamWriteTo.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\IO\StreamWriteTo.cs" />
+    <Compile Include="content\netfx\System\IO\StreamWriteTo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <NuSpec Include="Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tools\netfx-System.IO.StreamWriteTo.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>

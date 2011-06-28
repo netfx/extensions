@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,8 @@ namespace System.Net.Http
 		/// Executes the HTTP query and retrieves the full response information 
 		/// together with the actual result.
 		/// </summary>
+		/// <nuget id="netfx-System.Net.Http.HttpEntityClient" />
+		/// <param name="query" this="true">The query to execute</param>
 		public static IHttpEntityQueryResponse<T> Execute<T>(this IQueryable<T> query)
 		{
 			// This condition makes this easier to unit test code that 

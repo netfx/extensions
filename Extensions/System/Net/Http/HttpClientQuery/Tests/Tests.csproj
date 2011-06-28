@@ -30,6 +30,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
+  <Import Project="$(NuGetRoot)\NuGet.Tests.properties" Condition="Exists('$(NuGetRoot)\NuGet.Tests.properties')" />
   <ItemGroup>
     <Reference Include="Microsoft.ApplicationServer.Common">
       <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Common.dll</HintPath>
@@ -73,7 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpClientQuerySpec.cs" />
+    <Compile Include="content\netfx\System\Net\Http\HttpClientQuerySpec.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpWebService.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
@@ -86,7 +93,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <NuSpec Include="Package.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>

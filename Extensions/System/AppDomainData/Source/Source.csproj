@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>tools\netfx-System.AppDomainData.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +30,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>tools\netfx-System.AppDomainData.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -37,7 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AppDomainData.cs" />
+    <Compile Include="content\netfx\System\AppDomainData.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <NuSpec Include="Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tools\netfx-System.AppDomainData.xml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>

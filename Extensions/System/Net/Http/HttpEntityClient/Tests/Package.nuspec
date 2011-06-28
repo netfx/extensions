@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient.Tests</id>
 		<version>1.2.0.0</version>
 		<title>NETFx HttpEntityClient Tests</title>
-		<description xml:space="preserve">Tests for netfx-System.Net.Http.HttpEntityClient</description>
+		<description>Tests for netfx-System.Net.Http.HttpEntityClient</description>
 		<summary>Tests for netfx-System.Net.Http.HttpEntityClient</summary>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

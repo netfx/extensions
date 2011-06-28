@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ namespace System.Dynamic
 		/// to be used as an output parameter when invoking the 
 		/// dynamic object.
 		/// </summary>
+		/// <param name="value">The value to pass as out to the dynamic invocation.</param>
 		public static OutValue<T> Create<T>(Action<T> setter)
 		{
 			return new OutValue<T>(setter);

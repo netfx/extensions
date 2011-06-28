@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.DateTimeEpochExtensions.Tests</id>
+		<version>1.1.0.0</version>
+		<title>NETFx Epoch Time Extension Methods Tests</title>
+		<description>Tests for netfx-System.DateTimeEpochExtensions</description>
+		<authors>Julian Dominguez, Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<tags>netfx datetime datetimeoffset epoch</tags>
+	</metadata>
+</package>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:StreamWriteTo">
+            <summary>
+            Provides WriteTo extension methods to write streams easily to 
+            another steam or a target file.
+            </summary>
+        </member>
+        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+            Writes the input stream to the target file.
+            </summary>
+            <param name="source">The source stream to write to the target file.</param>
+            <param name="targetFile">The target file to write to.</param>
+            <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
+        </member>
+        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Writes the input stream to the target stream.
+            </summary>
+        </member>
+        <member name="M:StreamGetBytes.GetBytes(System.IO.Stream)">
+            <summary>
+            Returns all bytes from the given stream.
+            </summary>
+            <nuget id="netfx-System.IO.StreamGetBytes" />
+            <param name="stream" this="true">The stream to get bytes</param>
+        </member>
+    </members>
+</doc>

@@ -1,4 +1,4 @@
-﻿#region BSD License
+#region BSD License
 /* 
 Copyright (c) 2010, NETFx
 All rights reserved.

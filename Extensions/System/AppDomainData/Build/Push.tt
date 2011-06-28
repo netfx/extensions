@@ -1,3 +1,0 @@
-﻿<#@ Template Debug="true" Hostspecific="true" Language="C#" #>
-<#@ Output Extension=".ps1" Encoding="ASCII" #>
-<#@ Include File="..\..\..\..\Push.ttinclude" #>
