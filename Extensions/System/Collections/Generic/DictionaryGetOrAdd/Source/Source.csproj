@@ -44,7 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Collections\Generic\DictionaryGetOrAdd.cs" />
+    <Compile Include="content\netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

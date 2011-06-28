@@ -46,7 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Collections\Generic\IEnumerable\EmptyIfNullSpec.cs" />
+    <Compile Include="content\netfx\System\Collections\Generic\IEnumerable\EmptyIfNullSpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">
