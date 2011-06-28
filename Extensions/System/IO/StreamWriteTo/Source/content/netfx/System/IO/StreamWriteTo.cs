@@ -31,7 +31,8 @@ internal static class StreamWriteTo
 	/// <summary>
 	/// Writes the input stream to the target file.
 	/// </summary>
-	/// <param name="source">The source stream to write to the target file.</param>
+	/// <nuget id="netfx-System.IO.StreamWriteTo" />
+	/// <param name="source" this="true">The source stream to write to the target file.</param>
 	/// <param name="targetFile">The target file to write to.</param>
 	/// <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
 	public static void WriteTo(this Stream source, string targetFile, bool append = false)
@@ -45,6 +46,9 @@ internal static class StreamWriteTo
 	/// <summary>
 	/// Writes the input stream to the target stream.
 	/// </summary>
+	/// <nuget id="netfx-System.IO.StreamWriteTo" />
+	/// <param name="source" this="true">The source stream to write to the target stream.</param>
+	/// <param name="targetFile">The target stream to write to.</param>
 	/// <returns>The written <paramref name="target"/> stream.</returns>
 	public static Stream WriteTo(this Stream source, Stream target)
 	{
