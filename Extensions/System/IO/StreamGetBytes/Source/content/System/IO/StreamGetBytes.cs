@@ -27,6 +27,8 @@ internal static partial class StreamGetBytes
 	/// <summary>
 	/// Returns all bytes from the given stream.
 	/// </summary>
+	/// <nuget id="netfx-System.IO.StreamGetBytes" />
+	/// <param name="stream" this="true">The stream to get bytes</param>
 	public static byte[] GetBytes(this Stream stream)
 	{
 		var memoryStream = new MemoryStream();

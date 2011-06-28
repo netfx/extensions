@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.IO.StreamGetBytes</id>
-		<version>1.0.0.9</version>
-		<title>NETFx Stream.GetBytes Extension Method</title>
-		<description>Easily get all bytes that make up an arbitrary stream.</description>
+		<id>netfx-System.IO.StreamGetBytes.Tests</id>
+		<version>1.1.0.0</version>
+		<title>NETFx Stream.GetBytes Extension Method Tests</title>
+		<description>Tests for netfx-System.IO.StreamGetBytes</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

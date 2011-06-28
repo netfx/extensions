@@ -1,11 +1,8 @@
-﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
-<#@ Output Extension=".nuspec" #>
-<#@ Include File="..\..\..\..\..\..\Package.ttinclude" #>
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.IO.StreamGetBytes</id>
-		<version><#= version #></version>
+		<version>1.1.0.0</version>
 		<title>NETFx Stream.GetBytes Extension Method</title>
 		<description>Easily get all bytes that make up an arbitrary stream.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
