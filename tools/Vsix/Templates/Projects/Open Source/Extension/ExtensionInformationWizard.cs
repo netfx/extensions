@@ -17,8 +17,8 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 	{
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
-			if (!new Microsoft.CSharp.CSharpCodeProvider().IsValidIdentifier(replacementsDictionary["$projectname$"]))
-				throw new InvalidOperationException("Your chosen project name " + replacementsDictionary["$projectname$"] + " must be a valid C# code identifier.");
+			//if (!new Microsoft.CSharp.CSharpCodeProvider().IsValidIdentifier(replacementsDictionary["$projectname$"]))
+			//    throw new InvalidOperationException("Your chosen project name " + replacementsDictionary["$projectname$"] + " must be a valid C# code identifier.");
 
 			var targetDir = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
 			var extensionsRoot = (from parentDir in TraverseUp(targetDir)

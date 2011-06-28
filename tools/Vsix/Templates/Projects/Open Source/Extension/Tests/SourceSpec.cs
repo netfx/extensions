@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-internal class $safesolutionname$Spec
+public class $safesolutionname$Spec
 {
 	[Fact]
 	public void WhenAction_ThenAssert()
