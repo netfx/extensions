@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:IDomainEventsAccessor">
+            <summary>
+            Interface implemented by components or entities that need to 
+            access domain events (i.e. to raise new events).
+            </summary>
+        </member>
+        <member name="P:IDomainEventsAccessor.Events">
+            <summary>
+            Gets or sets the domain events interface 
+            to use for raising events.
+            </summary>
+        </member>
+        <member name="T:IDomainEventScheduler">
+            <summary>
+            Interface implemented by schedulers that can run async domain event 
+            handlers in the background.
+            </summary>
+        </member>
+        <member name="M:IDomainEventScheduler.Schedule(System.Action)">
+            <summary>
+            Schedules the specified action to run async as soon as possible.
+            </summary>
+        </member>
+        <member name="T:IDomainEvents">
+            <summary>
+            Basic interface for components to raise events.
+            </summary>
+        </member>
+        <member name="M:IDomainEvents.Raise``1(``0)">
+            <summary>
+            Raises the specified event.
+            </summary>
+            <typeparam name="T">Type of data in the event, typically inferred by the compiler based on the received <paramref name="event"/>.</typeparam>
+            <param name="event">The event payload.</param>
+        </member>
+        <member name="T:DomainEvents">
+            <summary>
+            Basic in-memory implementation of domain events that supports both synchronous 
+            and asynchronous event handlers (see <see cref="P:IDomainEventHandler.IsAsync"/>.
+            </summary>
+        </member>
+        <member name="M:DomainEvents.#cctor">
+            <summary>
+            Initializes the <see cref="P:DomainEvents.None"/> null object 
+            pattern property.
+            </summary>
+        </member>
+        <member name="M:DomainEvents.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEvents"/> class 
+            with the default <see cref="P:DomainEventScheduler.Default"/>.
+            </summary>
+            <param name="handlers">The available handlers.</param>
+        </member>
+        <member name="M:DomainEvents.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler},IDomainEventScheduler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEvents"/> class.
+            </summary>
+            <param name="handlers">The available handlers.</param>
+            <param name="asyncRunner">The scheduler to use for running async event handlers.</param>
+        </member>
+        <member name="M:DomainEvents.Raise``1(``0)">
+            <summary>
+            Raises the specified event.
+            </summary>
+            <typeparam name="T">Type of data in the event, typically inferred by the compiler based on the received <paramref name="event"/>.</typeparam>
+            <param name="event">The event payload.</param>
+        </member>
+        <member name="P:DomainEvents.None">
+            <summary>
+            Gets a default domain events implementation that 
+            does nothing (a.k.a. Null Object Pattern).
+            </summary>
+        </member>
+        <member name="T:DomainEvents.NullDomainEvents">
+            <summary>
+            Provides a null <see cref="T:IDomainEvents"/> implementation 
+            for use when no events have been configured.
+            </summary>
+        </member>
+        <member name="M:DomainEvents.NullDomainEvents.Raise``1(``0)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="T:DomainEventScheduler">
+            <summary>
+            Provides access to the <see cref="P:DomainEventScheduler.Default"/> scheduler to run 
+            async background event handlers.
+            </summary>
+        </member>
+        <member name="M:DomainEventScheduler.#cctor">
+            <summary>
+            Initializes the <see cref="T:DomainEventScheduler"/> class with the 
+            default task-based scheduler.
+            </summary>
+        </member>
+        <member name="P:DomainEventScheduler.Default">
+            <summary>
+            Gets the default async event scheduler.
+            </summary>
+        </member>
+        <member name="T:DomainEventScheduler.TaskPoolDomainEventScheduler">
+            <summary>
+            An async event scheduler that uses <see cref="M:System.Threading.Tasks.TaskFactory.StartNew(System.Action)"/> 
+            to run background event handlers.
+            </summary>
+        </member>
+        <member name="M:DomainEventScheduler.TaskPoolDomainEventScheduler.Schedule(System.Action)">
+            <summary>
+            Schedules the specified action to run async as soon as possible.
+            </summary>
+        </member>
+        <member name="T:DomainEventHandler`1">
+            <summary>
+            Convenience base class for domain event handlers.
+            </summary>
+            <typeparam name="T">Type of event this handler can process.</typeparam>
+        </member>
+        <member name="T:IDomainEventHandler`1">
+            <summary>
+            Interface implemented by domain event handlers.
+            </summary>
+            <typeparam name="T">Type of event this handler can process.</typeparam>
+        </member>
+        <member name="T:IDomainEventHandler">
+            <summary>
+            Interface implemented by domain event handlers indirectly through <see cref="T:IDomainEventHandler`1"/>.
+            </summary>
+        </member>
+        <member name="P:IDomainEventHandler.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IDomainEvents"/> implementation 
+            can use to invoke a handler asynchronously with regards to the event raiser.
+            </summary>
+        </member>
+        <member name="P:IDomainEventHandler.EventType">
+            <summary>
+            Gets the type of the event this handler can process.
+            </summary>
+        </member>
+        <member name="M:IDomainEventHandler`1.Handle(`0)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="M:DomainEventHandler`1.Handle(`0)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler`1.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IDomainEvents"/> implementation
+            can use to invoke a handler asynchronously with regards to the event raiser.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler`1.EventType">
+            <summary>
+            Gets the type of the event this handler can process, which equals 
+            the generic type parameter of <see cref="T:DomainEventHandler`1"/>.
+            </summary>
+        </member>
+    </members>
+</doc>
