@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="Microsoft.ApplicationServer.Common">
       <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Common.dll</HintPath>
@@ -69,14 +75,16 @@
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Net\Http\JsonContent.cs" />
+    <Compile Include="content\netfx\System\Net\Http\JsonContent.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetExtensions.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\JsonNetMediaTypeFormatter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <NuSpec Include="Package.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>
