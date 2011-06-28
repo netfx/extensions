@@ -29,19 +29,30 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>netfx-System.Dynamic.Reflection.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Dynamic\OutValue.cs" />
-    <Compile Include="content\System\Dynamic\DynamicReflection.cs" />
-    <Compile Include="content\System\Dynamic\RefValue.cs" />
-    <Compile Include="content\System\Dynamic\TypeParameter.cs" />
+    <Compile Include="content\netfx\System\Dynamic\OutValue.cs" />
+    <Compile Include="content\netfx\System\Dynamic\DynamicReflection.cs" />
+    <Compile Include="content\netfx\System\Dynamic\RefValue.cs" />
+    <Compile Include="content\netfx\System\Dynamic\TypeParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <NuSpec Include="Package.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>

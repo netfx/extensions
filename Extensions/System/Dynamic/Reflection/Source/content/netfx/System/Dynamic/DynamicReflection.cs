@@ -28,8 +28,8 @@ namespace System.Dynamic
 {
 	/// <summary>
 	/// Provides reflection-based dynamic syntax for objects and types. 
-	/// This class provides the extension methods <see cref="AsReflectionDynamic{object}"/> 
-	/// and <see cref="AsReflectionDynamic{Type}"/> as entry points.
+	/// This class provides the extension methods <see cref="AsDynamicReflection(object)"/> 
+	/// and <see cref="AsDynamicReflection(Type)"/> as entry points.
 	/// </summary>
 	internal static class DynamicReflection
 	{

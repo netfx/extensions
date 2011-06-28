@@ -7,7 +7,7 @@ using System.Dynamic;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Globalization;
 
-internal class PrivateDynamicObjectSpec
+public class PrivateDynamicObjectSpec
 {
 	[Fact]
 	public void WhenAsPrivateDynamicOfNullType_ThenReturnsNull()
