@@ -1,19 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Net.Http.HttpEntityClient</id>
-		<version>1.1.1.37</version>
-		<title>NETFx HttpEntityClient</title>
-		<description xml:space="preserve">Strong-typed Linq to Web API. Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
-
-Example:
-var products = client
-	.Query&lt;Product&gt;("products")
-	.OrderBy(x => x.Downloads)
-	.Skip(25)
-	.Take(25)
-	.ToList();	
-</description>
+		<id>netfx-System.Net.Http.HttpEntityClient.Tests</id>
+		<version>1.2.0.0</version>
+		<title>NETFx HttpEntityClient Tests</title>
+		<description>Tests for netfx-System.Net.Http.HttpEntityClient</description>
 		<summary>Simple CRUD + Query typed HTTP client</summary>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
