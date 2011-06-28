@@ -50,6 +50,9 @@ internal static class ThreadData
 	/// <see cref="IDisposable"/> can be used to remove the state 
 	/// when disposed.
 	/// </summary>
+	/// <nuget id="netfx-System.Threading.ThreadData" />
+	/// <param name="thread" this="true">The thread to set data</param>
+	/// <param name="data">The data to be set</param>
 	public static IDisposable SetData<T>(this Thread thread, T data)
 		where T : class
 	{
@@ -59,6 +62,8 @@ internal static class ThreadData
 	/// <summary>
 	/// Gets the data from the <see cref="Thread"/> storage.
 	/// </summary>
+	/// <nuget id="netfx-System.Threading.ThreadData" />
+	/// <param name="thread" this="true">The thread to get data from</param>
 	public static T GetData<T>(this Thread thread)
 		where T : class
 	{
