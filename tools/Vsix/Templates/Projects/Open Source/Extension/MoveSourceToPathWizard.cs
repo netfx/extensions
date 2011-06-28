@@ -34,6 +34,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 					.OfType<ProjectItem>()
 					.FirstOrDefault(item =>
 						item.Kind == Constants.vsProjectItemKindPhysicalFile &&
+						item.Name.EndsWith(".cs") && 
 						!item.Name.StartsWith("AssemblyInfo"));
 
 				if (sourceItem != null)

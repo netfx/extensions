@@ -57,6 +57,9 @@
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionInformationModel.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionTitleSuggestion.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionInformationWizard.cs" />
+    <Content Include="Templates\Projects\Open Source\Extension\Source\lib\doc.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Source\Properties\AssemblyInfo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
