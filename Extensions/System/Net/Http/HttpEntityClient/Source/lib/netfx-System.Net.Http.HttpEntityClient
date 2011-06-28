@@ -1,0 +1,2654 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:Reflect">
+            <summary>
+            Provides strong-typed static reflection for arbitrary 
+            expressions, typically static members where no 
+            instance parameter is needed.
+            </summary>
+            <devdoc>
+            Generated overloads for available Func/Action generic types 
+            for current target framework version 4.0.
+            </devdoc>
+        </member>
+        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Action})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{System.Func{``0}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the name of the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect.GetProperty``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect.GetField``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the field represented by the lambda expression.
+            </summary>
+            <param name="field">An expression that accesses a field.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="field"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="field"/> is not a lambda expression or it does not represent a field access.</exception>
+            <returns>The field info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``2(System.Linq.Expressions.Expression{System.Action{``0,``1}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``3(System.Linq.Expressions.Expression{System.Action{``0,``1,``2}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``4(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``5(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``6(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``7(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``8(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``9(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``10(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``11(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``12(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``13(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``14(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``15(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``16(System.Linq.Expressions.Expression{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <typeparam name="T16">The type of the sixteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``3(System.Linq.Expressions.Expression{System.Func{``0,``1,``2}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``4(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``5(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``6(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``7(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``8(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``9(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``10(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``11(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``12(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``13(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``14(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``15(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``16(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``17(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15,``16}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <typeparam name="T16">The type of the sixteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``2(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``3(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``4(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``5(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``6(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``7(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``8(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``9(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``10(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``11(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``12(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``13(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``14(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``15(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``16(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``17(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15,``16}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <typeparam name="T16">The type of the sixteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``4(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``5(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``6(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``7(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``8(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``9(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``10(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``11(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``12(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``13(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``14(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``15(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``16(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <typeparam name="T16">The type of the sixteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="T:Reflect`1">
+            <summary>
+            Provides strong-typed static reflection of the <typeparamref name="TTarget"/> 
+            type.
+            </summary>
+            <typeparam name="TTarget">Type to reflect.</typeparam>
+            <devdoc>
+            Generated overloads for available Func/Action generic types 
+            for current target framework version 4.0.
+            </devdoc>
+            <typeparam name="TTarget">Type to reflect.</typeparam>
+        </member>
+        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Action{`0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Func{`0,System.Action}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Gets the name of the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetProperty``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Gets the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetField``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Gets the field represented by the lambda expression.
+            </summary>
+            <param name="field">An expression that accesses a field.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="field"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="field"/> is not a lambda expression or it does not represent a field access.</exception>
+            <returns>The field info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Action{`0,``0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``2(System.Linq.Expressions.Expression{System.Action{`0,``0,``1}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``3(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``4(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``5(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``6(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``7(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``8(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``9(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``10(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``11(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``12(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``13(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``14(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``15(System.Linq.Expressions.Expression{System.Action{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``2(System.Linq.Expressions.Expression{System.Func{`0,``0,``1}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``3(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``4(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``5(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``6(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``7(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``8(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``9(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``10(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``11(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``12(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``13(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``14(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``15(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``16(System.Linq.Expressions.Expression{System.Func{`0,``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``2(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``3(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``4(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``5(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``6(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``7(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``8(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``9(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``10(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``11(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``12(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``13(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``14(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``15(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``16(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``2(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``3(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``4(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``5(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``6(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``7(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``8(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``9(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``10(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``11(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``12(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``13(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``14(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect`1.GetMethod``15(System.Linq.Expressions.Expression{System.Func{`0,System.Action{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <typeparam name="T1">The type of the first argument.</typeparam>
+            <typeparam name="T2">The type of the second argument.</typeparam>
+            <typeparam name="T3">The type of the third argument.</typeparam>
+            <typeparam name="T4">The type of the fourth argument.</typeparam>
+            <typeparam name="T5">The type of the fifth argument.</typeparam>
+            <typeparam name="T6">The type of the sixth argument.</typeparam>
+            <typeparam name="T7">The type of the seventh argument.</typeparam>
+            <typeparam name="T8">The type of the eighth argument.</typeparam>
+            <typeparam name="T9">The type of the nineth argument.</typeparam>
+            <typeparam name="T10">The type of the tenth argument.</typeparam>
+            <typeparam name="T11">The type of the eleventh argument.</typeparam>
+            <typeparam name="T12">The type of the twelfth argument.</typeparam>
+            <typeparam name="T13">The type of the thirteenth argument.</typeparam>
+            <typeparam name="T14">The type of the fourteenth argument.</typeparam>
+            <typeparam name="T15">The type of the fifteenth argument.</typeparam>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpEntityClient">
+            <summary>
+            A client API that communicates with REST services implemented 
+            using standard REST methods and WCF Web API for querying.
+            </summary>
+            <remarks>
+            The API assumes that entities have an ID that can be rendered 
+            as a string (Uris are strings ;)), and that POST is performed 
+            to the entity resource parent (not the entity Uri, like "products/23", 
+            but "products") and it's used for creating the entity. 
+            <para>
+            PUT can be used also for entity creation when the client 
+            determines the server-side URI (i.e. it generates a GUID).
+            </para>
+            <para>
+            Of course the service needs to implement this same style of REST 
+            service, but this is extremely common.
+            </para>
+            <para>
+            Select expressions in the query cause it to be executed and 
+            materialized locally, so that further operations can be 
+            performed even if they are in the 
+            <see cref="!:http://msdn.microsoft.com/en-us/library/ee622463.aspx#unsupportedMethods">unsupported methods</see> 
+            list. If anything fails in the expression, you can always call 
+            ToList and use Linq to Objects from that point on. This is 
+            automatic after a Select.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.HttpEntityClient.TotalCountHeader">
+            <summary>
+            Optional header emitted by the service that allows client-side 
+            paging by retrieving the server-side total count of entities in a given query.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityClient"/> class with 
+            the default formatter <see cref="T:System.Net.Http.JsonNetEntityFormatter"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityClient"/> class with 
+            the default formatter <see cref="T:System.Net.Http.JsonNetEntityFormatter"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.#ctor(System.Uri,System.Net.Http.IEntityFormatter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityClient"/> class.
+            </summary>
+            <param name="baseAddress">The base address of the service.</param>
+            <param name="formatter">The formatter that translates service responses into entitites.</param>
+            <param name="convention">The convention to discover the resource name (or path) for the entities.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Delete(System.String,System.String)">
+            <summary>
+            Deletes the specified entity.
+            </summary>
+            <param name="resourcePath">The path to the entity resource, i.e. "products".</param>
+            <param name="id">The id of the entity to delete.</param>
+            <exception cref="T:System.Net.Http.HttpEntityException">The request did not succeed.</exception>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Get``1(System.String,System.String)">
+            <summary>
+            Gets the entity with the given id.
+            </summary>
+            <typeparam name="T">Type of the entity to retrieve.</typeparam>
+            <param name="resourcePath">The path to the entity resource, i.e. "products".</param>
+            <param name="id">The id of the entity to retrieve.</param>
+            <exception cref="T:System.Net.Http.HttpEntityException">The request did not succeed.</exception>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Post``1(System.String,``0)">
+            <summary>
+            Posts the specified entity to the entity resource
+            and returns the state persisted by the service, which 
+            should be returned in the response body.
+            </summary>
+            <typeparam name="T">Type of the entity to post, can be inferred by the compiler based on the received entity instance.</typeparam>
+            <param name="resourcePath">The path to the entity resource, i.e. "products".</param>
+            <param name="entity">The entity to post.</param>
+            <exception cref="T:System.Net.Http.HttpEntityException">The request did not succeed.</exception>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Put``1(System.String,System.String,``0)">
+            <summary>
+            Puts the specified entity to the service.
+            </summary>
+            <typeparam name="T">Type of the entity to put, can be inferred by the compiler based on the received entity instance.</typeparam>
+            <param name="resourcePath">The path to the entity resource, i.e. "products".</param>
+            <param name="entity">The entity to pu.</param>
+            <exception cref="T:System.Net.Http.HttpEntityException">The request did not succeed.</exception>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.TryGet``1(System.String,System.String,``0@)">
+            <summary>
+            Tries to get the entity with the given id.
+            </summary>
+            <typeparam name="T">Type of the entity to retrieve, can be inferred by the compiler based on the received entity instance.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+            <param name="id">The entity id.</param>
+            <param name="entity">The retrieved entity if the request is succesfull.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.TryPost``1(System.String,``0,``0@)">
+            <summary>
+            Tries to posts the specified entity and retrieves the new id 
+            that was assigned by the service from the Location header, if any.
+            </summary>
+            <typeparam name="T">Type of the entity to post, can be inferred by the compiler based on the received entity instance.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+            <param name="entity">The entity returned from a successfull post, if the request succeeded.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.TryPut``1(System.String,System.String,``0)">
+            <summary>
+            Tries to put the specified entity to the service.
+            </summary>
+            <typeparam name="T">Type of the entity to put, can be inferred by the compiler based on the received entity instance.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.TryDelete(System.String,System.String)">
+            <summary>
+            Tries to delete the specified entity.
+            </summary>
+            <param name="resourcePath">The resource path.</param>
+            <param name="id">The entity id.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Query``1(System.String)">
+            <summary>
+            Creates a query for the given entity type, that will be
+            executed when the queryable is enumerated.
+            </summary>
+            <typeparam name="T">Type of entity being queried.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+            <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+            run on the server side when it's enumerated.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Query``1(System.String,System.Object)">
+            <summary>
+            Creates a query for the given entity type, that will be
+            executed when the queryable is enumerated.
+            </summary>
+            <typeparam name="T">Type of entity being queried.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+            <param name="options">Additional query options expressed as an anonymous type 
+            where the property names and their values are used to populate a <see cref="T:System.Collections.Specialized.NameValueCollection"/> 
+            automatically and are sent as query string parameters. Useful to overcome limitations
+            in the underlying query support in WCF.</param>
+            <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+            run on the server side when it's enumerated.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Query``1(System.String,System.Net.Http.HttpNameValueCollection)">
+            <summary>
+            Creates a query for the given entity type, that will be
+            executed when the queryable is enumerated.
+            </summary>
+            <typeparam name="T">Type of entity being queried.</typeparam>
+            <param name="resourcePath">The resource path.</param>
+            <param name="options">Additional query options to be applied by the service,
+            sent as query string parameters. Useful to overcome limitations
+            in the underlying query support in WCF.</param>
+            <returns>The query object which can be subsequently filtered with Where, ordered, take/skip, etc., which is 
+            run on the server side when it's enumerated.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Dispose">
+            <summary>
+            Releases the underlying <see cref="P:System.Net.Http.HttpEntityClient.Http"/> client.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.Dispose(System.Boolean)">
+            <summary>
+            Releases the underlying <see cref="P:System.Net.Http.HttpEntityClient.Http"/> client.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityClient.EntityFormatter">
+            <summary>
+            Gets the entity formatter.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityClient.BaseAddress">
+            <summary>
+            Gets the base address for this client.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityClient.Http">
+            <summary>
+            Gets the underlying HTTP client that is used to perform requests.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityClient.HttpQueryProvider.BuildRequestUri(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            Builds the actual request URI by setting the expression in a DS 
+            query context and invoking their translation. Also, remove () from 
+            the resource name and builds a Uri that Web Api understands.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpEntityClient.HttpQueryVisitor">
+            <summary>
+            Replaces occurrences of the entity query constant with a data service 
+            resource set expression which is needed for Uri translation. Also 
+            translates IQueryable projections to local in-memory Enumerable 
+            projections, as projections don't seem to be supported by Web Api.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpEntityClient.HttpQuery">
+            <summary>
+            Represents the query being built for execution.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.IHttpEntityQuery`1">
+            <summary>
+            Represents a remote HTTP query to an entity resource endpoint.
+            </summary>
+            <typeparam name="T">Type of entity being queried.</typeparam>
+        </member>
+        <member name="M:System.Net.Http.IHttpEntityQuery`1.Execute">
+            <summary>
+            Executes the query against the remote resource endpoint.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.IHttpEntityQueryResponse`1">
+            <summary>
+            Represents an HTTP query response.
+            </summary>
+            <typeparam name="T">Type of entity that was queried.</typeparam>
+        </member>
+        <member name="P:System.Net.Http.IHttpEntityQueryResponse`1.Response">
+            <summary>
+            Gets the original response from the service.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.IHttpEntityQueryResponse`1.TotalCount">
+            <summary>
+            Gets the optional total count of items on the service side, 
+            based on the value of the <c>X-TotalCount</c> header.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpEntityClient.TypeSystem">
+            <summary>
+            This is basically what everyone else (OData, MSDN samples, etc.) 
+            use for determining the element type given a sequence type (i.e. IEnumerable{T}).
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpEntityException">
+            <summary>
+            Exception that occurs when the response static is not 
+            successfull, therefore preventing deserialization of 
+            the expected entities.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityException.#ctor(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityException"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityException.StatusCode">
+            <summary>
+            Gets the status code of the <see cref="P:System.Net.Http.HttpEntityException.Response"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityException.Response">
+            <summary>
+            Gets the full response object that caused this exception.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.IEntityFormatter">
+            <summary>
+            Formatter that reads and writes <see cref="T:System.Net.Http.HttpContent"/> 
+            for arbitrary entity types.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.IEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
+            <summary>
+            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.IEntityFormatter.ToContent``1(``0)">
+            <summary>
+            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.IEntityFormatter.ContentType">
+            <summary>
+            Gets the content type supported by the formatter.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.JsonNetEntityFormatter">
+            <summary>
+            An entity formatter that serializes to and from Json.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.#ctor(System.Net.Http.JsonNetFormat,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.JsonNetEntityFormatter"/> class.
+            </summary>
+            <param name="format">The format to use when serializing or deserializing content.</param>
+            <param name="serializerSettings">The optional serializer settings to customize Json serialization behavior.</param>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
+            <summary>
+            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.ToContent``1(``0)">
+            <summary>
+            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.JsonNetEntityFormatter.ContentType">
+            <summary>
+            Gets the content type supported by the formatter, according to the <see cref="T:System.Net.Http.JsonNetFormat"/> 
+            specified in the constructor. Is always "text/json" or "application/bson".
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.JsonNetFormat">
+            <summary>
+            Json format to use with <see cref="T:System.Net.Http.JsonNetEntityFormatter"/>.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.JsonNetFormat.Json">
+            <summary>
+            Json text, that translates to a "text/json" content type.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.JsonNetFormat.Bson">
+            <summary>
+            Binary json, that translates to a "application/bson" content type.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.QueryableExtension">
+            <summary>
+            Provides the <see cref="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})"/> extension method to execute 
+            the query and retrieve the additional response information like 
+            total count and the original <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes the HTTP query and retrieves the full response information 
+            together with the actual result.
+            </summary>
+        </member>
+    </members>
+</doc>

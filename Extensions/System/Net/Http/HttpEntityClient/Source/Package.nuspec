@@ -1,11 +1,8 @@
-﻿<#@ Template Debug="False" Hostspecific="True" Language="C#" #>
-<#@ Output Extension=".nuspec" #>
-<#@ Include File="..\..\..\..\..\..\..\Package.ttinclude" #>
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Net.Http.HttpEntityClient</id>
-		<version><#= version #></version>
+		<version>1.2.0.1</version>
 		<title>NETFx HttpEntityClient</title>
 		<description xml:space="preserve">Strong-typed Linq to Web API. Builds on top of HttpClient and provides the easiest way to interface with typed REST services that are modeled around typed entities or contracts.
 

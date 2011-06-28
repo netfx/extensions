@@ -51,6 +51,12 @@ public class TestService
 		};
 	}
 
+	[WebGet(UriTemplate = "latest")]
+	public HttpResponseMessage GetLatest()
+	{
+		return new HttpResponseMessage<Product>(this.products.Last());
+	}
+
 	[WebGet(UriTemplate = "{id}")]
 	public HttpResponseMessage Get(int id)
 	{

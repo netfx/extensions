@@ -30,6 +30,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
+  <Import Project="$(NuGetRoot)\NuGet.Tests.properties" Condition="Exists('$(NuGetRoot)\NuGet.Tests.properties')" />
   <ItemGroup>
     <Reference Include="Microsoft.ApplicationServer.Common">
       <HintPath>..\packages\WebApi.Core.0.3.0\lib\40\Microsoft.ApplicationServer.Common.dll</HintPath>
@@ -73,12 +80,9 @@
     <Reference Include="Tracer">
       <HintPath>..\packages\Tracer.0.9.0.0\lib\NET40\Tracer.dll</HintPath>
     </Reference>
-    <Reference Include="xunit">
-      <HintPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), netfx.txt))\packages\xUnit\xunit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpEntityClientSpec.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\HttpEntityClientSpec.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\ActivatorResourceFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\CachingResourceFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\HttpQueryableServiceHost.cs" />
@@ -89,14 +93,13 @@
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SafeHostDisposer.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\SingletonResourceFactory.cs" />
     <Compile Include="netfx\Microsoft\ApplicationServer\Http\TracingChannel.cs" />
-    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reflect.Overloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="TestService.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\TestService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">
@@ -110,10 +113,12 @@
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
     </None>
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
+    <NuSpec Include="Package.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>

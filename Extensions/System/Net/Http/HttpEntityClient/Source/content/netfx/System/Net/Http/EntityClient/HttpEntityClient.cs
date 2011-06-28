@@ -130,6 +130,23 @@ namespace System.Net.Http
 		}
 
 		/// <summary>
+		/// Gets an entity from the resource path.
+		/// </summary>
+		/// <typeparam name="T">Type of the entity to retrieve.</typeparam>
+		/// <param name="resourcePath">The path to the entity resource, i.e. "products/current".</param>
+		/// <exception cref="HttpEntityException">The request did not succeed.</exception>
+		public T Get<T>(string resourcePath)
+		{
+			var entity = default(T);
+			var response = TryGet<T>(resourcePath, out entity);
+
+			if (!response.IsSuccessStatusCode)
+				throw new HttpEntityException(response);
+
+			return entity;
+		}
+
+		/// <summary>
 		/// Gets the entity with the given id.
 		/// </summary>
 		/// <typeparam name="T">Type of the entity to retrieve.</typeparam>
@@ -192,6 +209,27 @@ namespace System.Net.Http
 		public HttpResponseMessage TryGet<T>(string resourcePath, string id, out T entity)
 		{
 			var uri = new Uri(this.BaseAddress, resourcePath + "/" + id);
+			var response = this.http.Get(uri);
+			entity = default(T);
+
+			if (response.IsSuccessStatusCode)
+			{
+				ThrowIfUnsupportedContentType(response);
+				entity = this.EntityFormatter.FromContent<T>(response.Content);
+			}
+
+			return response;
+		}
+
+		/// <summary>
+		/// Tries to get the entity from the given resource location.
+		/// </summary>
+		/// <typeparam name="T">Type of the entity to retrieve, can be inferred by the compiler based on the received entity instance.</typeparam>
+		/// <param name="resourcePath">The resource path.</param>
+		/// <param name="entity">The retrieved entity if the request is succesfull.</param>
+		public HttpResponseMessage TryGet<T>(string resourcePath, out T entity)
+		{
+			var uri = new Uri(this.BaseAddress, resourcePath);
 			var response = this.http.Get(uri);
 			entity = default(T);
 

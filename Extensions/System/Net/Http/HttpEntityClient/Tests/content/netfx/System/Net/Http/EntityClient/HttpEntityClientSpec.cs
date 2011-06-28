@@ -35,6 +35,20 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenGettingWithoutId_ThenRetrieves()
+		{
+			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))
+			{
+				var client = new HttpEntityClient(ws.BaseUri);
+
+				var product = client.Get<Product>(resourceName + "/latest");
+
+				Assert.NotNull(product);
+				Assert.Equal("vga", product.Owner.Name);
+			}
+		}
+
+		[Fact]
 		public void WhenPostNew_ThenSavesAndRetrievesId()
 		{
 			using (var ws = new HttpWebService<TestService>("http://localhost:20000", "products", new ServiceConfiguration()))

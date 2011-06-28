@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>lib\netfx-System.Net.Http.HttpEntityClient</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <NuGetRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NuGet.properties))</NuGetRoot>
+    <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
+    <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
+  </PropertyGroup>
+  <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="Microsoft.Net.Http">
       <HintPath>..\packages\HttpClient.0.3.0\lib\40\Microsoft.Net.Http.dll</HintPath>
@@ -45,14 +52,14 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\System\Net\Http\EntityClient\IHttpEntityQueryResponse.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\HttpEntityClient.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\HttpEntityException.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\IEntityFormatter.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\IHttpEntityQuery.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\JsonNetEntityFormatter.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\JsonNetFormat.cs" />
-    <Compile Include="content\System\Net\Http\EntityClient\QueryableExtension.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\HttpEntityClient.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\HttpEntityException.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\IEntityFormatter.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\IHttpEntityQuery.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\IHttpEntityQueryResponse.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\JsonNetEntityFormatter.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\JsonNetFormat.cs" />
+    <Compile Include="content\netfx\System\Net\Http\EntityClient\QueryableExtension.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Net\Http\HttpNameValueCollection.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
@@ -69,6 +76,7 @@
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
     </None>
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
+    <NuSpec Include="Package.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -78,4 +86,5 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
 </Project>
