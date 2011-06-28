@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:LinqSpec">
+            <summary>
+            Allows creating and combining query specifications using logical And and Or 
+            operators.
+            </summary>
+            <nuget id="netfx-Patterns.LinqSpecs" />
+        </member>
+        <member name="M:LinqSpec.For``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Creates a custom ad-hoc <see cref="T:LinqSpec`1"/> for the given <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:LinqSpec.Spec``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Converts the given expression to a linq query specification. Typically 
+            not needed as the expression can be converted implicitly to a linq 
+            specification by just assigning it or passing it as such to another method.
+            </summary>
+        </member>
+        <member name="T:LinqSpec`1">
+            <summary>
+            Base class for query specifications that can be combined using logical And and Or 
+            operators. For custom ad-hoc queries, use the static <see cref="M:LinqSpec.For``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})"/> method.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.op_BitwiseAnd(LinqSpec{`0},LinqSpec{`0})">
+            <summary>
+            Allows to combine two query specifications using a logical And operation.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.op_BitwiseOr(LinqSpec{`0},LinqSpec{`0})">
+            <summary>
+            Allows to combine two query specifications using a logical Or operation.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.op_LogicalNot(LinqSpec{`0})">
+            <summary>
+            Negates the given expression.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.op_Implicit(LinqSpec{`0})~System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:LinqSpec`1"/> to a linq expression.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.op_Implicit(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})~LinqSpec{`0}">
+            <summary>
+            Performs an implicit conversion from a linq expression to <see cref="T:LinqSpec`1"/>.
+            </summary>
+        </member>
+        <member name="P:LinqSpec`1.Expression">
+            <summary>
+            Gets the expression that defines this query. Typically accessing 
+            this property is not needed as the query spec can be converted 
+            implicitly to an expression by just assigning it or passing it as 
+            such to another method.
+            </summary>
+        </member>
+        <member name="T:LinqSpec`1.AndSpec`1">
+            <summary>
+            The <c>And</c> specification.
+            </summary>
+        </member>
+        <member name="T:LinqSpec`1.OrSpec`1">
+            <summary>
+            The <c>Or</c> specification.
+            </summary>
+        </member>
+        <member name="T:LinqSpec`1.NegateSpec`1">
+            <summary>
+            Negates the given query specification.
+            </summary>
+        </member>
+        <member name="T:ExpressionCombiner">
+            <summary>
+            Combines linq expressions using logic operators And and Or.
+            </summary>
+            <remarks>
+            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
+            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
+            </remarks>
+            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
+        </member>
+    </members>
+</doc>
