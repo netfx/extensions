@@ -4,6 +4,13 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="M:StreamGetBytes.GetBytes(System.IO.Stream)">
+            <summary>
+            Returns all bytes from the given stream.
+            </summary>
+            <nuget id="netfx-System.IO.StreamGetBytes" />
+            <param name="stream" this="true">The stream to get bytes</param>
+        </member>
         <member name="T:StreamWriteTo">
             <summary>
             Provides WriteTo extension methods to write streams easily to 
@@ -22,13 +29,6 @@
             <summary>
             Writes the input stream to the target stream.
             </summary>
-        </member>
-        <member name="M:StreamGetBytes.GetBytes(System.IO.Stream)">
-            <summary>
-            Returns all bytes from the given stream.
-            </summary>
-            <nuget id="netfx-System.IO.StreamGetBytes" />
-            <param name="stream" this="true">The stream to get bytes</param>
         </member>
     </members>
 </doc>

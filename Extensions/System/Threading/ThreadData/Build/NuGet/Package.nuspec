@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Threading.ThreadData</id>
-		<version>1.0.0.21</version>
+		<version>1.0.0.22</version>
 		<title>NETFx Thread Data&lt;T&gt;</title>
 		<description>Provides strong-typed persistence of data in Thread local storage, which can also be transient and automatically removed on dispose.
 

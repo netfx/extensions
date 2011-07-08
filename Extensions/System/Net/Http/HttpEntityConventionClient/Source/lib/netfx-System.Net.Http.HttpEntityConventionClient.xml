@@ -4,6 +4,36 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:System.Net.Http.HttpEntityConventionClient">
+            <summary>
+            A client API that communicates with REST services implemented 
+            using standard REST methods and WCF Web API for querying.
+            </summary>
+            <remarks>
+            The API assumes that entities have an ID that can be rendered 
+            as a string (Uris are strings ;)), and that POST is performed 
+            to the entity resource parent (not the entity Uri, like "products/23", 
+            but "products") and it's used for creating the entity. 
+            <para>
+            PUT can be used also for entity creation when the client 
+            determines the server-side URI (i.e. it generates a GUID).
+            </para>
+            <para>
+            Of course the service needs to implement this same style of REST 
+            service, but this is extremely common.
+            </para>
+            <para>
+            Select expressions in the query cause it to be executed and 
+            materialized locally, so that further operations can be 
+            performed even if they are in the 
+            <see cref="!:http://msdn.microsoft.com/en-us/library/ee622463.aspx#unsupportedMethods">unsupported methods</see> 
+            list. If anything fails in the expression, you can always call 
+            ToList and use Linq to Objects from that point on. This is 
+            automatic after a Select.
+            </para>
+            </remarks>
+            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
+        </member>
         <member name="T:System.Net.Http.HttpEntityClient">
             <summary>
             A client API that communicates with REST services implemented 
@@ -260,210 +290,6 @@
             use for determining the element type given a sequence type (i.e. IEnumerable{T}).
             </summary>
         </member>
-        <member name="T:JsonNetMediaTypeFormatter">
-            <summary>
-            A <see cref="T:Microsoft.ApplicationServer.Http.MediaTypeFormatter"/> that supports the following media types:
-            "text/json", "application/json" and "application/bson" (for binary Json).
-            </summary>
-        </member>
-        <member name="M:JsonNetMediaTypeFormatter.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:JsonNetMediaTypeFormatter"/> class with 
-            <see cref="F:Newtonsoft.Json.ReferenceLoopHandling.Ignore"/> for the Json serializer.
-            </summary>
-        </member>
-        <member name="M:JsonNetMediaTypeFormatter.#ctor(Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Initializes a new instance of the <see cref="T:JsonNetMediaTypeFormatter"/> class with 
-            the specified Json serializer settings.
-            </summary>
-        </member>
-        <member name="M:JsonNetMediaTypeFormatter.OnWriteToStream(System.Type,System.Object,System.IO.Stream,System.Net.Http.Headers.HttpContentHeaders,System.Net.TransportContext)">
-            <summary>
-            Serializes the given value to the stream using Json.
-            </summary>
-        </member>
-        <member name="M:JsonNetMediaTypeFormatter.OnReadFromStream(System.Type,System.IO.Stream,System.Net.Http.Headers.HttpContentHeaders)">
-            <summary>
-            Deserializes the stream as Json.
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.JsonNetEntityFormatter">
-            <summary>
-            An entity formatter that serializes to and from Json.
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.IEntityFormatter">
-            <summary>
-            Formatter that reads and writes <see cref="T:System.Net.Http.HttpContent"/> 
-            for arbitrary entity types.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.IEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
-            <summary>
-            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.IEntityFormatter.ToContent``1(``0)">
-            <summary>
-            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
-            </summary>
-        </member>
-        <member name="P:System.Net.Http.IEntityFormatter.ContentType">
-            <summary>
-            Gets the content type supported by the formatter.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.JsonNetEntityFormatter.#ctor(System.Net.Http.JsonNetFormat,Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Net.Http.JsonNetEntityFormatter"/> class.
-            </summary>
-            <param name="format">The format to use when serializing or deserializing content.</param>
-            <param name="serializerSettings">The optional serializer settings to customize Json serialization behavior.</param>
-        </member>
-        <member name="M:System.Net.Http.JsonNetEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
-            <summary>
-            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.JsonNetEntityFormatter.ToContent``1(``0)">
-            <summary>
-            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
-            </summary>
-        </member>
-        <member name="P:System.Net.Http.JsonNetEntityFormatter.ContentType">
-            <summary>
-            Gets the content type supported by the formatter, according to the <see cref="T:System.Net.Http.JsonNetFormat"/> 
-            specified in the constructor. Is always "text/json" or "application/bson".
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.HttpEntityException">
-            <summary>
-            Exception that occurs when the response static is not 
-            successfull, therefore preventing deserialization of 
-            the expected entities.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.HttpEntityException.#ctor(System.Net.Http.HttpResponseMessage)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityException"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Net.Http.HttpEntityException.StatusCode">
-            <summary>
-            Gets the status code of the <see cref="P:System.Net.Http.HttpEntityException.Response"/>.
-            </summary>
-        </member>
-        <member name="P:System.Net.Http.HttpEntityException.Response">
-            <summary>
-            Gets the full response object that caused this exception.
-            </summary>
-        </member>
-        <member name="T:JsonNetExtensions">
-            <summary>
-            Provides the <see cref="M:JsonNetExtensions.UseJsonNet(Microsoft.ApplicationServer.Http.Description.IHttpHostConfigurationBuilder)"/> extension method to turn 
-            on usage of Json.NET instead of the built-in Json serializer.
-            </summary>
-        </member>
-        <member name="M:JsonNetExtensions.UseJsonNet(Microsoft.ApplicationServer.Http.Description.IHttpHostConfigurationBuilder)">
-            <summary>
-            Makes Json.NET media type formatter the default for Json content types.
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.PluralizerResourceFormat">
-            <summary>
-            How to format the pluralized resource name when applying the 
-            <see cref="T:System.Net.Http.PluralizerResourceConvention"/> convention to discover 
-            the resource name corresponding to an entity type.
-            </summary>
-            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
-        </member>
-        <member name="F:System.Net.Http.PluralizerResourceFormat.PascalCase">
-            <summary>
-            Example: turns 'customerAddress' into 'CustomerAddress'.
-            </summary>
-        </member>
-        <member name="F:System.Net.Http.PluralizerResourceFormat.CamelCase">
-            <summary>
-            Example: turns 'CustomerAddress' into 'customerAddress'.
-            </summary>
-        </member>
-        <member name="F:System.Net.Http.PluralizerResourceFormat.LowerCase">
-            <summary>
-            Example: turns 'CustomerAddress' into 'customeraddress'.
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.PluralizerResourceConvention">
-            <summary>
-            Entity resource convention that pluralizes singular-named 
-            entity types to make the resource name. If the entity type 
-            is already a plural name, returns it as-is.
-            </summary>
-            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient" />
-        </member>
-        <member name="T:System.Net.Http.IEntityResourceNameConvention">
-            <summary>
-            Provides the convention to discover the resource name 
-            for a given entity type. The resource name is used 
-            by the <see cref="T:System.Net.Http.HttpEntityConventionClient"/> to build 
-            requests for the given entity by appending it to the 
-            <see cref="!:HttpEntityConventionClient.BaseAddress"/>.
-            </summary>
-            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
-        </member>
-        <member name="M:System.Net.Http.IEntityResourceNameConvention.GetResourceName(System.Type)">
-            <summary>
-            Gets the name of the resource corresponding to the 
-            given entity.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.PluralizerResourceConvention.#ctor">
-            <summary>
-            Initializes the convention using the default en-US culture and 
-            <see cref="F:System.Net.Http.PluralizerResourceFormat.CamelCase"/> for pluralized names.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.PluralizerResourceConvention.#ctor(System.Data.Entity.Design.PluralizationServices.PluralizationService,System.Net.Http.PluralizerResourceFormat)">
-            <summary>
-            Initializes the convention with a custom pluralizer and resource format.
-            </summary>
-        </member>
-        <member name="M:System.Net.Http.PluralizerResourceConvention.GetResourceName(System.Type)">
-            <summary>
-            Gets the name of the resource corresponding to the
-            given entity by pluralizing it if necessary.
-            </summary>
-        </member>
-        <member name="T:System.Net.Http.HttpEntityConventionClient">
-            <summary>
-            A client API that communicates with REST services implemented 
-            using standard REST methods and WCF Web API for querying.
-            </summary>
-            <remarks>
-            The API assumes that entities have an ID that can be rendered 
-            as a string (Uris are strings ;)), and that POST is performed 
-            to the entity resource parent (not the entity Uri, like "products/23", 
-            but "products") and it's used for creating the entity. 
-            <para>
-            PUT can be used also for entity creation when the client 
-            determines the server-side URI (i.e. it generates a GUID).
-            </para>
-            <para>
-            Of course the service needs to implement this same style of REST 
-            service, but this is extremely common.
-            </para>
-            <para>
-            Select expressions in the query cause it to be executed and 
-            materialized locally, so that further operations can be 
-            performed even if they are in the 
-            <see cref="!:http://msdn.microsoft.com/en-us/library/ee622463.aspx#unsupportedMethods">unsupported methods</see> 
-            list. If anything fails in the expression, you can always call 
-            ToList and use Linq to Objects from that point on. This is 
-            automatic after a Select.
-            </para>
-            </remarks>
-            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
-        </member>
         <member name="M:System.Net.Http.HttpEntityConventionClient.#ctor(System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityConventionClient"/> class with 
@@ -572,17 +398,107 @@
             Gets the resource path for the given type, using the configured convention.
             </summary>
         </member>
-        <member name="T:System.Net.Http.QueryableExtension">
+        <member name="T:System.Net.Http.IEntityResourceNameConvention">
             <summary>
-            Provides the <see cref="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})"/> extension method to execute 
-            the query and retrieve the additional response information like 
-            total count and the original <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            Provides the convention to discover the resource name 
+            for a given entity type. The resource name is used 
+            by the <see cref="T:System.Net.Http.HttpEntityConventionClient"/> to build 
+            requests for the given entity by appending it to the 
+            <see cref="!:HttpEntityConventionClient.BaseAddress"/>.
+            </summary>
+            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
+        </member>
+        <member name="M:System.Net.Http.IEntityResourceNameConvention.GetResourceName(System.Type)">
+            <summary>
+            Gets the name of the resource corresponding to the 
+            given entity.
             </summary>
         </member>
-        <member name="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})">
+        <member name="T:System.Net.Http.PluralizerResourceConvention">
             <summary>
-            Executes the HTTP query and retrieves the full response information 
-            together with the actual result.
+            Entity resource convention that pluralizes singular-named 
+            entity types to make the resource name. If the entity type 
+            is already a plural name, returns it as-is.
+            </summary>
+            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient" />
+        </member>
+        <member name="M:System.Net.Http.PluralizerResourceConvention.#ctor">
+            <summary>
+            Initializes the convention using the default en-US culture and 
+            <see cref="F:System.Net.Http.PluralizerResourceFormat.CamelCase"/> for pluralized names.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.PluralizerResourceConvention.#ctor(System.Data.Entity.Design.PluralizationServices.PluralizationService,System.Net.Http.PluralizerResourceFormat)">
+            <summary>
+            Initializes the convention with a custom pluralizer and resource format.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.PluralizerResourceConvention.GetResourceName(System.Type)">
+            <summary>
+            Gets the name of the resource corresponding to the
+            given entity by pluralizing it if necessary.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.PluralizerResourceFormat">
+            <summary>
+            How to format the pluralized resource name when applying the 
+            <see cref="T:System.Net.Http.PluralizerResourceConvention"/> convention to discover 
+            the resource name corresponding to an entity type.
+            </summary>
+            <nuget id="netfx-System.Net.Http.HttpEntityConventionClient"/>
+        </member>
+        <member name="F:System.Net.Http.PluralizerResourceFormat.PascalCase">
+            <summary>
+            Example: turns 'customerAddress' into 'CustomerAddress'.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.PluralizerResourceFormat.CamelCase">
+            <summary>
+            Example: turns 'CustomerAddress' into 'customerAddress'.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.PluralizerResourceFormat.LowerCase">
+            <summary>
+            Example: turns 'CustomerAddress' into 'customeraddress'.
+            </summary>
+        </member>
+        <member name="T:JsonNetExtensions">
+            <summary>
+            Provides the <see cref="M:JsonNetExtensions.UseJsonNet(Microsoft.ApplicationServer.Http.Description.IHttpHostConfigurationBuilder)"/> extension method to turn 
+            on usage of Json.NET instead of the built-in Json serializer.
+            </summary>
+        </member>
+        <member name="M:JsonNetExtensions.UseJsonNet(Microsoft.ApplicationServer.Http.Description.IHttpHostConfigurationBuilder)">
+            <summary>
+            Makes Json.NET media type formatter the default for Json content types.
+            </summary>
+        </member>
+        <member name="T:JsonNetMediaTypeFormatter">
+            <summary>
+            A <see cref="T:Microsoft.ApplicationServer.Http.MediaTypeFormatter"/> that supports the following media types:
+            "text/json", "application/json" and "application/bson" (for binary Json).
+            </summary>
+        </member>
+        <member name="M:JsonNetMediaTypeFormatter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:JsonNetMediaTypeFormatter"/> class with 
+            <see cref="F:Newtonsoft.Json.ReferenceLoopHandling.Ignore"/> for the Json serializer.
+            </summary>
+        </member>
+        <member name="M:JsonNetMediaTypeFormatter.#ctor(Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:JsonNetMediaTypeFormatter"/> class with 
+            the specified Json serializer settings.
+            </summary>
+        </member>
+        <member name="M:JsonNetMediaTypeFormatter.OnWriteToStream(System.Type,System.Object,System.IO.Stream,System.Net.Http.Headers.HttpContentHeaders,System.Net.TransportContext)">
+            <summary>
+            Serializes the given value to the stream using Json.
+            </summary>
+        </member>
+        <member name="M:JsonNetMediaTypeFormatter.OnReadFromStream(System.Type,System.IO.Stream,System.Net.Http.Headers.HttpContentHeaders)">
+            <summary>
+            Deserializes the stream as Json.
             </summary>
         </member>
         <member name="T:Guard">
@@ -603,16 +519,178 @@
             <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
+        <member name="T:System.Net.Http.HttpEntityException">
+            <summary>
+            Exception that occurs when the response static is not 
+            successfull, therefore preventing deserialization of 
+            the expected entities.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEntityException.#ctor(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpEntityException"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityException.StatusCode">
+            <summary>
+            Gets the status code of the <see cref="P:System.Net.Http.HttpEntityException.Response"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpEntityException.Response">
+            <summary>
+            Gets the full response object that caused this exception.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.IEntityFormatter">
+            <summary>
+            Formatter that reads and writes <see cref="T:System.Net.Http.HttpContent"/> 
+            for arbitrary entity types.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.IEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
+            <summary>
+            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.IEntityFormatter.ToContent``1(``0)">
+            <summary>
+            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.IEntityFormatter.ContentType">
+            <summary>
+            Gets the content type supported by the formatter.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.JsonNetEntityFormatter">
+            <summary>
+            An entity formatter that serializes to and from Json.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.#ctor(System.Net.Http.JsonNetFormat,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.JsonNetEntityFormatter"/> class.
+            </summary>
+            <param name="format">The format to use when serializing or deserializing content.</param>
+            <param name="serializerSettings">The optional serializer settings to customize Json serialization behavior.</param>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.FromContent``1(System.Net.Http.HttpContent)">
+            <summary>
+            Reads an entity from <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.JsonNetEntityFormatter.ToContent``1(``0)">
+            <summary>
+            Converts an entity into <see cref="T:System.Net.Http.HttpContent"/>.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.JsonNetEntityFormatter.ContentType">
+            <summary>
+            Gets the content type supported by the formatter, according to the <see cref="T:System.Net.Http.JsonNetFormat"/> 
+            specified in the constructor. Is always "text/json" or "application/bson".
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.JsonNetFormat">
+            <summary>
+            Json format to use with <see cref="T:System.Net.Http.JsonNetEntityFormatter"/>.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.JsonNetFormat.Json">
+            <summary>
+            Json text, that translates to a "text/json" content type.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.JsonNetFormat.Bson">
+            <summary>
+            Binary json, that translates to a "application/bson" content type.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.QueryableExtension">
+            <summary>
+            Provides the <see cref="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})"/> extension method to execute 
+            the query and retrieve the additional response information like 
+            total count and the original <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QueryableExtension.Execute``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes the HTTP query and retrieves the full response information 
+            together with the actual result.
+            </summary>
+        </member>
         <member name="T:Reflect">
-            <devdoc>
-            Generated overloads for available Func/Action generic types 
-            for current target framework version 4.0.
-            </devdoc>
             <summary>
             Provides strong-typed static reflection for arbitrary 
             expressions, typically static members where no 
             instance parameter is needed.
             </summary>
+            <devdoc>
+            Generated overloads for available Func/Action generic types 
+            for current target framework version 4.0.
+            </devdoc>
+        </member>
+        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Action})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{System.Func{``0}}})">
+            <summary>
+            Gets the method represented by the lambda expression.
+            </summary>
+            <param name="method">An expression that invokes a method.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
+            <returns>The method info.</returns>
+        </member>
+        <member name="M:Reflect.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the name of the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect.GetProperty``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the property represented by the lambda expression.
+            </summary>
+            <param name="property">An expression that accesses a property.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
+            <returns>The property info.</returns>
+        </member>
+        <member name="M:Reflect.GetField``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets the field represented by the lambda expression.
+            </summary>
+            <param name="field">An expression that accesses a field.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="field"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="field"/> is not a lambda expression or it does not represent a field access.</exception>
+            <returns>The field info.</returns>
         </member>
         <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Action{``0}})">
             <summary>
@@ -1734,7 +1812,19 @@
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Action})">
+        <member name="T:Reflect`1">
+            <summary>
+            Provides strong-typed static reflection of the <typeparamref name="TTarget"/> 
+            type.
+            </summary>
+            <typeparam name="TTarget">Type to reflect.</typeparam>
+            <devdoc>
+            Generated overloads for available Func/Action generic types 
+            for current target framework version 4.0.
+            </devdoc>
+            <typeparam name="TTarget">Type to reflect.</typeparam>
+        </member>
+        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Action{`0}})">
             <summary>
             Gets the method represented by the lambda expression.
             </summary>
@@ -1743,7 +1833,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
             <summary>
             Gets the method represented by the lambda expression.
             </summary>
@@ -1752,7 +1842,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Reflect.GetMethod(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0}}})">
             <summary>
             Gets the method represented by the lambda expression.
             </summary>
@@ -1761,7 +1851,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Reflect.GetMethod``1(System.Linq.Expressions.Expression{System.Func{System.Func{``0}}})">
+        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Func{`0,System.Action}})">
             <summary>
             Gets the method represented by the lambda expression.
             </summary>
@@ -1770,7 +1860,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Reflect.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+        <member name="M:Reflect`1.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
             <summary>
             Gets the name of the property represented by the lambda expression.
             </summary>
@@ -1779,7 +1869,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
             <returns>The property info.</returns>
         </member>
-        <member name="M:Reflect.GetProperty``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+        <member name="M:Reflect`1.GetProperty``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
             <summary>
             Gets the property represented by the lambda expression.
             </summary>
@@ -1788,7 +1878,7 @@
             <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
             <returns>The property info.</returns>
         </member>
-        <member name="M:Reflect.GetField``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+        <member name="M:Reflect`1.GetField``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
             <summary>
             Gets the field represented by the lambda expression.
             </summary>
@@ -1796,18 +1886,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="field"/> is null.</exception>
             <exception cref="T:System.ArgumentException">The <paramref name="field"/> is not a lambda expression or it does not represent a field access.</exception>
             <returns>The field info.</returns>
-        </member>
-        <member name="T:Reflect`1">
-            <devdoc>
-            Generated overloads for available Func/Action generic types 
-            for current target framework version 4.0.
-            </devdoc>
-            <typeparam name="TTarget">Type to reflect.</typeparam>
-            <summary>
-            Provides strong-typed static reflection of the <typeparamref name="TTarget"/> 
-            type.
-            </summary>
-            <typeparam name="TTarget">Type to reflect.</typeparam>
         </member>
         <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Action{`0,``0}})">
             <summary>
@@ -2828,84 +2906,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
             <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
             <returns>The method info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Action{`0}})">
-            <summary>
-            Gets the method represented by the lambda expression.
-            </summary>
-            <param name="method">An expression that invokes a method.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-            <returns>The method info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Gets the method represented by the lambda expression.
-            </summary>
-            <param name="method">An expression that invokes a method.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-            <returns>The method info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetMethod``1(System.Linq.Expressions.Expression{System.Func{`0,System.Func{``0}}})">
-            <summary>
-            Gets the method represented by the lambda expression.
-            </summary>
-            <param name="method">An expression that invokes a method.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-            <returns>The method info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetMethod(System.Linq.Expressions.Expression{System.Func{`0,System.Action}})">
-            <summary>
-            Gets the method represented by the lambda expression.
-            </summary>
-            <param name="method">An expression that invokes a method.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="method"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-            <returns>The method info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Gets the name of the property represented by the lambda expression.
-            </summary>
-            <param name="property">An expression that accesses a property.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
-            <returns>The property info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetProperty``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Gets the property represented by the lambda expression.
-            </summary>
-            <param name="property">An expression that accesses a property.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="property"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="property"/> is not a lambda expression or it does not represent a property access.</exception>
-            <returns>The property info.</returns>
-        </member>
-        <member name="M:Reflect`1.GetField``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Gets the field represented by the lambda expression.
-            </summary>
-            <param name="field">An expression that accesses a field.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="field"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="field"/> is not a lambda expression or it does not represent a field access.</exception>
-            <returns>The field info.</returns>
-        </member>
-        <member name="T:System.Net.Http.JsonNetFormat">
-            <summary>
-            Json format to use with <see cref="T:System.Net.Http.JsonNetEntityFormatter"/>.
-            </summary>
-        </member>
-        <member name="F:System.Net.Http.JsonNetFormat.Json">
-            <summary>
-            Json text, that translates to a "text/json" content type.
-            </summary>
-        </member>
-        <member name="F:System.Net.Http.JsonNetFormat.Bson">
-            <summary>
-            Binary json, that translates to a "application/bson" content type.
-            </summary>
         </member>
     </members>
 </doc>

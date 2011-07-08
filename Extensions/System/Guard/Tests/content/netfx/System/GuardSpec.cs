@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-internal class GuardSpec
+public class GuardSpec
 {
 	[Fact]
 	public void WhenNullVariableReferencePassed_ThenThrowsArgumentNullExceptionWithVariableName()

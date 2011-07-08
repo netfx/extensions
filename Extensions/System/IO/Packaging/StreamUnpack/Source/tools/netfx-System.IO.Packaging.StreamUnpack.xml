@@ -4,44 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
-        <member name="T:StreamWriteTo">
-            <summary>
-            Provides WriteTo extension methods to write streams easily to 
-            another steam or a target file.
-            </summary>
-        </member>
-        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.String,System.Boolean)">
-            <summary>
-            Writes the input stream to the target file.
-            </summary>
-            <param name="source">The source stream to write to the target file.</param>
-            <param name="targetFile">The target file to write to.</param>
-            <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
-        </member>
-        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.IO.Stream)">
-            <summary>
-            Writes the input stream to the target stream.
-            </summary>
-            <returns>The written <paramref name="target"/> stream.</returns>
-        </member>
         <member name="T:StreamUnpack">
             <summary>
             Provides unpacking behavior for steams are 
@@ -126,6 +88,44 @@
             }
             </code>
             </example>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:StreamWriteTo">
+            <summary>
+            Provides WriteTo extension methods to write streams easily to 
+            another steam or a target file.
+            </summary>
+        </member>
+        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+            Writes the input stream to the target file.
+            </summary>
+            <param name="source">The source stream to write to the target file.</param>
+            <param name="targetFile">The target file to write to.</param>
+            <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
+        </member>
+        <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Writes the input stream to the target stream.
+            </summary>
+            <returns>The written <paramref name="target"/> stream.</returns>
         </member>
     </members>
 </doc>

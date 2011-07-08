@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Xml.XmlSerializer</id>
-		<version>1.0.0.9</version>
+		<version>1.0.0.10</version>
 		<title>NETFx XmlSerializer&lt;T&gt;</title>
 		<description>Provides a generics version of XmlSerializer.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

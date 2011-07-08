@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Reflection.Reflect</id>
-		<version>1.0.0.34</version>
+		<version>1.0.0.35</version>
 		<title>Obsolete: use netx-Reflector</title>
 		<description xml:space="preserve">This package has been renamed to netfx-Reflector, and installing it will actually install netfx-Reflector package.
 
