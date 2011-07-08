@@ -10,6 +10,7 @@ Write-Progress -Activity "Deploying NETFx" -Status "Cleaning drop location"
 # Remove-Item -Path Drop -Force -Recurse -ErrorAction SilentlyContinue | out-null
 Remove-Item Drop -Recurse -ErrorAction SilentlyContinue | out-null
 $dropDir = [System.IO.Directory]::CreateDirectory("Drop") 
+write-host "Drop location is " $dropDir.FullName
 
 # Build all extensions
 foreach ($build in (Get-ChildItem Extensions -Recurse -Filter *.sln))
@@ -23,11 +24,10 @@ foreach ($build in (Get-ChildItem Extensions -Recurse -Filter *.sln))
 
         Write-Progress -Activity "Building " -Status ("Building extension " + $build.Directory.Parent.Name) -PercentComplete $progress
         Write-Progress -Activity "Deploying NETFx" -Status ("Building extension " + $build.Directory.Parent.Name) -PercentComplete $progress
-        &$msbuild /verbosity:quiet /p:Configuration=Release
-   
+        &$msbuild /verbosity:quiet /p:Configuration=Release /nologo
     
 		# At this point there should only be one nupkg
-		gci -filter *.nupkg -recurse | Where-Object { $_.directoryname.endswith("bin\Release") }  | %{ write-host $_.MoveTo("$dropDir.FullName\\$_") }
+		gci -filter *.nupkg -recurse | Where-Object { $_.directoryname.endswith("bin\Release") }  | %{ $_.MoveTo([system.io.path]::combine($dropDir.FullName, $_.Name)); }
          
     popd
 }

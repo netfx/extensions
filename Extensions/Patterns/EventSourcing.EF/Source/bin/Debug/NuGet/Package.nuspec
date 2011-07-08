@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>netfx-Patterns.EventSourcing.EF</id>
+    <version>1.0.0.6</version>
+    <title>NETFx Patterns: Event Sourcing for Entity Framework</title>
+    <description>Implements the event sourcing pattern for entities persisted via EF</description>
+    <authors>Daniel Cazzulino, kzu, Clarius</authors>
+    <language>en-US</language>
+    <projectUrl>http://netfx.codeplex.com</projectUrl>
+    <licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+    <tags>netfx patterns ef entityframework ddd event sourcing</tags>
+    <dependencies>
+      <dependency id="netfx-Patterns.DomainEvents" version="1.0.0.15" />
+      <dependency id="netfx-Patterns.DomainContext.EF" version="1.0.0.4" />
+    </dependencies>
+  </metadata>
+</package>

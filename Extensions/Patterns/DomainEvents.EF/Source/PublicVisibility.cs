@@ -32,11 +32,9 @@ public partial interface IIdentifiable<TId> { }
 
 
 // DomainEvents
-public abstract partial class DomainEventHandler<T> { }
-public partial class DomainEvents { }
-public partial class DomainEventScheduler { }
-public partial interface IDomainEventHandler { }
-public partial interface IDomainEventHandler<T> { }
-public partial interface IDomainEvents { }
-public partial interface IDomainEventsAccessor { }
-public partial interface IDomainEventScheduler { }
+public partial class AggregateRoot<TId> { }
+public partial class DomainEvent { }
+public partial class DomainEventBus { }
+public partial class DomainEventHandler { }
+public partial class DomainEventHandler<T> { }
+public partial interface IDomainEventBus { }

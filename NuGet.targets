@@ -194,8 +194,8 @@ Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, upda
 				NuGetContent
 
     Adds any extra content in the current project that is under
-	the "content" folder but which may not have the Content 
-	build action (avoids common user errors).
+	the "content", tools and lib folders but which may not have 
+	the Content build action (avoids common user errors).
     ============================================================
     -->
 	<Target Name="NuGetContent">

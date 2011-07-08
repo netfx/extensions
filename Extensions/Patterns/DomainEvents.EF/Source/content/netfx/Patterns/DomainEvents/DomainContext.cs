@@ -23,94 +23,49 @@ using System.Diagnostics;
 /// <remarks>
 /// Adds domain event hooks to the domain context partial class, 
 /// by implementing the partial methods extension points provided.
-/// 
-/// Domain events are buffered while the domain entities are 
-/// performing their work, and are only dispatched after 
-/// the context SaveChanges has been called. Therefore, all 
-/// events typically have the past tense.
+/// <para>
+/// Domain events are published after the context SaveChanges has 
+/// been called.
+/// </para>
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainEvents.EF" />
-partial class DomainContext<TContextInterface, TId> : IDomainEvents
+partial class DomainContext<TContextInterface, TId>
 {
 	// Null pattern for cases where the partial class original DomainContext 
-	// constructor without events is used.
-	private IBufferedDomainEvents events = new NullBufferedDomainEvents();
+	// constructor without an event bus is used.
+	private IDomainEventBus eventBus = DomainEventBus.None;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DomainContext&lt;TContextInterface, TId&gt;"/> class.
 	/// </summary>
 	/// <param name="nameOrConnectionString">The name or connection string.</param>
-	/// <param name="events">The interface that entities can use to raise domain events.</param>
-	public DomainContext(string nameOrConnectionString, IDomainEvents events)
+	/// <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
+	public DomainContext(string nameOrConnectionString, IDomainEventBus eventBus)
 		: this(nameOrConnectionString)
 	{
-		this.events = new BufferedDomainEvents(events);
+		this.eventBus = eventBus;
 	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DomainContext&lt;TContextInterface, TId&gt;"/> class.
 	/// </summary>
-	/// <param name="events">The interface that entities can use to raise domain events.</param>
-	public DomainContext(IDomainEvents events)
+	/// <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
+	public DomainContext(IDomainEventBus eventBus)
 		: this()
 	{
-		this.events = new BufferedDomainEvents(events);
-	}
-
-	partial void OnEntityCreated(object entity)
-	{
-		var eventAccessor = entity as IDomainEventsAccessor;
-		if (eventAccessor != null)
-			eventAccessor.Events = this;
+		this.eventBus = eventBus;
 	}
 
 	partial void OnContextSavedChanges()
 	{
-		this.events.RaiseEvents();
-	}
+		// TODO: publish all events.
+		var events = this.ChangeTracker.Entries<AggregateRoot<TId>>()
+			.SelectMany(root => root.Entity.GetChanges());
 
-	void IDomainEvents.Raise<T>(T @event)
-	{
-		this.events.Raise(@event);
-	}
-
-	private interface IBufferedDomainEvents : IDomainEvents
-	{
-		void RaiseEvents();
-	}
-
-	private class BufferedDomainEvents : IBufferedDomainEvents
-	{
-		private IDomainEvents events;
-		private Queue<Action<IDomainEvents>> raisers = new Queue<Action<IDomainEvents>>();
-
-		public BufferedDomainEvents(IDomainEvents events)
+		foreach (var @event in events)
 		{
-			this.events = events;
+			this.eventBus.Publish(@event);
 		}
 
-		public void Raise<T>(T @event)
-		{
-			this.raisers.Enqueue(x => x.Raise(@event));
-		}
-
-		public void RaiseEvents()
-		{
-			while (this.raisers.Any())
-			{
-				this.raisers.Dequeue().Invoke(this.events);
-			}
-		}
-	}
-
-	private class NullBufferedDomainEvents : IBufferedDomainEvents
-	{
-		public void Raise<T>(T @event)
-		{
-		}
-
-		public void RaiseEvents()
-		{
-		}
 	}
 }

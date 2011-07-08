@@ -7,6 +7,8 @@ using EnvDTE;
 using System.Windows;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace NetFx.Templates.Projects.OpenSource.Extension
 {
@@ -15,6 +17,13 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 	/// </summary>
 	public class ExtensionInformationWizard : IWizard
 	{
+		/// <summary>
+		/// Runs custom wizard logic at the beginning of a template wizard run.
+		/// </summary>
+		/// <param name="automationObject">The automation object being used by the template wizard.</param>
+		/// <param name="replacementsDictionary">The list of standard parameters to be replaced.</param>
+		/// <param name="runKind">A <see cref="T:Microsoft.VisualStudio.TemplateWizard.WizardRunKind"/> indicating the type of wizard run.</param>
+		/// <param name="customParams">The custom parameters with which to perform parameter replacement in the project.</param>
 		public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
 		{
 			//if (!new Microsoft.CSharp.CSharpCodeProvider().IsValidIdentifier(replacementsDictionary["$projectname$"]))
@@ -34,23 +43,25 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 				Backout(string.Format(
 					"Selected target path '{0}' is not located under the root NETFx Extensions repository folder.", targetDir));
 			}
-
-			var pathToRoot = targetDir.FullName
-				.Replace(extensionsRoot.FullName, "")
+			
+			var pathToRoot = Regex
+				.Replace(targetDir.FullName, extensionsRoot.FullName.Replace("\\", "\\\\"), "", RegexOptions.IgnoreCase)
 				.Split(Path.DirectorySeparatorChar)
 				.Aggregate("..\\", (result, current) => result + "..\\");
 
-			var ns = string.Join(".", targetDir.Parent.FullName
+			var ns = string.Join(".", Regex
 				// We start from the parent directory, as we'll use the $safeprojectname$ to build the identifier later
-				.Replace(extensionsRoot.FullName, "")
+				.Replace(targetDir.Parent.FullName, extensionsRoot.FullName.Replace("\\", "\\\\"), "", RegexOptions.IgnoreCase)
 				.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s))
 				.Concat(new[] { replacementsDictionary["$projectname$"] }));
+
 			var identifier = "netfx-" + ns;
 
 			var view = new ExtensionInformationView();
 			view.Model.Identifier = identifier;
 			view.Model.Title = "NETFx " + ExtensionTitleSuggestion.Suggest(
-				targetDir.Parent.FullName.Replace(extensionsRoot.FullName, ""),
+				Regex.Replace(targetDir.Parent.FullName, extensionsRoot.FullName.Replace("\\", "\\\\"), "", RegexOptions.IgnoreCase),
 				replacementsDictionary["$projectname$"]);
 			view.Model.PathToRoot = pathToRoot;
 			view.Model.TargetNamespace = ns.Substring(0, ns.LastIndexOf('.'));

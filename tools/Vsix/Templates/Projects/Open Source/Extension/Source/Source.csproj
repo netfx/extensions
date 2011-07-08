@@ -50,9 +50,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</NuSpec>
 		<Folder Include="content\netfx"/>
-		<Content Include="lib\$Identifier$.xml">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+		<Folder Include="tools"/>
+		<Content Include="lib\$Identifier$.xml"/>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />

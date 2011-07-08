@@ -18,11 +18,11 @@
 			<Folder Name="Properties">
 				<ProjectItem>AssemblyInfo.cs</ProjectItem>
 			</Folder>
+			<Folder Name="lib">
+				<ProjectItem OpenInEditor="false" ReplaceParameters="true" TargetFileName="$Identifier$.xml">doc.xml</ProjectItem>
+			</Folder>
 			<ProjectItem OpenInEditor="true" ReplaceParameters="true" TargetFileName="$solutionname$.cs">Source.cs</ProjectItem>
 			<ProjectItem OpenInEditor="false" ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
-			<Folder Name="lib">
-				<ProjectItem OpenInEditor="false" TargetFileName="$Identifier$.xml" ReplaceParameters="true">doc.xml</ProjectItem>
-			</Folder>
 		</Project>
   </TemplateContent>
 	<WizardExtension>

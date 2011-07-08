@@ -1,0 +1,13 @@
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\obj\Debug\ResolveAssemblyReference.cache
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Push.ps1
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Tests.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Tests.pdb
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Moq.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Source.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\xunit.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Source.pdb
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\xunit.xml
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Moq.pdb
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\bin\Debug\Moq.xml
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\obj\Debug\Tests.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Tests\obj\Debug\Tests.pdb

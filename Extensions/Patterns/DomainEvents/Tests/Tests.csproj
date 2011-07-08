@@ -46,9 +46,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\netfx\Patterns\AggregateRootSpec.cs" />
     <Compile Include="content\netfx\Patterns\DomainEventsSpec.cs" />
+    <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>

@@ -4,175 +4,186 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:IDomainEventsAccessor">
+        <member name="T:AggregateRoot`1">
             <summary>
-            Interface implemented by components or entities that need to 
-            access domain events (i.e. to raise new events).
+            Base class for aggregate roots that use events to apply state 
+            changes and notify consumers on an <see cref="T:IDomainEventBus"/>.
             </summary>
-            <nuget id="netfx-Patterns.DomainEvents" />
+            <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
         </member>
-        <member name="P:IDomainEventsAccessor.Events">
+        <member name="F:AggregateRoot`1.appliersCache">
             <summary>
-            Gets or sets the domain events interface 
-            to use for raising events.
-            </summary>
-        </member>
-        <member name="T:IDomainEventScheduler">
-            <summary>
-            Interface implemented by schedulers that can run async domain event 
-            handlers in the background.
-            </summary>
-            <nuget id="netfx-Patterns.DomainEvents" />
-        </member>
-        <member name="M:IDomainEventScheduler.Schedule(System.Action)">
-            <summary>
-            Schedules the specified action to run async as soon as possible.
+            This cache is the only bit of complexity in the whole thing, and it's 
+            basically an optimization to avoid dynamic and private reflection to 
+            happen at runtime. This cache contains a generated lambda to apply 
+            events from history, and is only built if you ever use the <see cref="M:AggregateRoot`1.LoadFrom(System.Collections.Generic.IEnumerable{DomainEvent})"/> 
+            method. Otherwise, it has no impact whatesoever in your entities performance, 
+            as the cache is never eagerly built.
             </summary>
         </member>
-        <member name="T:IDomainEvents">
+        <member name="M:AggregateRoot`1.AcceptChanges">
             <summary>
-            Basic interface for components to raise events.
+            Clears the internal events retrieved from <see cref="M:AggregateRoot`1.GetChanges"/>, 
+            signaling that all pending events have been commited.
             </summary>
-            <nuget id="netfx-Patterns.DomainEvents" />
         </member>
-        <member name="M:IDomainEvents.Raise``1(``0)">
+        <member name="M:AggregateRoot`1.GetChanges">
             <summary>
-            Raises the specified event.
+            Gets the pending changes.
             </summary>
-            <typeparam name="T">Type of data in the event, typically inferred by the compiler based on the received <paramref name="event"/>.</typeparam>
-            <param name="event">The event payload.</param>
         </member>
-        <member name="T:DomainEvents">
+        <member name="M:AggregateRoot`1.LoadFrom(System.Collections.Generic.IEnumerable{DomainEvent})">
             <summary>
-            Basic in-memory implementation of domain events that supports both synchronous 
-            and asynchronous event handlers (see <see cref="P:IDomainEventHandler.IsAsync"/>.
+            Loads the aggregate root state from an even stream.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.ApplyChange``1(``0,System.Action{``0})">
+            <summary>
+            Applies a change to the entity state via an event. 
+            The derived class should provide a method called <c>Apply</c> 
+            receiving the concrete type of event, where state 
+            changes are performed to the entity.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.EnsureApplyReflectionCache">
+            <summary>
+            Builds the reflection-based cache of Apply-style methods 
+            for the current instance if needed.
+            </summary>
+        </member>
+        <member name="P:AggregateRoot`1.Id">
+            <summary>
+            Gets or sets the aggregate root identifier.
+            </summary>
+        </member>
+        <member name="T:DomainEventBus">
+            <summary>
+            Default implementation of an <see cref="T:IDomainEventBus"/> that 
+            invokes handlers as events are published.
+            <para>
+            Handlers with <see cref="P:DomainEventHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
+            </para>
             </summary>
             <nuget id="netfx-Patterns.DomainEvents"/>
         </member>
-        <member name="M:DomainEvents.#cctor">
+        <member name="T:IDomainEventBus">
             <summary>
-            Initializes the <see cref="P:DomainEvents.None"/> null object 
+            Interface implemented by the component that coordinates 
+            event handler invocation when a subscribed event is published.
+            </summary>
+            <nuget id="netfx-Patterns.DomainEvents" />
+        </member>
+        <member name="M:IDomainEventBus.Publish(DomainEvent)">
+            <summary>
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="event">The event payload.</param>
+        </member>
+        <member name="M:DomainEventBus.#cctor">
+            <summary>
+            Initializes the <see cref="P:DomainEventBus.None"/> null object 
             pattern property.
             </summary>
         </member>
-        <member name="M:DomainEvents.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler})">
+        <member name="M:DomainEventBus.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
             <summary>
-            Initializes a new instance of the <see cref="T:DomainEvents"/> class 
-            with the default <see cref="P:DomainEventScheduler.Default"/>.
+            Initializes a new instance of the <see cref="T:DomainEventBus"/> class with 
+            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
             </summary>
-            <param name="handlers">The available handlers.</param>
+            <param name="eventHandlers">The event handlers.</param>
         </member>
-        <member name="M:DomainEvents.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler},IDomainEventScheduler)">
+        <member name="M:DomainEventBus.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
             <summary>
-            Initializes a new instance of the <see cref="T:DomainEvents"/> class.
+            Initializes a new instance of the <see cref="T:DomainEventBus"/> class with 
+            the given async runner.
             </summary>
-            <param name="handlers">The available handlers.</param>
-            <param name="asyncRunner">The scheduler to use for running async event handlers.</param>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
         </member>
-        <member name="M:DomainEvents.Raise``1(``0)">
+        <member name="M:DomainEventBus.Publish(DomainEvent)">
             <summary>
-            Raises the specified event.
+            Publishes the specified event to the bus so that all subscribers are notified.
             </summary>
-            <typeparam name="T">Type of data in the event, typically inferred by the compiler based on the received <paramref name="event"/>.</typeparam>
             <param name="event">The event payload.</param>
         </member>
-        <member name="P:DomainEvents.None">
+        <member name="P:DomainEventBus.None">
             <summary>
-            Gets a default domain events implementation that 
+            Gets a default domain event bus implementation that 
             does nothing (a.k.a. Null Object Pattern).
             </summary>
         </member>
-        <member name="T:DomainEvents.NullDomainEvents">
+        <member name="T:DomainEventBus.NullBus">
             <summary>
-            Provides a null <see cref="T:IDomainEvents"/> implementation 
+            Provides a null <see cref="T:IDomainEventBus"/> implementation 
             for use when no events have been configured.
             </summary>
         </member>
-        <member name="M:DomainEvents.NullDomainEvents.Raise``1(``0)">
+        <member name="M:DomainEventBus.NullBus.Publish(DomainEvent)">
             <summary>
             Does nothing.
             </summary>
         </member>
-        <member name="T:DomainEventScheduler">
+        <member name="T:DomainEvent">
             <summary>
-            Provides access to the <see cref="P:DomainEventScheduler.Default"/> scheduler to run 
-            async background event handlers.
+            Base class for domain events.
+            </summary>
+            <nuget id="netfx-Patterns.DomainEvents" />
+        </member>
+        <member name="T:DomainEventHandler">
+            <summary>
+            Base class part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:DomainEventHandler`1"/> instead.
             </summary>
             <nuget id="netfx-Patterns.DomainEvents"/>
         </member>
-        <member name="M:DomainEventScheduler.#cctor">
+        <member name="P:DomainEventHandler.IsAsync">
             <summary>
-            Initializes the <see cref="T:DomainEventScheduler"/> class with the 
-            default task-based scheduler.
-            </summary>
-        </member>
-        <member name="P:DomainEventScheduler.Default">
-            <summary>
-            Gets the default async event scheduler.
-            </summary>
-        </member>
-        <member name="T:DomainEventScheduler.TaskPoolDomainEventScheduler">
-            <summary>
-            An async event scheduler that uses <see cref="M:System.Threading.Tasks.TaskFactory.StartNew(System.Action)"/> 
-            to run background event handlers.
-            </summary>
-        </member>
-        <member name="M:DomainEventScheduler.TaskPoolDomainEventScheduler.Schedule(System.Action)">
-            <summary>
-            Schedules the specified action to run async as soon as possible.
-            </summary>
-        </member>
-        <member name="T:DomainEventHandler`1">
-            <summary>
-            Convenience base class for domain event handlers.
-            </summary>
-            <typeparam name="T">Type of event this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.DomainEvents" />
-        </member>
-        <member name="T:IDomainEventHandler`1">
-            <summary>
-            Interface implemented by domain event handlers.
-            </summary>
-            <typeparam name="T">Type of event this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.DomainEvents" />
-        </member>
-        <member name="T:IDomainEventHandler">
-            <summary>
-            Interface implemented by domain event handlers indirectly through <see cref="T:IDomainEventHandler`1"/>.
-            </summary>
-            <nuget id="netfx-Patterns.DomainEvents"/>
-        </member>
-        <member name="P:IDomainEventHandler.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IDomainEvents"/> implementation 
+            Invocation style hint that the <see cref="T:IDomainEventBus"/> implementation
             can use to invoke a handler asynchronously with regards to the event raiser.
             </summary>
         </member>
-        <member name="P:IDomainEventHandler.EventType">
+        <member name="P:DomainEventHandler.EventType">
             <summary>
             Gets the type of the event this handler can process.
             </summary>
         </member>
-        <member name="M:IDomainEventHandler`1.Handle(`0)">
+        <member name="T:DomainEventHandler`1">
             <summary>
-            Handles the specified event.
+            Base class for domain event handlers that handle a specific type of event.
             </summary>
+            <typeparam name="T">Type of event this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.DomainEvents" />
         </member>
         <member name="M:DomainEventHandler`1.Handle(`0)">
             <summary>
             Handles the specified event.
             </summary>
         </member>
-        <member name="P:DomainEventHandler`1.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IDomainEvents"/> implementation
-            can use to invoke a handler asynchronously with regards to the event raiser.
-            </summary>
-        </member>
         <member name="P:DomainEventHandler`1.EventType">
             <summary>
             Gets the type of the event this handler can process, which equals 
             the generic type parameter of <see cref="T:DomainEventHandler`1"/>.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
     </members>

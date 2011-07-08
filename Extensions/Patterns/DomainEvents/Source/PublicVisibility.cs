@@ -19,15 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-// This file makes all classes public so that the XML documentation 
-// is generated for all (by default) internal types.
+// Show how to optionally make classes public if so desired, without changing the netfx source.
 
-public abstract partial class DomainEventHandler<T> { }
-public partial class DomainEvents { }
-public partial class DomainEventScheduler { }
-public partial interface IDomainEventHandler { }
-public partial interface IDomainEventHandler<T> { }
-public partial interface IDomainEvents { }
-public partial interface IDomainEventsAccessor { }
-public partial interface IDomainEventScheduler { }
-public partial class NullDomainEvents { }
+public partial class AggregateRoot<TId> { }
+public partial class DomainEvent { }
+public partial class DomainEventBus { }
+public partial class DomainEventHandler { }
+public partial class DomainEventHandler<T> { }
+public partial interface IDomainEventBus { }

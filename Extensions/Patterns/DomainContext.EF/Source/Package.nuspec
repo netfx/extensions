@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.DomainContext.EF</id>
-		<version>1.0.0.0</version>
+		<version>1.1.0.0</version>
 		<title>NETFx Patterns: Domain Context for Entity Framework</title>
 		<description>Implements the DomainContext pattern for EntityFramework 4.1, by extending the DbContext with support for rich domain modeling capabilities for aggregate roots and dependent entities, including automatic graph saving, logical deletes and more.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

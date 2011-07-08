@@ -17,18 +17,32 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// Convenience base class for domain event handlers.
+/// Base class part of the infrastructure. Concrete 
+/// handlers should inherit <see cref="DomainEventHandler{T}"/> instead.
 /// </summary>
-/// <typeparam name="T">Type of event this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.DomainEvents" />
-abstract partial class DomainEventHandler<T> : IDomainEventHandler<T>
+abstract partial class DomainEventHandler
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IDomainEvents"/> implementation
+	/// Invocation style hint that the <see cref="IDomainEventBus"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event raiser.
 	/// </summary>
 	public abstract bool IsAsync { get; }
 
+	/// <summary>
+	/// Gets the type of the event this handler can process.
+	/// </summary>
+	public abstract Type EventType { get; }
+}
+
+/// <summary>
+/// Base class for domain event handlers that handle a specific type of event.
+/// </summary>
+/// <typeparam name="T">Type of event this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.DomainEvents" />
+abstract partial class DomainEventHandler<T> : DomainEventHandler
+	where T : DomainEvent
+{
 	/// <summary>
 	/// Handles the specified event.
 	/// </summary>
@@ -38,5 +52,5 @@ abstract partial class DomainEventHandler<T> : IDomainEventHandler<T>
 	/// Gets the type of the event this handler can process, which equals 
 	/// the generic type parameter of <see cref="DomainEventHandler{T}"/>.
 	/// </summary>
-	public Type EventType { get { return typeof(T); } }
+	public override Type EventType { get { return typeof(T); } }
 }

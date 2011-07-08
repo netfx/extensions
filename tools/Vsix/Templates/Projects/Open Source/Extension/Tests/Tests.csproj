@@ -48,6 +48,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</NuSpec>
 		<Folder Include="content\netfx"/>
+		<Folder Include="lib"/>
+		<Folder Include="tools"/>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />

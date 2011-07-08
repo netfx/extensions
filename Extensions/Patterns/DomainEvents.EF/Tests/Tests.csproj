@@ -53,9 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\DomainEvents\DomainEventsContextSpec.cs" />
+    <Compile Include="netfx\Patterns\AggregateRootSpec.cs" />
     <Compile Include="netfx\Patterns\DomainContext\DomainContextSpec.cs" />
     <Compile Include="netfx\Patterns\DomainEventsSpec.cs" />
     <Compile Include="netfx\System\Dynamic\ReflectionDynamicObjectSpec.cs" />
+    <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NuSpec>
