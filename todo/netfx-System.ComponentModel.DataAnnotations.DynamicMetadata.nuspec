@@ -1,0 +1,18 @@
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.ComponentModel.DataAnnotations.DynamicMetadata</id>
+		<version>1.0.0.4</version>
+		<title>DynamicMetadata: externalize validation attributes and configure them dynamically via API</title>
+		<description>Instead of using an associated metadata type that needs to be kept in sync with the target type, explicitly configure only the validation attributes on the members you need, by configuring the DynamicMetadataDescriptionProvider.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx componentmodel annotations validation</tags>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net40"/>
+			<frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net35"/>
+		</frameworkAssemblies>
+	</metadata>
+</package>
