@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Xml.Linq.DynamicXmlExtensions">
+            <summary>
+            Provides the <see cref="M:System.Xml.Linq.DynamicXmlExtensions.ToDynamic(System.Xml.Linq.XElement)"/> extension method for 
+            <see cref="T:System.Xml.Linq.XElement"/>, allowing read-only dynamic API
+            access over the underlying XML.
+            </summary>
+        </member>
+        <member name="M:System.Xml.Linq.DynamicXmlExtensions.ToDynamic(System.Xml.Linq.XElement)">
+            <summary>
+            Converts the element into a dynamic object to use 
+            dotted and indexer notation for elements and attribtes, 
+            with built-in support for <see cref="T:System.Xml.XmlConvert"/> when 
+            casting the resulting values.
+            </summary>
+            <nuget id="netfx-System.Xml.DynamicXml"/>
+            <param name="xml" this="true">The xelement to access dinamically</param>
+        </member>
+    </members>
+</doc>

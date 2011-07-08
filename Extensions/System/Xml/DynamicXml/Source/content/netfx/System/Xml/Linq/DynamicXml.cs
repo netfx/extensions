@@ -62,6 +62,8 @@ namespace System.Xml.Linq
 		/// with built-in support for <see cref="XmlConvert"/> when 
 		/// casting the resulting values.
 		/// </summary>
+		/// <nuget id="netfx-System.Xml.DynamicXml" />
+		/// <param name="xml" this="true">The xelement to access dinamically</param>
 		public static dynamic ToDynamic(this XElement xml)
 		{
 			return new DynamicXmlElement(xml);
