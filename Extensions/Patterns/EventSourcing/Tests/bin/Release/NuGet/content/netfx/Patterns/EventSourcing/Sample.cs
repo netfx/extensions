@@ -69,7 +69,7 @@ namespace Tests.content.netfx.Patterns.EventSourcing
 			if (version <= 0)
 				throw new ArgumentException();
 
-			this.ApplyChange(new ProductPublishedEvent(this.Id) { Version = version }, this.Apply);
+			this.ApplyEvent(new ProductPublishedEvent(this.Id) { Version = version }, this.Apply);
 		}
 
 		private void Apply(ProductPublishedEvent @event)

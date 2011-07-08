@@ -1,7 +1,0 @@
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Debug\ResolveAssemblyReference.cache
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Debug\Push.ps1
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Debug\Source.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Debug\Source.pdb
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Debug\netfx-Patterns.EventSourcing.xml
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Debug\Source.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Debug\Source.pdb

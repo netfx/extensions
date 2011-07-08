@@ -1,7 +1,0 @@
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Release\Push.ps1
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Release\Source.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Release\Source.pdb
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\bin\Release\netfx-Patterns.EventSourcing.xml
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Release\ResolveAssemblyReference.cache
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Release\Source.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing\Source\obj\Release\Source.pdb

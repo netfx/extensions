@@ -65,7 +65,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.ApplyChange(new TestPublished { Version = version }, this.Apply);
+				base.ApplyEvent(new TestPublished { Version = version }, this.Apply);
 			}
 
 			public int LatestVersion { get; set; }
