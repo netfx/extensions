@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:DomainCommand">
+            <summary>
+            Base class for domain commands.
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands" />
+        </member>
+        <member name="T:DomainCommandBus">
+            <summary>
+            Default implementation of an <see cref="T:IDomainCommandBus"/> that 
+            invokes command handlers registered for a given command.
+            <para>
+            Handlers with <see cref="P:DomainCommandHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
+            </para>
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands"/>
+        </member>
+        <member name="T:IDomainCommandBus">
+            <summary>
+            Interface implemented by the component that coordinates 
+            command handler invocation when a subscribed command is executed.
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands" />
+        </member>
+        <member name="M:IDomainCommandBus.Execute``1(``0)">
+            <summary>
+            Executes the specified command.
+            </summary>
+        </member>
+        <member name="M:DomainCommandBus.#cctor">
+            <summary>
+            Initializes the <see cref="P:DomainCommandBus.None"/> null object 
+            pattern property.
+            </summary>
+        </member>
+        <member name="M:DomainCommandBus.#ctor(System.Collections.Generic.IEnumerable{DomainCommandHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainCommandBus"/> class with 
+            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="commandHandlers">The command handlers.</param>
+        </member>
+        <member name="M:DomainCommandBus.#ctor(System.Collections.Generic.IEnumerable{DomainCommandHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainCommandBus"/> class with 
+            the given async runner.
+            </summary>
+            <param name="commandHandlers">The command handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke command handlers 
+            that have <see cref="P:DomainCommandHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:DomainCommandBus.Execute``1(``0)">
+            <summary>
+            Executes all handlers registered to receive the given command.
+            </summary>
+            <typeparam name="T">Type of command, typically inferred by the compiler based on the received <paramref name="command"/>.</typeparam>
+            <param name="command">The command payload.</param>
+        </member>
+        <member name="P:DomainCommandBus.None">
+            <summary>
+            Gets a default domain command bus implementation that 
+            does nothing (a.k.a. Null Object Pattern).
+            </summary>
+        </member>
+        <member name="T:DomainCommandBus.NullBus">
+            <summary>
+            Provides a null <see cref="T:IDomainCommandBus"/> implementation 
+            for use when no command bus has been configured.
+            </summary>
+        </member>
+        <member name="M:DomainCommandBus.NullBus.Execute``1(``0)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="T:DomainCommandHandler">
+            <summary>
+            Base class part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:DomainCommandHandler`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands"/>
+        </member>
+        <member name="P:DomainCommandHandler.IsAsync">
+            <summary>
+            Gets a value indicating whether this handler should be executed asynchronously.
+            </summary>
+        </member>
+        <member name="T:DomainCommandHandler`1">
+            <summary>
+            Base class for domain command handlers that subscribe to specific type of command.
+            </summary>
+            <typeparam name="T">Type of command this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands" />
+        </member>
+        <member name="M:DomainCommandHandler`1.Handle(`0)">
+            <summary>
+            Handles the specified command.
+            </summary>
+        </member>
+    </members>
+</doc>
