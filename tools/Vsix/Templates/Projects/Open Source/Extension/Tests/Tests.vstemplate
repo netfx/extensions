@@ -17,6 +17,9 @@
 		<Project TargetFileName="Tests.csproj" File="Tests.csproj" ReplaceParameters="true">
 			<ProjectItem OpenInEditor="true" ReplaceParameters="true" TargetFileName="$solutionname$Spec.cs">SourceSpec.cs</ProjectItem>
 			<ProjectItem OpenInEditor="false" ReplaceParameters="true" TargetFileName="Package.nuspec">Package.nuspec</ProjectItem>
+			<Folder Name="tools">
+				<ProjectItem OpenInEditor="false" ReplaceParameters="false">install.ps1</ProjectItem>
+			</Folder>
 		</Project>
 	</TemplateContent>
 	<WizardExtension>
