@@ -33,11 +33,11 @@ using System.Globalization;
 
 namespace <#= targetNamespace #>
 {<#
-RenderArea(rootArea);
+RenderArea(rootArea, "");
 #>}
 
 <#+
-private void RenderArea(ResourceArea area)
+private void RenderArea(ResourceArea area, string visibility)
 {
     PushIndent("\t");
 
@@ -48,7 +48,7 @@ private void RenderArea(ResourceArea area)
 ///	</summary>
 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
 [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-static partial class <#=area.Name #>
+<#=visibility #>static partial class <#=area.Name #>
 {<#+
 	foreach (var value in area.Values)
 	{
@@ -89,7 +89,7 @@ for (int i = 0; i < value.FormatNames.Count; i++)
 
 	foreach (var nestedArea in area.NestedAreas)
 	{
-		RenderArea(nestedArea);
+		RenderArea(nestedArea, "public ");
 	}
 #>
 }
