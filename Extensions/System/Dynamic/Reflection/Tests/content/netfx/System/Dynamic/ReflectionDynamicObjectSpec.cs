@@ -288,7 +288,7 @@ public class PrivateDynamicObjectSpec
 
 		target.StaticField = "foo";
 
-		Assert.Equal("foo", target.StaticField);
+		Assert.Equal("foo", PrivateObject.StaticField);
 
 		var value = target.StaticMethod("hello");
 
@@ -406,6 +406,7 @@ public class PrivateDynamicObjectSpec
 		static PrivateObject()
 		{
 			StaticProp = Guid.NewGuid().ToString();
+			StaticField = null;
 		}
 
 		private PrivateObject(Guid id)
@@ -432,7 +433,9 @@ public class PrivateDynamicObjectSpec
 
 		public Guid Id { get; set; }
 
+#pragma warning disable 0169
 		private int field;
+#pragma warning restore 0169
 
 		private string Property { get; set; }
 

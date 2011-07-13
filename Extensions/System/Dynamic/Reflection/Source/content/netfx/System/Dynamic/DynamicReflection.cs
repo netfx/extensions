@@ -31,7 +31,7 @@ namespace System.Dynamic
 	/// This class provides the extension methods <see cref="AsDynamicReflection(object)"/> 
 	/// and <see cref="AsDynamicReflection(Type)"/> as entry points.
 	/// </summary>
-	internal static class DynamicReflection
+	static partial class DynamicReflection
 	{
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given object members.

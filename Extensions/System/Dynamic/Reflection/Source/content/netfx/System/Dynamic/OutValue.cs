@@ -9,14 +9,14 @@ namespace System.Dynamic
 	/// Allows output parameters to be passed to reflection dynamic.
 	/// This support does not exist in C# 4.0 dynamic out of the box.
 	/// </summary>
-	internal abstract class OutValue
+	abstract partial class OutValue
 	{
 		/// <summary>
 		/// Creates a value setter delegating reference
 		/// to be used as an output parameter when invoking the 
 		/// dynamic object.
 		/// </summary>
-		/// <param name="value">The value to pass as out to the dynamic invocation.</param>
+		/// <param name="setter">The value to pass as out to the dynamic invocation.</param>
 		public static OutValue<T> Create<T>(Action<T> setter)
 		{
 			return new OutValue<T>(setter);
@@ -32,7 +32,7 @@ namespace System.Dynamic
 	/// Allows output parameters to be passed to reflection dynamic.
 	/// This support does not exist in C# 4.0 dynamic out of the box.
 	/// </summary>
-	internal class OutValue<T> : OutValue
+	partial class OutValue<T> : OutValue
 	{
 		private Action<T> setter;
 
