@@ -71,10 +71,17 @@ static partial class <#=area.Name #>
 	/// </summary>
 	public static string <#=value.Name #>(<#= string.Join(", ", value.FormatNames.Select(s => "object " + s)) #>)
 	{
-		return string.Format(
-			CultureInfo.CurrentCulture, 
-			Resources.<#=area.Prefix #><#=value.Name #>, 
-			<#= string.Join(", ", value.FormatNames) #>);
+		return Resources.<#=area.Prefix #><#=value.Name #>.FormatWith(new 
+		{
+<#+
+for (int i = 0; i < value.FormatNames.Count; i++)
+{
+#>
+			<#=value.FormatNames[i] #> = <#=value.FormatNames[i]#>,
+<#+
+}
+#>
+		});
 	}
 <#+
 		}
@@ -171,11 +178,11 @@ public static class ResourceFile
 		// Parse parameter names
 		if (value.HasFormat)
 		{
+			var argIndex = 0;
 			value.FormatNames.AddRange(FormatExpression
 				.Matches(resourceValue)
 				.OfType<Match>()
-				// TODO: add support for named format strings.
-				.Select(match => "arg" + match.Groups["name"].Value)
+				.Select(match => int.TryParse(match.Groups["name"].Value, out argIndex) ? "arg" + match.Groups["name"].Value : match.Groups["name"].Value)
 				.Distinct());
 		}
 
