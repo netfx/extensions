@@ -1,3 +1,5 @@
+# Pushes all packages in the Drop folder.
+
 $nuget = Get-ChildItem NuGet.exe
 $dropDir = [System.IO.Directory]::CreateDirectory("Drop") 
 $apiKey = $apiKey = Get-Content apikey.txt

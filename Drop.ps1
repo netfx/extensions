@@ -21,7 +21,16 @@ while ($isRoot -eq $null)
 }
 
 . ./Common.ps1
-Push-Packages $current
+Build-Packages $current
+
+mkdir Drop -ea silentlycontinue
+$dropDir = gci -Filter Drop
+
+Get-ChildItem -Path $current -Recurse -Filter *.nupkg | `
+Where-Object { $_.DirectoryName.EndsWith("bin\Release") }  | %{ `
+	$target = [System.IO.Path]::Combine($dropDir.FullName, $_.Name); `
+	Remove-Item -Path $target -ea silentlycontinue; `
+	$_.MoveTo($target); }
 
 # Pop folders just in case this is invoked from a powershell prompt
 $current = $pwd.Path
