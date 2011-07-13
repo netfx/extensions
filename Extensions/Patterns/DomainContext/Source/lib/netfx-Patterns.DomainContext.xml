@@ -109,5 +109,55 @@
             Logically deletes the aggregate root with the specified identifier.
             </summary>
         </member>
+        <member name="T:QueryableExtensions">
+            <summary>
+            Allows consumers of <see cref="T:IDomainContext`1"/> queryable 
+            aggregate roots to include/prefetch certain properties or 
+            property paths. This class allows testing of such extension 
+            method by exposing a replaceable <see cref="T:QueryableExtensions.IIncluder"/> 
+            interface that concrete domain context implementations 
+            replace on their constructors.
+            </summary>
+        </member>
+        <member name="M:QueryableExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="M:QueryableExtensions.Include``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="T:QueryableExtensions.IIncluder">
+            <summary>
+            Provides the <c>Include</c> extension method for queryables. Does 
+            nothing by default.
+            </summary>
+        </member>
+        <member name="M:QueryableExtensions.IIncluder.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies that the given property should be included/prefetched.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="M:QueryableExtensions.IIncluder.Include``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Specifies that the given property should be included/prefetched.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
     </members>
 </doc>
