@@ -74,7 +74,8 @@ namespace NetFx.Patterns.EventSourcing.EF
 		}
 	}
 
-	public class TestContext : DomainContext<TestContext, int>
+	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
+	internal class TestContext : DomainContext<TestContext, int>
 	{
 		public TestContext(IDomainEventBus bus)
 			: base(bus)
@@ -84,7 +85,8 @@ namespace NetFx.Patterns.EventSourcing.EF
 		public virtual DbSet<TestEntity> Tests { get; set; }
 	}
 
-	public class PublishEvent : DomainEvent<int>
+	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
+	internal class PublishEvent : DomainEvent<int>
 	{
 		public PublishEvent(int id, string title)
 		{
@@ -95,7 +97,8 @@ namespace NetFx.Patterns.EventSourcing.EF
 		public string Title { get; private set; }
 	}
 
-	public class TestEntity : AggregateRoot<int>
+	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
+	internal class TestEntity : AggregateRoot<int>
 	{
 		static TestEntity()
 		{

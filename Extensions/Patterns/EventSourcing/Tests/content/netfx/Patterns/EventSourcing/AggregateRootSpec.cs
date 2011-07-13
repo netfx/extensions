@@ -57,8 +57,8 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			Assert.False(root.GetChanges().Any());
 		}
 
-
-		public class TestRoot : AggregateRoot<Guid>
+		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+		internal class TestRoot : AggregateRoot<Guid>
 		{
 			public void Publish(int version)
 			{
@@ -76,7 +76,8 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			}
 		}
 
-		public class TestPublished : DomainEvent
+		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+		internal class TestPublished : DomainEvent
 		{
 			public int Version { get; set; }
 		}

@@ -26,7 +26,7 @@ using System.Text;
 /// interfaces.
 /// </devdoc>
 /// <nuget id="netfx-Patterns.EventSourcing.EF"/>
-partial class AggregateRoot<TId> : IAggregateRoot<TId>
+public partial class AggregateRoot<TId> : IAggregateRoot<TId>
 	where TId : IComparable
 {
 	/// <summary>

@@ -8,12 +8,12 @@ using System.Text;
 /// handlers should inherit <see cref="DomainCommandHandler{T}"/> instead.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainCommands" />
-abstract partial class DomainCommandHandler
+public abstract partial class DomainCommandHandler
 {
 	/// <summary>
 	/// Gets a value indicating whether this handler should be executed asynchronously.
 	/// </summary>
-	public abstract bool IsAsync { get; }
+	public virtual bool IsAsync { get { return false; } }
 }
 
 /// <summary>
@@ -21,7 +21,7 @@ abstract partial class DomainCommandHandler
 /// </summary>
 /// <typeparam name="T">Type of command this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.DomainCommands" />
-abstract partial class DomainCommandHandler<T> : DomainCommandHandler
+public abstract partial class DomainCommandHandler<T> : DomainCommandHandler
 	where T : DomainCommand
 {
 	/// <summary>

@@ -36,9 +36,113 @@ namespace Tests.content.netfx.Patterns.EventSourcing
 			product.GetChanges().ToList().ForEach(e => bus.Publish(product, e));
 		}
 
+		[Fact]
+		public void WhenEventPersisted_ThenCanObserveIt()
+		{
+			var store = new DomainEventStore<Guid>();
+			//store.Events.Where(
+			
+		}
+
+		public class DomainEventStore<TAggregateId>
+			 where TAggregateId : IComparable
+		{
+			private List<InMemoryPersistedEvent<TAggregateId>> events = new List<InMemoryPersistedEvent<TAggregateId>>();
+
+			public void Save(DomainEvent<TAggregateId> @event)
+			{
+				this.events.Add(new InMemoryPersistedEvent<TAggregateId>(@event));
+			}
+
+			public IQueryable<TDomainEvent> Find<TDomainEvent>()
+				where TDomainEvent : DomainEvent<TAggregateId>
+			{
+				return this.events
+					.Select(x => x.Payload as TDomainEvent)
+					.Where(x => x != null)
+					.AsQueryable();
+			}
+
+			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId)
+				where TDomainEvent : DomainEvent<TAggregateId>
+			{
+				return this.events
+					.Select(x => x.Payload as TDomainEvent)
+					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
+					.AsQueryable();
+			}
+
+			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId)
+				where TDomainEvent : DomainEvent<TAggregateId>
+			{
+				return this.events
+					.Select(x => x.Payload as TDomainEvent)
+					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
+					.AsQueryable();
+			}
+
+			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId, DateTime? since, DateTime? until, RangeType? range)
+				where TDomainEvent : DomainEvent<TAggregateId>
+			{
+				var result = this.events
+					.Select(x => x.Payload as TDomainEvent);
+
+				//if (since != null)
+
+				return result
+					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
+					.AsQueryable();
+			}
+		}
+
+		public enum RangeType
+		{
+			Exclusive,
+			Inclusive,
+		}
+
+		public abstract partial class PersistedEvent<TAggregateId>
+		{
+			public PersistedEvent()
+			{
+				this.When = DateTime.UtcNow;
+			}
+
+			/// <summary>
+			/// Gets or sets the identifier of the aggregate root associated with this event.
+			/// </summary>
+			public TAggregateId AggregateId { get; set; }
+
+			/// <summary>
+			/// Gets or sets the time the event was persisted, in UTC.
+			/// </summary>
+			public DateTime When { get; set; }
+		}
+
+		public class InMemoryPersistedEvent<TAggregateId> : PersistedEvent<TAggregateId>
+		{
+			public InMemoryPersistedEvent(DomainEvent<TAggregateId> @event)
+			{
+				this.Payload = @event;
+			}
+
+			/// <summary>
+			/// Gets or sets the event payload data.
+			/// </summary>
+			public DomainEvent<TAggregateId> Payload { get; set; }
+		}
+
+		public class JsonPersistedEvent<TAggregateId> : PersistedEvent<TAggregateId>
+		{
+			/// <summary>
+			/// Gets or sets the event payload data.
+			/// </summary>
+			public string Payload { get; set; }
+		}
 	}
 
-	public class Repository<TId>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+	internal class Repository<TId>
 		where TId : IComparable
 	{
 		private List<object> aggregates = new List<object>();
@@ -59,8 +163,14 @@ namespace Tests.content.netfx.Patterns.EventSourcing
 		}
 	}
 
-	public class Product : AggregateRoot<Guid>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+	internal class Product : AggregateRoot<Guid>
 	{
+		public Product()
+		{
+			this.Id = Guid.NewGuid();
+		}
+
 		public string Title { get; set; }
 		public int Version { get; set; }
 
@@ -78,7 +188,8 @@ namespace Tests.content.netfx.Patterns.EventSourcing
 		}
 	}
 
-	public class ProductPublishedEvent : DomainEvent<Guid>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+	internal class ProductPublishedEvent : DomainEvent<Guid>
 	{
 		public ProductPublishedEvent(Guid guid)
 		{
@@ -88,7 +199,8 @@ namespace Tests.content.netfx.Patterns.EventSourcing
 		public int Version { get; set; }
 	}
 
-	public class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+	internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
 	{
 		private Repository<Guid> repository;
 

@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.DomainContext.EF.Tests</id>
-		<version>1.1.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx Patterns: Domain Context for Entity Framework Tests</title>
-		<description>Tests for netfx-Patterns.DomainContext.EF</description>
+		<description>xUnit tests for netfx-Patterns.DomainContext.EF</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
@@ -16,8 +16,8 @@
 			<frameworkAssembly assemblyName="System.Data.Entity" targetFramework="net40"/>
 		</frameworkAssemblies>
 		<dependencies>
-			<dependency id="EntityFramework" version="4.1.10331.0" />
-			<dependency id="netfx-System.Dynamic.Reflection.Tests" version="1.1.0.1" />
+			<dependency id="EntityFramework" version="4.1" />
+			<dependency id="netfx-System.Dynamic.Reflection.Tests" version="1.1" />
 		</dependencies>
 	</metadata>
 </package>

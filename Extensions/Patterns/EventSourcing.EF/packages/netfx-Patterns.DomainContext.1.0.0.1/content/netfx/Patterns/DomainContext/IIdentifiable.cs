@@ -22,7 +22,7 @@ using System;
 /// in EF or "components" in NH) just don't implement this interface.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainContext" />
-partial interface IIdentifiable<TId>
+public partial interface IIdentifiable<TId>
 	where TId : IComparable
 {
 	/// <summary>

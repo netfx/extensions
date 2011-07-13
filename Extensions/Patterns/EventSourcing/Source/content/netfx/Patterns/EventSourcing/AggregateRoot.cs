@@ -26,7 +26,7 @@ using System.Linq.Expressions;
 /// changes and notify consumers on an <see cref="IDomainEventBus"/>.
 /// </summary>
 /// <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
-partial class AggregateRoot<TId>
+public partial class AggregateRoot<TId>
 	where TId : IComparable
 {
 	/// <summary>

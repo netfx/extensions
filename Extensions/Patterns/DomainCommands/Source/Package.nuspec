@@ -3,8 +3,9 @@
 	<metadata>
 		<id>netfx-Patterns.DomainCommands</id>
 		<version>1.0.0.0</version>
-		<title>NETFx DomainCommands</title>
-		<description>Basic classes to support designing a domain model whose entry point is always a command issued by the user in task-based user interfaces.</description>
+		<title>NETFx Patterns: Domain Commands Core</title>
+		<description>Basic classes to support designing a domain model where the model-mutating behavior 
+is always the result of executing a command issued by the user in task-based user interfaces.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

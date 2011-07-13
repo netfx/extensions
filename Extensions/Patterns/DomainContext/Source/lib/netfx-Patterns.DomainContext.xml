@@ -11,12 +11,13 @@
             their business logic.
             </summary>
             <remarks>
-            Some aggregate roots may need to create and save 
+            Some aggregate roots may need to create, find or save 
             other aggregate roots in the context, and in order to do 
             it, they can implement this interface. Domain 
             context implementations should check for this interface 
             when the entities are being materialized or 
             constructed via <see cref="M:IDomainContext`1.New``1(System.Action{``0})"/> 
+            or <see cref="M:IDomainContext`1.Find``1(`0)"/> 
             to set the property value.
             </remarks>
             <nuget id="netfx-Patterns.DomainContext"/>
@@ -81,7 +82,9 @@
             <remarks>
             Although not strictly required, using this method for creating new 
             aggregate roots allows the context to perform additional initialization 
-            if needed.
+            if needed, such as injecting the <see cref="T:IDomainContext`1"/> into an 
+            entity that implements <see cref="T:IDomainContextAccessor`1"/>, tracking 
+            the entity changes, create a proxy for it, etc.
             </remarks>
             <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
         </member>

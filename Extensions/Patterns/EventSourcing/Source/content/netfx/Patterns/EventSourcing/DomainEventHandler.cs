@@ -21,13 +21,13 @@ using System;
 /// handlers should inherit <see cref="DomainEventHandler{T}"/> instead.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEventHandler
+public abstract partial class DomainEventHandler
 {
 	/// <summary>
 	/// Invocation style hint that the <see cref="IDomainEventBus"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
-	public abstract bool IsAsync { get; }
+	public virtual bool IsAsync { get { return false; } }
 
 	/// <summary>
 	/// Gets the type of the event this handler can process.
@@ -40,7 +40,7 @@ abstract partial class DomainEventHandler
 /// </summary>
 /// <typeparam name="T">Type of event this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEventHandler<T> : DomainEventHandler
+public abstract partial class DomainEventHandler<T> : DomainEventHandler
 	where T : DomainEvent
 {
 	/// <summary>

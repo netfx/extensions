@@ -7,6 +7,6 @@ using System.Text;
 /// Base class for domain commands.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainCommands" />
-partial class DomainCommand
+public partial class DomainCommand
 {
 }

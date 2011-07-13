@@ -64,7 +64,6 @@
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />
     <Compile Include="netfx\System\Dynamic\TypeParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

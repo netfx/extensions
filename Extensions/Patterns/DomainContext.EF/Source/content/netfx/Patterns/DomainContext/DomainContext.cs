@@ -71,7 +71,7 @@ using System.Dynamic;
 /// </para>
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainContext.EF" />
-abstract partial class DomainContext<TContextInterface, TId> : DbContext
+public abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomainContext<TId>
 	where TContextInterface : class
 	where TId : IComparable
 {
@@ -147,6 +147,11 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext
 		: base(nameOrConnectionString)
 	{
 		Initialize();
+	}
+
+	void IDomainContext<TId>.SaveChanges()
+	{
+		this.SaveChanges();
 	}
 
 	/// <summary>

@@ -30,7 +30,7 @@ using System.Diagnostics;
 /// </para>
 /// </remarks>
 /// <nuget id="netfx-Patterns.EventSourcing.EF" />
-partial class DomainContext<TContextInterface, TId>
+public partial class DomainContext<TContextInterface, TId>
 {
 	// Null pattern for cases where the partial class original DomainContext 
 	// constructor without an event bus is used.

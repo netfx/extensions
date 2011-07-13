@@ -23,7 +23,7 @@ using System.Text;
 /// Provides access to the domain aggregate roots.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainContext" />
-partial interface IDomainContext<TId> : IDisposable
+public partial interface IDomainContext<TId> : IDisposable
 	where TId : IComparable
 {
 	/// <summary>
@@ -37,7 +37,9 @@ partial interface IDomainContext<TId> : IDisposable
 	/// <remarks>
 	/// Although not strictly required, using this method for creating new 
 	/// aggregate roots allows the context to perform additional initialization 
-	/// if needed.
+	/// if needed, such as injecting the <see cref="IDomainContext{TId}"/> into an 
+	/// entity that implements <see cref="IDomainContextAccessor{TDomainContext}"/>, tracking 
+	/// the entity changes, create a proxy for it, etc.
 	/// </remarks>
 	/// <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
 	T New<T>(Action<T> initializer = null) where T : class, IAggregateRoot<TId>;

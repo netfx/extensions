@@ -14,7 +14,7 @@ using System.Threading;
 /// </para>
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainCommands" />
-partial class DomainCommandBus : IDomainCommandBus
+public partial class DomainCommandBus : IDomainCommandBus
 {
 	private IEnumerable<DomainCommandHandler> commandHandlers;
 	private Action<Action> asyncActionRunner;

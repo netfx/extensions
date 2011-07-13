@@ -21,13 +21,13 @@ using System;
 /// event handler invocation when a subscribed event is published.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IDomainEventBus
+public partial interface IDomainEventBus
 {
 	/// <summary>
 	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
+	/// <typeparam name="TAggregateId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="event">The event payload.</param>
-	void Publish<TId>(AggregateRoot<TId> sender, DomainEvent @event) where TId : IComparable;
+	void Publish<TAggregateId>(AggregateRoot<TAggregateId> sender, DomainEvent @event) where TAggregateId : IComparable;
 }

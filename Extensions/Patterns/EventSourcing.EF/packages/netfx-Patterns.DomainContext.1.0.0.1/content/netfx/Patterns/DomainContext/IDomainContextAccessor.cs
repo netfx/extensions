@@ -25,16 +25,17 @@ using System.Text;
 /// their business logic.
 /// </summary>
 /// <remarks>
-/// Some aggregate roots may need to create and save 
+/// Some aggregate roots may need to create, find or save 
 /// other aggregate roots in the context, and in order to do 
 /// it, they can implement this interface. Domain 
 /// context implementations should check for this interface 
 /// when the entities are being materialized or 
 /// constructed via <see cref="IDomainContext{TId}.New{T}"/> 
+/// or <see cref="IDomainContext{TId}.Find{T}"/> 
 /// to set the property value.
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainContext" />
-partial interface IDomainContextAccessor<TContext>
+public partial interface IDomainContextAccessor<TContext>
 {
 	/// <summary>
 	/// Gets or sets the owning domain context.

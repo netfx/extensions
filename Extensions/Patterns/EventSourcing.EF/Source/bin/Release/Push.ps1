@@ -1,8 +1,8 @@
 # ========================================================================
 #	This script looks up the directory tree searching for the NETFx root
 #	which is signaled by the netfx.txt file.
-#	Once the root is located, the "true" Push.ps1 from there is imported 
-#	in the context and the Push-Package function in it is invoked.
+#	Once the root is located, the Common.ps1 from there is imported 
+#	in the context and the Push-Packages function in it is invoked.
 # ========================================================================
 
 $current = $pwd.Path
@@ -20,10 +20,8 @@ while ($isRoot -eq $null)
 	$isRoot = gci netfx.txt -ea silentlycontinue
 }
 
-# write-host Relative to current path: ([string]::Join("\\", $paths))
-
-. ./Push-Package.ps1
-Push-Package $current
+. ./Common.ps1
+Push-Packages $current
 
 # Pop folders just in case this is invoked from a powershell prompt
 $current = $pwd.Path

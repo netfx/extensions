@@ -5,7 +5,7 @@
 /// command handler invocation when a subscribed command is executed.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainCommands" />
-partial interface IDomainCommandBus
+public partial interface IDomainCommandBus
 {
 	/// <summary>
 	/// Executes the specified command.

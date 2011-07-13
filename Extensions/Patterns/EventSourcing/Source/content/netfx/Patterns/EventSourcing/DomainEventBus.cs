@@ -30,7 +30,7 @@ using System.Threading;
 /// </para>
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-partial class DomainEventBus : IDomainEventBus
+public partial class DomainEventBus : IDomainEventBus
 {
 	private Action<Action> asyncActionRunner;
 	private IEnumerable<DomainEventHandler> eventHandlers;

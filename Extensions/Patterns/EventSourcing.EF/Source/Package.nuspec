@@ -12,8 +12,8 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx patterns ef entityframework ddd event sourcing</tags>
 		<dependencies>
-			<dependency id="netfx-Patterns.DomainEvents" version="1.0.0.15" />
-			<dependency id="netfx-Patterns.DomainContext.EF" version="1.0.0.4" />
+			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
+			<dependency id="netfx-Patterns.DomainContext.EF" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

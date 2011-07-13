@@ -3,8 +3,11 @@ D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\So
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Source.pdb
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\netfx-Patterns.EventSourcing.EF.xml
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\EntityFramework.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Moq.dll
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Tracer.dll
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\EntityFramework.xml
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Moq.pdb
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Moq.xml
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Tracer.pdb
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\bin\Release\Tracer.xml
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Source\obj\Release\ResolveAssemblyReference.cache

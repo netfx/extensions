@@ -54,11 +54,11 @@
   <ItemGroup>
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
-    <Folder Include="tools\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">
@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="tools\install.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />

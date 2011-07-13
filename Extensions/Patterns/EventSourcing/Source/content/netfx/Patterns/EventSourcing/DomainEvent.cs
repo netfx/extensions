@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 /// events should inherit <see cref="DomainEvent{TAggregateId}"/> instead.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEvent
+public abstract partial class DomainEvent
 {
 }
 
@@ -33,10 +33,19 @@ abstract partial class DomainEvent
 /// Base class for domain events.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEvent<TAggregateId> : DomainEvent
+public abstract partial class DomainEvent<TAggregateId> : DomainEvent
 {
 	/// <summary>
-	/// Gets identifier of the aggregate root that published this event.
+	/// Initializes a new instance of the <see cref="DomainEvent&lt;TAggregateId&gt;"/> class 
+	/// with the given aggregate root identifier.
 	/// </summary>
-	public TAggregateId AggregateId { get; protected set; }
+	protected DomainEvent(TAggregateId aggregateId)
+	{
+		this.AggregateId = aggregateId;
+	}
+
+	/// <summary>
+	/// Gets the identifier of the aggregate root that published this event.
+	/// </summary>
+	public TAggregateId AggregateId { get; set; }
 }

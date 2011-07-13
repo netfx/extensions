@@ -177,15 +177,18 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		}
 	}
 
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class BaseArgs : DomainEvent
 	{
 	}
 
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class FooArgs : BaseArgs
 	{
 		public int Id { get; set; }
 	}
 
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class TestAggregate : AggregateRoot<int>
 	{
 	}

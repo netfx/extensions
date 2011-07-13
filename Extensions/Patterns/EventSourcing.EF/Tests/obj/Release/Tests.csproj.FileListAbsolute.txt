@@ -1,4 +1,3 @@
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\obj\Release\ResolveAssemblyReference.cache
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Push.ps1
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Tests.dll
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Tests.pdb
@@ -14,5 +13,6 @@ D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Moq
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Moq.xml
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Tracer.pdb
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\bin\Release\Tracer.xml
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\obj\Release\ResolveAssemblyReference.cache
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\obj\Release\Tests.dll
 D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.EF\Tests\obj\Release\Tests.pdb

@@ -4,6 +4,84 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:DomainEventHandler">
+            <summary>
+            Base class part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:DomainEventHandler`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="P:DomainEventHandler.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IDomainEventBus"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler.EventType">
+            <summary>
+            Gets the type of the event this handler can process.
+            </summary>
+        </member>
+        <member name="T:DomainEventHandler`1">
+            <summary>
+            Base class for domain event handlers that handle a specific type of event.
+            </summary>
+            <typeparam name="T">Type of event this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
+        </member>
+        <member name="M:DomainEventHandler`1.Handle(`0)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler`1.EventType">
+            <summary>
+            Gets the type of the event this handler can process, which equals 
+            the generic type parameter of <see cref="T:DomainEventHandler`1"/>.
+            </summary>
+        </member>
+        <member name="T:DomainEvent">
+            <summary>
+            Base class part of the infrastructure. Concrete 
+            events should inherit <see cref="T:DomainEvent`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="T:DomainEvent`1">
+            <summary>
+            Base class for domain events.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing" />
+        </member>
+        <member name="M:DomainEvent`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEvent`1"/> class 
+            with the given aggregate root identifier.
+            </summary>
+        </member>
+        <member name="P:DomainEvent`1.AggregateId">
+            <summary>
+            Gets the identifier of the aggregate root that published this event.
+            </summary>
+        </member>
         <member name="T:AggregateRoot`1">
             <summary>
             Base class for aggregate roots that use events to apply state 
@@ -56,24 +134,6 @@
             Gets or sets the aggregate root identifier.
             </summary>
         </member>
-        <member name="T:DomainEvent">
-            <summary>
-            Base class part of the infrastructure. Concrete 
-            events should inherit <see cref="T:DomainEvent`1"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="T:DomainEvent`1">
-            <summary>
-            Base class for domain events.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
-        <member name="P:DomainEvent`1.AggregateId">
-            <summary>
-            Gets identifier of the aggregate root that published this event.
-            </summary>
-        </member>
         <member name="T:DomainEventBus">
             <summary>
             Default implementation of an <see cref="T:IDomainEventBus"/> that 
@@ -97,7 +157,7 @@
             <summary>
             Publishes the specified event to the bus so that all subscribers are notified.
             </summary>
-            <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
+            <typeparam name="TAggregateId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
             <param name="sender">The sender of the event.</param>
             <param name="event">The event payload.</param>
         </member>
@@ -146,60 +206,6 @@
         <member name="M:DomainEventBus.NullBus.Publish``1(AggregateRoot{``0},DomainEvent)">
             <summary>
             Does nothing.
-            </summary>
-        </member>
-        <member name="T:DomainEventHandler">
-            <summary>
-            Base class part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainEventHandler`1"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="P:DomainEventHandler.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IDomainEventBus"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
-            </summary>
-        </member>
-        <member name="P:DomainEventHandler.EventType">
-            <summary>
-            Gets the type of the event this handler can process.
-            </summary>
-        </member>
-        <member name="T:DomainEventHandler`1">
-            <summary>
-            Base class for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="T">Type of event this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
-        <member name="M:DomainEventHandler`1.Handle(`0)">
-            <summary>
-            Handles the specified event.
-            </summary>
-        </member>
-        <member name="P:DomainEventHandler`1.EventType">
-            <summary>
-            Gets the type of the event this handler can process, which equals 
-            the generic type parameter of <see cref="T:DomainEventHandler`1"/>.
-            </summary>
-        </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
     </members>
