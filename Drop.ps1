@@ -1,9 +1,12 @@
-# ========================================================================
+# ===========================================================================
+#	Builds on Release mode all packages recursively down from the 	
+#	current folder and copies all resulting packages to the root Drop folder
+#
 #	This script looks up the directory tree searching for the NETFx root
 #	which is signaled by the netfx.txt file.
 #	Once the root is located, the Common.ps1 from there is imported 
-#	in the context and the Push-Packages function in it is invoked.
-# ========================================================================
+#	in the context and the Drop-Packages function in it is invoked.
+# ===========================================================================
 
 $current = $pwd.Path
 $paths = new-object System.Collections.Stack
@@ -21,16 +24,7 @@ while ($isRoot -eq $null)
 }
 
 . ./Common.ps1
-Build-Packages $current
-
-mkdir Drop -ea silentlycontinue
-$dropDir = gci -Filter Drop
-
-Get-ChildItem -Path $current -Recurse -Filter *.nupkg | `
-Where-Object { $_.DirectoryName.EndsWith("bin\Release") }  | %{ `
-	$target = [System.IO.Path]::Combine($dropDir.FullName, $_.Name); `
-	Remove-Item -Path $target -ea silentlycontinue; `
-	$_.MoveTo($target); }
+Drop-Packages $current
 
 # Pop folders just in case this is invoked from a powershell prompt
 $current = $pwd.Path
