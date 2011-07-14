@@ -59,6 +59,7 @@
     <Compile Include="netfx\Patterns\DomainContext\IDomainContext.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContextAccessor.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IIdentifiable.cs" />
+    <Compile Include="netfx\Patterns\DomainContext\QueryableExtensions.cs" />
     <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
     <Compile Include="netfx\System\Dynamic\OutValue.cs" />
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />

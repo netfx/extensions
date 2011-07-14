@@ -101,6 +101,44 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenIncludingDependent_ThenSucceeds()
+		{
+			var foo = new Foo { Name = "Foo", Baz = { new Baz() } };
+			using (var db = new TestContext())
+			{
+				db.Save(foo);
+				db.SaveChanges();
+			}
+
+			using (var db = new TestContext())
+			{
+				IQueryable<Foo> foos = db.Foos;
+				var saved = foos.Include(x => x.Baz).FirstOrDefault(x => x.Name == foo.Name);
+				Assert.NotNull(saved);
+				Assert.True(saved.Baz.Any());
+			}
+		}
+
+		[Fact(Skip = "Can't figure out how to make string paths work")]
+		public void WhenIncludingDependentAsString_ThenSucceeds()
+		{
+			var foo = new Foo { Name = "Foo", Bars = { new Bar { Baz = new Baz() } } };
+			using (var db = new TestContext())
+			{
+				db.Save(foo);
+				db.SaveChanges();
+			}
+			
+			using (var db = new TestContext())
+			{
+				IQueryable<Foo> foos = db.Foos;
+				var saved = foos.Include(x => "Bars").FirstOrDefault(x => x.Name == foo.Name);
+				Assert.NotNull(saved);
+				Assert.True(saved.Bars.Any());
+			}
+		}
+
+		[Fact]
 		public void WhenSavingInvalidEntity_ThenThrowsValidationException()
 		{
 			var foo = new AggregateRootWithRequiredProperty();
@@ -663,7 +701,6 @@ namespace Tests
 				Assert.Same(db, saved.Context);
 			}
 		}
-
 	}
 
 	public class AggregateRoot : IAggregateRoot<long>
@@ -757,6 +794,8 @@ namespace Tests
 
 	public class Bar : AggregateRoot
 	{
+		public virtual Baz Baz { get; set; }
+		public virtual Foo Parent { get; set; }
 	}
 
 	public class Baz : AggregateRoot

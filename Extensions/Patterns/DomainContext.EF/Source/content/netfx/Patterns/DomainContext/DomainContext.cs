@@ -275,6 +275,10 @@ public abstract partial class DomainContext<TContextInterface, TId> : DbContext,
 	/// </summary>
 	private void Initialize()
 	{
+		// Setup the EF includer. We assume no two contexts will do the 
+		// same within an appdomain.
+		QueryableExtensions.Includer = new DbIncluder();
+
 		this.tracer = Tracer.GetSourceFor(this.GetType());
 		this.Configuration.AutoDetectChangesEnabled = true;
 		this.Configuration.LazyLoadingEnabled = true;
@@ -741,6 +745,24 @@ public abstract partial class DomainContext<TContextInterface, TId> : DbContext,
 			writer.Flush();
 
 			return result.ToString();
+		}
+	}
+
+	/// <summary>
+	/// Implements the Include extension interface for EF.
+	/// </summary>
+	private class DbIncluder : QueryableExtensions.IIncluder
+	{
+		public IQueryable<T> Include<T, TProperty>(IQueryable<T> source, Expression<Func<T, TProperty>> path)
+			where T : class
+		{
+			return DbExtensions.Include(source, path);
+		}
+
+		public IQueryable<T> Include<T>(IQueryable<T> source, string path) 
+			where T : class
+		{
+			return DbExtensions.Include(source, path);
 		}
 	}
 
