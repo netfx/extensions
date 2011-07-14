@@ -1,4 +1,4 @@
-﻿#region BSD License
+#region BSD License
 /* 
 Copyright (c) 2010, NETFx
 All rights reserved.
@@ -31,11 +31,13 @@ namespace System.Dynamic
 	/// This class provides the extension methods <see cref="AsDynamicReflection(object)"/> 
 	/// and <see cref="AsDynamicReflection(Type)"/> as entry points.
 	/// </summary>
-	internal static class DynamicReflection
+	static partial class DynamicReflection
 	{
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given object members.
 		/// </summary>
+		/// <nuget id="netfx-System.Dynamic.Reflection" />
+		/// <param name="obj" this="true">The object to access dinamically</param>
 		public static dynamic AsDynamicReflection(this object obj)
 		{
 			if (obj == null)
@@ -47,6 +49,8 @@ namespace System.Dynamic
 		/// <summary>
 		/// Provides dynamic syntax for accessing the given type members.
 		/// </summary>
+		/// <nuget id="netfx-System.Dynamic.Reflection" />
+		/// <param name="type" this="true">The type to access dinamically</param>
 		public static dynamic AsDynamicReflection(this Type type)
 		{
 			if (type == null)
@@ -60,6 +64,8 @@ namespace System.Dynamic
 		/// the reflection dynamic must use to make a generic 
 		/// method invocation.
 		/// </summary>
+		/// <nuget id="netfx-System.Dynamic.Reflection" />
+		/// <param name="type" this="true">The type to convert</param>
 		public static TypeParameter AsGenericTypeParameter(this Type type)
 		{
 			return new TypeParameter(type);
