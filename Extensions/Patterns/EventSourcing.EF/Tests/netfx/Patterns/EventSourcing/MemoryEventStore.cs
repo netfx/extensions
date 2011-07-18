@@ -17,74 +17,66 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Xunit;
+using System.Linq.Expressions;
 
 namespace NetFx.Patterns.EventSourcing.Core.Tests
 {
+	/// <summary>
+	/// Simple in-memory store for testing the API.
+	/// </summary>
 	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests"/>
-	public class AggregateRootSpec
+	public class MemoryEventStore<TId> : IDomainEventStore<TId>
 	{
-		[Fact]
-		public void WhenDomainActionPerformed_ThenRootChangesStateThroughEvent()
+		private List<StoredEvent> events = new List<StoredEvent>();
+
+		public MemoryEventStore()
 		{
-			var root = new TestRoot();
-			root.Publish(5);
-
-			Assert.Equal(5, root.LatestVersion);
-			Assert.True(root.GetChanges().Any());
-			Assert.True(root.GetChanges().OfType<TestPublished>().Any(x => x.Version == 5));
-
-			root.AcceptChanges();
-
-			Assert.False(root.GetChanges().Any());
+			this.TypeNameConverter = type => type.Name;
 		}
 
-		[Fact]
-		public void WhenLoadingFromEvent_ThenRootChangesState()
+		public Func<Type, string> TypeNameConverter { get; set; }
+
+		public void Save(AggregateRoot<TId> sender, TimestampedEventArgs args)
 		{
-			var root = new TestRoot();
-			var events = new TimestampedEventArgs[] { new TestPublished { Version = 5 } };
-
-			root.Load(events);
-
-			Assert.Equal(5, root.LatestVersion);
-			Assert.False(root.GetChanges().Any());
-
-			// This should be no-op now.
-			root.AcceptChanges();
-
-			Assert.False(root.GetChanges().Any());
+			this.events.Add(new StoredEvent(sender, args));
 		}
 
-		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-		internal class TestRoot : AggregateRoot<Guid>
+		public IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria)
 		{
-			public TestRoot()
-			{
-				Handles<TestPublished>(this.Apply);
-			}
+			var source = this.events.AsQueryable();
+			var predicate = criteria.ToExpression(this.TypeNameConverter);
 
-			public void Publish(int version)
-			{
-				if (version < 0)
-					throw new ArgumentException();
+			if (predicate != null)
+				source = source.Where(predicate).Cast<StoredEvent>();
 
-				base.ApplyChange(new TestPublished { Version = version });
-			}
-
-			public int LatestVersion { get; set; }
-
-			private void Apply(TestPublished published)
-			{
-				this.LatestVersion = published.Version;
-			}
+			return source.Select(x => x.EventArgs);
 		}
 
-		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-		internal class TestPublished : TimestampedEventArgs
+		private class StoredEvent : IStoredEvent<TId>
 		{
-			public int Version { get; set; }
+			public StoredEvent(AggregateRoot<TId> sender, TimestampedEventArgs args)
+			{
+				this.AggregateRoot = sender;
+				this.EventArgs = args;
+			}
+
+			public AggregateRoot<TId> AggregateRoot { get; private set; }
+			public TimestampedEventArgs EventArgs { get; private set; }
+
+			public TId AggregateId { get { return this.AggregateRoot.Id; } }
+			public string AggregateType { get { return this.AggregateRoot.GetType().Name; } }
+			public string EventType { get { return this.EventArgs.GetType().Name; } }
+			public DateTime Timestamp { get { return this.EventArgs.Timestamp; } }
+
+			public override string ToString()
+			{
+				return string.Format("{0}({1}), {2} on {3} (payload: {4})", 
+					this.AggregateType, 
+					this.AggregateId, 
+					this.EventType, 
+					this.Timestamp, 
+					this.EventArgs);
+			}
 		}
 	}
 }

@@ -17,17 +17,37 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// event handler invocation when a subscribed event is published.
+/// Represents a persisted event in an event store.
 /// </summary>
+/// <remarks>
+/// The core interface does not expose the event payload, 
+/// as its representation as well as specific storage type
+/// and serialization/deserialization can vary wildly 
+/// across store implementation. Imposing a particular 
+/// representation via this interface would be unnecessarily 
+/// restrictive and is not needed for the rest of the APIs.
+/// </remarks>
+/// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IDomainEventBus
+public partial interface IStoredEvent<TId>
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Gets the aggregate id that the event applies to.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	TId AggregateId { get; }
+
+	/// <summary>
+	/// Gets the type of the aggregate root that this event applies to.
+	/// </summary>
+	string AggregateType { get; }
+
+	/// <summary>
+	/// Gets the type of the event.
+	/// </summary>
+	string EventType { get; }
+
+	/// <summary>
+	/// Gets the UTC timestamp of the event.
+	/// </summary>
+	DateTime Timestamp { get; }
 }

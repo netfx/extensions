@@ -15,19 +15,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// event handler invocation when a subscribed event is published.
+/// Base class for domain event payloads, which are always timestamped.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IDomainEventBus
+public abstract partial class TimestampedEventArgs : EventArgs
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	public TimestampedEventArgs()
+		: this(null)
+	{
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
+	/// </summary>
+	/// <param name="timestamp">The time when the event occurred.</param>
+	public TimestampedEventArgs(DateTime? timestamp = null)
+	{
+		if (timestamp != null)
+			// We always persist UTC times.
+			this.Timestamp = timestamp.Value.Kind == DateTimeKind.Local ? 
+				timestamp.Value.ToUniversalTime() : 
+				timestamp.Value;
+		else
+			this.Timestamp = DateTime.UtcNow;
+	}
+
+	/// <summary>
+	/// Gets the timestamp for the event.
+	/// </summary>
+	public DateTime Timestamp { get; set; }
 }

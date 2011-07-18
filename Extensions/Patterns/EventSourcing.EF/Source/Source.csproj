@@ -64,15 +64,21 @@
     <Compile Include="netfx\Patterns\DomainContext\IDomainContextAccessor.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IIdentifiable.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\AggregateRoot.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEvent.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventBus.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\DomainEventQueryExtensions.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\IStoredEvent.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\TimestampedEventArgs.cs" />
     <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
     <Compile Include="netfx\System\Dynamic\OutValue.cs" />
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />
     <Compile Include="netfx\System\Dynamic\TypeParameter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
