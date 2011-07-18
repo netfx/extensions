@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.DomainContext</id>
-		<version>1.0.0.3</version>
+		<id>netfx-Patterns.DomainContext.Core</id>
+		<version>1.0.0.0</version>
 		<title>NETFx Patterns: Domain Context Core</title>
 		<description>Provides the core interfaces to implement a domain context.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
