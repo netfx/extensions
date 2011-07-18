@@ -44,9 +44,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Reactive">
-      <HintPath>..\packages\Rx-Main.1.0.10621\lib\Net4\System.Reactive.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <NuSpec Include="Package.nuspec">
@@ -63,10 +60,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Sample\content\Domain\Product.cs">
+      <Link>content\netfx\Patterns\EventSourcing\Product.cs</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -18,9 +18,9 @@ using System;
 
 /// <summary>
 /// Base class part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="DomainEventHandler{T}"/> instead.
+/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
 public abstract partial class DomainEventHandler
 {
 	/// <summary>
@@ -30,7 +30,7 @@ public abstract partial class DomainEventHandler
 	public virtual bool IsAsync { get { return false; } }
 
 	/// <summary>
-	/// Gets the type of the event this handler can process.
+	/// Gets the type of the event argument this handler can process.
 	/// </summary>
 	public abstract Type EventType { get; }
 }
@@ -38,19 +38,20 @@ public abstract partial class DomainEventHandler
 /// <summary>
 /// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
-/// <typeparam name="T">Type of event this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-public abstract partial class DomainEventHandler<T> : DomainEventHandler
-	where T : DomainEvent
+/// <typeparam name="TAggregateId">Type of identifier used by the aggregate roots.</typeparam>
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+public abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler
+	where TEventArgs : TimestampedEventArgs
 {
 	/// <summary>
 	/// Handles the specified event.
 	/// </summary>
-	public abstract void Handle(T @event);
+	public abstract void Handle(TAggregateId aggregateId, TEventArgs @event);
 
 	/// <summary>
 	/// Gets the type of the event this handler can process, which equals 
-	/// the generic type parameter of <see cref="DomainEventHandler{T}"/>.
+	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
 	/// </summary>
-	public override Type EventType { get { return typeof(T); } }
+	public override Type EventType { get { return typeof(TEventArgs); } }
 }

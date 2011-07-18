@@ -17,35 +17,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Text;
 
 /// <summary>
-/// Base class part of the infrastructure. Concrete 
-/// events should inherit <see cref="DomainEvent{TAggregateId}"/> instead.
+/// Base class for domain event payloads, which are always timestamped.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-public abstract partial class DomainEvent
-{
-}
-
-/// <summary>
-/// Base class for domain events.
-/// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-public abstract partial class DomainEvent<TAggregateId> : DomainEvent
+/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+public abstract partial class TimestampedEventArgs : EventArgs
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEvent&lt;TAggregateId&gt;"/> class 
-	/// with the given aggregate root identifier.
+	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
 	/// </summary>
-	protected DomainEvent(TAggregateId aggregateId)
+	public TimestampedEventArgs()
+		: this(null)
 	{
-		this.AggregateId = aggregateId;
 	}
 
 	/// <summary>
-	/// Gets the identifier of the aggregate root that published this event.
+	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
 	/// </summary>
-	public TAggregateId AggregateId { get; set; }
+	/// <param name="timestamp">The time when the event occurred.</param>
+	public TimestampedEventArgs(DateTime? timestamp = null)
+	{
+		if (timestamp != null)
+			// We always persist UTC times.
+			this.Timestamp = timestamp.Value.Kind == DateTimeKind.Local ? 
+				timestamp.Value.ToUniversalTime() : 
+				timestamp.Value;
+		else
+			this.Timestamp = DateTime.UtcNow;
+	}
+
+	/// <summary>
+	/// Gets the timestamp for the event.
+	/// </summary>
+	public DateTime Timestamp { get; set; }
 }

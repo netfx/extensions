@@ -15,19 +15,46 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// event handler invocation when a subscribed event is published.
+/// Interface implemented by domain event stores.
 /// </summary>
+/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IDomainEventBus
+public partial interface IDomainEventStore<TId>
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Gets or sets the function that converts a <see cref="Type"/> to 
+	/// its string representation in the store. Used to calculate the 
+	/// values of <see cref="IStoredEvent{TId}.AggregateType"/> and 
+	/// <see cref="IStoredEvent{TId}.EventType"/>.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
+	Func<Type, string> TypeNameConverter { get; set; }
+
+	/// <summary>
+	/// Saves the given event raised by the given sender aggregate root.
+	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	/// <param name="args">The <see cref="TimestampedEventArgs"/> instance containing the event data.</param>
+	void Save(AggregateRoot<TId> sender, TimestampedEventArgs args);
+
+	/// <summary>
+	/// Queries the event store for events that match the given criteria.
+	/// </summary>
+	/// <remarks>
+	/// This is the only low-level querying method that stores need to implement. 
+	/// As a facility for stores that store events in an <see cref="IQueryable{T}"/> 
+	/// queryable object, the <see cref="StoredEventCriteria{TId}"/> object exposes a 
+	/// <see cref="StoredEventCriteria{TId}.ToExpression"/> method that 
+	/// makes the query implementation trivial in that case.
+	/// <para>
+	/// The more user-friendly querying API in <see cref="IDomainEventQuery{TId}"/> 
+	/// leverages this method internally and therefore can be used by any 
+	/// event store implementation.
+	/// </para>
+	/// </remarks>
+	IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria);
 }

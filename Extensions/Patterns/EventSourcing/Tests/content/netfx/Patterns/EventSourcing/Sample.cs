@@ -19,205 +19,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Diagnostics;
 
-namespace Tests.content.netfx.Patterns.EventSourcing
+namespace NetFx.Patterns.EventSourcing.Core.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
+	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests" />
 	public class Sample
 	{
 		[Fact]
-		public void WhenHandlerRegistered_ThenCanProcessEntity()
-		{
-			var product = new Product { Title = "DevStore" };
-			var repository = new Repository<Guid>(product);
-			var bus = new DomainEventBus(new [] { new SendMailHandler(repository) });
-
-			product.Publish(1);
-			product.GetChanges().ToList().ForEach(e => bus.Publish(product, e));
-		}
-
-		[Fact]
 		public void WhenEventPersisted_ThenCanObserveIt()
 		{
-			var store = new DomainEventStore<Guid>();
-			//store.Events.Where(
+			var store = new MemoryEventStore<int>();
+			var product = new Product(5, "DevStore");
+			product.Publish(1);
+			product.Publish(2);
+			product.Publish(3);
+			product.GetChanges().ToList()
+				.ForEach(e => store.Save(product, e));
+
+			product = new Product(6, "WoVS");
+			product.Publish(1);
+			product.Publish(2);
+			product.GetChanges().ToList()
+				.ForEach(e => store.Save(product, e));
+
+			var product2 = new Product();
+			product2.Load(store.Query().For<Product>(6));
+
+			Assert.Equal(product.Id, product2.Id);
+			Assert.Equal(product.Version, product2.Version);
+
+			var events = store.Query().For<Product>(5).OfType<Product.PublishedEvent>();
+			Assert.Equal(3, events.Count());
+
+			Console.WriteLine("For product 5, of type published:");
+			foreach (var e in events)
+			{
+				Console.WriteLine("\t" + e);
+			}
+
+			events = store.Query().For<Product>().OfType<Product.PublishedEvent>();
+			Assert.Equal(5, events.Count());
+
+			Console.WriteLine();
+			Console.WriteLine("For all products, of type published:");
+			foreach (var e in events)
+			{
+				Console.WriteLine("\t" + e);
+			}
+
+			events = store.Query().For<Product>();
+			Assert.Equal(7, events.Count());
 			
-		}
-
-		public class DomainEventStore<TAggregateId>
-			 where TAggregateId : IComparable
-		{
-			private List<InMemoryPersistedEvent<TAggregateId>> events = new List<InMemoryPersistedEvent<TAggregateId>>();
-
-			public void Save(DomainEvent<TAggregateId> @event)
+			Console.WriteLine();
+			Console.WriteLine("For all products, all event types:");
+			foreach (var e in events)
 			{
-				this.events.Add(new InMemoryPersistedEvent<TAggregateId>(@event));
+				Console.WriteLine("\t" + e);
 			}
 
-			public IQueryable<TDomainEvent> Find<TDomainEvent>()
-				where TDomainEvent : DomainEvent<TAggregateId>
+			events = store.Query().OfType<Product.CreatedEvent>();
+			Assert.Equal(2, events.Count());
+
+			Console.WriteLine();
+			Console.WriteLine("Products created events:");
+			foreach (var e in events)
 			{
-				return this.events
-					.Select(x => x.Payload as TDomainEvent)
-					.Where(x => x != null)
-					.AsQueryable();
+				Console.WriteLine("\t" + e);
 			}
 
-			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId)
-				where TDomainEvent : DomainEvent<TAggregateId>
-			{
-				return this.events
-					.Select(x => x.Payload as TDomainEvent)
-					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
-					.AsQueryable();
-			}
+			//product.Load(store.Events.For<Product>(23));
 
-			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId)
-				where TDomainEvent : DomainEvent<TAggregateId>
-			{
-				return this.events
-					.Select(x => x.Payload as TDomainEvent)
-					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
-					.AsQueryable();
-			}
+			//var player = new DomainEventPlayer(store);
+			//player.Observe<ProductPublishedEvent>();
 
-			public IQueryable<TDomainEvent> Find<TDomainEvent>(TAggregateId aggregateId, DateTime? since, DateTime? until, RangeType? range)
-				where TDomainEvent : DomainEvent<TAggregateId>
-			{
-				var result = this.events
-					.Select(x => x.Payload as TDomainEvent);
-
-				//if (since != null)
-
-				return result
-					.Where(x => x != null && x.AggregateId.CompareTo(aggregateId) == 0)
-					.AsQueryable();
-			}
-		}
-
-		public enum RangeType
-		{
-			Exclusive,
-			Inclusive,
-		}
-
-		public abstract partial class PersistedEvent<TAggregateId>
-		{
-			public PersistedEvent()
-			{
-				this.When = DateTime.UtcNow;
-			}
-
-			/// <summary>
-			/// Gets or sets the identifier of the aggregate root associated with this event.
-			/// </summary>
-			public TAggregateId AggregateId { get; set; }
-
-			/// <summary>
-			/// Gets or sets the time the event was persisted, in UTC.
-			/// </summary>
-			public DateTime When { get; set; }
-		}
-
-		public class InMemoryPersistedEvent<TAggregateId> : PersistedEvent<TAggregateId>
-		{
-			public InMemoryPersistedEvent(DomainEvent<TAggregateId> @event)
-			{
-				this.Payload = @event;
-			}
-
-			/// <summary>
-			/// Gets or sets the event payload data.
-			/// </summary>
-			public DomainEvent<TAggregateId> Payload { get; set; }
-		}
-
-		public class JsonPersistedEvent<TAggregateId> : PersistedEvent<TAggregateId>
-		{
-			/// <summary>
-			/// Gets or sets the event payload data.
-			/// </summary>
-			public string Payload { get; set; }
-		}
-	}
-
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-	internal class Repository<TId>
-		where TId : IComparable
-	{
-		private List<object> aggregates = new List<object>();
-
-		public Repository(params object[] aggregates)
-		{
-			this.aggregates.AddRange(aggregates);
-		}
-
-		public T Find<T>(TId id)
-			where T : AggregateRoot<TId>
-		{
-			return aggregates.OfType<T>().FirstOrDefault(x => x.Id.CompareTo(id) == 0);
-		}
-
-		public void SaveChanges()
-		{
-		}
-	}
-
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-	internal class Product : AggregateRoot<Guid>
-	{
-		public Product()
-		{
-			this.Id = Guid.NewGuid();
-		}
-
-		public string Title { get; set; }
-		public int Version { get; set; }
-
-		public void Publish(int version)
-		{
-			if (version <= 0)
-				throw new ArgumentException();
-
-			this.ApplyEvent(new ProductPublishedEvent(this.Id) { Version = version }, this.Apply);
-		}
-
-		private void Apply(ProductPublishedEvent @event)
-		{
-			this.Version = @event.Version;
-		}
-	}
-
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-	internal class ProductPublishedEvent : DomainEvent<Guid>
-	{
-		public ProductPublishedEvent(Guid guid)
-		{
-			this.AggregateId = guid;
-		}
-
-		public int Version { get; set; }
-	}
-
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-	internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
-	{
-		private Repository<Guid> repository;
-
-		public SendMailHandler(Repository<Guid> repository)
-		{
-			this.repository = repository;
-		}
-
-		public override void Handle(ProductPublishedEvent @event)
-		{
-			var product = this.repository.Find<Product>(@event.AggregateId);
-			Console.WriteLine("Product {0} has current version {1}", product.Title, @event.Version);
-		}
-
-		public override bool IsAsync
-		{
-			get { return false; }
+			//player.Replay(from: null, to: null);
+			//store.Events.Where(
+			//store.Events.Where(x => x.AggregateType == "Product" &&
+			//    x.EventType == "Published");
 		}
 	}
 }

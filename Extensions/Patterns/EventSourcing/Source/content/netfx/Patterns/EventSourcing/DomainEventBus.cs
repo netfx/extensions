@@ -22,14 +22,15 @@ using System.Threading;
 
 /// <summary>
 /// Default implementation of an <see cref="IDomainEventBus"/> that 
-/// invokes handlers as events are published.
+/// invokes handlers as events are published, and where handlers are 
+/// run in-process.
 /// <para>
 /// Handlers with <see cref="DomainEventHandler.IsAsync"/> set to 
 /// <see langword="true"/> are invoked through the optional 
 /// async runner delegate passed to the constructor.
 /// </para>
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
 public partial class DomainEventBus : IDomainEventBus
 {
 	private Action<Action> asyncActionRunner;
@@ -87,26 +88,25 @@ public partial class DomainEventBus : IDomainEventBus
 	/// </summary>
 	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
 	/// <param name="sender">The sender of the event.</param>
-	/// <param name="event">The event payload.</param>
-	public virtual void Publish<TId>(AggregateRoot<TId> sender, DomainEvent @event)
-		where TId : IComparable
+	/// <param name="args">The event payload.</param>
+	public virtual void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args)
 	{
 		Guard.NotNull(() => sender, sender);
-		Guard.NotNull(() => @event, @event);
+		Guard.NotNull(() => args, args);
 
-		var compatibleHandlers = this.eventHandlers.Where(h => h.EventType.IsAssignableFrom(@event.GetType())).ToList();
-		dynamic dynamicEvent = @event;
+		var compatibleHandlers = this.eventHandlers.Where(h => h.EventType.IsAssignableFrom(args.GetType())).ToList();
+		dynamic dynamicEvent = args;
 
 		// By making this dynamic, we allow event handlers to subscribe to base classes
 		foreach (dynamic handler in compatibleHandlers.Where(h => !h.IsAsync).AsParallel())
 		{
-			handler.Handle(dynamicEvent);
+			handler.Handle(sender.Id, dynamicEvent);
 		}
 
 		// Run background handlers through the async runner.
 		foreach (dynamic handler in compatibleHandlers.Where(h => h.IsAsync).AsParallel())
 		{
-			asyncActionRunner(() => handler.Handle(@event));
+			asyncActionRunner(() => handler.Handle(sender.Id, args));
 		}
 	}
 
@@ -116,7 +116,7 @@ public partial class DomainEventBus : IDomainEventBus
 		while (baseType != typeof(object))
 		{
 			if (baseType.IsGenericType &&
-				baseType.GetGenericTypeDefinition() == typeof(DomainEventHandler<>))
+				baseType.GetGenericTypeDefinition() == typeof(DomainEventHandler<,>))
 				return true;
 
 			baseType = baseType.BaseType;
@@ -134,8 +134,7 @@ public partial class DomainEventBus : IDomainEventBus
 		/// <summary>
 		/// Does nothing.
 		/// </summary>
-		public void Publish<TId>(AggregateRoot<TId> sender, DomainEvent @event)
-			where TId : IComparable
+		public void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args)
 		{
 		}
 	}
