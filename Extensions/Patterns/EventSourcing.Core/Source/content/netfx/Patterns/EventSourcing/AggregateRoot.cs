@@ -36,13 +36,13 @@ abstract partial class AggregateRoot<TId>
 	/// <summary>
 	/// Gets or sets the aggregate root identifier.
 	/// </summary>
-	public TId Id { get; set; }
+	public virtual TId Id { get; set; }
 
 	/// <summary>
 	/// Clears the internal events retrieved from <see cref="GetChanges"/>, 
 	/// signaling that all pending events have been commited.
 	/// </summary>
-	public void AcceptChanges()
+	public virtual void AcceptChanges()
 	{
 		this.changes.Clear();
 	}
@@ -50,7 +50,7 @@ abstract partial class AggregateRoot<TId>
 	/// <summary>
 	/// Gets the pending changes.
 	/// </summary>
-	public IEnumerable<TimestampedEventArgs> GetChanges()
+	public virtual IEnumerable<TimestampedEventArgs> GetChanges()
 	{
 		return this.changes.AsReadOnly();
 	}
@@ -58,7 +58,7 @@ abstract partial class AggregateRoot<TId>
 	/// <summary>
 	/// Loads the aggregate root state from an even stream.
 	/// </summary>
-	public void Load(IEnumerable<TimestampedEventArgs> history)
+	public virtual void Load(IEnumerable<TimestampedEventArgs> history)
 	{
 		foreach (var e in history)
 		{
@@ -73,7 +73,7 @@ abstract partial class AggregateRoot<TId>
 	/// <summary>
 	/// Configures a handler for an event.
 	/// </summary>
-	protected void Handles<TEvent>(Action<TEvent> handler)
+	protected virtual void Handles<TEvent>(Action<TEvent> handler)
 		where TEvent : TimestampedEventArgs
 	{
 		this.handlers.Add(typeof(TEvent), @event => handler((TEvent)@event));
@@ -81,11 +81,11 @@ abstract partial class AggregateRoot<TId>
 
 	/// <summary>
 	/// Applies a change to the entity state via an event. 
-	/// The derived class should provide a method called <c>Apply</c> 
-	/// receiving the concrete type of event, where state 
-	/// changes are performed to the entity.
+	/// The derived class should invoke <see cref="Handles{TEvent}"/> 
+	/// to configure the handlers for specific types of events. The 
+	/// handlers perform the actual state changes to the entity.
 	/// </summary>
-	protected void ApplyChange<TEvent>(TEvent @event)
+	protected virtual void ApplyChange<TEvent>(TEvent @event)
 		where TEvent : TimestampedEventArgs
 	{
 		ApplyChangeImpl(@event, true);

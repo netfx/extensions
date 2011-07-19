@@ -42,6 +42,10 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			this.events.Add(new StoredEvent(sender, args));
 		}
 
+		public void SaveChanges()
+		{
+		}
+
 		public IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria)
 		{
 			var source = this.events.AsQueryable();

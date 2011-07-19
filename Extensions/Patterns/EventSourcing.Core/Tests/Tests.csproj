@@ -63,6 +63,7 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStoreSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="tools\install.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

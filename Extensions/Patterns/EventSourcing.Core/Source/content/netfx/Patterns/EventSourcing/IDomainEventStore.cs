@@ -58,4 +58,10 @@ partial interface IDomainEventStore<TId>
 	/// </para>
 	/// </remarks>
 	IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria);
+
+	/// <summary>
+	/// Persists all <see cref="Save"/>s performed so far, effectively commiting 
+	/// the changes to the underlying store in a unit-of-work style.
+	/// </summary>
+	void SaveChanges();
 }

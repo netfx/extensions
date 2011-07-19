@@ -19,21 +19,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-// This file defines the visibility of the classes and interfaces 
-// introduced by the EventSourcing.Core package. By default, pattern APIs 
-// are public, but you can modify this file and make them internal
-// if you want. The nuget update process will never overwrite 
-// this file once you made changes to it.
+/// <summary>
+/// Provides the <see cref="None"/> empty store for use 
+/// when no store is needed.
+/// </summary>
+/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+partial class DomainEventStore<TId>
+	where TId : IComparable
+{
+	/// <summary>
+	/// Initializes the <see cref="None"/> null object 
+	/// pattern property.
+	/// </summary>
+	static DomainEventStore()
+	{
+		None = new NullStore();
+	}
 
-public partial class AggregateRoot<TId> { }
-public partial class DomainEventBus<TId> { }
-public partial class DomainEventHandler { }
-public partial class DomainEventHandler<TAggregateId, TEventArgs> { }
-public partial class DomainEventQueryExtensions { }
-public partial class DomainEventStore<TId> { }
-public partial interface IDomainEventBus<TId> { }
-public partial interface IDomainEventQuery<TId> { }
-public partial interface IDomainEventStore<TId> { }
-public partial interface IStoredEvent<TId> { }
-public partial class StoredEventCriteria<TId> { }
-public partial class TimestampedEventArgs { }
+	/// <summary>
+	/// Gets a default domain event store implementation that 
+	/// does nothing (a.k.a. Null Object Pattern).
+	/// </summary>
+	public static IDomainEventStore<TId> None { get; private set; }
+
+	private class NullStore : IDomainEventStore<TId>
+	{
+		public Func<Type, string> TypeNameConverter { get; set; }
+
+		public IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria)
+		{
+			return Enumerable.Empty<TimestampedEventArgs>();
+		}
+
+		public void Save(AggregateRoot<TId> sender, TimestampedEventArgs args)
+		{
+		}
+
+		public void SaveChanges()
+		{
+		}
+	}
+}

@@ -134,9 +134,9 @@
         <member name="M:AggregateRoot`1.ApplyChange``1(``0)">
             <summary>
             Applies a change to the entity state via an event. 
-            The derived class should provide a method called <c>Apply</c> 
-            receiving the concrete type of event, where state 
-            changes are performed to the entity.
+            The derived class should invoke <see cref="M:AggregateRoot`1.Handles``1(System.Action{``0})"/> 
+            to configure the handlers for specific types of events. The 
+            handlers perform the actual state changes to the entity.
             </summary>
         </member>
         <member name="P:AggregateRoot`1.Id">
@@ -148,13 +148,17 @@
             <summary>
             Default implementation of an <see cref="T:IDomainEventBus`1"/> that 
             invokes handlers as events are published, and where handlers are 
-            run in-process.
+            run in-process (if any handlers are provided).
+            </summary>
+            <remarks>
+            A persistent <see cref="T:IDomainEventStore`1"/> can also be specified 
+            to persist events to a store for later playback or auditing.
             <para>
             Handlers with <see cref="P:DomainEventHandler.IsAsync"/> set to 
             <see langword="true"/> are invoked through the optional 
             async runner delegate passed to the constructor.
             </para>
-            </summary>
+            </remarks>
             <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
@@ -164,6 +168,13 @@
             pattern property.
             </summary>u
         </member>
+        <member name="M:DomainEventBus`1.#ctor(IDomainEventStore{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class
+            with a persistent store for events and no in-memory handlers.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+        </member>
         <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
             <summary>
             Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
@@ -171,11 +182,29 @@
             </summary>
             <param name="eventHandlers">The event handlers.</param>
         </member>
+        <member name="M:DomainEventBus`1.#ctor(IDomainEventStore{`0},System.Collections.Generic.IEnumerable{DomainEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
+            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
         <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
             <summary>
             Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
             the given async runner.
             </summary>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:DomainEventBus`1.#ctor(IDomainEventStore{`0},System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
+            a persistent store for events, a set of event handlers and a specific async runner.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
             <param name="eventHandlers">The event handlers.</param>
             <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
             that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
@@ -241,6 +270,26 @@
             the generic type parameter of <see cref="T:DomainEventHandler`2"/>.
             </summary>
         </member>
+        <member name="T:DomainEventStore`1">
+            <summary>
+            Provides the <see cref="P:DomainEventStore`1.None"/> empty store for use 
+            when no store is needed.
+            </summary>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="M:DomainEventStore`1.#cctor">
+            <summary>
+            Initializes the <see cref="P:DomainEventStore`1.None"/> null object 
+            pattern property.
+            </summary>
+        </member>
+        <member name="P:DomainEventStore`1.None">
+            <summary>
+            Gets a default domain event store implementation that 
+            does nothing (a.k.a. Null Object Pattern).
+            </summary>
+        </member>
         <member name="T:IDomainEventStore`1">
             <summary>
             Interface implemented by domain event stores.
@@ -271,6 +320,12 @@
             event store implementation.
             </para>
             </remarks>
+        </member>
+        <member name="M:IDomainEventStore`1.SaveChanges">
+            <summary>
+            Persists all <see cref="M:IDomainEventStore`1.Save(AggregateRoot{`0},TimestampedEventArgs)"/>s performed so far, effectively commiting 
+            the changes to the underlying store in a unit-of-work style.
+            </summary>
         </member>
         <member name="P:IDomainEventStore`1.TypeNameConverter">
             <summary>

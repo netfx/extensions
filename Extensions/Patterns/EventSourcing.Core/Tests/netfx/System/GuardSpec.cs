@@ -29,6 +29,22 @@ public class GuardSpec
 	}
 
 	[Fact]
+	public void WhenNonEmptyStringVariablePassed_ThenNoOp()
+	{
+		var value = "foo";
+
+		Guard.NotNullOrEmpty(() => value, value);
+	}
+
+	[Fact]
+	public void WhenNonNullStringVariablePassed_ThenNoOp()
+	{
+		var value = "foo";
+
+		Guard.NotNull(() => value, value);
+	}
+
+	[Fact]
 	public void WhenEmptyStringVariablePassed_ThenThrowsArgumentExceptionWithVariableName()
 	{
 		string value = String.Empty;

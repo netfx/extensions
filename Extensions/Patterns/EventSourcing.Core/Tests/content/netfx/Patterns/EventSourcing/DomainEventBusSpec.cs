@@ -29,7 +29,13 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenNullHandlers_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int>(null));
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int>(default(IEnumerable<DomainEventHandler>)));
+		}
+
+		[Fact]
+		public void WhenNullEventStore_ThenThrows()
+		{
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int>(default(IDomainEventStore<int>)));
 		}
 
 		[Fact]
@@ -52,6 +58,52 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var bus = new DomainEventBus<int>(Enumerable.Empty<DomainEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish((AggregateRoot<int>)null, new FooArgs()));
+		}
+
+		[Fact]
+		public void WhenPublishingEvent_ThenSavesToStore()
+		{
+			var args = new FooArgs { Id = 5 };
+			var aggregate = new TestAggregate();
+			var store = new Mock<IDomainEventStore<int>>();
+
+			var bus = new DomainEventBus<int>(store.Object);
+
+			bus.Publish(aggregate, args);
+
+			store.Verify(x => x.Save(aggregate, args));
+		}
+
+		[Fact]
+		public void WhenPublishingEvent_ThenSavesToStoreAndInvokesHandler()
+		{
+			var args = new FooArgs { Id = 5 };
+			var aggregate = new TestAggregate();
+			var store = new Mock<IDomainEventStore<int>>();
+			var handler = new Mock<DomainEventHandler<int, BaseArgs>> { CallBase = true };
+
+			var bus = new DomainEventBus<int>(store.Object, new[] { handler.Object });
+
+			bus.Publish(aggregate, args);
+
+			store.Verify(x => x.Save(aggregate, args));
+			handler.Verify(x => x.Handle(5, It.IsAny<BaseArgs>()));
+		}
+
+		[Fact]
+		public void WhenPublishingEventWithAsyncHandler_ThenSavesToStoreAndInvokesHandler()
+		{
+			var args = new FooArgs { Id = 5 };
+			var aggregate = new TestAggregate();
+			var store = new Mock<IDomainEventStore<int>>();
+			var handler = new Mock<DomainEventHandler<int, BaseArgs>> { CallBase = true };
+			handler.Setup(x => x.IsAsync).Returns(true);
+
+			var bus = new DomainEventBus<int>(store.Object, new[] { handler.Object });
+
+			bus.Publish(aggregate, args);
+
+			store.Verify(x => x.Save(aggregate, args));
 		}
 
 		[Fact]

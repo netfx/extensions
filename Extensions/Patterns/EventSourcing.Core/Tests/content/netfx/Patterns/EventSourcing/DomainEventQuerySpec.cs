@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using System.Collections;
 
 namespace NetFx.Patterns.EventSourcing.Core.Tests
 {
@@ -25,6 +26,15 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			product.Publish(2);
 			product.GetChanges().ToList()
 				.ForEach(e => store.Save(product, e));
+		}
+
+		[Fact]
+		public void WhenGettingEmptyQueryEnumerable_ThenEmptyList()
+		{
+			var store = new MemoryEventStore<int>();
+			var enumerable = store.Query() as IEnumerable;
+
+			Assert.False(enumerable.GetEnumerator().MoveNext());
 		}
 
 		[Fact]

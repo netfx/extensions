@@ -48,6 +48,7 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
