@@ -67,7 +67,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainContextSpec.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContextEventSourcing\DomainContextSpec.cs" />
     <Compile Include="netfx\Patterns\DomainContext\DomainContextSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />

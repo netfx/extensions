@@ -4,403 +4,104 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:System.Dynamic.OutValue">
+        <member name="T:TimestampedEventArgs">
             <summary>
-            Allows output parameters to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
+            Base class for domain event payloads, which are always timestamped.
             </summary>
-        </member>
-        <member name="M:System.Dynamic.OutValue.Create``1(System.Action{``0})">
-            <summary>
-            Creates a value setter delegating reference
-            to be used as an output parameter when invoking the 
-            dynamic object.
-            </summary>
-            <param name="setter">The value to pass as out to the dynamic invocation.</param>
-        </member>
-        <member name="P:System.Dynamic.OutValue.Value">
-            <summary>
-            Sets the value.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.OutValue`1">
-            <summary>
-            Allows output parameters to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.OutValue`1.#ctor(System.Action{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.OutValue`1"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.OutValue`1.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:AggregateRoot`1">
-            <devdoc>
-            Implements the <see cref="T:IAggregateRoot`1"/> on the 
-            event sourcing-provided aggregate root implementation, 
-            which doesn't require a dependency on the domain context 
-            interfaces.
-            </devdoc>
-            <nuget id="netfx-Patterns.EventSourcing.EF"/>
-            <summary>
-            Base class for aggregate roots that use events to apply state 
-            changes (Event Sourcing) and notify consumers on an <see cref="T:IDomainEventBus`1"/>.
-            </summary>
-            <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="T:IAggregateRoot`1">
+        <member name="M:TimestampedEventArgs.#ctor">
             <summary>
-            Base interface that must be implemented by all aggregate root entities. 
+            Initializes a new instance of the <see cref="T:TimestampedEventArgs"/> class.
             </summary>
-            <remarks>
-            This interface simply provides the <see cref="P:IAggregateRoot`1.IsDeleted"/> on top of 
-            what <see cref="T:IIdentifiable`1"/> provides, enforcing the rule that that 
-            aggregate are never deleted using the domain model, they are 
-            simply marked as deleted.
+        </member>
+        <member name="M:TimestampedEventArgs.#ctor(System.Nullable{System.DateTime})">
+            <summary>
+            Initializes a new instance of the <see cref="T:TimestampedEventArgs"/> class.
+            </summary>
+            <param name="timestamp">The time when the event occurred.</param>
+        </member>
+        <member name="P:TimestampedEventArgs.Timestamp">
+            <summary>
+            Gets the timestamp for the event.
+            </summary>
+        </member>
+        <member name="T:DomainEventBus`1">
+            <summary>
+            Default implementation of an <see cref="T:IDomainEventBus`1"/> that 
+            invokes handlers as events are published, and where handlers are 
+            run in-process.
             <para>
-            Accessing the underlying context implementation though, aggregate 
-            roots can be deleted anyway as usual in EF/NH (i.e. in migration scenarios, 
-            tests, etc., it might be needed).
+            Handlers with <see cref="P:DomainEventHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
             </para>
-            </remarks>
-            <nuget id="netfx-Patterns.DomainContext"/>
-        </member>
-        <member name="T:IIdentifiable`1">
-            <summary>
-            Base interface that must be implented by all domain entities. 
-            Types that do not have their separate table (a.k.a. "complex types" 
-            in EF or "components" in NH) just don't implement this interface.
             </summary>
-            <nuget id="netfx-Patterns.DomainContext" />
-        </member>
-        <member name="P:IIdentifiable`1.Id">
-            <summary>
-            Gets or sets the id.
-            </summary>
-        </member>
-        <member name="P:IAggregateRoot`1.IsDeleted">
-            <summary>
-            Gets or sets a value indicating whether the entity is deleted. 
-            Aggregate root entities are never deleted using the domain model, they are 
-            simply marked as deleted.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`1.AcceptChanges">
-            <summary>
-            Clears the internal events retrieved from <see cref="M:AggregateRoot`1.GetChanges"/>, 
-            signaling that all pending events have been commited.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`1.GetChanges">
-            <summary>
-            Gets the pending changes.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`1.Load(System.Collections.Generic.IEnumerable{TimestampedEventArgs})">
-            <summary>
-            Loads the aggregate root state from an even stream.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`1.Handles``1(System.Action{``0})">
-            <summary>
-            Configures a handler for an event.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`1.ApplyChange``1(``0)">
-            <summary>
-            Applies a change to the entity state via an event. 
-            The derived class should provide a method called <c>Apply</c> 
-            receiving the concrete type of event, where state 
-            changes are performed to the entity.
-            </summary>
-        </member>
-        <member name="P:AggregateRoot`1.IsDeleted">
-            <summary>
-            Gets or sets a value indicating whether this instance is deleted.
-            </summary>
-        </member>
-        <member name="P:AggregateRoot`1.Id">
-            <summary>
-            Gets or sets the aggregate root identifier.
-            </summary>
-        </member>
-        <member name="T:QueryableExtensions">
-            <summary>
-            Allows consumers of <see cref="T:IDomainContext`1"/> queryable 
-            aggregate roots to include/prefetch certain properties or 
-            property paths. This class allows testing of such extension 
-            method by exposing a replaceable <see cref="T:QueryableExtensions.IIncluder"/> 
-            interface that concrete domain context implementations 
-            replace on their constructors.
-            </summary>
-        </member>
-        <member name="M:QueryableExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
-            <summary>
-            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
-            </summary>
-            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
-            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
-            <param name="source">The queryable source to include/prefetch properties from.</param>
-            <param name="path">The property path expression.</param>
-        </member>
-        <member name="M:QueryableExtensions.Include``1(System.Linq.IQueryable{``0},System.String)">
-            <summary>
-            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
-            </summary>
-            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
-            <param name="source">The queryable source to include/prefetch properties from.</param>
-            <param name="path">The property path expression.</param>
-        </member>
-        <member name="T:QueryableExtensions.IIncluder">
-            <summary>
-            Provides the <c>Include</c> extension method for queryables. Does 
-            nothing by default.
-            </summary>
-        </member>
-        <member name="M:QueryableExtensions.IIncluder.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
-            <summary>
-            Specifies that the given property should be included/prefetched.
-            </summary>
-            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
-            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
-            <param name="source">The queryable source to include/prefetch properties from.</param>
-            <param name="path">The property path expression.</param>
-        </member>
-        <member name="M:QueryableExtensions.IIncluder.Include``1(System.Linq.IQueryable{``0},System.String)">
-            <summary>
-            Specifies that the given property should be included/prefetched.
-            </summary>
-            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
-            <param name="source">The queryable source to include/prefetch properties from.</param>
-            <param name="path">The property path expression.</param>
-        </member>
-        <member name="T:System.Dynamic.RefValue">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
-            <summary>
-            Creates a value getter/setter delegating reference
-            to be used by reference when invoking the 
-            dynamic object.
-            </summary>
-            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
-            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
-        </member>
-        <member name="P:System.Dynamic.RefValue.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.RefValue`1">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.RefValue`1.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:StoredEventCriteria`1">
-            <summary>
-            Represents the filter criteria for a domain event store query.
-            </summary>
-            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="M:StoredEventCriteria`1.#ctor">
+        <member name="T:IDomainEventBus`1">
             <summary>
-            Initializes a new instance of the <see cref="T:StoredEventCriteria`1"/> class.
+            Interface implemented by the component that coordinates 
+            event handler invocation when a subscribed event is published.
             </summary>
-        </member>
-        <member name="M:StoredEventCriteria`1.ToExpression(System.Func{System.Type,System.String})">
-            <summary>
-            Converts the criteria object into an expression tree that can be used to 
-            run queries against an <see cref="T:System.Linq.IQueryable`1"/>.
-            </summary>
-            <param name="typeNameConverter">The function that converts a <see cref="T:System.Type"/> to 
-            its string representation in the store. Used to calculate the 
-            values of <see cref="P:IStoredEvent`1.AggregateType"/> and 
-            <see cref="P:IStoredEvent`1.EventType"/>.</param>
-            <returns>The criteria object converted to an expression that can be 
-            used to query an <see cref="T:System.Linq.IQueryable`1"/> if the store 
-            implementation provides one.</returns>
-        </member>
-        <member name="M:StoredEventCriteria`1.BuildEquals(`0)">
-            <devdoc>
-            This is needed because == doesn't compile for TId and calling CompareTo 
-            wouldn't work on most non in-memory stores either.
-            </devdoc>
-        </member>
-        <member name="P:StoredEventCriteria`1.AggregateTypeAndIds">
-            <summary>
-            List of aggregate type + identifier filters. The two filters 
-            should be considered by event stores as AND'ed (i.e. 
-            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
-            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.AggregateTypes">
-            <summary>
-            List of aggregate type filters. All types added are OR'ed with the 
-            others (i.e. <c>AggregateType == Product OR AggregateType == Order</c>).
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.EventTypes">
-            <summary>
-            List of event type filters. All types added are OR'ed with the 
-            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.Since">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.Until">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.IsExclusiveDateRange">
-            <summary>
-            If set to <see langword="true"/>, <see cref="P:StoredEventCriteria`1.Since"/> and <see cref="P:StoredEventCriteria`1.Until"/> should 
-            be considered as exclusive date ranges (excludes values with a matching date). 
-            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-            </summary>
-        </member>
-        <member name="T:DomainEventHandler">
-            <summary>
-            Base class part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainEventHandler`2"/> instead.
-            </summary>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="P:DomainEventHandler.IsAsync">
+        <member name="M:IDomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
             <summary>
-            Invocation style hint that the <see cref="T:IDomainEventBus`1"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The event payload.</param>
+        </member>
+        <member name="M:DomainEventBus`1.#cctor">
+            <summary>
+            Initializes the <see cref="P:DomainEventBus`1.None"/> null object 
+            pattern property.
+            </summary>u
+        </member>
+        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
+            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
+        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
+            the given async runner.
+            </summary>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:DomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
+            <summary>
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The event payload.</param>
+        </member>
+        <member name="P:DomainEventBus`1.None">
+            <summary>
+            Gets a default domain event bus implementation that 
+            does nothing (a.k.a. Null Object Pattern).
             </summary>
         </member>
-        <member name="P:DomainEventHandler.EventType">
+        <member name="T:DomainEventBus`1.NullBus">
             <summary>
-            Gets the type of the event argument this handler can process.
+            Provides a null <see cref="T:IDomainEventBus`1"/> implementation 
+            for use when no events have been configured.
             </summary>
         </member>
-        <member name="T:DomainEventHandler`2">
+        <member name="M:DomainEventBus`1.NullBus.Publish(AggregateRoot{`0},TimestampedEventArgs)">
             <summary>
-            Base class for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TAggregateId">Type of identifier used by the aggregate roots.</typeparam>
-            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
-        </member>
-        <member name="M:DomainEventHandler`2.Handle(`0,`1)">
-            <summary>
-            Handles the specified event.
-            </summary>
-        </member>
-        <member name="P:DomainEventHandler`2.EventType">
-            <summary>
-            Gets the type of the event this handler can process, which equals 
-            the generic type parameter of <see cref="T:DomainEventHandler`2"/>.
-            </summary>
-        </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.TypeParameter">
-            <summary>
-            Represents a runtime type parameter to use to 
-            make a generic method invocation.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.TypeParameter.Type">
-            <summary>
-            Gets the type.
-            </summary>
-        </member>
-        <member name="T:IStoredEvent`1">
-            <summary>
-            Represents a persisted event in an event store.
-            </summary>
-            <remarks>
-            The core interface does not expose the event payload, 
-            as its representation as well as specific storage type
-            and serialization/deserialization can vary wildly 
-            across store implementation. Imposing a particular 
-            representation via this interface would be unnecessarily 
-            restrictive and is not needed for the rest of the APIs.
-            </remarks>
-            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="P:IStoredEvent`1.AggregateId">
-            <summary>
-            Gets the aggregate id that the event applies to.
-            </summary>
-        </member>
-        <member name="P:IStoredEvent`1.AggregateType">
-            <summary>
-            Gets the type of the aggregate root that this event applies to.
-            </summary>
-        </member>
-        <member name="P:IStoredEvent`1.EventType">
-            <summary>
-            Gets the type of the event.
-            </summary>
-        </member>
-        <member name="P:IStoredEvent`1.Timestamp">
-            <summary>
-            Gets the UTC timestamp of the event.
+            Does nothing.
             </summary>
         </member>
         <member name="T:DomainContext`2">
-            <remarks>
-            Extendes the domain context behavior so that all events 
-            raised or applied by aggregate roots are published to 
-            an event bus.
-            <para>
-            Domain events are published after the context SaveChanges has 
-            been called.
-            </para>
-            </remarks>
-            <nuget id="netfx-Patterns.EventSourcing.EF"/>
             <summary>
             Base class for domain contexts. 
             </summary>
@@ -440,6 +141,16 @@
             </para>
             </remarks>
             <nuget id="netfx-Patterns.DomainContext.EF"/>
+            <remarks>
+            Extendes the domain context behavior so that all events 
+            raised or applied by aggregate roots are published to 
+            an event bus.
+            <para>
+            Domain events are published after the context SaveChanges has 
+            been called.
+            </para>
+            </remarks>
+            <nuget id="netfx-Patterns.EventSourcing.EF"/>
         </member>
         <member name="T:IDomainContext`1">
             <summary>
@@ -485,19 +196,6 @@
             <summary>
             Logically deletes the aggregate root with the specified identifier.
             </summary>
-        </member>
-        <member name="M:DomainContext`2.#ctor(System.String,IDomainEventBus{`1})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainContext`2"/> class.
-            </summary>
-            <param name="nameOrConnectionString">The name or connection string.</param>
-            <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
-        </member>
-        <member name="M:DomainContext`2.#ctor(IDomainEventBus{`1})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainContext`2"/> class.
-            </summary>
-            <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
         </member>
         <member name="F:DomainContext`2.validatedTypes">
             <summary>
@@ -652,6 +350,19 @@
             reflection target invocation exception happens.
             </summary>
         </member>
+        <member name="M:DomainContext`2.#ctor(System.String,IDomainEventBus{`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainContext`2"/> class.
+            </summary>
+            <param name="nameOrConnectionString">The name or connection string.</param>
+            <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
+        </member>
+        <member name="M:DomainContext`2.#ctor(IDomainEventBus{`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DomainContext`2"/> class.
+            </summary>
+            <param name="eventBus">The event publisher invoked after entities are saved to publish all generated events.</param>
+        </member>
         <member name="P:DomainContext`2.ObjectContext">
             <summary>
             Gets the object context.
@@ -667,125 +378,123 @@
             Implements the Include extension interface for EF.
             </summary>
         </member>
+        <member name="T:QueryableExtensions.IIncluder">
+            <summary>
+            Provides the <c>Include</c> extension method for queryables. Does 
+            nothing by default.
+            </summary>
+        </member>
+        <member name="T:QueryableExtensions">
+            <summary>
+            Allows consumers of <see cref="T:IDomainContext`1"/> queryable 
+            aggregate roots to include/prefetch certain properties or 
+            property paths. This class allows testing of such extension 
+            method by exposing a replaceable <see cref="T:QueryableExtensions.IIncluder"/> 
+            interface that concrete domain context implementations 
+            replace on their constructors.
+            </summary>
+        </member>
+        <member name="M:QueryableExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="M:QueryableExtensions.Include``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Specifies that the given property should be included/prefetched for a queryable from an <see cref="T:IDomainContext`1"/>.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="T:QueryableExtensions.IIncluder">
+            <summary>
+            Provides the <c>Include</c> extension method for queryables. Does 
+            nothing by default.
+            </summary>
+        </member>
+        <member name="M:QueryableExtensions.IIncluder.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies that the given property should be included/prefetched.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <typeparam name="TProperty">The type of the property, inferred by the compiler from the <paramref name="path"/> expression.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
+        <member name="M:QueryableExtensions.IIncluder.Include``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Specifies that the given property should be included/prefetched.
+            </summary>
+            <typeparam name="T">Type of queryable entity, inferred by the compiler from the <paramref name="source"/> argument.</typeparam>
+            <param name="source">The queryable source to include/prefetch properties from.</param>
+            <param name="path">The property path expression.</param>
+        </member>
         <member name="T:DomainContext`2.TypeSystem">
             <summary>
             This is basically what everyone else (OData, MSDN samples, etc.) 
             use for determining the element type given a sequence type (i.e. IEnumerable{T}).
             </summary>
         </member>
-        <member name="T:System.Dynamic.DynamicReflection">
+        <member name="T:Guard">
             <summary>
-            Provides reflection-based dynamic syntax for objects and types. 
-            This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
-            and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
+            Common guard class for argument validation.
             </summary>
         </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
             <summary>
-            Provides dynamic syntax for accessing the given object members.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection" />
-            <param name="obj" this="true">The object to access dinamically</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)">
-            <summary>
-            Provides dynamic syntax for accessing the given type members.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection" />
-            <param name="type" this="true">The type to access dinamically</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsGenericTypeParameter(System.Type)">
-            <summary>
-            Converts the type to a <see cref="T:System.Dynamic.TypeParameter"/> that 
-            the reflection dynamic must use to make a generic 
-            method invocation.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection"/>
-            <param name="type" this="true">The type to convert</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
-            <summary>
-            Finds the best match among the candidates.
-            </summary>
-            <param name="binder">The binder that is requesting the match.</param>
-            <param name="args">The args passed in to the invocation.</param>
-            <param name="genericArgs">The generic args if any.</param>
-            <param name="candidates">The candidate methods to use for the match..</param>
-            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
-        </member>
-        <member name="T:DomainEventBus`1">
-            <summary>
-            Default implementation of an <see cref="T:IDomainEventBus`1"/> that 
-            invokes handlers as events are published, and where handlers are 
-            run in-process.
-            <para>
-            Handlers with <see cref="P:DomainEventHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor.
-            </para>
-            </summary>
-            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="T:IDomainEventBus`1">
-            <summary>
-            Interface implemented by the component that coordinates 
-            event handler invocation when a subscribed event is published.
-            </summary>
-            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The event payload.</param>
-        </member>
-        <member name="M:DomainEventBus`1.#cctor">
-            <summary>
-            Initializes the <see cref="P:DomainEventBus`1.None"/> null object 
-            pattern property.
-            </summary>u
-        </member>
-        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
-            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
-            the given async runner.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:DomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The event payload.</param>
-        </member>
-        <member name="P:DomainEventBus`1.None">
-            <summary>
-            Gets a default domain event bus implementation that 
-            does nothing (a.k.a. Null Object Pattern).
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
             </summary>
         </member>
-        <member name="T:DomainEventBus`1.NullBus">
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
             <summary>
-            Provides a null <see cref="T:IDomainEventBus`1"/> implementation 
-            for use when no events have been configured.
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
-        <member name="M:DomainEventBus`1.NullBus.Publish(AggregateRoot{`0},TimestampedEventArgs)">
+        <member name="T:IDomainContextAccessor`1">
             <summary>
-            Does nothing.
+            Interface implemented by entities that need to 
+            access the owning domain context to implement 
+            their business logic.
+            </summary>
+            <remarks>
+            Some aggregate roots may need to create, find or save 
+            other aggregate roots in the context, and in order to do 
+            it, they can implement this interface. Domain 
+            context implementations should check for this interface 
+            when the entities are being materialized or 
+            constructed via <see cref="M:IDomainContext`1.New``1(System.Action{``0})"/> 
+            or <see cref="M:IDomainContext`1.Find``1(`0)"/> 
+            to set the property value.
+            </remarks>
+            <nuget id="netfx-Patterns.DomainContext"/>
+        </member>
+        <member name="P:IDomainContextAccessor`1.Context">
+            <summary>
+            Gets or sets the owning domain context.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.TypeParameter">
+            <summary>
+            Represents a runtime type parameter to use to 
+            make a generic method invocation.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.TypeParameter.Type">
+            <summary>
+            Gets the type.
             </summary>
         </member>
         <member name="T:DomainEventQueryExtensions">
@@ -871,6 +580,144 @@
             or System.Object is found (events can't be System.Object either).
             </devdoc>
         </member>
+        <member name="T:ExpressionCombiner">
+            <summary>
+            Combines linq expressions using logic operators And and Or.
+            </summary>
+            <remarks>
+            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
+            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
+            </remarks>
+            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
+        </member>
+        <member name="T:AggregateRoot`1">
+            <summary>
+            Base class for aggregate roots that use events to apply state 
+            changes (Event Sourcing) and notify consumers on an <see cref="T:IDomainEventBus`1"/>.
+            </summary>
+            <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <devdoc>
+            Implements the <see cref="T:IAggregateRoot`1"/> on the 
+            event sourcing-provided aggregate root implementation, 
+            which doesn't require a dependency on the domain context 
+            interfaces.
+            </devdoc>
+            <nuget id="netfx-Patterns.EventSourcing.EF"/>
+        </member>
+        <member name="T:IAggregateRoot`1">
+            <summary>
+            Base interface that must be implemented by all aggregate root entities. 
+            </summary>
+            <remarks>
+            This interface simply provides the <see cref="P:IAggregateRoot`1.IsDeleted"/> on top of 
+            what <see cref="T:IIdentifiable`1"/> provides, enforcing the rule that that 
+            aggregate are never deleted using the domain model, they are 
+            simply marked as deleted.
+            <para>
+            Accessing the underlying context implementation though, aggregate 
+            roots can be deleted anyway as usual in EF/NH (i.e. in migration scenarios, 
+            tests, etc., it might be needed).
+            </para>
+            </remarks>
+            <nuget id="netfx-Patterns.DomainContext"/>
+        </member>
+        <member name="T:IIdentifiable`1">
+            <summary>
+            Base interface that must be implented by all domain entities. 
+            Types that do not have their separate table (a.k.a. "complex types" 
+            in EF or "components" in NH) just don't implement this interface.
+            </summary>
+            <nuget id="netfx-Patterns.DomainContext" />
+        </member>
+        <member name="P:IIdentifiable`1.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:IAggregateRoot`1.IsDeleted">
+            <summary>
+            Gets or sets a value indicating whether the entity is deleted. 
+            Aggregate root entities are never deleted using the domain model, they are 
+            simply marked as deleted.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.AcceptChanges">
+            <summary>
+            Clears the internal events retrieved from <see cref="M:AggregateRoot`1.GetChanges"/>, 
+            signaling that all pending events have been commited.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.GetChanges">
+            <summary>
+            Gets the pending changes.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.Load(System.Collections.Generic.IEnumerable{TimestampedEventArgs})">
+            <summary>
+            Loads the aggregate root state from an even stream.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.Handles``1(System.Action{``0})">
+            <summary>
+            Configures a handler for an event.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`1.ApplyChange``1(``0)">
+            <summary>
+            Applies a change to the entity state via an event. 
+            The derived class should provide a method called <c>Apply</c> 
+            receiving the concrete type of event, where state 
+            changes are performed to the entity.
+            </summary>
+        </member>
+        <member name="P:AggregateRoot`1.Id">
+            <summary>
+            Gets or sets the aggregate root identifier.
+            </summary>
+        </member>
+        <member name="P:AggregateRoot`1.IsDeleted">
+            <summary>
+            Gets or sets a value indicating whether this instance is deleted.
+            </summary>
+        </member>
+        <member name="T:DomainEventHandler">
+            <summary>
+            Base class part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:DomainEventHandler`2"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="P:DomainEventHandler.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IDomainEventBus`1"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler.EventType">
+            <summary>
+            Gets the type of the event argument this handler can process.
+            </summary>
+        </member>
+        <member name="T:DomainEventHandler`2">
+            <summary>
+            Base class for domain event handlers that handle a specific type of event.
+            </summary>
+            <typeparam name="TAggregateId">Type of identifier used by the aggregate roots.</typeparam>
+            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core" />
+        </member>
+        <member name="M:DomainEventHandler`2.Handle(`0,`1)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="P:DomainEventHandler`2.EventType">
+            <summary>
+            Gets the type of the event this handler can process, which equals 
+            the generic type parameter of <see cref="T:DomainEventHandler`2"/>.
+            </summary>
+        </member>
         <member name="T:IDomainEventStore`1">
             <summary>
             Interface implemented by domain event stores.
@@ -910,60 +757,219 @@
             <see cref="P:IStoredEvent`1.EventType"/>.
             </summary>
         </member>
-        <member name="T:TimestampedEventArgs">
+        <member name="T:IStoredEvent`1">
             <summary>
-            Base class for domain event payloads, which are always timestamped.
+            Represents a persisted event in an event store.
             </summary>
+            <remarks>
+            The core interface does not expose the event payload, 
+            as its representation as well as specific storage type
+            and serialization/deserialization can vary wildly 
+            across store implementation. Imposing a particular 
+            representation via this interface would be unnecessarily 
+            restrictive and is not needed for the rest of the APIs.
+            </remarks>
+            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="M:TimestampedEventArgs.#ctor">
+        <member name="P:IStoredEvent`1.AggregateId">
             <summary>
-            Initializes a new instance of the <see cref="T:TimestampedEventArgs"/> class.
+            Gets the aggregate id that the event applies to.
             </summary>
         </member>
-        <member name="M:TimestampedEventArgs.#ctor(System.Nullable{System.DateTime})">
+        <member name="P:IStoredEvent`1.AggregateType">
             <summary>
-            Initializes a new instance of the <see cref="T:TimestampedEventArgs"/> class.
-            </summary>
-            <param name="timestamp">The time when the event occurred.</param>
-        </member>
-        <member name="P:TimestampedEventArgs.Timestamp">
-            <summary>
-            Gets the timestamp for the event.
+            Gets the type of the aggregate root that this event applies to.
             </summary>
         </member>
-        <member name="T:IDomainContextAccessor`1">
+        <member name="P:IStoredEvent`1.EventType">
             <summary>
-            Interface implemented by entities that need to 
-            access the owning domain context to implement 
-            their business logic.
-            </summary>
-            <remarks>
-            Some aggregate roots may need to create, find or save 
-            other aggregate roots in the context, and in order to do 
-            it, they can implement this interface. Domain 
-            context implementations should check for this interface 
-            when the entities are being materialized or 
-            constructed via <see cref="M:IDomainContext`1.New``1(System.Action{``0})"/> 
-            or <see cref="M:IDomainContext`1.Find``1(`0)"/> 
-            to set the property value.
-            </remarks>
-            <nuget id="netfx-Patterns.DomainContext"/>
-        </member>
-        <member name="P:IDomainContextAccessor`1.Context">
-            <summary>
-            Gets or sets the owning domain context.
+            Gets the type of the event.
             </summary>
         </member>
-        <member name="T:ExpressionCombiner">
+        <member name="P:IStoredEvent`1.Timestamp">
             <summary>
-            Combines linq expressions using logic operators And and Or.
+            Gets the UTC timestamp of the event.
             </summary>
-            <remarks>
-            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
-            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
-            </remarks>
-            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
+        </member>
+        <member name="T:StoredEventCriteria`1">
+            <summary>
+            Represents the filter criteria for a domain event store query.
+            </summary>
+            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="M:StoredEventCriteria`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StoredEventCriteria`1"/> class.
+            </summary>
+        </member>
+        <member name="M:StoredEventCriteria`1.ToExpression(System.Func{System.Type,System.String})">
+            <summary>
+            Converts the criteria object into an expression tree that can be used to 
+            run queries against an <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="typeNameConverter">The function that converts a <see cref="T:System.Type"/> to 
+            its string representation in the store. Used to calculate the 
+            values of <see cref="P:IStoredEvent`1.AggregateType"/> and 
+            <see cref="P:IStoredEvent`1.EventType"/>.</param>
+            <returns>The criteria object converted to an expression that can be 
+            used to query an <see cref="T:System.Linq.IQueryable`1"/> if the store 
+            implementation provides one.</returns>
+        </member>
+        <member name="M:StoredEventCriteria`1.BuildEquals(`0)">
+            <devdoc>
+            This is needed because == doesn't compile for TId and calling CompareTo 
+            wouldn't work on most non in-memory stores either.
+            </devdoc>
+        </member>
+        <member name="P:StoredEventCriteria`1.AggregateTypeAndIds">
+            <summary>
+            List of aggregate type + identifier filters. The two filters 
+            should be considered by event stores as AND'ed (i.e. 
+            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
+            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
+            </summary>
+        </member>
+        <member name="P:StoredEventCriteria`1.AggregateTypes">
+            <summary>
+            List of aggregate type filters. All types added are OR'ed with the 
+            others (i.e. <c>AggregateType == Product OR AggregateType == Order</c>).
+            </summary>
+        </member>
+        <member name="P:StoredEventCriteria`1.EventTypes">
+            <summary>
+            List of event type filters. All types added are OR'ed with the 
+            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
+            </summary>
+        </member>
+        <member name="P:StoredEventCriteria`1.Since">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:StoredEventCriteria`1.Until">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:StoredEventCriteria`1.IsExclusiveDateRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:StoredEventCriteria`1.Since"/> and <see cref="P:StoredEventCriteria`1.Until"/> should 
+            be considered as exclusive date ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.OutValue">
+            <summary>
+            Allows output parameters to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.OutValue.Create``1(System.Action{``0})">
+            <summary>
+            Creates a value setter delegating reference
+            to be used as an output parameter when invoking the 
+            dynamic object.
+            </summary>
+            <param name="setter">The value to pass as out to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.OutValue.Value">
+            <summary>
+            Sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.OutValue`1">
+            <summary>
+            Allows output parameters to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.OutValue`1.#ctor(System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.OutValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.OutValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
+            <summary>
+            Creates a value getter/setter delegating reference
+            to be used by reference when invoking the 
+            dynamic object.
+            </summary>
+            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
+            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.RefValue.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue`1">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.RefValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.DynamicReflection">
+            <summary>
+            Provides reflection-based dynamic syntax for objects and types. 
+            This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
+            and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
+            <summary>
+            Provides dynamic syntax for accessing the given object members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="obj" this="true">The object to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)">
+            <summary>
+            Provides dynamic syntax for accessing the given type members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="type" this="true">The type to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsGenericTypeParameter(System.Type)">
+            <summary>
+            Converts the type to a <see cref="T:System.Dynamic.TypeParameter"/> that 
+            the reflection dynamic must use to make a generic 
+            method invocation.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection"/>
+            <param name="type" this="true">The type to convert</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
+            <summary>
+            Finds the best match among the candidates.
+            </summary>
+            <param name="binder">The binder that is requesting the match.</param>
+            <param name="args">The args passed in to the invocation.</param>
+            <param name="genericArgs">The generic args if any.</param>
+            <param name="candidates">The candidate methods to use for the match..</param>
+            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
         </member>
     </members>
 </doc>

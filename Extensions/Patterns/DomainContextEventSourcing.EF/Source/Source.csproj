@@ -56,10 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing.EF\AggregateRoot.Interface.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainContext.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing.EF\Visibility.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContextEventSourcing\AggregateRoot.Interface.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContextEventSourcing\DomainContext.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContextEventSourcing\Visibility.cs" />
     <Compile Include="netfx\Patterns\DomainContext.EF\DomainContext.cs" />
     <Compile Include="netfx\Patterns\DomainContext.EF\Visibility.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IAggregateRoot.cs" />
