@@ -25,4 +25,4 @@ using System.Text;
 // if you want. The nuget update process will never overwrite 
 // this file once you made changes to it.
 
-public partial class DomainEventStore<TId> { }
+public partial class DomainContext<TContextInterface, TId> { }
