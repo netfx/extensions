@@ -32,6 +32,7 @@ using System;
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainContext" />
 public partial interface IAggregateRoot<TId> : IIdentifiable<TId>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Gets or sets a value indicating whether the entity is deleted. 

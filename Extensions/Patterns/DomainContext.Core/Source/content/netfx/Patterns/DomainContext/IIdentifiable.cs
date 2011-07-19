@@ -23,6 +23,7 @@ using System;
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainContext" />
 public partial interface IIdentifiable<TId>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Gets or sets the id.

@@ -24,6 +24,7 @@ using System.Text;
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainContext" />
 public partial interface IDomainContext<TId> : IDisposable
+	where TId : IComparable
 {
 	/// <summary>
 	/// Saves all changes made in this context to the underlying database.
