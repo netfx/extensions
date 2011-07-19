@@ -27,7 +27,7 @@ using System.Reflection;
 /// that makes querying event stores easier.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public static partial class DomainEventQueryExtensions
+static partial class DomainEventQueryExtensions
 {
 	/// <summary>
 	/// Queries the event store for events that match specified 
@@ -38,11 +38,13 @@ public static partial class DomainEventQueryExtensions
 	/// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
 	/// <param name="store">The domain event store.</param>
 	public static IDomainEventQuery<TId> Query<TId>(this IDomainEventStore<TId> store)
+		where TId : IComparable
 	{
 		return new DomainEventQuery<TId>(store);
 	}
 
 	private class DomainEventQuery<TId> : IDomainEventQuery<TId>
+		where TId : IComparable
 	{	
 		private IDomainEventStore<TId> store;
 		private StoredEventCriteria<TId> criteria = new StoredEventCriteria<TId>();

@@ -54,6 +54,7 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\IStoredEvent.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\TimestampedEventArgs.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

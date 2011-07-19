@@ -29,19 +29,19 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenNullHandlers_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new DomainEventBus(null));
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int>(null));
 		}
 
 		[Fact]
 		public void WhenNullAsyncRunner_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new DomainEventBus(Enumerable.Empty<DomainEventHandler>(), null));
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int>(Enumerable.Empty<DomainEventHandler>(), null));
 		}
 
 		[Fact]
 		public void WhenPublishNullEvent_ThenThrows()
 		{
-			var bus = new DomainEventBus(Enumerable.Empty<DomainEventHandler>());
+			var bus = new DomainEventBus<int>(Enumerable.Empty<DomainEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish(new TestAggregate(), default(FooArgs)));
 		}
@@ -49,7 +49,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenPublishNullAggregate_ThenThrows()
 		{
-			var bus = new DomainEventBus(Enumerable.Empty<DomainEventHandler>());
+			var bus = new DomainEventBus<int>(Enumerable.Empty<DomainEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish((AggregateRoot<int>)null, new FooArgs()));
 		}
@@ -60,7 +60,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<DomainEventHandler<int, FooArgs>> { CallBase = true };
 
-			var bus = new DomainEventBus(new[] { handler.Object });
+			var bus = new DomainEventBus<int>(new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -73,7 +73,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<DomainEventHandler<int, BaseArgs>> { CallBase = true };
 
-			var bus = new DomainEventBus(new[] { handler.Object });
+			var bus = new DomainEventBus<int>(new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -89,7 +89,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new DomainEventBus(new[] { handler.Object }, asyncRunner);
+			var bus = new DomainEventBus<int>(new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -106,7 +106,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new DomainEventBus(new[] { handler.Object }, asyncRunner);
+			var bus = new DomainEventBus<int>(new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -121,7 +121,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			var handler = new Mock<DomainEventHandler<int, FooArgs>> { CallBase = true };
 			handler.Setup(x => x.IsAsync).Returns(true);
 
-			var bus = new DomainEventBus(new[] { handler.Object });
+			var bus = new DomainEventBus<int>(new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -131,7 +131,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenDefaultDomainEventsRaises_ThenDoesNothing()
 		{
-			DomainEventBus.None.Publish(new TestAggregate(), new FooArgs());
+			DomainEventBus<int>.None.Publish(new TestAggregate(), new FooArgs());
 		}
 
 		[Fact]
@@ -139,7 +139,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		{
 			var handler = new NonGenericHandler();
 
-			Assert.Throws<ArgumentException>(() => new DomainEventBus(new DomainEventHandler[] { handler }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int>(new DomainEventHandler[] { handler }));
 		}
 
 		[Fact]
@@ -147,13 +147,13 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		{
 			var handler = new Mock<DomainEventHandler<int, FooArgs>>();
 
-			Assert.Throws<ArgumentException>(() => new DomainEventBus(new DomainEventHandler[] { handler.Object }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int>(new DomainEventHandler[] { handler.Object }));
 		}
 
 		[Fact]
 		public void WhenNullHandlerProvided_ThenThrows()
 		{
-			Assert.Throws<ArgumentException>(() => new DomainEventBus(new DomainEventHandler[] { null }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int>(new DomainEventHandler[] { null }));
 		}
 
 		private class HandlerBase : DomainEventHandler<int, FooArgs>

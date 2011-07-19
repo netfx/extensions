@@ -23,7 +23,7 @@ using System.Text;
 /// Base class for domain event payloads, which are always timestamped.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public abstract partial class TimestampedEventArgs : EventArgs
+abstract partial class TimestampedEventArgs : EventArgs
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.

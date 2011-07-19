@@ -56,13 +56,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.Interface.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainContext.cs" />
-    <Compile Include="netfx\Patterns\DomainContext\DomainContext.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.EF\AggregateRoot.Interface.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainContext.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.EF\Visibility.cs" />
+    <Compile Include="netfx\Patterns\DomainContext.EF\DomainContext.cs" />
+    <Compile Include="netfx\Patterns\DomainContext.EF\Visibility.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IAggregateRoot.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContext.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContextAccessor.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IIdentifiable.cs" />
+    <Compile Include="netfx\Patterns\DomainContext\QueryableExtensions.cs" />
+    <Compile Include="netfx\Patterns\DomainContext\Visibility.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\AggregateRoot.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventBus.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
@@ -73,6 +78,7 @@
     <Compile Include="netfx\Patterns\EventSourcing\IStoredEvent.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\TimestampedEventArgs.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
     <Compile Include="netfx\System\Dynamic\OutValue.cs" />
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />

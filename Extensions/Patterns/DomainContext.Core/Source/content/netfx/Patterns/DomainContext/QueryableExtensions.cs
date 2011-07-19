@@ -28,7 +28,7 @@ using System.Linq.Expressions;
 /// interface that concrete domain context implementations 
 /// replace on their constructors.
 /// </summary>
-public static partial class QueryableExtensions
+static partial class QueryableExtensions
 {
 	internal static IIncluder Includer = new NullIncluder();
 

@@ -53,6 +53,7 @@
     <Compile Include="content\netfx\Patterns\DomainContext\IDomainContext.cs" />
     <Compile Include="content\netfx\Patterns\DomainContext\IIdentifiable.cs" />
     <Compile Include="content\netfx\Patterns\DomainContext\QueryableExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContext\Visibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

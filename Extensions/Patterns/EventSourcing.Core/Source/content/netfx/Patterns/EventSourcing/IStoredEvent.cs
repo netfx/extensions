@@ -29,7 +29,8 @@ using System;
 /// </remarks>
 /// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IStoredEvent<TId>
+partial interface IStoredEvent<TId>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Gets the aggregate id that the event applies to.

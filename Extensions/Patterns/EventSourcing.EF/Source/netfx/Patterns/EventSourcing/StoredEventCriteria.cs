@@ -26,7 +26,8 @@ using System.Reflection;
 /// </summary>
 /// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial class StoredEventCriteria<TId>
+partial class StoredEventCriteria<TId>
+	where TId : IComparable
 {
 	private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(IStoredEvent<TId>).GetProperty("AggregateId"));
 

@@ -26,6 +26,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 	/// </summary>
 	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests"/>
 	public class MemoryEventStore<TId> : IDomainEventStore<TId>
+		where TId : IComparable
 	{
 		private List<StoredEvent> events = new List<StoredEvent>();
 

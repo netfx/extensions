@@ -35,7 +35,7 @@ using System.Text;
 /// to set the property value.
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainContext" />
-public partial interface IDomainContextAccessor<TContext>
+partial interface IDomainContextAccessor<TContext>
 {
 	/// <summary>
 	/// Gets or sets the owning domain context.

@@ -24,7 +24,8 @@ using System.Linq.Expressions;
 /// </summary>
 /// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IDomainEventStore<TId>
+partial interface IDomainEventStore<TId>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Gets or sets the function that converts a <see cref="Type"/> to 

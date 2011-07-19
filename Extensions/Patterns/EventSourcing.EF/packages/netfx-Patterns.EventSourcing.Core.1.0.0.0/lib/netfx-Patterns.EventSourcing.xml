@@ -7,7 +7,7 @@
         <member name="T:AggregateRoot`1">
             <summary>
             Base class for aggregate roots that use events to apply state 
-            changes (Event Sourcing) and notify consumers on an <see cref="T:IDomainEventBus"/>.
+            changes (Event Sourcing) and notify consumers on an <see cref="T:IDomainEventBus`1"/>.
             </summary>
             <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
@@ -46,9 +46,9 @@
             Gets or sets the aggregate root identifier.
             </summary>
         </member>
-        <member name="T:DomainEventBus">
+        <member name="T:DomainEventBus`1">
             <summary>
-            Default implementation of an <see cref="T:IDomainEventBus"/> that 
+            Default implementation of an <see cref="T:IDomainEventBus`1"/> that 
             invokes handlers as events are published, and where handlers are 
             run in-process.
             <para>
@@ -57,66 +57,66 @@
             async runner delegate passed to the constructor.
             </para>
             </summary>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="T:IDomainEventBus">
+        <member name="T:IDomainEventBus`1">
             <summary>
             Interface implemented by the component that coordinates 
             event handler invocation when a subscribed event is published.
             </summary>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
         </member>
-        <member name="M:IDomainEventBus.Publish``1(AggregateRoot{``0},TimestampedEventArgs)">
+        <member name="M:IDomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
             <summary>
             Publishes the specified event to the bus so that all subscribers are notified.
             </summary>
-            <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
             <param name="sender">The sender of the event.</param>
             <param name="args">The event payload.</param>
         </member>
-        <member name="M:DomainEventBus.#cctor">
+        <member name="M:DomainEventBus`1.#cctor">
             <summary>
-            Initializes the <see cref="P:DomainEventBus.None"/> null object 
+            Initializes the <see cref="P:DomainEventBus`1.None"/> null object 
             pattern property.
             </summary>u
         </member>
-        <member name="M:DomainEventBus.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
+        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler})">
             <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus"/> class with 
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
             the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
             </summary>
             <param name="eventHandlers">The event handlers.</param>
         </member>
-        <member name="M:DomainEventBus.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
+        <member name="M:DomainEventBus`1.#ctor(System.Collections.Generic.IEnumerable{DomainEventHandler},System.Action{System.Action})">
             <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus"/> class with 
+            Initializes a new instance of the <see cref="T:DomainEventBus`1"/> class with 
             the given async runner.
             </summary>
             <param name="eventHandlers">The event handlers.</param>
             <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
             that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
         </member>
-        <member name="M:DomainEventBus.Publish``1(AggregateRoot{``0},TimestampedEventArgs)">
+        <member name="M:DomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
             <summary>
             Publishes the specified event to the bus so that all subscribers are notified.
             </summary>
-            <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
             <param name="sender">The sender of the event.</param>
             <param name="args">The event payload.</param>
         </member>
-        <member name="P:DomainEventBus.None">
+        <member name="P:DomainEventBus`1.None">
             <summary>
             Gets a default domain event bus implementation that 
             does nothing (a.k.a. Null Object Pattern).
             </summary>
         </member>
-        <member name="T:DomainEventBus.NullBus">
+        <member name="T:DomainEventBus`1.NullBus">
             <summary>
-            Provides a null <see cref="T:IDomainEventBus"/> implementation 
+            Provides a null <see cref="T:IDomainEventBus`1"/> implementation 
             for use when no events have been configured.
             </summary>
         </member>
-        <member name="M:DomainEventBus.NullBus.Publish``1(AggregateRoot{``0},TimestampedEventArgs)">
+        <member name="M:DomainEventBus`1.NullBus.Publish(AggregateRoot{`0},TimestampedEventArgs)">
             <summary>
             Does nothing.
             </summary>
@@ -130,7 +130,7 @@
         </member>
         <member name="P:DomainEventHandler.IsAsync">
             <summary>
-            Invocation style hint that the <see cref="T:IDomainEventBus"/> implementation
+            Invocation style hint that the <see cref="T:IDomainEventBus`1"/> implementation
             can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>

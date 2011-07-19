@@ -73,6 +73,7 @@
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Sample.cs" />
     <Compile Include="netfx\System\Dynamic\ReflectionDynamicObjectSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />

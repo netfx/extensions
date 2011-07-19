@@ -13,7 +13,7 @@
 		<tags>netfx patterns ef entityframework ddd event sourcing</tags>
 		<dependencies>
 			<dependency id="Moq" version="4.0" />
-			<dependency id="netfx-Patterns.EventSourcing.Tests" version="1.0" />
+			<dependency id="netfx-Patterns.EventSourcing.Core.Tests" version="1.0" />
 			<dependency id="netfx-Patterns.DomainContext.EF.Tests" version="1.0" />
 		</dependencies>
 	</metadata>

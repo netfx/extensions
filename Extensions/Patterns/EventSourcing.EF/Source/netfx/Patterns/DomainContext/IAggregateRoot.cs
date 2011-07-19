@@ -31,7 +31,7 @@ using System;
 /// </para>
 /// </remarks>
 /// <nuget id="netfx-Patterns.DomainContext" />
-public partial interface IAggregateRoot<TId> : IIdentifiable<TId>
+partial interface IAggregateRoot<TId> : IIdentifiable<TId>
 	where TId : IComparable
 {
 	/// <summary>

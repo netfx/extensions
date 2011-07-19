@@ -53,85 +53,46 @@
             Gets or sets the id.
             </summary>
         </member>
-        <member name="T:System.Dynamic.TypeParameter">
+        <member name="T:DomainContext`2">
             <summary>
-            Represents a runtime type parameter to use to 
-            make a generic method invocation.
+            Base class for domain contexts. 
             </summary>
-        </member>
-        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.TypeParameter.Type">
-            <summary>
-            Gets the type.
-            </summary>
-        </member>
-        <member name="T:IAggregateRoot`1">
-            <summary>
-            Base interface that must be implemented by all aggregate root entities. 
-            </summary>
+            <typeparam name="TContextInterface">The type of the context interface, used to determine and 
+            validate the aggregate roots exposed by the context.</typeparam>
+            <typeparam name="TId">The type of identifiers used by this context aggregate roots 
+            (it is be the same for all aggregate roots). Must be a value type or a string.</typeparam>
             <remarks>
-            This interface simply provides the <see cref="P:IAggregateRoot`1.IsDeleted"/> on top of 
-            what <see cref="T:IIdentifiable`1"/> provides, enforcing the rule that that 
-            aggregate are never deleted using the domain model, they are 
-            simply marked as deleted.
             <para>
-            Accessing the underlying context implementation though, aggregate 
-            roots can be deleted anyway as usual in EF/NH (i.e. in migration scenarios, 
-            tests, etc., it might be needed).
+            This context is smart enough to automatically process insert or updates of entire 
+            object graphs from aggregate roots. The deeper the graphs and the relationships, 
+            the more expensive save operations are, but the behavior is consistent and transparent 
+            to the user, and makes modeling domain behavior much easier than dealing with explicit 
+            updates of collections and references.
+            </para>
+            <para>
+            The <typeparamref name="TContextInterface"/> is used to determine what type are 
+            the aggregate roots for the context. All public <see cref="T:System.Linq.IQueryable`1"/> properties 
+            of this interface are considered aggregate roots. All such properties whose <c>T</c> 
+            type parameter does not implement the <see cref="T:IAggregateRoot`1"/> interface compatible 
+            with the context <typeparamref name="TId"/> parameter cause an exception that is logged 
+            at static initialization time.
+            </para>
+            <para>
+            All entity types tracked by this context must implement <see cref="T:IIdentifiable`1"/>, unless 
+            they are complex types. This ensures proper updating/deleting behavior for object graphs.
+            </para>
+            <para>
+            A domain context is configured by default with the following properties:
+            <code>
+            this.Configuration.AutoDetectChangesEnabled = true;
+            this.Configuration.LazyLoadingEnabled = true;
+            this.Configuration.ProxyCreationEnabled = true;
+            this.Configuration.ValidateOnSaveEnabled = true;
+            </code>
+            This can be changed in a derived class constructor.
             </para>
             </remarks>
-            <nuget id="netfx-Patterns.DomainContext"/>
-        </member>
-        <member name="P:IAggregateRoot`1.IsDeleted">
-            <summary>
-            Gets or sets a value indicating whether the entity is deleted. 
-            Aggregate root entities are never deleted using the domain model, they are 
-            simply marked as deleted.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.DynamicReflection">
-            <summary>
-            Provides reflection-based dynamic syntax for objects and types. 
-            This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
-            and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
-            <summary>
-            Provides dynamic syntax for accessing the given object members.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection" />
-            <param name="obj" this="true">The object to access dinamically</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)">
-            <summary>
-            Provides dynamic syntax for accessing the given type members.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection" />
-            <param name="type" this="true">The type to access dinamically</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.AsGenericTypeParameter(System.Type)">
-            <summary>
-            Converts the type to a <see cref="T:System.Dynamic.TypeParameter"/> that 
-            the reflection dynamic must use to make a generic 
-            method invocation.
-            </summary>
-            <nuget id="netfx-System.Dynamic.Reflection"/>
-            <param name="type" this="true">The type to convert</param>
-        </member>
-        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
-            <summary>
-            Finds the best match among the candidates.
-            </summary>
-            <param name="binder">The binder that is requesting the match.</param>
-            <param name="args">The args passed in to the invocation.</param>
-            <param name="genericArgs">The generic args if any.</param>
-            <param name="candidates">The candidate methods to use for the match..</param>
-            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+            <nuget id="netfx-Patterns.DomainContext.EF"/>
         </member>
         <member name="T:IDomainContext`1">
             <summary>
@@ -177,65 +138,6 @@
             <summary>
             Logically deletes the aggregate root with the specified identifier.
             </summary>
-        </member>
-        <member name="T:DomainContext`2">
-            <summary>
-            Base class for domain contexts. 
-            </summary>
-            <typeparam name="TContextInterface">The type of the context interface, used to determine and 
-            validate the aggregate roots exposed by the context.</typeparam>
-            <typeparam name="TId">The type of identifiers used by this context aggregate roots 
-            (it is be the same for all aggregate roots). Must be a value type or a string.</typeparam>
-            <remarks>
-            <para>
-            This context is smart enough to automatically process insert or updates of entire 
-            object graphs from aggregate roots. The deeper the graphs and the relationships, 
-            the more expensive save operations are, but the behavior is consistent and transparent 
-            to the user, and makes modeling domain behavior much easier than dealing with explicit 
-            updates of collections and references.
-            </para>
-            <para>
-            The <typeparamref name="TContextInterface"/> is used to determine what type are 
-            the aggregate roots for the context. All public <see cref="T:System.Linq.IQueryable`1"/> properties 
-            of this interface are considered aggregate roots. All such properties whose <c>T</c> 
-            type parameter does not implement the <see cref="T:IAggregateRoot`1"/> interface compatible 
-            with the context <typeparamref name="TId"/> parameter cause an exception that is logged 
-            at static initialization time.
-            </para>
-            <para>
-            All entity types tracked by this context must implement <see cref="T:IIdentifiable`1"/>, unless 
-            they are complex types. This ensures proper updating/deleting behavior for object graphs.
-            </para>
-            <para>
-            A domain context is configured by default with the following properties:
-            <code>
-            this.Configuration.AutoDetectChangesEnabled = true;
-            this.Configuration.LazyLoadingEnabled = true;
-            this.Configuration.ProxyCreationEnabled = true;
-            this.Configuration.ValidateOnSaveEnabled = true;
-            </code>
-            This can be changed in a derived class constructor.
-            </para>
-            </remarks>
-            <nuget id="netfx-Patterns.DomainContext.EF"/>
-        </member>
-        <member name="F:DomainContext`2.OnContextCreatedCalled">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntityCreatedCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntitySavingCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntitySavedCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnContextSavingChangesCalled">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnContextSavedChangesCalled">
-            <summary />
         </member>
         <member name="F:DomainContext`2.validatedTypes">
             <summary>
@@ -390,6 +292,24 @@
             reflection target invocation exception happens.
             </summary>
         </member>
+        <member name="F:DomainContext`2.OnContextCreatedCalled">
+            <summary />
+        </member>
+        <member name="F:DomainContext`2.OnEntityCreatedCalls">
+            <summary />
+        </member>
+        <member name="F:DomainContext`2.OnEntitySavingCalls">
+            <summary />
+        </member>
+        <member name="F:DomainContext`2.OnEntitySavedCalls">
+            <summary />
+        </member>
+        <member name="F:DomainContext`2.OnContextSavingChangesCalled">
+            <summary />
+        </member>
+        <member name="F:DomainContext`2.OnContextSavedChangesCalled">
+            <summary />
+        </member>
         <member name="P:DomainContext`2.ObjectContext">
             <summary>
             Gets the object context.
@@ -467,6 +387,109 @@
             use for determining the element type given a sequence type (i.e. IEnumerable{T}).
             </summary>
         </member>
+        <member name="T:IAggregateRoot`1">
+            <summary>
+            Base interface that must be implemented by all aggregate root entities. 
+            </summary>
+            <remarks>
+            This interface simply provides the <see cref="P:IAggregateRoot`1.IsDeleted"/> on top of 
+            what <see cref="T:IIdentifiable`1"/> provides, enforcing the rule that that 
+            aggregate are never deleted using the domain model, they are 
+            simply marked as deleted.
+            <para>
+            Accessing the underlying context implementation though, aggregate 
+            roots can be deleted anyway as usual in EF/NH (i.e. in migration scenarios, 
+            tests, etc., it might be needed).
+            </para>
+            </remarks>
+            <nuget id="netfx-Patterns.DomainContext"/>
+        </member>
+        <member name="P:IAggregateRoot`1.IsDeleted">
+            <summary>
+            Gets or sets a value indicating whether the entity is deleted. 
+            Aggregate root entities are never deleted using the domain model, they are 
+            simply marked as deleted.
+            </summary>
+        </member>
+        <member name="T:IDomainContextAccessor`1">
+            <summary>
+            Interface implemented by entities that need to 
+            access the owning domain context to implement 
+            their business logic.
+            </summary>
+            <remarks>
+            Some aggregate roots may need to create, find or save 
+            other aggregate roots in the context, and in order to do 
+            it, they can implement this interface. Domain 
+            context implementations should check for this interface 
+            when the entities are being materialized or 
+            constructed via <see cref="M:IDomainContext`1.New``1(System.Action{``0})"/> 
+            or <see cref="M:IDomainContext`1.Find``1(`0)"/> 
+            to set the property value.
+            </remarks>
+            <nuget id="netfx-Patterns.DomainContext"/>
+        </member>
+        <member name="P:IDomainContextAccessor`1.Context">
+            <summary>
+            Gets or sets the owning domain context.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.TypeParameter">
+            <summary>
+            Represents a runtime type parameter to use to 
+            make a generic method invocation.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.TypeParameter.Type">
+            <summary>
+            Gets the type.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.DynamicReflection">
+            <summary>
+            Provides reflection-based dynamic syntax for objects and types. 
+            This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
+            and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
+            <summary>
+            Provides dynamic syntax for accessing the given object members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="obj" this="true">The object to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)">
+            <summary>
+            Provides dynamic syntax for accessing the given type members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="type" this="true">The type to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsGenericTypeParameter(System.Type)">
+            <summary>
+            Converts the type to a <see cref="T:System.Dynamic.TypeParameter"/> that 
+            the reflection dynamic must use to make a generic 
+            method invocation.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection"/>
+            <param name="type" this="true">The type to convert</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
+            <summary>
+            Finds the best match among the candidates.
+            </summary>
+            <param name="binder">The binder that is requesting the match.</param>
+            <param name="args">The args passed in to the invocation.</param>
+            <param name="genericArgs">The generic args if any.</param>
+            <param name="candidates">The candidate methods to use for the match..</param>
+            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+        </member>
         <member name="T:System.Dynamic.OutValue">
             <summary>
             Allows output parameters to be passed to reflection dynamic.
@@ -500,29 +523,6 @@
         <member name="P:System.Dynamic.OutValue`1.Value">
             <summary>
             Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:IDomainContextAccessor`1">
-            <summary>
-            Interface implemented by entities that need to 
-            access the owning domain context to implement 
-            their business logic.
-            </summary>
-            <remarks>
-            Some aggregate roots may need to create, find or save 
-            other aggregate roots in the context, and in order to do 
-            it, they can implement this interface. Domain 
-            context implementations should check for this interface 
-            when the entities are being materialized or 
-            constructed via <see cref="M:IDomainContext`1.New``1(System.Action{``0})"/> 
-            or <see cref="M:IDomainContext`1.Find``1(`0)"/> 
-            to set the property value.
-            </remarks>
-            <nuget id="netfx-Patterns.DomainContext"/>
-        </member>
-        <member name="P:IDomainContextAccessor`1.Context">
-            <summary>
-            Gets or sets the owning domain context.
             </summary>
         </member>
     </members>

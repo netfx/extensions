@@ -20,14 +20,15 @@ using System;
 /// Interface implemented by the component that coordinates 
 /// event handler invocation when a subscribed event is published.
 /// </summary>
+/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public partial interface IDomainEventBus
+partial interface IDomainEventBus<TId>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="args">The event payload.</param>
-	void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	void Publish(AggregateRoot<TId> sender, TimestampedEventArgs args);
 }

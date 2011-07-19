@@ -12,7 +12,8 @@ using System.Text;
 /// </remarks>
 /// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-public interface IDomainEventQuery<TId> : IEnumerable<TimestampedEventArgs>
+partial interface IDomainEventQuery<TId> : IEnumerable<TimestampedEventArgs>
+	where TId : IComparable
 {
 	/// <summary>
 	/// Filters events that target the given aggregate type. Can be called 

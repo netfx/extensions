@@ -1,4 +1,7 @@
 # ========================================================================
+#	Pushes to nuget.org all packages from this folder down, built on 
+#	Release mode.
+#
 #	This script looks up the directory tree searching for the NETFx root
 #	which is signaled by the netfx.txt file.
 #	Once the root is located, the Common.ps1 from there is imported 

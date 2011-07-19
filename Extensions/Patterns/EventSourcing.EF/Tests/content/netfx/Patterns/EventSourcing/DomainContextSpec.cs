@@ -14,7 +14,7 @@ namespace NetFx.Patterns.EventSourcing.EF
 		[Fact]
 		public void WhenPersisting_ThenSubmitsToBus()
 		{
-			var bus = new Mock<IDomainEventBus>();
+			var bus = new Mock<IDomainEventBus<int>>();
 			var id = 0;
 
 			// Some other code creates the aggregate root.
@@ -27,7 +27,7 @@ namespace NetFx.Patterns.EventSourcing.EF
 				id = entity.Id;
 			}
 
-			bus.Verify(x => x.Publish<int>(It.IsAny<TestEntity>(), It.IsAny<DomainEvent>()), Times.Never());
+			bus.Verify(x => x.Publish(It.IsAny<TestEntity>(), It.IsAny<TimestampedEventArgs>()), Times.Never());
 
 			// Now it's time to do something on the domain
 			using (var context = new TestContext(bus.Object))
@@ -39,13 +39,13 @@ namespace NetFx.Patterns.EventSourcing.EF
 				context.SaveChanges();
 			}
 
-			bus.Verify(x => x.Publish<int>(It.IsAny<TestEntity>(), It.IsAny<DomainEvent>()), Times.Once());
+			bus.Verify(x => x.Publish(It.IsAny<TestEntity>(), It.IsAny<TimestampedEventArgs>()), Times.Once());
 		}
 
 		[Fact]
 		public void WhenPersisting_ThenAcceptsChangeEvents()
 		{
-			var bus = new Mock<IDomainEventBus>();
+			var bus = new Mock<IDomainEventBus<int>>();
 			var id = 0;
 
 			// Some other code creates the aggregate root.
@@ -58,7 +58,7 @@ namespace NetFx.Patterns.EventSourcing.EF
 				id = entity.Id;
 			}
 
-			bus.Verify(x => x.Publish<int>(It.IsAny<TestEntity>(), It.IsAny<DomainEvent>()), Times.Never());
+			bus.Verify(x => x.Publish(It.IsAny<TestEntity>(), It.IsAny<TimestampedEventArgs>()), Times.Never());
 
 			// Now it's time to do something on the domain
 			using (var context = new TestContext(bus.Object))
@@ -70,14 +70,14 @@ namespace NetFx.Patterns.EventSourcing.EF
 				context.SaveChanges();
 			}
 
-			bus.Verify(x => x.Publish<int>(It.IsAny<TestEntity>(), It.IsAny<DomainEvent>()), Times.Once());
+			bus.Verify(x => x.Publish(It.IsAny<TestEntity>(), It.IsAny<TimestampedEventArgs>()), Times.Once());
 		}
 	}
 
 	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
 	internal class TestContext : DomainContext<TestContext, int>
 	{
-		public TestContext(IDomainEventBus bus)
+		public TestContext(IDomainEventBus<int> bus)
 			: base(bus)
 		{
 		}
@@ -86,14 +86,15 @@ namespace NetFx.Patterns.EventSourcing.EF
 	}
 
 	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
-	internal class PublishEvent : DomainEvent<int>
+	internal class PublishEvent : TimestampedEventArgs
 	{
 		public PublishEvent(int id, string title)
 		{
-			this.AggregateId = id;
+			this.ProductId = id;
 			this.Title = title;
 		}
 
+		public int ProductId { get; set; }
 		public string Title { get; private set; }
 	}
 
@@ -105,6 +106,11 @@ namespace NetFx.Patterns.EventSourcing.EF
 			Database.SetInitializer<TestContext>(new DropCreateDatabaseIfModelChanges<TestContext>());
 		}
 
+		public TestEntity()
+		{
+			this.Handles<PublishEvent>(this.OnPublished);
+		}
+
 		public string Title { get; set; }
 
 		public void Publish(string title)
@@ -112,10 +118,10 @@ namespace NetFx.Patterns.EventSourcing.EF
 			if (string.IsNullOrEmpty(title))
 				throw new ArgumentException();
 
-			this.ApplyEvent(new PublishEvent(this.Id, title), this.Apply);
+			this.ApplyChange(new PublishEvent(this.Id, title));
 		}
 
-		private void Apply(PublishEvent publish)
+		private void OnPublished(PublishEvent publish)
 		{
 			this.Title = publish.Title;
 		}

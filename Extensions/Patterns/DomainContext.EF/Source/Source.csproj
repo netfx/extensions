@@ -53,13 +53,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\DomainContext\DomainContext.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContext.EF\DomainContext.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContext.EF\Visibility.cs" />
     <Compile Include="DomainContextHooks.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IAggregateRoot.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContext.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContextAccessor.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IIdentifiable.cs" />
     <Compile Include="netfx\Patterns\DomainContext\QueryableExtensions.cs" />
+    <Compile Include="netfx\Patterns\DomainContext\Visibility.cs" />
     <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
     <Compile Include="netfx\System\Dynamic\OutValue.cs" />
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />

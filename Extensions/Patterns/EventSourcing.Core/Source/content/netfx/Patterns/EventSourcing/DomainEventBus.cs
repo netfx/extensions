@@ -21,7 +21,7 @@ using System.Text;
 using System.Threading;
 
 /// <summary>
-/// Default implementation of an <see cref="IDomainEventBus"/> that 
+/// Default implementation of an <see cref="IDomainEventBus{TId}"/> that 
 /// invokes handlers as events are published, and where handlers are 
 /// run in-process.
 /// <para>
@@ -30,8 +30,10 @@ using System.Threading;
 /// async runner delegate passed to the constructor.
 /// </para>
 /// </summary>
+/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core" />
-public partial class DomainEventBus : IDomainEventBus
+partial class DomainEventBus<TId> : IDomainEventBus<TId>
+	where TId : IComparable
 {
 	private Action<Action> asyncActionRunner;
 	private IEnumerable<DomainEventHandler> eventHandlers;
@@ -49,10 +51,10 @@ public partial class DomainEventBus : IDomainEventBus
 	/// Gets a default domain event bus implementation that 
 	/// does nothing (a.k.a. Null Object Pattern).
 	/// </summary>
-	public static IDomainEventBus None { get; private set; }
+	public static IDomainEventBus<TId> None { get; private set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus"/> class with 
+	/// Initializes a new instance of the <see cref="DomainEventBus{TId}"/> class with 
 	/// the default async runner that enqueues work in the <see cref="ThreadPool"/>.
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
@@ -62,7 +64,7 @@ public partial class DomainEventBus : IDomainEventBus
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus"/> class with 
+	/// Initializes a new instance of the <see cref="DomainEventBus{TId}"/> class with 
 	/// the given async runner.
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
@@ -86,10 +88,9 @@ public partial class DomainEventBus : IDomainEventBus
 	/// <summary>
 	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	/// <typeparam name="TId">The type of identifier used by the event sender. Inferred by the compiler from the <paramref name="sender"/> argument.</typeparam>
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="args">The event payload.</param>
-	public virtual void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args)
+	public virtual void Publish(AggregateRoot<TId> sender, TimestampedEventArgs args)
 	{
 		Guard.NotNull(() => sender, sender);
 		Guard.NotNull(() => args, args);
@@ -126,15 +127,15 @@ public partial class DomainEventBus : IDomainEventBus
 	}
 
 	/// <summary>
-	/// Provides a null <see cref="IDomainEventBus"/> implementation 
+	/// Provides a null <see cref="IDomainEventBus{TId}"/> implementation 
 	/// for use when no events have been configured.
 	/// </summary>
-	private class NullBus : IDomainEventBus
+	private class NullBus : IDomainEventBus<TId>
 	{
 		/// <summary>
 		/// Does nothing.
 		/// </summary>
-		public void Publish<TId>(AggregateRoot<TId> sender, TimestampedEventArgs args)
+		public void Publish(AggregateRoot<TId> sender, TimestampedEventArgs args)
 		{
 		}
 	}

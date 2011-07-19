@@ -21,10 +21,10 @@ using System;
 /// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.Core" />
-public abstract partial class DomainEventHandler
+abstract partial class DomainEventHandler
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IDomainEventBus"/> implementation
+	/// Invocation style hint that the <see cref="IDomainEventBus{TId}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
 	public virtual bool IsAsync { get { return false; } }
@@ -41,7 +41,7 @@ public abstract partial class DomainEventHandler
 /// <typeparam name="TAggregateId">Type of identifier used by the aggregate roots.</typeparam>
 /// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core" />
-public abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler
+abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler
 	where TEventArgs : TimestampedEventArgs
 {
 	/// <summary>

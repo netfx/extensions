@@ -10,9 +10,9 @@ using System.Text;
 public class DomainContext
 {
 	private List<AggregateRoot<int>> aggregates = new List<AggregateRoot<int>>();
-	private IDomainEventBus bus;
+	private IDomainEventBus<int> bus;
 
-	public DomainContext(IDomainEventBus bus, params AggregateRoot<int>[] aggregates)
+	public DomainContext(IDomainEventBus<int> bus, params AggregateRoot<int>[] aggregates)
 	{
 		this.bus = bus;
 		this.aggregates.AddRange(aggregates);

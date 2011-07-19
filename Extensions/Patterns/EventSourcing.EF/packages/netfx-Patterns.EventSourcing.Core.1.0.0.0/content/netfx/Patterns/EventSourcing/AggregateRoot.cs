@@ -23,11 +23,12 @@ using System.Linq.Expressions;
 
 /// <summary>
 /// Base class for aggregate roots that use events to apply state 
-/// changes (Event Sourcing) and notify consumers on an <see cref="IDomainEventBus"/>.
+/// changes (Event Sourcing) and notify consumers on an <see cref="IDomainEventBus{TId}"/>.
 /// </summary>
 /// <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core" />
-public abstract partial class AggregateRoot<TId>
+abstract partial class AggregateRoot<TId>
+	where TId : IComparable
 {
 	private Dictionary<Type, Action<TimestampedEventArgs>> handlers = new Dictionary<Type, Action<TimestampedEventArgs>>();
 	private List<TimestampedEventArgs> changes = new List<TimestampedEventArgs>();
