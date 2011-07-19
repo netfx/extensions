@@ -4,104 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:IDomainEventBus`1">
-            <summary>
-            Interface implemented by the component that coordinates 
-            event handler invocation when a subscribed event is published.
-            </summary>
-            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The event payload.</param>
-        </member>
-        <member name="T:DomainEventQueryExtensions">
-            <summary>
-            Provides the entry point <see cref="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})"/> for a fluent API 
-            that makes querying event stores easier.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})">
-            <summary>
-            Queries the event store for events that match specified 
-            criteria via the returned fluent API methods 
-            <see cref="M:IDomainEventQuery`1.For``1"/> and 
-            <see cref="M:IDomainEventQuery`1.OfType``1"/>. 
-            </summary>
-            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
-            <param name="store">The domain event store.</param>
-        </member>
-        <member name="T:IDomainEventQuery`1">
-            <summary>
-            Provides a fluent API to filter events from the event store. 
-            </summary>
-            <remarks>
-            This interface is returned from the <see cref="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})"/> 
-            extension method for <see cref="T:IDomainEventStore`1"/>.
-            </remarks>
-            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventQuery`1.For``1">
-            <summary>
-            Filters events that target the given aggregate type. Can be called 
-            multiple times and will filter for any of the specified types (OR operator).
-            </summary>
-            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-        </member>
-        <member name="M:IDomainEventQuery`1.For``1(`0)">
-            <summary>
-            Filters events that target the given aggregate type and identifier. Can be called 
-            multiple times and will filter for any of the specified types and ids (OR operator).
-            </summary>
-            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-            <param name="aggregateId">The aggregate root identifier that the events apply to.</param>
-        </member>
-        <member name="M:IDomainEventQuery`1.OfType``1">
-            <summary>
-            Filters events that are assignable to the given type. Can be called 
-            multiple times and will filter for any of the specified types (OR operator).
-            </summary>
-            <typeparam name="TEventArgs">The type of the events to filter.</typeparam>
-        </member>
-        <member name="M:IDomainEventQuery`1.Since(System.DateTime)">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-            <param name="when">The starting date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IDomainEventQuery`1.ExclusiveDateRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IDomainEventQuery`1.Until(System.DateTime)">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-            <param name="when">The ending date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IDomainEventQuery`1.ExclusiveDateRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IDomainEventQuery`1.ExclusiveDateRange">
-            <summary>
-            Makes the configured <see cref="M:IDomainEventQuery`1.Since(System.DateTime)"/> and/or <see cref="M:IDomainEventQuery`1.Until(System.DateTime)"/> dates 
-            exclusive, changing the default behavior which is to be inclusive.
-            </summary>
-        </member>
-        <member name="M:DomainEventQueryExtensions.DomainEventQuery`1.GetInheritance``1">
-            <devdoc>
-            Returns a list of the T and all its base types until an 
-            abstract base class is found (can't be persisted therefore) 
-            or System.Object is found (events can't be System.Object either).
-            </devdoc>
-        </member>
         <member name="T:AggregateRoot`1">
             <summary>
             Base class for aggregate roots that use events to apply state 
@@ -161,6 +63,21 @@
             </remarks>
             <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="T:IDomainEventBus`1">
+            <summary>
+            Interface implemented by the component that coordinates 
+            event handler invocation when a subscribed event is published.
+            </summary>
+            <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="M:IDomainEventBus`1.Publish(AggregateRoot{`0},TimestampedEventArgs)">
+            <summary>
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The event payload.</param>
         </member>
         <member name="M:DomainEventBus`1.#cctor">
             <summary>
@@ -269,6 +186,89 @@
             Gets the type of the event this handler can process, which equals 
             the generic type parameter of <see cref="T:DomainEventHandler`2"/>.
             </summary>
+        </member>
+        <member name="T:DomainEventQueryExtensions">
+            <summary>
+            Provides the entry point <see cref="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})"/> for a fluent API 
+            that makes querying event stores easier.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})">
+            <summary>
+            Queries the event store for events that match specified 
+            criteria via the returned fluent API methods 
+            <see cref="M:IDomainEventQuery`1.For``1"/> and 
+            <see cref="M:IDomainEventQuery`1.OfType``1"/>. 
+            </summary>
+            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+            <param name="store">The domain event store.</param>
+        </member>
+        <member name="T:IDomainEventQuery`1">
+            <summary>
+            Provides a fluent API to filter events from the event store. 
+            </summary>
+            <remarks>
+            This interface is returned from the <see cref="M:DomainEventQueryExtensions.Query``1(IDomainEventStore{``0})"/> 
+            extension method for <see cref="T:IDomainEventStore`1"/>.
+            </remarks>
+            <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+        </member>
+        <member name="M:IDomainEventQuery`1.For``1">
+            <summary>
+            Filters events that target the given aggregate type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+        </member>
+        <member name="M:IDomainEventQuery`1.For``1(`0)">
+            <summary>
+            Filters events that target the given aggregate type and identifier. Can be called 
+            multiple times and will filter for any of the specified types and ids (OR operator).
+            </summary>
+            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+            <param name="aggregateId">The aggregate root identifier that the events apply to.</param>
+        </member>
+        <member name="M:IDomainEventQuery`1.OfType``1">
+            <summary>
+            Filters events that are assignable to the given type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TEventArgs">The type of the events to filter.</typeparam>
+        </member>
+        <member name="M:IDomainEventQuery`1.Since(System.DateTime)">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+            <param name="when">The starting date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:IDomainEventQuery`1.ExclusiveDateRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:IDomainEventQuery`1.Until(System.DateTime)">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+            <param name="when">The ending date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:IDomainEventQuery`1.ExclusiveDateRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:IDomainEventQuery`1.ExclusiveDateRange">
+            <summary>
+            Makes the configured <see cref="M:IDomainEventQuery`1.Since(System.DateTime)"/> and/or <see cref="M:IDomainEventQuery`1.Until(System.DateTime)"/> dates 
+            exclusive, changing the default behavior which is to be inclusive.
+            </summary>
+        </member>
+        <member name="M:DomainEventQueryExtensions.DomainEventQuery`1.GetInheritance``1">
+            <devdoc>
+            Returns a list of the T and all its base types until an 
+            abstract base class is found (can't be persisted therefore) 
+            or System.Object is found (events can't be System.Object either).
+            </devdoc>
         </member>
         <member name="T:DomainEventStore`1">
             <summary>
