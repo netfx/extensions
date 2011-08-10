@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.LinqSpecs</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx Patterns: Linq Query Specifications</title>
 		<description>Provides the primitives for centralizing and reusing Linq queries across a domain.</description>
 		<authors>Daniel Cazzulino, Jose Romaniello, kzu, Clarius</authors>

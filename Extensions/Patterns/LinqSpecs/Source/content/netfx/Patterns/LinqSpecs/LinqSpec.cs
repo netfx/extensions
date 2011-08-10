@@ -28,37 +28,6 @@ static partial class LinqSpec
 	{
 		return specification;
 	}
-
-	private class AdHocSpec<T> : LinqSpec<T>, IEquatable<AdHocSpec<T>>
-	{
-		private readonly Expression<Func<T, bool>> specification;
-
-		public AdHocSpec(Expression<Func<T, bool>> specification)
-		{
-			this.specification = specification;
-		}
-
-		public override Expression<Func<T, bool>> Expression { get { return this.specification; } }
-
-		public override bool Equals(object obj)
-		{
-			if (Object.ReferenceEquals(null, obj)) return false;
-			if (Object.ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
-
-			return Equals((AdHocSpec<T>)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return this.specification.GetHashCode();
-		}
-
-		public bool Equals(AdHocSpec<T> other)
-		{
-			return this.specification.Equals(other.specification);
-		}
-	}
 }
 
 /// <summary>
@@ -80,7 +49,7 @@ abstract partial class LinqSpec<T>
 	/// </summary>
 	public static LinqSpec<T> operator &(LinqSpec<T> spec1, LinqSpec<T> spec2)
 	{
-		return new AndSpec<T>(spec1, spec2);
+		return new AndSpec(spec1, spec2);
 	}
 
 	public static bool operator false(LinqSpec<T> spec1)
@@ -98,7 +67,7 @@ abstract partial class LinqSpec<T>
 	/// </summary>
 	public static LinqSpec<T> operator |(LinqSpec<T> spec1, LinqSpec<T> spec2)
 	{
-		return new OrSpec<T>(spec1, spec2);
+		return new OrSpec(spec1, spec2);
 	}
 
 	/// <summary>
@@ -122,19 +91,19 @@ abstract partial class LinqSpec<T>
 	/// </summary>
 	public static implicit operator LinqSpec<T>(Expression<Func<T, bool>> expression)
 	{
-		return expression.Spec();
+		return new AdHocSpec(expression);
 	}
 
 	/// <summary>
 	/// The <c>And</c> specification.
 	/// </summary>
-	private class AndSpec<TArg> : LinqSpec<TArg>, IEquatable<AndSpec<TArg>>
+	private class AndSpec : LinqSpec<T>, IEquatable<AndSpec>
 	{
-		private readonly Expression<Func<TArg, bool>> expression;
-		private LinqSpec<TArg> spec1;
-		private LinqSpec<TArg> spec2;
+		private readonly Expression<Func<T, bool>> expression;
+		private LinqSpec<T> spec1;
+		private LinqSpec<T> spec2;
 
-		public AndSpec(LinqSpec<TArg> spec1, LinqSpec<TArg> spec2)
+		public AndSpec(LinqSpec<T> spec1, LinqSpec<T> spec2)
 		{
 			this.spec1 = spec1;
 			this.spec2 = spec2;
@@ -143,7 +112,7 @@ abstract partial class LinqSpec<T>
 			this.expression = spec1.Expression.And(spec2.Expression);
 		}
 
-		public override Expression<Func<TArg, bool>> Expression { get { return this.expression; } }
+		public override Expression<Func<T, bool>> Expression { get { return this.expression; } }
 
 		public override bool Equals(object obj)
 		{
@@ -151,7 +120,7 @@ abstract partial class LinqSpec<T>
 			if (Object.ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != this.GetType()) return false;
 
-			return Equals((LinqSpec<T>.AndSpec<TArg>)obj);
+			return Equals((LinqSpec<T>.AndSpec)obj);
 		}
 
 		public override int GetHashCode()
@@ -159,7 +128,7 @@ abstract partial class LinqSpec<T>
 			return spec1.GetHashCode() ^ spec2.GetHashCode();
 		}
 
-		public bool Equals(LinqSpec<T>.AndSpec<TArg> other)
+		public bool Equals(LinqSpec<T>.AndSpec other)
 		{
 			return this.spec1.Equals(other.spec1) &&
 				this.spec2.Equals(other.spec2);
@@ -169,20 +138,20 @@ abstract partial class LinqSpec<T>
 	/// <summary>
 	/// The <c>Or</c> specification.
 	/// </summary>
-	private class OrSpec<TArg> : LinqSpec<TArg>, IEquatable<OrSpec<TArg>>
+	private class OrSpec : LinqSpec<T>, IEquatable<OrSpec>
 	{
-		private readonly Expression<Func<TArg, bool>> expression;
-		private LinqSpec<TArg> spec1;
-		private LinqSpec<TArg> spec2;
+		private readonly Expression<Func<T, bool>> expression;
+		private LinqSpec<T> spec1;
+		private LinqSpec<T> spec2;
 
-		public OrSpec(LinqSpec<TArg> spec1, LinqSpec<TArg> spec2)
+		public OrSpec(LinqSpec<T> spec1, LinqSpec<T> spec2)
 		{
 			this.spec1 = spec1;
 			this.spec2 = spec2;
 			this.expression = spec1.Expression.Or(spec2.Expression);
 		}
 
-		public override Expression<Func<TArg, bool>> Expression { get { return this.expression; } }
+		public override Expression<Func<T, bool>> Expression { get { return this.expression; } }
 
 		public override bool Equals(object obj)
 		{
@@ -190,7 +159,7 @@ abstract partial class LinqSpec<T>
 			if (Object.ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != this.GetType()) return false;
 
-			return Equals((LinqSpec<T>.OrSpec<TArg>)obj);
+			return Equals((OrSpec)obj);
 		}
 
 		public override int GetHashCode()
@@ -198,7 +167,7 @@ abstract partial class LinqSpec<T>
 			return spec1.GetHashCode() ^ spec2.GetHashCode();
 		}
 
-		public bool Equals(LinqSpec<T>.OrSpec<TArg> other)
+		public bool Equals(OrSpec other)
 		{
 			return this.spec1.Equals(other.spec1) &&
 				this.spec2.Equals(other.spec2);
@@ -240,6 +209,37 @@ abstract partial class LinqSpec<T>
 		public bool Equals(LinqSpec<T>.NegateSpec<TArg> other)
 		{
 			return this.spec.Equals(other.spec);
+		}
+	}
+
+	private class AdHocSpec : LinqSpec<T>, IEquatable<AdHocSpec>
+	{
+		private readonly Expression<Func<T, bool>> specification;
+
+		public AdHocSpec(Expression<Func<T, bool>> specification)
+		{
+			this.specification = specification;
+		}
+
+		public override Expression<Func<T, bool>> Expression { get { return this.specification; } }
+
+		public override bool Equals(object obj)
+		{
+			if (Object.ReferenceEquals(null, obj)) return false;
+			if (Object.ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+
+			return Equals((AdHocSpec)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.specification.GetHashCode();
+		}
+
+		public bool Equals(AdHocSpec other)
+		{
+			return this.specification.Equals(other.specification);
 		}
 	}
 }

@@ -4,6 +4,16 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:ExpressionCombiner">
+            <summary>
+            Combines linq expressions using logic operators And and Or.
+            </summary>
+            <remarks>
+            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
+            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
+            </remarks>
+            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
+        </member>
         <member name="T:LinqSpec">
             <summary>
             Allows creating and combining query specifications using logical And and Or 
@@ -62,12 +72,12 @@
             such to another method.
             </summary>
         </member>
-        <member name="T:LinqSpec`1.AndSpec`1">
+        <member name="T:LinqSpec`1.AndSpec">
             <summary>
             The <c>And</c> specification.
             </summary>
         </member>
-        <member name="T:LinqSpec`1.OrSpec`1">
+        <member name="T:LinqSpec`1.OrSpec">
             <summary>
             The <c>Or</c> specification.
             </summary>
@@ -76,16 +86,6 @@
             <summary>
             Negates the given query specification.
             </summary>
-        </member>
-        <member name="T:ExpressionCombiner">
-            <summary>
-            Combines linq expressions using logic operators And and Or.
-            </summary>
-            <remarks>
-            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
-            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
-            </remarks>
-            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
         </member>
     </members>
 </doc>

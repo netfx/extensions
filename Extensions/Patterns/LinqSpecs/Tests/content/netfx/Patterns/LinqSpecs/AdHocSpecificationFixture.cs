@@ -1,6 +1,8 @@
 using System.Linq;
 using SharpTestsEx;
 using Xunit;
+using System.Linq.Expressions;
+using System;
 
 namespace netfx.Patterns.QuerySpecs
 {
@@ -42,6 +44,15 @@ namespace netfx.Patterns.QuerySpecs
 			var specification = LinqSpec.For<string>(n => n.StartsWith("J"));
 
 			Assert.False(specification.Equals(specification | LinqSpec.For<string>(n => true)));
+		}
+
+		[Fact]
+		public void should_get_adhoc_from_expression()
+		{
+			Expression<Func<string, bool>> expr = n => n.StartsWith("J");
+			var specification1 = expr.Spec();
+
+			Assert.Equal(specification1.Expression.Compile()("Joe"), expr.Compile()("Joe"));
 		}
 	}
 }

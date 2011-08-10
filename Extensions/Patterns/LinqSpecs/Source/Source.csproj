@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\LinqSpecs\LinqSpec.cs" />
+    <Compile Include="content\netfx\Patterns\LinqSpecs\Visibility.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
