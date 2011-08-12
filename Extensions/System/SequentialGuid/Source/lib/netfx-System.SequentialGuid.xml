@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:SequentialGuid">
+            <summary>
+            A safe managed sequential GUID generator (or Comb) that improves 
+            performance of GUID-style identifiers used in persistence.
+            </summary>
+            <devdoc>Source from NHibernate Guid Comb generator: http://nhibernate.svn.sourceforge.net/viewvc/nhibernate/trunk/nhibernate/src/NHibernate/Id/GuidCombGenerator.cs </devdoc>
+            <nuget id="netfx-System.SequentialGuid" />
+        </member>
+        <member name="M:SequentialGuid.NewGuid">
+            <summary>
+            Creates a new sequential guid.
+            </summary>
+        </member>
+    </members>
+</doc>
