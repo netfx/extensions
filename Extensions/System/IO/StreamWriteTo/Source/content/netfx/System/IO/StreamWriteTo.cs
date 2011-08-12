@@ -24,6 +24,7 @@ using System.IO;
 /// Provides WriteTo extension methods to write streams easily to 
 /// another steam or a target file.
 /// </summary>
+/// <nuget id="netfx-System.IO.StreamWriteTo" />
 internal static class StreamWriteTo
 {
 	private const long BufferSize = 4096;
@@ -31,7 +32,6 @@ internal static class StreamWriteTo
 	/// <summary>
 	/// Writes the input stream to the target file.
 	/// </summary>
-	/// <nuget id="netfx-System.IO.StreamWriteTo" />
 	/// <param name="source" this="true">The source stream to write to the target file.</param>
 	/// <param name="targetFile">The target file to write to.</param>
 	/// <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
@@ -46,11 +46,10 @@ internal static class StreamWriteTo
 	/// <summary>
 	/// Writes the input stream to the target stream.
 	/// </summary>
-	/// <nuget id="netfx-System.IO.StreamWriteTo" />
 	/// <param name="source" this="true">The source stream to write to the target stream.</param>
-	/// <param name="targetFile">The target stream to write to.</param>
+	/// <param name="target">The target stream to write to.</param>
 	/// <returns>The written <paramref name="target"/> stream.</returns>
-	public static Stream WriteTo(this Stream source, Stream target)
+	public static void WriteTo(this Stream source, Stream target)
 	{
 		var buffer = new byte[BufferSize];
 		var read = 0;
@@ -58,10 +57,5 @@ internal static class StreamWriteTo
 		{
 			target.Write(buffer, 0, read);
 		}
-
-		if (target.CanSeek)
-			target.Seek(0, SeekOrigin.Begin);
-
-		return target;
 	}
 }

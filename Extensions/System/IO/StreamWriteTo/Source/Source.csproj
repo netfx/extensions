@@ -48,7 +48,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NuSpec Include="Package.nuspec" />
+    <NuSpec Include="Package.nuspec">
+      <SubType>Designer</SubType>
+    </NuSpec>
   </ItemGroup>
   <ItemGroup>
     <Content Include="tools\netfx-System.IO.StreamWriteTo.xml" />

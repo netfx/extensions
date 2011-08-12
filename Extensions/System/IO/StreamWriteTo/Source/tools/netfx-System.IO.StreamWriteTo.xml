@@ -9,12 +9,12 @@
             Provides WriteTo extension methods to write streams easily to 
             another steam or a target file.
             </summary>
+            <nuget id="netfx-System.IO.StreamWriteTo" />
         </member>
         <member name="M:StreamWriteTo.WriteTo(System.IO.Stream,System.String,System.Boolean)">
             <summary>
             Writes the input stream to the target file.
             </summary>
-            <nuget id="netfx-System.IO.StreamWriteTo" />
             <param name="source" this="true">The source stream to write to the target file.</param>
             <param name="targetFile">The target file to write to.</param>
             <param name="append">If set to <see langword="true"/> and the file exists, then appends the source stream, otherwise, it will overwrite it.</param>
@@ -23,9 +23,8 @@
             <summary>
             Writes the input stream to the target stream.
             </summary>
-            <nuget id="netfx-System.IO.StreamWriteTo" />
             <param name="source" this="true">The source stream to write to the target stream.</param>
-            <param name="targetFile">The target stream to write to.</param>
+            <param name="target">The target stream to write to.</param>
             <returns>The written <paramref name="target"/> stream.</returns>
         </member>
     </members>
