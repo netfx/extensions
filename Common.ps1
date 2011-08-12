@@ -37,8 +37,8 @@ function Drop-Packages
 	Get-ChildItem -Path $current -Recurse -Filter *.nupkg | `
 	Where-Object { $_.DirectoryName.EndsWith("bin\Release") }  | %{ `
 		$target = [System.IO.Path]::Combine($dropDir.FullName, $_.Name); `
-		Remove-Item -Path $target -ea silentlycontinue; `
-		$_.MoveTo($target); }
+		[System.Threading.Thread]::Sleep(1000); `
+		$_.CopyTo($target, $true); }
 
 	Write-Progress -Activity "Deploying NETFx" -Status "Done!" -Completed
 }
