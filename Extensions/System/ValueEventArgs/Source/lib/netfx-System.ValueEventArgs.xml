@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:ValueEventArgs">
+            <summary>
+            Factory class to create <see cref="T:ValueEventArgs`1"/> from a value.
+            </summary>
+            <nuget id="netfx-System.ValueEventArgs"/>
+        </member>
+        <member name="M:ValueEventArgs.Create``1(``0)">
+            <summary>
+            Creates a typed <see cref="T:ValueEventArgs`1"/> for the given piece of data.
+            </summary>
+        </member>
+        <member name="T:ValueEventArgs`1">
+            <summary>
+            An EventArgs class that exposes a single Value property of a type T.
+            </summary>
+            <typeparam name="T">Type of value exposed by the argument class.</typeparam>
+            <nuget id="netfx-System.ValueEventArgs"/>
+        </member>
+        <member name="M:ValueEventArgs`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValueEventArgs`1"/> class.
+            </summary>
+        </member>
+        <member name="M:ValueEventArgs`1.Equals(ValueEventArgs{`0})">
+            <summary>
+            Checks if the current instance is equal to the other.
+            </summary>
+        </member>
+        <member name="M:ValueEventArgs`1.Equals(System.Object)">
+            <summary>
+            Checks if the current instance is equal to the given object.
+            </summary>
+        </member>
+        <member name="M:ValueEventArgs`1.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+        </member>
+        <member name="P:ValueEventArgs`1.Value">
+            <summary>
+            Gets value of the event.
+            </summary>
+        </member>
+    </members>
+</doc>
