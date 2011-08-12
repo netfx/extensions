@@ -34,7 +34,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-///	<netfx id="$Identifier$" />
+// NOTE: the <nuget id="" /> documentation element is used to determine 
+// which nuget provides what classes. This is important as netfx packages 
+// can use other netfx packages, therefore generating XML documentation 
+// for them too. We need to tell apart the actual types provides by 
+// this nuget, hence the id.
+
+/// <summary>
+/// $Description$
+/// </summary>
+///	<nuget id="$Identifier$" />
 internal static partial class $safesolutionname$
 {
+	// NOTE: Extension methods must annotate the <param> element with a this="true" 
+	// attribute for the parameter that is extended by the extension method. This
+	// allows nuget intellisense to show it when it's appropriate.
+
+	/// <summary>
+	/// Sample extension method
+	/// </summary>
+	/// <param name="source" this="true">The object this extension method applies to.</param>
+	public static void Sample(this string source)
+	{
+	}
 }

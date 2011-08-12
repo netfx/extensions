@@ -73,7 +73,7 @@ namespace NetFx.Templates.Projects.OpenSource.Extension
 			{
 				foreach (var property in typeof(ExtensionInformationModel).GetProperties())
 				{
-					CallContext.SetData("$" + property.Name + "$", property.GetValue(view.Model, null));
+					CallContext.SetData("$" + property.Name + "$", property.GetValue(view.Model, null).ToString().XmlEncode());
 				}
 			}
 			else

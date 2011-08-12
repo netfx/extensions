@@ -48,6 +48,7 @@
       <DependentUpon>Reflect.Overloads.tt</DependentUpon>
     </Compile>
     <Compile Include="netfx\System\ServiceProvider.cs" />
+    <Compile Include="netfx\System\Xml\XmlEncode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\AddSourceReferenceWizard.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionInformationWizard.cs" />
@@ -58,6 +59,10 @@
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionInformationModel.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\ExtensionTitleSuggestion.cs" />
     <Compile Include="Templates\Projects\Open Source\Extension\GetExtensionInformationWizard.cs" />
+    <Content Include="Templates\Items\Code\NuGetScript\NuGetScript.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <ItemTemplate Include="Templates\Items\Code\NuGetScript\NuGetScript.vstemplate" />
     <Content Include="Templates\Projects\Open Source\Extension\Source\lib\doc.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -107,6 +112,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Tests\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Items\Code\NuGetScript\install.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -233,6 +241,7 @@
   <Target Name="ZipItemTemplates" Condition="'@(ItemTemplate)' != ''">
     <!-- This target works exactly the same as the previous one, but for item templates -->
     <Message Text="Zipping item template for: %(ItemTemplate.RelativeDir)%(ItemTemplate.Filename)%(ItemTemplate.Extension)" />
+    <Copy SourceFiles="@(ItemTemplate)" DestinationFolder="$(TargetDir)%(ItemTemplate.RelativeDir)" />
     <CreateItem Include="$(TargetDir)%(ItemTemplate.RelativeDir)**\*.*" AdditionalMetadata="TemplateDir=$([System.IO.Directory]::GetParent($(TargetDir)%(ItemTemplate.RelativeDir)).FullName)\;ZipFile=$([System.IO.Directory]::GetParent(%(ItemTemplate.FullPath)).Name).zip">
       <Output ItemName="_ItemTemplateItem" TaskParameter="Include" />
     </CreateItem>

@@ -33,17 +33,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Xunit;
+using System.IO;
+using System.Xml.Linq;
+using System.Xml;
 
-namespace NetFx.$TargetNamespace$
+///	<nuget id="netfx-System.Xml.XmlEncode" />
+internal static partial class XmlEncodeExtension
 {
-	///	<nuget id="$Identifier$.Tests" />
-	public class $safesolutionname$Spec
+	/// <summary>
+	/// Encodes a string for use in an XML element or attribute.
+	/// </summary>
+	/// <param name="value" this="true">The value to encode in XML compatible way.</param>
+	/// <returns>The XML encoded string.</returns>
+	public static string XmlEncode(this string value)
 	{
-		[Fact]
-		public void WhenAction_ThenAssert()
+		Guard.NotNull(() => value, value);
+
+		var output = new StringBuilder();
+		var text = new XText(value);
+
+		using (var writer = XmlWriter.Create(output, new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment }))
 		{
-			// Suggested naming convention for specs/tests.
+			text.WriteTo(writer);
+			writer.Flush();
+			return output.ToString();
 		}
 	}
 }

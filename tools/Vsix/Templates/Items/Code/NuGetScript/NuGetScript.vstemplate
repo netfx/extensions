@@ -1,0 +1,14 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+	<TemplateData>
+		<DefaultName>install.ps1</DefaultName>
+		<Name>NuGet Script</Name>
+		<Description>NuGet powershell script file, used for install/uninstall/init package lifecycles.</Description>
+		<ProjectType>CSharp</ProjectType>
+		<SortOrder>10</SortOrder>
+		<Icon>NuGetScript.ico</Icon>
+		<ProvideDefaultName>false</ProvideDefaultName>
+	</TemplateData>
+	<TemplateContent>
+		<ProjectItem TargetFileName="$fileinputname$.ps1" ReplaceParameters="false">install.ps1</ProjectItem>
+	</TemplateContent>
+</VSTemplate>
