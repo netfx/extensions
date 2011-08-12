@@ -20,6 +20,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+/// <summary>
+/// >Easily get all bytes that make up an arbitrary stream.
+/// </summary>
 internal static partial class StreamGetBytes
 {
 	private const long BufferSize = 4096;
@@ -31,11 +34,16 @@ internal static partial class StreamGetBytes
 	/// <param name="stream" this="true">The stream to get bytes</param>
 	public static byte[] GetBytes(this Stream stream)
 	{
-		var memoryStream = new MemoryStream();
-		stream.WriteTo(memoryStream);
+		Guard.NotNull(() => stream, stream);
 
-		var buffer = new byte[memoryStream.Length];
-		Array.Copy(memoryStream.GetBuffer(), buffer, memoryStream.Length);
+		if (stream.CanSeek)
+			stream.Seek(0, SeekOrigin.Begin);
+
+		var mem = new MemoryStream();
+		stream.WriteTo(mem);
+
+		var buffer = new byte[mem.Length];
+		Array.Copy(mem.GetBuffer(), buffer, mem.Length);
 
 		return buffer;
 	}

@@ -5,16 +5,28 @@ using System.Text;
 using Xunit;
 using System.IO;
 
-internal class StreamGetBytesSpec
+namespace NetFx.System.IO
 {
-	[Fact]
-	public void WhenGettingBytes_ThenEqualsContent()
+	/// <nuget id="netfx-System.IO.StreamGetBytes.Tests" />
+	public class StreamGetBytesSpec
 	{
-		Stream source = new MemoryStream(Encoding.UTF8.GetBytes("Hello World"));
-		var bytes = source.GetBytes();
+		[Fact]
+		public void WhenGettingBytesFromNullStream_ThenThrows()
+		{
+			var source = default(MemoryStream);
 
-		var target = new MemoryStream(bytes);
+			Assert.Throws<ArgumentNullException>(() => source.GetBytes());
+		}
 
-		Assert.Equal("Hello World", new StreamReader(target).ReadToEnd());
+		[Fact]
+		public void WhenGettingBytes_ThenEqualsContent()
+		{
+			Stream source = new MemoryStream(Encoding.UTF8.GetBytes("Hello World"));
+			var bytes = source.GetBytes();
+
+			var target = new MemoryStream(bytes);
+
+			Assert.Equal("Hello World", new StreamReader(target).ReadToEnd());
+		}
 	}
 }
