@@ -37,6 +37,18 @@ RenderArea(rootArea, "");
 #>}
 
 <#+
+private void RenderMessageHint(string value)
+{
+	foreach (var line in value.Split(new [] { '\n' }, StringSplitOptions.None))
+    {
+	    PushIndent("\t");
+#>
+///	<#= line #>
+<#+
+        PopIndent();
+    }
+}
+
 private void RenderArea(ResourceArea area, string visibility)
 {
     PushIndent("\t");
@@ -57,7 +69,8 @@ private void RenderArea(ResourceArea area, string visibility)
 #>
 
 	/// <summary>
-	/// Looks up a localized string similar to: <#=value.Value #>
+	/// Looks up a localized string similar to: 
+<#+ RenderMessageHint(value.Value); #>
 	/// </summary>
 	public static string <#=value.Name #> { get { return Resources.<#=area.Prefix #><#=value.Name #>; } }
 <#+
@@ -67,7 +80,8 @@ private void RenderArea(ResourceArea area, string visibility)
 #>
 
 	/// <summary>
-	/// Looks up a localized string similar to: <#=value.Value #>
+	/// Looks up a localized string similar to: 
+<#+ RenderMessageHint(value.Value); #>
 	/// </summary>
 	public static string <#=value.Name #>(<#= string.Join(", ", value.FormatNames.Select(s => "object " + s)) #>)
 	{

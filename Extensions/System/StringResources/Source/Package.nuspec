@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.StringResources</id>
-		<version>1.0.0.7</version>
+		<version>1.0.0.9</version>
 		<title>NETFx Smart String Resources</title>
 		<description>Suplements the built-in Resources .resx C# generator by generating a strong-typed class named Strings from the 
 same .resx file, but exposing format parameters as method parameters and organizing strings in classes according to the resource name 
