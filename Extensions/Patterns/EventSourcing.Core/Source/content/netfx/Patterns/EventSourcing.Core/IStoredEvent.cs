@@ -15,25 +15,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-// This file defines the visibility of the classes and interfaces 
-// introduced by the EventSourcing.Core package. By default, pattern APIs 
-// are public, but you can modify this file and make them internal
-// if you want. The nuget update process will never overwrite 
-// this file once you made changes to it.
+/// <summary>
+/// Represents a persisted event in an event store.
+/// </summary>
+/// <remarks>
+/// The core interface does not expose the event payload, 
+/// as its representation as well as specific storage type
+/// and serialization/deserialization can vary wildly 
+/// across store implementation. Imposing a particular 
+/// representation via this interface would be unnecessarily 
+/// restrictive and is not needed for the rest of the APIs.
+/// </remarks>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+partial interface IStoredEvent<TAggregateId>
+	where TAggregateId : IComparable
+{
+	/// <summary>
+	/// Gets the aggregate root identifier that the event applies to.
+	/// </summary>
+	TAggregateId AggregateId { get; }
 
-public partial class AggregateRoot<TId> { }
-public partial class DomainEventBus<TId> { }
-public partial class DomainEventHandler { }
-public partial class DomainEventHandler<TAggregateId, TEventArgs> { }
-public partial class DomainEventQueryExtensions { }
-public partial class DomainEventStore<TId> { }
-public partial interface IDomainEventBus<TId> { }
-public partial interface IDomainEventQuery<TId> { }
-public partial interface IDomainEventStore<TId> { }
-public partial interface IStoredEvent<TId> { }
-public partial class StoredEventCriteria<TId> { }
-public partial class TimestampedEventArgs { }
+	/// <summary>
+	/// Gets the type of the the domain object that this event applies to.
+	/// </summary>
+	string AggregateType { get; }
+
+	/// <summary>
+	/// Gets the type of the event.
+	/// </summary>
+	string EventType { get; }
+
+	/// <summary>
+	/// Gets the UTC timestamp of the event.
+	/// </summary>
+	DateTime Timestamp { get; }
+}

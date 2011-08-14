@@ -15,49 +15,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
-/// Provides the <see cref="None"/> empty store for use 
-/// when no store is needed.
+/// Interface implemented by the component that coordinates 
+/// event handler invocation when a subscribed event is published.
 /// </summary>
-/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial class DomainEventStore<TId>
-	where TId : IComparable
+partial interface IDomainEventBus<TAggregateId, TBaseEvent>
+	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Initializes the <see cref="None"/> null object 
-	/// pattern property.
+	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	static DomainEventStore()
-	{
-		None = new NullStore();
-	}
-
-	/// <summary>
-	/// Gets a default domain event store implementation that 
-	/// does nothing (a.k.a. Null Object Pattern).
-	/// </summary>
-	public static IDomainEventStore<TId> None { get; private set; }
-
-	private class NullStore : IDomainEventStore<TId>
-	{
-		public Func<Type, string> TypeNameConverter { get; set; }
-
-		public IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria)
-		{
-			return Enumerable.Empty<TimestampedEventArgs>();
-		}
-
-		public void Save(AggregateRoot<TId> sender, TimestampedEventArgs args)
-		{
-		}
-
-		public void SaveChanges()
-		{
-		}
-	}
+	/// <param name="sender">The sender of the event.</param>
+	/// <param name="args">The event payload.</param>
+	void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
 }

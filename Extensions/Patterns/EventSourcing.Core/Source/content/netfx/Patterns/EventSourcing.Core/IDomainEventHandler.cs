@@ -17,18 +17,35 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// event handler invocation when a subscribed event is published.
+/// Base interface part of the infrastructure. Concrete 
+/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> 
+/// or implement <see cref="IDomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
-/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IDomainEventBus<TId>
-	where TId : IComparable
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+partial interface IDomainEventHandler
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Invocation style hint that the <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	bool IsAsync { get; }
+
+	/// <summary>
+	/// Gets the type of the event argument this handler can process.
+	/// </summary>
+	Type EventType { get; }
+}
+
+/// <summary>
+/// Base interface for domain event handlers that handle a specific type of event.
+/// </summary>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+partial interface IDomainEventHandler<TAggregateId, TEventArgs> : IDomainEventHandler
+{
+	/// <summary>
+	/// Handles the specified event.
+	/// </summary>
+	void Handle(TAggregateId aggregateId, TEventArgs @event);
 }

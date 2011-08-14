@@ -25,28 +25,36 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 	/// Simple in-memory store for testing the API.
 	/// </summary>
 	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests"/>
-	public class MemoryEventStore<TId> : IDomainEventStore<TId>
-		where TId : IComparable
+	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IDomainEventStore<TAggregateId, TBaseEvent>
+		where TAggregateId : IComparable
 	{
 		private List<StoredEvent> events = new List<StoredEvent>();
+		private Func<DateTime> utcNow;
 
 		public MemoryEventStore()
+			: this(() => DateTime.UtcNow)
+		{
+		}
+
+		public MemoryEventStore(Func<DateTime> utcNow)
 		{
 			this.TypeNameConverter = type => type.Name;
+			this.utcNow = utcNow;
 		}
 
 		public Func<Type, string> TypeNameConverter { get; set; }
+		public IQueryable<IStoredEvent<TAggregateId>> AllEvents { get { return this.events.OfType<IStoredEvent<TAggregateId>>().AsQueryable(); } }
 
-		public void Save(AggregateRoot<TId> sender, TimestampedEventArgs args)
+		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 		{
-			this.events.Add(new StoredEvent(sender, args));
+			this.events.Add(new StoredEvent(sender, args) { Timestamp = this.utcNow() });
 		}
 
-		public void SaveChanges()
+		public void Commit()
 		{
 		}
 
-		public IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria)
+		public IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria)
 		{
 			var source = this.events.AsQueryable();
 			var predicate = criteria.ToExpression(this.TypeNameConverter);
@@ -57,21 +65,21 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			return source.Select(x => x.EventArgs);
 		}
 
-		private class StoredEvent : IStoredEvent<TId>
+		private class StoredEvent : IStoredEvent<TAggregateId>
 		{
-			public StoredEvent(AggregateRoot<TId> sender, TimestampedEventArgs args)
+			public StoredEvent(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 			{
 				this.AggregateRoot = sender;
 				this.EventArgs = args;
 			}
 
-			public AggregateRoot<TId> AggregateRoot { get; private set; }
-			public TimestampedEventArgs EventArgs { get; private set; }
+			public AggregateRoot<TAggregateId, TBaseEvent> AggregateRoot { get; private set; }
+			public TBaseEvent EventArgs { get; private set; }
 
-			public TId AggregateId { get { return this.AggregateRoot.Id; } }
+			public TAggregateId AggregateId { get { return this.AggregateRoot.Id; } }
 			public string AggregateType { get { return this.AggregateRoot.GetType().Name; } }
 			public string EventType { get { return this.EventArgs.GetType().Name; } }
-			public DateTime Timestamp { get { return this.EventArgs.Timestamp; } }
+			public DateTime Timestamp { get; set; }
 
 			public override string ToString()
 			{

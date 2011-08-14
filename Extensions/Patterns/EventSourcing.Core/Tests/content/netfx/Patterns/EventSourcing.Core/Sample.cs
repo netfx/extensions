@@ -31,19 +31,19 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenEventPersisted_ThenCanObserveIt()
 		{
-			var store = new MemoryEventStore<int>();
+			var store = new MemoryEventStore<int, DomainEvent>();
 			var product = new Product(5, "DevStore");
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+				.ForEach(e => store.Persist(product, e));
 
 			product = new Product(6, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+				.ForEach(e => store.Persist(product, e));
 
 			var product2 = new Product();
 			product2.Load(store.Query().For<Product>(6));
@@ -97,7 +97,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 
 			//player.Replay(from: null, to: null);
 			//store.Events.Where(
-			//store.Events.Where(x => x.AggregateType == "Product" &&
+			//store.Events.Where(x => x.SourceTypes == "Product" &&
 			//    x.EventType == "Published");
 		}
 	}

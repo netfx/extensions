@@ -15,41 +15,42 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
-/// Base class for domain event payloads, which are always timestamped.
+/// Base class part of the infrastructure. Concrete 
+/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-abstract partial class TimestampedEventArgs : EventArgs
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+abstract partial class DomainEventHandler : IDomainEventHandler
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
+	/// Invocation style hint that the <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
-	public TimestampedEventArgs()
-		: this(null)
-	{
-	}
+	public virtual bool IsAsync { get { return false; } }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="TimestampedEventArgs"/> class.
+	/// Gets the type of the event argument this handler can process.
 	/// </summary>
-	/// <param name="timestamp">The time when the event occurred.</param>
-	public TimestampedEventArgs(DateTime? timestamp = null)
-	{
-		if (timestamp != null)
-			// We always persist UTC times.
-			this.Timestamp = timestamp.Value.Kind == DateTimeKind.Local ? 
-				timestamp.Value.ToUniversalTime() : 
-				timestamp.Value;
-		else
-			this.Timestamp = DateTime.UtcNow;
-	}
+	public abstract Type EventType { get; }
+}
+
+/// <summary>
+/// Base class for domain event handlers that handle a specific type of event.
+/// </summary>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler, IDomainEventHandler<TAggregateId, TEventArgs>
+{
+	/// <summary>
+	/// Handles the specified event.
+	/// </summary>
+	public abstract void Handle(TAggregateId aggregateId, TEventArgs @event);
 
 	/// <summary>
-	/// Gets the timestamp for the event.
+	/// Gets the type of the event this handler can process, which equals 
+	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
 	/// </summary>
-	public DateTime Timestamp { get; set; }
+	public override Type EventType { get { return typeof(TEventArgs); } }
 }

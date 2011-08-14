@@ -5,15 +5,19 @@ using System.Text;
 
 namespace NetFx.Patterns.EventSourcing.Core.Tests
 {
+	public class DomainEvent { }
+
+	public abstract class AggregateRoot : AggregateRoot<int, DomainEvent> { }
+
 	/// <summary>
-	/// Product is an aggregate root with domain logic.
+	/// Product is an the domain object sourcing the event with domain logic.
 	/// </summary>
-	public class Product : AggregateRoot<int>
+	public class Product : AggregateRoot
 	{
 		/// <summary>
 		/// Event raised when a new product is created.
 		/// </summary>
-		public class CreatedEvent : TimestampedEventArgs
+		public class CreatedEvent : DomainEvent
 		{
 			public int Id { get; set; }
 			public string Title { get; set; }
@@ -28,7 +32,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		/// <summary>
 		/// Event raised when a new version of a product is published.
 		/// </summary>
-		public class PublishedEvent : TimestampedEventArgs
+		public class PublishedEvent : DomainEvent
 		{
 			public int Version { get; set; }
 
@@ -43,7 +47,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		/// </summary>
 		public Product()
 		{
-			// First thing an aggregate root must do is 
+			// First thing an the domain object sourcing the event must do is 
 			// setup which methods handle which events.
 			// This helps avoid doing any unnecessary 
 			// reflection invocation for events.
@@ -67,7 +71,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			if (string.IsNullOrEmpty(title))
 				throw new ArgumentException("title");
 
-			this.ApplyChange(new CreatedEvent { Id = id, Title = title });
+			this.Raise(new CreatedEvent { Id = id, Title = title });
 		}
 
 		// Technically, these members wouldn't even need a public setter 
@@ -84,7 +88,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			// When we're ready to apply state changes, we 
 			// apply them through an event that calls back 
 			// the OnCreated method as mapped in the ctor.
-			this.ApplyChange(new PublishedEvent { Version = version });
+			this.Raise(new PublishedEvent { Version = version });
 		}
 
 		private void OnCreated(CreatedEvent @event)

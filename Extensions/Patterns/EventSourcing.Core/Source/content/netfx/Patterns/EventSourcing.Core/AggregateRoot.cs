@@ -22,21 +22,22 @@ using System.Reflection;
 using System.Linq.Expressions;
 
 /// <summary>
-/// Base class for aggregate roots that use events to apply state 
-/// changes (Event Sourcing) and notify consumers on an <see cref="IDomainEventBus{TId}"/>.
+/// Base class for domain classes that raise and optionally consume 
+/// as their persistence mechanism.
 /// </summary>
-/// <typeparam name="TId">The type of identifier used by the aggregate root.</typeparam>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core" />
-abstract partial class AggregateRoot<TId>
-	where TId : IComparable
+abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
+	where TAggregateId : IComparable
 {
-	private Dictionary<Type, Action<TimestampedEventArgs>> handlers = new Dictionary<Type, Action<TimestampedEventArgs>>();
-	private List<TimestampedEventArgs> changes = new List<TimestampedEventArgs>();
+	private Dictionary<Type, Action<TBaseEvent>> handlers = new Dictionary<Type, Action<TBaseEvent>>();
+	private List<TBaseEvent> changes = new List<TBaseEvent>();
 
 	/// <summary>
-	/// Gets or sets the aggregate root identifier.
+	/// Gets or sets the identifier of the domain object sourcing the event.
 	/// </summary>
-	public virtual TId Id { get; set; }
+	public virtual TAggregateId Id { get; set; }
 
 	/// <summary>
 	/// Clears the internal events retrieved from <see cref="GetChanges"/>, 
@@ -50,19 +51,19 @@ abstract partial class AggregateRoot<TId>
 	/// <summary>
 	/// Gets the pending changes.
 	/// </summary>
-	public virtual IEnumerable<TimestampedEventArgs> GetChanges()
+	public virtual IEnumerable<TBaseEvent> GetChanges()
 	{
 		return this.changes.AsReadOnly();
 	}
 
 	/// <summary>
-	/// Loads the aggregate root state from an even stream.
+	/// Loads the the domain object sourcing the event state from an even stream.
 	/// </summary>
-	public virtual void Load(IEnumerable<TimestampedEventArgs> history)
+	public virtual void Load(IEnumerable<TBaseEvent> history)
 	{
 		foreach (var e in history)
 		{
-			var handler = default(Action<TimestampedEventArgs>);
+			var handler = default(Action<TBaseEvent>);
 			if (this.handlers.TryGetValue(e.GetType(), out handler))
 			{
 				handler.Invoke(e);
@@ -74,7 +75,7 @@ abstract partial class AggregateRoot<TId>
 	/// Configures a handler for an event.
 	/// </summary>
 	protected virtual void Handles<TEvent>(Action<TEvent> handler)
-		where TEvent : TimestampedEventArgs
+		where TEvent : TBaseEvent
 	{
 		this.handlers.Add(typeof(TEvent), @event => handler((TEvent)@event));
 	}
@@ -85,16 +86,16 @@ abstract partial class AggregateRoot<TId>
 	/// to configure the handlers for specific types of events. The 
 	/// handlers perform the actual state changes to the entity.
 	/// </summary>
-	protected virtual void ApplyChange<TEvent>(TEvent @event)
-		where TEvent : TimestampedEventArgs
+	protected virtual void Raise<TEvent>(TEvent @event)
+		where TEvent : TBaseEvent
 	{
 		ApplyChangeImpl(@event, true);
 	}
 
 	private void ApplyChangeImpl<TEvent>(TEvent @event, bool isNew)
-		where TEvent : TimestampedEventArgs
+		where TEvent : TBaseEvent
 	{
-		var handler = default(Action<TimestampedEventArgs>);
+		var handler = default(Action<TBaseEvent>);
 		if (this.handlers.TryGetValue(typeof(TEvent), out handler))
 			handler.Invoke(@event);
 

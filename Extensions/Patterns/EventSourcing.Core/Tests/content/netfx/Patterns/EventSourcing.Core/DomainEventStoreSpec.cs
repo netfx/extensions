@@ -11,19 +11,19 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		[Fact]
 		public void WhenSaving_ThenNoOp()
 		{
-			DomainEventStore<int>.None.Save(null, null);
+			DomainEventStore<int, DomainEvent>.None.Persist(null, null);
 		}
 
 		[Fact]
 		public void WhenSavingChanges_ThenNoOp()
 		{
-			DomainEventStore<int>.None.SaveChanges();
+			DomainEventStore<int, DomainEvent>.None.Commit();
 		}
 
 		[Fact]
 		public void WhenQuerying_ThenReturnsEmpty()
 		{
-			Assert.False(DomainEventStore<int>.None.Query(null).Any());
+			Assert.False(DomainEventStore<int, DomainEvent>.None.Query(null).Any());
 		}
 	}
 }

@@ -32,34 +32,37 @@ static partial class DomainEventQueryExtensions
 	/// <summary>
 	/// Queries the event store for events that match specified 
 	/// criteria via the returned fluent API methods 
-	/// <see cref="IDomainEventQuery{TId}.For{TAggregate}()"/> and 
-	/// <see cref="IDomainEventQuery{TId}.OfType{TEventArgs}()"/>. 
+	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.For{TAggregate}()"/> and 
+	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.OfType{TEventArgs}()"/>. 
 	/// </summary>
-	/// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <param name="store">The domain event store.</param>
-	public static IDomainEventQuery<TId> Query<TId>(this IDomainEventStore<TId> store)
-		where TId : IComparable
+	public static IDomainEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IDomainEventStore<TAggregateId, TBaseEvent> store)
+		where TAggregateId : IComparable
 	{
-		return new DomainEventQuery<TId>(store);
+		return new DomainEventQuery<TAggregateId, TBaseEvent>(store);
 	}
 
-	private class DomainEventQuery<TId> : IDomainEventQuery<TId>
-		where TId : IComparable
+	private class DomainEventQuery<TAggregateId, TBaseEvent> : IDomainEventQuery<TAggregateId, TBaseEvent>
+		where TAggregateId : IComparable
 	{	
-		private IDomainEventStore<TId> store;
-		private StoredEventCriteria<TId> criteria = new StoredEventCriteria<TId>();
+		private IDomainEventStore<TAggregateId, TBaseEvent> store;
+		private StoredEventCriteria<TAggregateId> criteria = new StoredEventCriteria<TAggregateId>();
 
-		public DomainEventQuery(IDomainEventStore<TId> store)
+		public DomainEventQuery(IDomainEventStore<TAggregateId, TBaseEvent> store)
 		{
 			this.store = store;
 		}
 
-		public IEnumerator<TimestampedEventArgs> GetEnumerator()
+		public StoredEventCriteria<TAggregateId> Criteria { get { return this.criteria; } }
+
+		public IEnumerator<TBaseEvent> GetEnumerator()
 		{
 			return this.store.Query(this.criteria).GetEnumerator();
 		}
 
-		public IDomainEventQuery<TId> For<TAggregate>()
+		public IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>()
 		{
 			foreach (var type in GetInheritance<TAggregate>())
 			{
@@ -69,17 +72,18 @@ static partial class DomainEventQueryExtensions
 			return this;
 		}
 
-		public IDomainEventQuery<TId> For<TAggregate>(TId aggregateId)
+		public IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId)
 		{
 			foreach (var type in GetInheritance<TAggregate>())
 			{
-				this.criteria.AggregateTypeAndIds.Add(Tuple.Create(type, aggregateId));
+				this.criteria.AggregateInstances.Add(new StoredEventAggregateFilter<TAggregateId>(type, aggregateId));
 			}
 
 			return this;
 		}
 
-		public IDomainEventQuery<TId> OfType<TEventArgs>()
+		public IDomainEventQuery<TAggregateId, TBaseEvent> OfType<TEventArgs>()
+			where TEventArgs : TBaseEvent
 		{
 			foreach (var type in GetInheritance<TEventArgs>())
 			{
@@ -89,19 +93,19 @@ static partial class DomainEventQueryExtensions
 			return this;
 		}
 
-		public IDomainEventQuery<TId> Since(DateTime when)
+		public IDomainEventQuery<TAggregateId, TBaseEvent> Since(DateTime when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IDomainEventQuery<TId> Until(DateTime when)
+		public IDomainEventQuery<TAggregateId, TBaseEvent> Until(DateTime when)
 		{
 			this.criteria.Until = when;
 			return this;
 		}
 
-		public IDomainEventQuery<TId> ExclusiveDateRange()
+		public IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveDateRange()
 		{
 			this.criteria.IsExclusiveDateRange = true;
 			return this;

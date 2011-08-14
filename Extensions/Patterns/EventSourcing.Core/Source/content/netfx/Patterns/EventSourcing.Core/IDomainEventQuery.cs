@@ -8,34 +8,40 @@ using System.Text;
 /// </summary>
 /// <remarks>
 /// This interface is returned from the <see cref="DomainEventQueryExtensions.Query"/> 
-/// extension method for <see cref="IDomainEventStore{TId}"/>.
+/// extension method for <see cref="IDomainEventStore{TAggregateId, TBaseEvent}"/>.
 /// </remarks>
-/// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IDomainEventQuery<TId> : IEnumerable<TimestampedEventArgs>
-	where TId : IComparable
+partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBaseEvent>
+	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Filters events that target the given aggregate type. Can be called 
+	/// Gets the criteria that was built using the fluent API so far.
+	/// </summary>
+	StoredEventCriteria<TAggregateId> Criteria { get; }
+
+	/// <summary>
+	/// Filters events that target the given aggregate root type. Can be called 
 	/// multiple times and will filter for any of the specified types (OR operator).
 	/// </summary>
 	/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-	IDomainEventQuery<TId> For<TAggregate>();
+	IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>();
 
 	/// <summary>
-	/// Filters events that target the given aggregate type and identifier. Can be called 
+	/// Filters events that target the given aggregate root type and identifier. Can be called 
 	/// multiple times and will filter for any of the specified types and ids (OR operator).
 	/// </summary>
 	/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-	/// <param name="aggregateId">The aggregate root identifier that the events apply to.</param>
-	IDomainEventQuery<TId> For<TAggregate>(TId aggregateId);
+	/// <param name="aggregateId">The aggregate root identifier to filter by.</param>
+	IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId);
 
 	/// <summary>
 	/// Filters events that are assignable to the given type. Can be called 
 	/// multiple times and will filter for any of the specified types (OR operator).
 	/// </summary>
 	/// <typeparam name="TEventArgs">The type of the events to filter.</typeparam>
-	IDomainEventQuery<TId> OfType<TEventArgs>();
+	IDomainEventQuery<TAggregateId, TBaseEvent> OfType<TEventArgs>() where TEventArgs : TBaseEvent;
 
 	/// <summary>
 	/// Filters events that happened after the given starting date.
@@ -45,7 +51,7 @@ partial interface IDomainEventQuery<TId> : IEnumerable<TimestampedEventArgs>
 	/// By default, includes events with the given date, unless the 
 	/// <see cref="ExclusiveDateRange"/> is called to make the range exclusive.
 	/// </remarks>
-	IDomainEventQuery<TId> Since(DateTime when);
+	IDomainEventQuery<TAggregateId, TBaseEvent> Since(DateTime when);
 
 	/// <summary>
 	/// Filters events that happened before the given ending date.
@@ -55,11 +61,11 @@ partial interface IDomainEventQuery<TId> : IEnumerable<TimestampedEventArgs>
 	/// By default, includes events with the given date, unless the 
 	/// <see cref="ExclusiveDateRange"/> is called to make the range exclusive.
 	/// </remarks>
-	IDomainEventQuery<TId> Until(DateTime when);
+	IDomainEventQuery<TAggregateId, TBaseEvent> Until(DateTime when);
 
 	/// <summary>
 	/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
 	/// exclusive, changing the default behavior which is to be inclusive.
 	/// </summary>
-	IDomainEventQuery<TId> ExclusiveDateRange();
+	IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveDateRange();
 }

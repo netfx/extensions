@@ -15,40 +15,35 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Represents a persisted event in an event store.
+/// Filter criteria containing the aggregate type and identifier, 
+/// used by the <see cref="StoredEventCriteria{TAggregateId}"/>.
 /// </summary>
-/// <remarks>
-/// The core interface does not expose the event payload, 
-/// as its representation as well as specific storage type
-/// and serialization/deserialization can vary wildly 
-/// across store implementation. Imposing a particular 
-/// representation via this interface would be unnecessarily 
-/// restrictive and is not needed for the rest of the APIs.
-/// </remarks>
-/// <typeparam name="TId">The type of identifiers used by the aggregate roots.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IStoredEvent<TId>
-	where TId : IComparable
+partial class StoredEventAggregateFilter<TAggregateId>
+	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Gets the aggregate id that the event applies to.
+	/// Initializes a new instance of the <see cref="StoredEventAggregateFilter{TAggregateId}"/> class.
 	/// </summary>
-	TId AggregateId { get; }
+	/// <param name="aggregateType">Type of the event source to filter by.</param>
+	/// <param name="aggregateId">The aggregate root identifier to filter by.</param>
+	public StoredEventAggregateFilter(Type aggregateType, TAggregateId aggregateId)
+	{
+		this.AggregateType = aggregateType;
+		this.AggregateId = aggregateId;
+	}
 
 	/// <summary>
-	/// Gets the type of the aggregate root that this event applies to.
+	/// Gets or sets the type of the aggregate to filter by.
 	/// </summary>
-	string AggregateType { get; }
+	public Type AggregateType { get; private set; }
 
 	/// <summary>
-	/// Gets the type of the event.
+	/// Gets or sets the aggregate root identifier to filter by.
 	/// </summary>
-	string EventType { get; }
-
-	/// <summary>
-	/// Gets the UTC timestamp of the event.
-	/// </summary>
-	DateTime Timestamp { get; }
+	public TAggregateId AggregateId { get; private set; }
 }

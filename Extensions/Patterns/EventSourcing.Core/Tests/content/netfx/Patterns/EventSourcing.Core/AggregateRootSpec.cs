@@ -44,7 +44,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		public void WhenLoadingFromEvent_ThenRootChangesState()
 		{
 			var root = new TestRoot();
-			var events = new TimestampedEventArgs[] { new TestPublished { Version = 5 } };
+			var events = new DomainEvent[] { new TestPublished { Version = 5 } };
 
 			root.Load(events);
 
@@ -58,7 +58,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		}
 
 		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-		internal class TestRoot : AggregateRoot<Guid>
+		internal class TestRoot : AggregateRoot<Guid, DomainEvent>
 		{
 			public TestRoot()
 			{
@@ -70,7 +70,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.ApplyChange(new TestPublished { Version = version });
+				base.Raise(new TestPublished { Version = version });
 			}
 
 			public int LatestVersion { get; set; }
@@ -82,7 +82,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		}
 
 		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-		internal class TestPublished : TimestampedEventArgs
+		internal class TestPublished : DomainEvent
 		{
 			public int Version { get; set; }
 		}

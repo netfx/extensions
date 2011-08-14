@@ -15,43 +15,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Base class part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
+/// Provides the <see cref="None"/> empty store for use 
+/// when no store is needed.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
-abstract partial class DomainEventHandler
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+partial class DomainEventStore<TAggregateId, TBaseEvent>
+	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IDomainEventBus{TId}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the event publisher.
+	/// Initializes the <see cref="None"/> null object 
+	/// pattern property.
 	/// </summary>
-	public virtual bool IsAsync { get { return false; } }
+	static DomainEventStore()
+	{
+		None = new NullStore();
+	}
 
 	/// <summary>
-	/// Gets the type of the event argument this handler can process.
+	/// Gets a default domain event store implementation that 
+	/// does nothing (a.k.a. Null Object Pattern).
 	/// </summary>
-	public abstract Type EventType { get; }
-}
+	public static IDomainEventStore<TAggregateId, TBaseEvent> None { get; private set; }
 
-/// <summary>
-/// Base class for domain event handlers that handle a specific type of event.
-/// </summary>
-/// <typeparam name="TAggregateId">Type of identifier used by the aggregate roots.</typeparam>
-/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
-abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler
-	where TEventArgs : TimestampedEventArgs
-{
-	/// <summary>
-	/// Handles the specified event.
-	/// </summary>
-	public abstract void Handle(TAggregateId aggregateId, TEventArgs @event);
+	private class NullStore : IDomainEventStore<TAggregateId, TBaseEvent>
+	{
+		public Func<Type, string> TypeNameConverter { get; set; }
 
-	/// <summary>
-	/// Gets the type of the event this handler can process, which equals 
-	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
-	/// </summary>
-	public override Type EventType { get { return typeof(TEventArgs); } }
+		public IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria)
+		{
+			return Enumerable.Empty<TBaseEvent>();
+		}
+
+		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+		{
+		}
+
+		public void Commit()
+		{
+		}
+	}
 }

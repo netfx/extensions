@@ -22,46 +22,52 @@ using System.Linq.Expressions;
 /// <summary>
 /// Interface implemented by domain event stores.
 /// </summary>
-/// <typeparam name="TId">The type of identifier used by aggregate roots in the domain.</typeparam>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IDomainEventStore<TId>
-	where TId : IComparable
+partial interface IDomainEventStore<TAggregateId, TBaseEvent>
+	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Gets or sets the function that converts a <see cref="Type"/> to 
 	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="IStoredEvent{TId}.AggregateType"/> and 
-	/// <see cref="IStoredEvent{TId}.EventType"/>.
+	/// values of <see cref="IStoredEvent{TAggregateId}.AggregateType"/> and 
+	/// <see cref="IStoredEvent{TAggregateId}.EventType"/>.
 	/// </summary>
 	Func<Type, string> TypeNameConverter { get; set; }
 
 	/// <summary>
-	/// Saves the given event raised by the given sender aggregate root.
+	/// Notifies the store that the given event raised by the given sender 
+	/// should be persisted when <see cref="Commit"/> is called.
 	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The <see cref="TimestampedEventArgs"/> instance containing the event data.</param>
-	void Save(AggregateRoot<TId> sender, TimestampedEventArgs args);
+	/// <param name="args">The instance containing the event data.</param>
+	void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
 	/// </summary>
 	/// <remarks>
 	/// This is the only low-level querying method that stores need to implement. 
-	/// As a facility for stores that store events in an <see cref="IQueryable{T}"/> 
-	/// queryable object, the <see cref="StoredEventCriteria{TId}"/> object exposes a 
-	/// <see cref="StoredEventCriteria{TId}.ToExpression"/> method that 
-	/// makes the query implementation trivial in that case.
 	/// <para>
-	/// The more user-friendly querying API in <see cref="IDomainEventQuery{TId}"/> 
+	/// As a facility for stores that persist events in an <see cref="IQueryable{T}"/> 
+	/// queryable object, the <see cref="StoredEventCriteria{TAggregateId}"/> object 
+	/// can be converted to an expression using the <see cref="StoredEventCriteriaExtensions.ToExpression{TAggregateId}"/> 
+	/// extension method, making the query implementation trivial in that case.
+	/// </para>
+	/// <para>
+	/// The more user-friendly querying API in <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}"/> 
 	/// leverages this method internally and therefore can be used by any 
-	/// event store implementation.
+	/// event store implementation. It's accessible by executing the 
+	/// <see cref="DomainEventQueryExtensions.Query{TAggregateId, TBaseEvent}"/> over the 
+	/// store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TimestampedEventArgs> Query(StoredEventCriteria<TId> criteria);
+	IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria);
 
 	/// <summary>
-	/// Persists all <see cref="Save"/>s performed so far, effectively commiting 
+	/// Persists all <see cref="Persist"/>s performed so far, effectively commiting 
 	/// the changes to the underlying store in a unit-of-work style.
 	/// </summary>
-	void SaveChanges();
+	void Commit();
 }
