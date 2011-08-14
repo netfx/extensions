@@ -39,10 +39,13 @@
   <Import Project="$(NuGetRoot)\NuGet.Tests.properties" Condition="Exists('$(NuGetRoot)\NuGet.Tests.properties')" />
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -52,16 +55,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainEventStoreSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\Sample.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\AggregateRootSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventBusSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventQuerySpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventStoreSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\MemoryEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\Product.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\Sample.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
+    <Compile Include="netfx\System\SystemClockSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="tools\install.ps1" />
   </ItemGroup>

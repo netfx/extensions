@@ -13,6 +13,7 @@
 		<tags>netfx patterns eventsourcing entityframework ef</tags>
 		<dependencies>
 			<dependency id="netfx-Patterns.EventSourcing.Core" version="1.0" />
+			<dependency id="netfx-System.Clock" version="1.0" />
 			<dependency id="EntityFramework" version="4.1" />
 			<dependency id="Newtonsoft.Json" version="4.0" />
 		</dependencies>

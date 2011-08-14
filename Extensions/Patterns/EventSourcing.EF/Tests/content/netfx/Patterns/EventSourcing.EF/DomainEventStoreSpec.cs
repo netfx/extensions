@@ -39,23 +39,23 @@ using System.Data.Entity;
 
 namespace NetFx.Patterns.EventSourcing.EF.Tests
 {
-	///	<netfx id="netfx-Patterns.EventSourcing.EF.Tests" />
+	///	<nuget id="netfx-Patterns.EventSourcing.EF.Tests" />
 	public class DomainEventStoreSpec
 	{
 		[Fact]
 		public void WhenSavingEvent_ThenCanRetrieveIt()
 		{
 			Database.SetInitializer(new DropCreateDatabaseAlways<DomainEventStore>());
-			IDomainEventStore<int> store = new DomainEventStore("EventSourcing.EF");
+			IDomainEventStore<int, DomainEvent> store = new DomainEventStore("EventSourcing.EF");
 			var product = new Product(5, "DevStore");
 			product.Publish(1);
 
 			foreach (var e in product.GetChanges())
 			{
-				store.Save(product, e);
+				store.Persist(product, e);
 			}
 
-			store.SaveChanges();
+			store.Commit();
 
 			var events = store.Query().ToList();
 
@@ -68,13 +68,13 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		public void WhenSavingMultipleEvents_ThenCanLoadSpecificAggregate()
 		{
 			Database.SetInitializer(new DropCreateDatabaseAlways<DomainEventStore>());
-			IDomainEventStore<int> store = new DomainEventStore("EventSourcing.EF");
+			IDomainEventStore<int, DomainEvent> store = new DomainEventStore("EventSourcing.EF");
 			var product = new Product(5, "DevStore");
 			product.Publish(1);
 
 			foreach (var e in product.GetChanges())
 			{
-				store.Save(product, e);
+				store.Persist(product, e);
 			}
 
 			product = new Product(6, "WoVS");
@@ -84,10 +84,10 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 
 			foreach (var e in product.GetChanges())
 			{
-				store.Save(product, e);
+				store.Persist(product, e);
 			}
 
-			store.SaveChanges();
+			store.Commit();
 
 			var saved = new Product();
 			saved.Load(store.Query().For<Product>(6));
@@ -99,7 +99,7 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 
 	}
 
-	public class DomainEventStore : DomainEventStore<int, StoredEvent>
+	internal class DomainEventStore : DomainEventStore<int, DomainEvent, StoredEvent>
 	{
 		public DomainEventStore(string nameOrConnectionString)
 			: base(nameOrConnectionString)
@@ -107,7 +107,7 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		}
 	}
 
-	public class StoredEvent : StoredEvent<int>
+	internal class StoredEvent : StoredEvent<int>
 	{
 	}
 }

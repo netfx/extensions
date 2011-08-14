@@ -40,12 +40,13 @@
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity" />
@@ -54,30 +55,37 @@
     <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing.EF\StoredEvent.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing.EF\Visibility.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\AggregateRoot.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEventBus.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\DomainEventQueryExtensions.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\IStoredEvent.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\TimestampedEventArgs.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\AggregateRoot.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventBus.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventHandler.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventQueryExtensions.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\IDomainEventBus.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\IDomainEventHandler.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\IDomainEventQuery.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\IDomainEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\IStoredEvent.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\StoredEventAggregateFilter.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\StoredEventCriteria.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\StoredEventCriteriaExtensions.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Core\Visibility.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Json\JsonDomainEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Json\JsonStoredEvent.cs" />
     <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\IClock.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
+    <Compile Include="netfx\System\SystemClock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="lib\netfx-Patterns.EventSourcing.EF.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="tools\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="tools\install.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
