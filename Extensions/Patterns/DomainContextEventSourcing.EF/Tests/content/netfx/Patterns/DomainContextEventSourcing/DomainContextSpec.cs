@@ -6,7 +6,7 @@ using System.Data.Entity;
 using Xunit;
 using Moq;
 
-namespace NetFx.Patterns.EventSourcing.EF
+namespace NetFx.Patterns.DomainContextEventSourcing.EF
 {
 	/// <nuget id="netfx-Patterns.EventSourcing.EF" />
 	public class DomainContextSpec
