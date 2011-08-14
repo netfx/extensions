@@ -6,7 +6,7 @@ using Xunit;
 using Moq;
 
 /// <nuget id="netfx-Patterns.DomainCommands.Tests" />
-public class DomainCommandssSpec
+public class DomainCommandsSpec
 {
 	[Fact]
 	public void WhenHandlerRegisteredForSpecificType_ThenHandlesOnExecute()
@@ -14,7 +14,7 @@ public class DomainCommandssSpec
 		var command = new FooCommand { Id = 5 };
 		var handler = new Mock<DomainCommandHandler<FooCommand>> { CallBase = true };
 
-		var bus = new DomainCommandBus(new[] { handler.Object });
+		var bus = new DomainCommandBus<IDomainCommand>(new[] { handler.Object });
 
 		bus.Execute(command);
 
@@ -27,7 +27,7 @@ public class DomainCommandssSpec
 		var command = new FooCommand { Id = 5 };
 		var handler = new Mock<DomainCommandHandler<BaseCommand>> { CallBase = true };
 
-		var bus = new DomainCommandBus(new[] { handler.Object });
+		var bus = new DomainCommandBus<IDomainCommand>(new[] { handler.Object });
 
 		bus.Execute(command);
 
@@ -43,7 +43,7 @@ public class DomainCommandssSpec
 		var asyncCalled = false;
 		Action<Action> asyncRunner = action => asyncCalled = true;
 
-		var bus = new DomainCommandBus(new[] { handler.Object }, asyncRunner);
+		var bus = new DomainCommandBus<IDomainCommand>(new[] { handler.Object }, asyncRunner);
 
 		bus.Execute(command);
 
@@ -60,7 +60,7 @@ public class DomainCommandssSpec
 		var asyncCalled = false;
 		Action<Action> asyncRunner = action => asyncCalled = true;
 
-		var bus = new DomainCommandBus(new[] { handler.Object }, asyncRunner);
+		var bus = new DomainCommandBus<IDomainCommand>(new[] { handler.Object }, asyncRunner);
 
 		bus.Execute(command);
 
@@ -73,19 +73,43 @@ public class DomainCommandssSpec
 	{
 		var command = new FooCommand { Id = 5 };
 		var handler = new Mock<DomainCommandHandler<FooCommand>> { CallBase = true };
+		var handlerCalled = false;
 		handler.Setup(x => x.IsAsync).Returns(true);
+		handler.Setup(x => x.Handle(It.IsAny<FooCommand>())).Callback<FooCommand>(c => handlerCalled = true);
 
-		var bus = new DomainCommandBus(new[] { handler.Object });
+		var bus = new DomainCommandBus<IDomainCommand>(new[] { handler.Object });
 
 		bus.Execute(command);
 
-		handler.Verify(x => x.Handle(command), Times.Never());
+		while (!handlerCalled)
+			System.Threading.Thread.Sleep(10);
+
+		handler.Verify(x => x.Handle(command));
 	}
+
+	[Fact]
+	public void WhenNoAsyncHandlerRegistereded_ThenInvokesOnThreadPool()
+	{
+		var command = new FooCommand { Id = 5 };
+		var handler = new Mock<DomainCommandHandler<FooCommand>> { CallBase = true };
+		handler.Setup(x => x.IsAsync).Returns(true);
+		var handlerCalled = false;
+		handler.Setup(x => x.Handle(It.IsAny<FooCommand>())).Callback<FooCommand>(c => handlerCalled = true);
+		var bus = new DomainCommandBus<IDomainCommand>(DomainCommandStore<IDomainCommand>.None, new[] { handler.Object });
+
+		bus.Execute(command);
+
+		while (!handlerCalled)
+			System.Threading.Thread.Sleep(10);
+
+		handler.Verify(x => x.Handle(command));
+	}
+
 
 	[Fact]
 	public void WhenDefaultDomainCommandsExecutes_ThenDoesNothing()
 	{
-		DomainCommandBus.None.Execute(new FooCommand());
+		DomainCommandBus<IDomainCommand>.None.Execute(new FooCommand());
 	}
 
 	[Fact]
@@ -93,13 +117,25 @@ public class DomainCommandssSpec
 	{
 		var handler = new NonGenericHandler();
 
-		Assert.Throws<ArgumentException>(() => new DomainCommandBus(new DomainCommandHandler[] { handler }));
+		Assert.Throws<ArgumentException>(() => new DomainCommandBus<IDomainCommand>(new DomainCommandHandler[] { handler }));
 	}
 
 	[Fact]
 	public void WhenNullHandlerProvided_ThenThrows()
 	{
-		Assert.Throws<ArgumentException>(() => new DomainCommandBus(new DomainCommandHandler[] { null }));
+		Assert.Throws<ArgumentException>(() => new DomainCommandBus<IDomainCommand>(new DomainCommandHandler[] { null }));
+	}
+
+	[Fact]
+	public void WhenPersistingToNullStore_ThenNothingHappens()
+	{
+		DomainCommandStore<IDomainCommand>.None.Persist(new FooCommand());
+	}
+
+	[Fact]
+	public void WhenCommittingNullStore_ThenNothingHappens()
+	{
+		DomainCommandStore<IDomainCommand>.None.Commit();
 	}
 
 	private class HandlerBase : DomainCommandHandler<FooCommand>
@@ -121,7 +157,11 @@ public class DomainCommandssSpec
 	}
 }
 
-public class BaseCommand : DomainCommand
+public interface IDomainCommand
+{
+}
+
+public class BaseCommand : IDomainCommand
 {
 }
 
