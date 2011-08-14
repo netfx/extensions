@@ -44,18 +44,20 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryExtensions.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IStoredEvent.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\TimestampedEventArgs.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\AggregateRoot.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\StoredEventAggregateFilter.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\IDomainEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventQueryExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\IDomainEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\IDomainEventQuery.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\IDomainEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\IStoredEvent.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\StoredEventCriteria.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\StoredEventCriteriaExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\Visibility.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

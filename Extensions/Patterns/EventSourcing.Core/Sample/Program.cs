@@ -11,9 +11,9 @@ namespace Sample
 		{
 		}
 
-		public class ConsoleHandler : DomainEventHandler<TimestampedEventArgs>
+		internal class ConsoleHandler : DomainEventHandler<DomainEvent>
 		{
-			public override void Handle(int aggregateId, TimestampedEventArgs @event)
+			public override void Handle(int aggregateId, DomainEvent @event)
 			{
 				Console.WriteLine(@event);
 			}
@@ -23,10 +23,11 @@ namespace Sample
 		{
 			var product = new Product { Title = "DevStore" };
 			var context = default(DomainContext);
-			var bus = new DomainEventBus<int>(new DomainEventHandler[] 
+			var bus = default(IDomainEventBus);
+			bus = new DomainEventBus(new IDomainEventHandler[] 
 			{ 
 				new ConsoleHandler(), 
-				new SendMailHandler(new Lazy<DomainContext>(() => context)) 
+				new SendMailHandler(new Lazy<DomainContext>(() => context), new Lazy<IDomainEventBus>(() => bus)),
 			});
 			
 			context = new DomainContext(bus, product);

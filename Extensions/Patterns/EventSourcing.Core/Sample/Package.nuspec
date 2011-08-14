@@ -4,7 +4,7 @@
 		<id>netfx-Patterns.EventSourcing.Core.Sample</id>
 		<version>1.0.0.0</version>
 		<title>NETFx Patterns: Event Sourcing Core Sample</title>
-		<description>Simple example of a domain aggregate root with logic that leverages event sourcing.</description>
+		<description>Simple example of a domain object with logic that leverages event sourcing.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
@@ -13,6 +13,7 @@
 		<tags>netfx event sourcing ddd patterns</tags>
 		<dependencies>
 			<dependency id="netfx-Patterns.EventSourcing.Core" version="1.0" />
+			<dependency id="netfx-System.StringFormatWith" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

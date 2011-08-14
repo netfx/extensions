@@ -60,13 +60,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStoreSpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\AggregateRootSpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventBusSpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventQuerySpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\DomainEventStoreSpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\MemoryEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\Product.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.Core\Sample.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
   </ItemGroup>

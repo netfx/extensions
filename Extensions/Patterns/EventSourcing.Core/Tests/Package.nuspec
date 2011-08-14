@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.EventSourcing.Core.Tests</id>
+		<id>netfx-Patterns.EventSourcing.Core.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Tests for Event Sourcing Core</title>
+		<title>NETFx Patterns: Event Sourcing Core xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.Core</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
