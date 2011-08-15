@@ -11,7 +11,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
         <member name="M:AggregateRoot`2.AcceptChanges">
             <summary>
@@ -76,7 +76,7 @@
             handlers should inherit <see cref="T:DomainEventHandler`2"/> 
             or implement <see cref="T:IDomainEventHandler`2"/> instead.
             </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="P:IDomainEventHandler.IsAsync">
             <summary>
@@ -95,7 +95,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
         <member name="M:IDomainEventHandler`2.Handle(`0,`1)">
             <summary>
@@ -119,7 +119,7 @@
             </remarks>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="T:IDomainEventBus`2">
             <summary>
@@ -128,7 +128,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:IDomainEventBus`2.Publish(AggregateRoot{`0,`1},`1)">
             <summary>
@@ -213,7 +213,7 @@
             Base class part of the infrastructure. Concrete 
             handlers should inherit <see cref="T:DomainEventHandler`2"/> instead.
             </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="P:DomainEventHandler.IsAsync">
             <summary>
@@ -232,7 +232,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
         <member name="M:DomainEventHandler`2.Handle(`0,`1)">
             <summary>
@@ -250,7 +250,7 @@
             Provides the entry point <see cref="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})"/> for a fluent API 
             that makes querying event stores easier.
             </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})">
             <summary>
@@ -273,7 +273,7 @@
             </remarks>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:IDomainEventQuery`2.For``1">
             <summary>
@@ -342,7 +342,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:DomainEventStore`2.#cctor">
             <summary>
@@ -362,7 +362,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:IDomainEventStore`2.Persist(AggregateRoot{`0,`1},`1)">
             <summary>
@@ -420,7 +420,7 @@
             restrictive and is not needed for the rest of the APIs.
             </remarks>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="P:IStoredEvent`1.AggregateId">
             <summary>
@@ -447,7 +447,7 @@
             Represents the filter criteria for a domain event store query.
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
         <member name="M:StoredEventCriteria`1.#ctor">
             <summary>
