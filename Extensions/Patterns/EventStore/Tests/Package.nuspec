@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-Patterns.EventStore.Tests.xUnit</id>
+		<version>1.0.0.0</version>
+		<title>NETFx Patterns: Event Store Core xUnit Tests</title>
+		<description>xUnit tests for netfx-Patterns.EventStore</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx event sourcing ddd patern</tags>
+		<dependencies>
+			<dependency id="Moq" version="4.0" />
+			<dependency id="netfx-Guard.Tests" version="1.3" />
+			<dependency id="netfx-System.Linq.Expressions.ExpressionCombiner.Tests" version="1.0" />
+		</dependencies>
+	</metadata>
+</package>
