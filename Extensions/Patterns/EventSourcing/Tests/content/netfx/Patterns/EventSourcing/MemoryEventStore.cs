@@ -19,12 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
 	/// <summary>
 	/// Simple in-memory store for testing the API.
 	/// </summary>
-	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests"/>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests"/>
 	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IDomainEventStore<TAggregateId, TBaseEvent>
 		where TAggregateId : IComparable
 	{
@@ -50,6 +50,11 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			this.events.Add(new StoredEvent(sender, args) { Timestamp = this.utcNow() });
 		}
 
+		public void Persist(TBaseEvent @event)
+		{
+			this.events.Add(new StoredEvent(@event) { Timestamp = this.utcNow() });
+		}
+
 		public void Commit()
 		{
 		}
@@ -65,30 +70,64 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			return source.Select(x => x.EventArgs);
 		}
 
+		public IEnumerable<TBaseEvent> Query(StoredEventCriteria criteria)
+		{
+			var source = this.events.AsQueryable();
+			var predicate = criteria.ToExpression(this.TypeNameConverter);
+
+			if (predicate != null)
+				source = source.Where(predicate).Cast<StoredEvent>();
+
+			return source.Select(x => x.EventArgs);
+		}
+
 		private class StoredEvent : IStoredEvent<TAggregateId>
 		{
-			public StoredEvent(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+			public StoredEvent(TBaseEvent @event)
 			{
-				this.AggregateRoot = sender;
-				this.EventArgs = args;
+				this.EventArgs = @event;
 			}
 
-			public AggregateRoot<TAggregateId, TBaseEvent> AggregateRoot { get; private set; }
+			public StoredEvent(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent @event)
+				: this(@event)
+			{
+				this.Aggregate = new StoredAggregate(sender);
+			}
+
+			public IStoredAggregate<TAggregateId> Aggregate { get; private set; }
 			public TBaseEvent EventArgs { get; private set; }
 
-			public TAggregateId AggregateId { get { return this.AggregateRoot.Id; } }
-			public string AggregateType { get { return this.AggregateRoot.GetType().Name; } }
+			public Guid EventId { get; set; }
 			public string EventType { get { return this.EventArgs.GetType().Name; } }
 			public DateTime Timestamp { get; set; }
 
 			public override string ToString()
 			{
-				return string.Format("{0}({1}), {2} on {3} (payload: {4})", 
-					this.AggregateType, 
-					this.AggregateId, 
+				return string.Format("{0}, {1} on {2} (payload: {3})", 
+					this.Aggregate == null ? "" : this.Aggregate.ToString(), 
 					this.EventType, 
 					this.Timestamp, 
 					this.EventArgs);
+			}
+		}
+
+		private class StoredAggregate : IStoredAggregate<TAggregateId>
+		{
+			public StoredAggregate(AggregateRoot<TAggregateId, TBaseEvent> sender)
+			{
+				this.AggregateRoot = sender;
+			}
+
+			public AggregateRoot<TAggregateId, TBaseEvent> AggregateRoot { get; private set; }
+
+			public TAggregateId AggregateId { get { return this.AggregateRoot.Id; } }
+			public string AggregateType { get { return this.AggregateRoot.GetType().Name; } }
+
+			public override string ToString()
+			{
+				return string.Format("{0}({1})",
+					this.AggregateType,
+					this.AggregateId);
 			}
 		}
 	}

@@ -25,8 +25,8 @@ using System.Reflection;
 /// Represents the filter criteria for a domain event store query.
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial class StoredEventCriteria<TAggregateId>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
+partial class StoredEventCriteria<TAggregateId> : StoredEventCriteria
 	where TAggregateId : IComparable
 {
 	/// <summary>
@@ -36,7 +36,6 @@ partial class StoredEventCriteria<TAggregateId>
 	{
 		this.AggregateInstances = new List<StoredEventAggregateFilter<TAggregateId>>();
 		this.AggregateTypes = new List<Type>();
-		this.EventTypes = new List<Type>();
 	}
 
 	/// <summary>
@@ -56,27 +55,4 @@ partial class StoredEventCriteria<TAggregateId>
 	/// use <see cref="AggregateInstances"/> instead.
 	/// </remarks>
 	public List<Type> AggregateTypes { get; private set; }
-
-	/// <summary>
-	/// List of event type filters. All types added are OR'ed with the 
-	/// others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
-	/// </summary>
-	public List<Type> EventTypes { get; private set; }
-
-	/// <summary>
-	/// Filters events that happened after the given starting date.
-	/// </summary>
-	public DateTime? Since { get; set; }
-
-	/// <summary>
-	/// Filters events that happened before the given ending date.
-	/// </summary>
-	public DateTime? Until { get; set; }
-
-	/// <summary>
-	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
-	/// be considered as exclusive date ranges (excludes values with a matching date). 
-	/// Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-	/// </summary>
-	public bool IsExclusiveDateRange { get; set; }
 }

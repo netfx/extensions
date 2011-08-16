@@ -12,7 +12,7 @@ using System.Text;
 /// </remarks>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
 partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBaseEvent>
 	where TAggregateId : IComparable
 {
@@ -40,8 +40,8 @@ partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBas
 	/// Filters events that are assignable to the given type. Can be called 
 	/// multiple times and will filter for any of the specified types (OR operator).
 	/// </summary>
-	/// <typeparam name="TEventArgs">The type of the events to filter.</typeparam>
-	IDomainEventQuery<TAggregateId, TBaseEvent> OfType<TEventArgs>() where TEventArgs : TBaseEvent;
+	/// <typeparam name="TEvent">The type of the events to filter.</typeparam>
+	IDomainEventQuery<TAggregateId, TBaseEvent> OfType<TEvent>() where TEvent : TBaseEvent;
 
 	/// <summary>
 	/// Filters events that happened after the given starting date.
@@ -49,7 +49,7 @@ partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBas
 	/// <param name="when">The starting date to filter by.</param>
 	/// <remarks>
 	/// By default, includes events with the given date, unless the 
-	/// <see cref="ExclusiveDateRange"/> is called to make the range exclusive.
+	/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 	/// </remarks>
 	IDomainEventQuery<TAggregateId, TBaseEvent> Since(DateTime when);
 
@@ -59,7 +59,7 @@ partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBas
 	/// <param name="when">The ending date to filter by.</param>
 	/// <remarks>
 	/// By default, includes events with the given date, unless the 
-	/// <see cref="ExclusiveDateRange"/> is called to make the range exclusive.
+	/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 	/// </remarks>
 	IDomainEventQuery<TAggregateId, TBaseEvent> Until(DateTime when);
 
@@ -67,5 +67,5 @@ partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBas
 	/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
 	/// exclusive, changing the default behavior which is to be inclusive.
 	/// </summary>
-	IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveDateRange();
+	IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveRange();
 }

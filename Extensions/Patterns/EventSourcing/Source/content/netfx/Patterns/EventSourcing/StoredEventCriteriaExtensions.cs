@@ -37,8 +37,8 @@ static partial class StoredEventCriteriaExtensions
 	/// <param name="criteria">The criteria object to convert to a Linq expression.</param>
 	/// <param name="typeNameConverter">The function that converts a <see cref="Type"/> to
 	/// its string representation in the store. Used to calculate the
-	/// values of <see cref="IStoredEvent{TAggregateId}.AggregateType"/> and
-	/// <see cref="IStoredEvent{TAggregateId}.EventType"/>.</param>
+	/// values of <see cref="IStoredAggregate{TAggregateId}.AggregateType"/> and
+	/// <see cref="IStoredEvent.EventType"/>.</param>
 	/// <returns>
 	/// The criteria object converted to an expression that can be
 	/// used to query an <see cref="IQueryable{T}"/> if the store
@@ -53,7 +53,8 @@ static partial class StoredEventCriteriaExtensions
 	private class StoredEventCriteriaBuilder<TAggregateId>
 		where TAggregateId : IComparable
 	{
-		private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(IStoredEvent<TAggregateId>).GetProperty("AggregateId"));
+		private static readonly Lazy<PropertyInfo> AggregateProperty = new Lazy<PropertyInfo>(() => typeof(IStoredEvent<TAggregateId>).GetProperty("Aggregate"));
+		private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(IStoredAggregate<TAggregateId>).GetProperty("AggregateId"));
 
 		private StoredEventCriteria<TAggregateId> criteria;
 		private Func<Type, string> typeNameConverter;
@@ -71,8 +72,11 @@ static partial class StoredEventCriteriaExtensions
 			foreach (var filter in this.criteria.AggregateInstances)
 			{
 				var sourceType = typeNameConverter.Invoke(filter.AggregateType);
-				// Builds: AggregateId == id && SourceTypes == type
-				var predicate = BuildEquals(filter.AggregateId).And(e => e.AggregateType == sourceType);
+				// Builds: Aggregate != null && Aggregate.AggregateId == id && Aggregate.AggregateType == type
+
+				var predicate = ((Expression<Func<IStoredEvent<TAggregateId>, bool>>)
+					(e => e.Aggregate != null && e.Aggregate.AggregateType == sourceType)).And
+					(BuildEquals(filter.AggregateId));
 
 				// ORs all aggregregate+id filters.
 				criteria = Or(criteria, predicate);
@@ -94,7 +98,7 @@ static partial class StoredEventCriteriaExtensions
 				var sourceType = typeNameConverter.Invoke(filter);
 
 				// ORs all aggregregate filters.
-				criteria = Or(criteria, e => e.AggregateType == sourceType);
+				criteria = Or(criteria, e => e.Aggregate != null && e.Aggregate.AggregateType == sourceType);
 			}
 
 			if (criteria == null)
@@ -142,7 +146,11 @@ static partial class StoredEventCriteriaExtensions
 			var @event = Expression.Parameter(typeof(IStoredEvent<TAggregateId>), "event");
 			var lambda = Expression.Lambda<Func<IStoredEvent<TAggregateId>, bool>>(
 				Expression.Equal(
-					Expression.MakeMemberAccess(@event, AggregateIdProperty.Value),
+					Expression.MakeMemberAccess(
+						Expression.MakeMemberAccess(
+							@event, 
+							AggregateProperty.Value), 
+						AggregateIdProperty.Value),
 					Expression.Constant(id, typeof(TAggregateId))), @event);
 
 			return lambda;
@@ -162,7 +170,7 @@ static partial class StoredEventCriteriaExtensions
 			if (this.criteria.Since != null)
 			{
 				var since = this.criteria.Since.Value.ToUniversalTime();
-				if (this.criteria.IsExclusiveDateRange)
+				if (this.criteria.IsExclusiveRange)
 					result = And(result, e => e.Timestamp > since);
 				else
 					result = And(result, e => e.Timestamp >= since);
@@ -171,7 +179,7 @@ static partial class StoredEventCriteriaExtensions
 			if (this.criteria.Until != null)
 			{
 				var until = this.criteria.Until.Value.ToUniversalTime();
-				if (this.criteria.IsExclusiveDateRange)
+				if (this.criteria.IsExclusiveRange)
 					result = And(result, e => e.Timestamp < until);
 				else
 					result = And(result, e => e.Timestamp <= until);

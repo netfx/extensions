@@ -21,7 +21,7 @@ using System;
 /// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> 
 /// or implement <see cref="IDomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+/// <nuget id="netfx-Patterns.EventSourcing" />
 partial interface IDomainEventHandler
 {
 	/// <summary>
@@ -41,7 +41,7 @@ partial interface IDomainEventHandler
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+/// <nuget id="netfx-Patterns.EventSourcing" />
 partial interface IDomainEventHandler<TAggregateId, TEventArgs> : IDomainEventHandler
 {
 	/// <summary>

@@ -20,7 +20,7 @@ using System;
 /// Base class part of the infrastructure. Concrete 
 /// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+/// <nuget id="netfx-Patterns.EventSourcing" />
 abstract partial class DomainEventHandler : IDomainEventHandler
 {
 	/// <summary>
@@ -40,7 +40,7 @@ abstract partial class DomainEventHandler : IDomainEventHandler
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core" />
+/// <nuget id="netfx-Patterns.EventSourcing" />
 abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler, IDomainEventHandler<TAggregateId, TEventArgs>
 {
 	/// <summary>

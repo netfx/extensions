@@ -24,21 +24,13 @@ using System.Linq.Expressions;
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IDomainEventStore<TAggregateId, TBaseEvent>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
+partial interface IDomainEventStore<TAggregateId, TBaseEvent> : IEventStore<TBaseEvent>
 	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Gets or sets the function that converts a <see cref="Type"/> to 
-	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="IStoredEvent{TAggregateId}.AggregateType"/> and 
-	/// <see cref="IStoredEvent{TAggregateId}.EventType"/>.
-	/// </summary>
-	Func<Type, string> TypeNameConverter { get; set; }
-
-	/// <summary>
 	/// Notifies the store that the given event raised by the given sender 
-	/// should be persisted when <see cref="Commit"/> is called.
+	/// should be persisted when <see cref="IEventStore{TBaseEvent}.Commit"/> is called.
 	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="args">The instance containing the event data.</param>
@@ -64,10 +56,4 @@ partial interface IDomainEventStore<TAggregateId, TBaseEvent>
 	/// </para>
 	/// </remarks>
 	IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria);
-
-	/// <summary>
-	/// Persists all <see cref="Persist"/>s performed so far, effectively commiting 
-	/// the changes to the underlying store in a unit-of-work style.
-	/// </summary>
-	void Commit();
 }

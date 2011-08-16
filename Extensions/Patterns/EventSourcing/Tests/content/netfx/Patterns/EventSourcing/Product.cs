@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
 	public class DomainEvent { }
 

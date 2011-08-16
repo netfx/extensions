@@ -46,3 +46,6 @@ public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 // public partial interface IDomainEventQuery<TAggregateId, TBaseEvent> { }
 // public partial interface IDomainEventStore<TAggregateId, TBaseEvent> { }
 // public partial interface IStoredEvent<TAggregateId> { }
+// public partial interface IStoredAggregate<TAggregateId> { }
+// public partial class StoredEventCriteria<TAggregateId> { }
+// public partial class StoredEventAggregateFilter<TAggregateId> { }

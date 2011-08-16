@@ -26,14 +26,14 @@ using System.Reflection;
 /// Provides the entry point <see cref="Query"/> for a fluent API 
 /// that makes querying event stores easier.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
 static partial class DomainEventQueryExtensions
 {
 	/// <summary>
 	/// Queries the event store for events that match specified 
 	/// criteria via the returned fluent API methods 
 	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.For{TAggregate}()"/> and 
-	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.OfType{TEventArgs}()"/>. 
+	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.OfType{TEvent}()"/>. 
 	/// </summary>
 	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
@@ -105,9 +105,9 @@ static partial class DomainEventQueryExtensions
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveDateRange()
+		public IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveRange()
 		{
-			this.criteria.IsExclusiveDateRange = true;
+			this.criteria.IsExclusiveRange = true;
 			return this;
 		}
 

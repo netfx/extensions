@@ -22,7 +22,7 @@ using System;
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
 partial interface IDomainEventBus<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {

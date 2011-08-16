@@ -6,9 +6,9 @@ using Xunit;
 using System.Collections;
 using Moq;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests" />
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class DomainEventQuerySpec
 	{
 		private MemoryEventStore<int, DomainEvent> store;
@@ -16,7 +16,6 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 
 		public DomainEventQuerySpec()
 		{
-			//this.store = new MemoryEventStore<int, DomainEvent>(() => this.utcNow().Subtract(TimeSpan.FromDays(365)));
 			this.store = new MemoryEventStore<int, DomainEvent>(() => this.utcNow());
 
 			var product = new Product(5, "DevStore");
@@ -31,8 +30,6 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			product.Publish(2);
 			product.GetChanges().ToList()
 				.ForEach(e => store.Persist(product, e));
-
-			//this.utcNow = () => DateTime.UtcNow;
 		}
 
 		[Fact]
@@ -53,6 +50,14 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			Assert.Equal(6, product.Id);
 			Assert.Equal("WoVS", product.Title);
 			Assert.Equal(2, product.Version);
+		}
+
+		[Fact]
+		public void WhenQuerying_ThenCanAccessCriteria()
+		{
+			var criteria = store.Query().Criteria;
+
+			Assert.NotNull(criteria);
 		}
 
 		[Fact]
@@ -134,7 +139,7 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			store.Persist(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveDateRange();
+			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveRange();
 
 			Assert.Equal(1, events.Count());
 		}
@@ -184,9 +189,25 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			store.Persist(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveDateRange();
+			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange();
 
 			Assert.Equal(2, events.Count());
+		}
+
+		[Fact]
+		public void WhenFilteringBySystemEventType_ThenSucceeds()
+		{
+			store.Persist(new SystemEvent { Name = "Shutdown" });
+
+			var events = ((IEventStore<DomainEvent>)store).Query().OfType<SystemEvent>().ToList().OfType<SystemEvent>().ToList();
+
+			Assert.Equal(1, events.Count);
+			Assert.Equal("Shutdown", events[0].Name);
+		}
+
+		public class SystemEvent : DomainEvent
+		{
+			public string Name { get; set; }
 		}
 
 		public class DeactivatedEvent : DomainEvent

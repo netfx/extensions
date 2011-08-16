@@ -21,9 +21,9 @@ using System.Text;
 using Xunit;
 using Moq;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests" />
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class DomainEventsSpec
 	{
 		[Fact]

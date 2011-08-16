@@ -16,39 +16,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endregion
 using System;
 
-/// <summary>
-/// Represents a persisted event in an event store.
-/// </summary>
-/// <remarks>
-/// The core interface does not expose the event payload, 
-/// as its representation as well as specific storage type
-/// and serialization/deserialization can vary wildly 
-/// across store implementation. Imposing a particular 
-/// representation via this interface would be unnecessarily 
-/// restrictive and is not needed for the rest of the APIs.
-/// </remarks>
+/// <devdoc>
+/// Links the basic stored event with the optional associated aggregate 
+/// root information.
+/// </devdoc>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
-partial interface IStoredEvent<TAggregateId>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
+partial interface IStoredEvent<TAggregateId> : IStoredEvent
 	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Gets the aggregate root identifier that the event applies to.
+	/// Gets the aggregate root associated with this event.
 	/// </summary>
-	TAggregateId AggregateId { get; }
-
-	/// <summary>
-	/// Gets the type of the the domain object that this event applies to.
-	/// </summary>
-	string AggregateType { get; }
-
-	/// <summary>
-	/// Gets the type of the event.
-	/// </summary>
-	string EventType { get; }
-
-	/// <summary>
-	/// Gets the UTC timestamp of the event.
-	/// </summary>
-	DateTime Timestamp { get; }
+	IStoredAggregate<TAggregateId> Aggregate { get; }
 }

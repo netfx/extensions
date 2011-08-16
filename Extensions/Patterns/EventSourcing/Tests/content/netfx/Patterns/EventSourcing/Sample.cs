@@ -23,9 +23,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests" />
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class Sample
 	{
 		[Fact]

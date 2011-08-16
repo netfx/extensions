@@ -25,7 +25,7 @@ using System.Text;
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing.Core"/>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
 partial class DomainEventStore<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {
@@ -48,17 +48,27 @@ partial class DomainEventStore<TAggregateId, TBaseEvent>
 	{
 		public Func<Type, string> TypeNameConverter { get; set; }
 
-		public IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria)
+		public void Commit()
 		{
-			return Enumerable.Empty<TBaseEvent>();
 		}
 
 		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 		{
 		}
 
-		public void Commit()
+		public void Persist(TBaseEvent @event)
 		{
 		}
+
+		public IEnumerable<TBaseEvent> Query(StoredEventCriteria criteria)
+		{
+			return Enumerable.Empty<TBaseEvent>();
+		}
+
+		public IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria)
+		{
+			return Enumerable.Empty<TBaseEvent>();
+		}
+
 	}
 }

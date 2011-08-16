@@ -4,18 +4,24 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
 	public class DomainEventStoreSpec
 	{
 		[Fact]
-		public void WhenSaving_ThenNoOp()
+		public void WhenPersistingEvent_ThenNoOp()
+		{
+			DomainEventStore<int, DomainEvent>.None.Persist(null);
+		}
+
+		[Fact]
+		public void WhenPersistingAggregateEvent_ThenNoOp()
 		{
 			DomainEventStore<int, DomainEvent>.None.Persist(null, null);
 		}
 
 		[Fact]
-		public void WhenSavingChanges_ThenNoOp()
+		public void WhenCommit_ThenNoOp()
 		{
 			DomainEventStore<int, DomainEvent>.None.Commit();
 		}
@@ -24,6 +30,12 @@ namespace NetFx.Patterns.EventSourcing.Core.Tests
 		public void WhenQuerying_ThenReturnsEmpty()
 		{
 			Assert.False(DomainEventStore<int, DomainEvent>.None.Query(null).Any());
+		}
+
+		[Fact]
+		public void WhenQuerying_ThenReturnsEmptyNonAggregate()
+		{
+			Assert.False(((IEventStore<DomainEvent>)DomainEventStore<int, DomainEvent>.None).Query(null).Any());
 		}
 	}
 }

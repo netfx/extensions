@@ -20,9 +20,9 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace NetFx.Patterns.EventSourcing.Core.Tests
+namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Core.Tests"/>
+	/// <nuget id="netfx-Patterns.EventSourcing.Tests"/>
 	public class AggregateRootSpec
 	{
 		[Fact]
