@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:ISerializer`1">
+            <summary>
+            Implementations of this interface are able to serialize and 
+            deserialize an object graph from a given storage type.
+            </summary>
+            <nuget id="netfx-System.ISerializer" />
+        </member>
+        <member name="M:ISerializer`1.Deserialize``1(`0)">
+            <summary>
+            Deserializes an object graph from the provided storage.
+            </summary>
+            <typeparam name="T">The type of object to be deserialized.</typeparam>
+            <param name="storage">The storage from which the object will be reconstructed.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:ISerializer`1.Serialize``1(`0,``0)">
+            <summary>
+            Serializes the provided object graph and writes it to the storage.
+            </summary>
+            <typeparam name="T">The type of object to be serialized</typeparam>
+            <param name="storage">The storage where the object should be persisted.</param>
+            <param name="graph">The object graph to be serialized.</param>
+        </member>
+    </members>
+</doc>
