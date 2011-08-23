@@ -15,33 +15,46 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Reflection;
 
 /// <summary>
-/// Represents a persisted event in an event store.
+/// Represents the filter criteria for an event store query.
 /// </summary>
-/// <remarks>
-/// The core interface does not expose the event payload, 
-/// as its representation as well as specific storage type
-/// and serialization/deserialization can vary wildly 
-/// across store implementation. Imposing a particular 
-/// representation via this interface would be unnecessarily 
-/// restrictive and is not needed for the rest of the APIs.
-/// </remarks>
 /// <nuget id="netfx-Patterns.EventStore"/>
-partial interface IStoredEvent
+partial class EventQueryCriteria
 {
 	/// <summary>
-	/// Gets the event id.
+	/// Initializes a new instance of the <see cref="EventQueryCriteria"/> class.
 	/// </summary>
-	Guid EventId { get; }
+	public EventQueryCriteria()
+	{
+		this.EventTypes = new List<Type>();
+	}
 
 	/// <summary>
-	/// Gets the type of the event.
+	/// List of event type filters. All types added are OR'ed with the 
+	/// others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
 	/// </summary>
-	string EventType { get; }
+	public List<Type> EventTypes { get; private set; }
 
 	/// <summary>
-	/// Gets the UTC timestamp of the event.
+	/// Filters events that happened after the given starting date.
 	/// </summary>
-	DateTime Timestamp { get; }
+	public DateTime? Since { get; set; }
+
+	/// <summary>
+	/// Filters events that happened before the given ending date.
+	/// </summary>
+	public DateTime? Until { get; set; }
+
+	/// <summary>
+	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
+	/// be considered as exclusive ranges (excludes values with a matching date). 
+	/// Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+	/// </summary>
+	public bool IsExclusiveRange { get; set; }
 }

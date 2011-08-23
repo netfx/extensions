@@ -8,15 +8,15 @@ using Moq;
 
 namespace NetFx.Patterns.EventStore.Tests
 {
-	/// <nuget id="netfx-Patterns.EventStore.Tests" />
+	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
 	public class EventQuerySpec
 	{
-		private MemoryEventStore<DomainEvent> store;
+		private MemoryEventStore<SystemEvent> store;
 		private Func<DateTime> utcNow = () => DateTime.UtcNow;
 
 		public EventQuerySpec()
 		{
-			this.store = new MemoryEventStore<DomainEvent>(() => this.utcNow());
+			this.store = new MemoryEventStore<SystemEvent>(() => this.utcNow());
 
 			this.store.Persist(new ProductCreatedEvent { Id = 5, Title = "DevStore" });
 			this.store.Persist(new ProductPublishedEvent { Version = 1 });
@@ -31,7 +31,7 @@ namespace NetFx.Patterns.EventStore.Tests
 		[Fact]
 		public void WhenGettingEmptyQueryEnumerable_ThenEmptyList()
 		{
-			var store = new MemoryEventStore<DomainEvent>(() => this.utcNow());
+			var store = new MemoryEventStore<SystemEvent>(() => this.utcNow());
 			var enumerable = store.Query() as IEnumerable;
 
 			Assert.False(enumerable.GetEnumerator().MoveNext());
@@ -141,7 +141,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			Assert.Equal(2, events.Count());
 		}
 
-		public class DeactivatedEvent : DomainEvent
+		public class DeactivatedEvent : SystemEvent
 		{
 			public override string ToString()
 			{

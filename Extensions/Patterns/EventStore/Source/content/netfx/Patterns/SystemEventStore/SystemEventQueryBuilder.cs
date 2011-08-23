@@ -24,15 +24,16 @@ using System.Reflection;
 
 /// <summary>
 /// Provides the entry point <see cref="Query"/> for a fluent API 
-/// that makes querying event stores easier.
+/// that makes building the event store query criteria easier.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventStore"/>
-static partial class EventQueryExtensions
+static partial class EventQueryBuilder
 {
 	/// <summary>
-	/// Queries the event store for events that match specified 
-	/// criteria via the returned fluent API methods 
-	/// <see cref="IEventQuery{TBaseEvent}.OfType{TEvent}()"/>. 
+	/// Allows building a query against the event store 
+	/// using a fluent API and automatically executing 
+	/// it to find events that match built criteria upon 
+	/// query enumeration or execution.
 	/// </summary>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
 	/// <param name="store">The domain event store.</param>
@@ -44,18 +45,23 @@ static partial class EventQueryExtensions
 	private class EventQuery<TBaseEvent> : IEventQuery<TBaseEvent>
 	{
 		private IEventStore<TBaseEvent> store;
-		private StoredEventCriteria criteria = new StoredEventCriteria();
+		private EventQueryCriteria criteria = new EventQueryCriteria();
 
 		public EventQuery(IEventStore<TBaseEvent> store)
 		{
 			this.store = store;
 		}
 
-		public StoredEventCriteria Criteria { get { return this.criteria; } }
+		public EventQueryCriteria Criteria { get { return this.criteria; } }
+
+		public IEnumerable<TBaseEvent> Execute()
+		{
+			return this.store.Query(this.criteria);
+		}		
 
 		public IEnumerator<TBaseEvent> GetEnumerator()
 		{
-			return this.store.Query(this.criteria).GetEnumerator();
+			return Execute().GetEnumerator();
 		}
 
 		public IEventQuery<TBaseEvent> OfType<TEvent>()

@@ -60,10 +60,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\netfx\Patterns\EventStore\EventBusSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\EventQuerySpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\EventStoreSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\Product.cs" />
+    <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
   </ItemGroup>
   <ItemGroup>

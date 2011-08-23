@@ -15,48 +15,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
-/// Provides the <see cref="None"/> empty store for use 
-/// when no store is needed.
+/// Interface implemented by the component that coordinates 
+/// event handler invocation when a subscribed event is published.
 /// </summary>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventStore"/>
-partial class EventStore<TBaseEvent>
+partial interface IEventBus<TBaseEvent>
 {
 	/// <summary>
-	/// Initializes the <see cref="None"/> null object 
-	/// pattern property.
+	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	static EventStore()
-	{
-		None = new NullStore();
-	}
-
-	/// <summary>
-	/// Gets a default domain event store implementation that 
-	/// does nothing (a.k.a. Null Object Pattern).
-	/// </summary>
-	public static IEventStore<TBaseEvent> None { get; private set; }
-
-	private class NullStore : IEventStore<TBaseEvent>
-	{
-		public Func<Type, string> TypeNameConverter { get; set; }
-
-		public IEnumerable<TBaseEvent> Query(StoredEventCriteria criteria)
-		{
-			return Enumerable.Empty<TBaseEvent>();
-		}
-
-		public void Persist(TBaseEvent @event)
-		{
-		}
-
-		public void Commit()
-		{
-		}
-	}
+	/// <param name="event">The event payload.</param>
+	void Publish(TBaseEvent @event);
 }

@@ -15,30 +15,42 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.CompilerServices;
 
-// These are needed only if you include this package tests 
-// or if you intend to mock any of the included types using 
-// any of the proxy-generating mocking libraries such as 
-// Moq, Rhino Mocks, etc.
-// Otherwise, feel free to comment this out or wrap it in 
-// an #if DEBUG directive.
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+/// <summary>
+/// Base interface part of the infrastructure. Concrete 
+/// handlers should inherit <see cref="SystemEventHandler{TEventArgs}"/> 
+/// or implement <see cref="ISystemEventHandler{TEventArgs}"/> instead.
+/// </summary>
+/// <nuget id="netfx-Patterns.EventStore" />
+partial interface ISystemEventHandler
+{
+	/// <summary>
+	/// Invocation style hint that the <see cref="IEventBus{TBaseEvent}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
+	/// </summary>
+	bool IsAsync { get; }
 
-// In order to make other types introduced by this package public, 
-// declare a partial type as public here.
-// For example, the following declarations would make public 
-// all types:
+	/// <summary>
+	/// Gets the type of the event argument this handler can process.
+	/// </summary>
+	Type EventType { get; }
+}
 
-// public partial interface IEventQuery<TBaseEvent> { }
-// public partial interface IEventStore<TBaseEvent> { }
-// public partial interface IStoredEvent { }
-
-// public partial class EventQueryExtensions { }
-// public partial class EventStore<TBaseEvent> { }
-// public partial class StoredEventCriteria { }
-// public partial class StoredEventCriteriaExtensions { }
+/// <summary>
+/// Base interface for system event handlers that handle a specific type of event.
+/// </summary>
+/// <remarks>
+/// Unlike domain/aggregate root specific handlers, system event handlers process 
+/// events that do not apply to a single aggregate root and are typically not related 
+/// to the domain model but some system-level service or functionality (such as an 
+/// email sending service).
+/// </remarks>
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventStore" />
+partial interface ISystemEventHandler<TEventArgs> : ISystemEventHandler
+{
+	/// <summary>
+	/// Handles the specified event.
+	/// </summary>
+	void Handle(TEventArgs @event);
+}

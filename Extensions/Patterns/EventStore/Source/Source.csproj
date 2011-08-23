@@ -44,15 +44,16 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventStore\EventQueryExtensions.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\EventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\EventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\SystemEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\EventQueryBuilder.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\IEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\ISystemEventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\IEventQuery.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\IEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\IStoredEvent.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\StoredEventCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\StoredEventCriteriaExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\EventStore\EventQueryCriteria.cs" />
     <Compile Include="content\netfx\Patterns\EventStore\Visibility.cs" />
-    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

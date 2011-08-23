@@ -15,46 +15,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Reflection;
 
 /// <summary>
-/// Represents the filter criteria for an event store query.
+/// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventStore"/>
-partial class StoredEventCriteria
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventStore" />
+abstract partial class SystemEventHandler<TEventArgs> : ISystemEventHandler<TEventArgs>
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="StoredEventCriteria"/> class.
+	/// Handles the specified event.
 	/// </summary>
-	public StoredEventCriteria()
-	{
-		this.EventTypes = new List<Type>();
-	}
+	public abstract void Handle(TEventArgs @event);
 
 	/// <summary>
-	/// List of event type filters. All types added are OR'ed with the 
-	/// others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
+	/// Gets the type of the event this handler can process, which equals 
+	/// the generic type parameter of <see cref="SystemEventHandler{TEventArgs}"/>.
 	/// </summary>
-	public List<Type> EventTypes { get; private set; }
+	public Type EventType { get { return typeof(TEventArgs); } }
 
 	/// <summary>
-	/// Filters events that happened after the given starting date.
+	/// Invocation style hint that the <see cref="IEventBus{TBaseEvent}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
-	public DateTime? Since { get; set; }
-
-	/// <summary>
-	/// Filters events that happened before the given ending date.
-	/// </summary>
-	public DateTime? Until { get; set; }
-
-	/// <summary>
-	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
-	/// be considered as exclusive ranges (excludes values with a matching date). 
-	/// Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-	/// </summary>
-	public bool IsExclusiveRange { get; set; }
+	public virtual bool IsAsync { get; protected set; }
 }

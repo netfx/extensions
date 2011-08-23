@@ -27,13 +27,6 @@ using System.Linq.Expressions;
 partial interface IEventStore<TBaseEvent>
 {
 	/// <summary>
-	/// Gets or sets the function that converts a <see cref="Type"/> to 
-	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="IStoredEvent.EventType"/>.
-	/// </summary>
-	Func<Type, string> TypeNameConverter { get; set; }
-
-	/// <summary>
 	/// Notifies the store that the given event
 	/// should be persisted when <see cref="Commit"/> is called.
 	/// </summary>
@@ -44,22 +37,18 @@ partial interface IEventStore<TBaseEvent>
 	/// Queries the event store for events that match the given criteria.
 	/// </summary>
 	/// <remarks>
-	/// This is the only low-level querying method that stores need to implement. 
-	/// <para>
-	/// As a facility for stores that persist events in an <see cref="IQueryable{T}"/> 
-	/// queryable object, the <see cref="StoredEventCriteria"/> object 
-	/// can be converted to an expression using the <see cref="StoredEventCriteriaExtensions.ToExpression"/> 
-	/// extension method, making the query implementation trivial in that case.
-	/// </para>
+	/// Store implementations are advised to provide full support for the 
+	/// specified criteria, but aren't required to.
 	/// <para>
 	/// The more user-friendly querying API in <see cref="IEventQuery{TBaseEvent}"/> 
-	/// leverages this method internally and therefore can be used by any 
-	/// event store implementation. It's accessible by executing the 
-	/// <see cref="EventQueryExtensions.Query{TBaseEvent}"/> extension method
+	/// provides a fluent API over any store to build the criteria object, 
+	/// and can therefore be used with any event store implementation. 
+	/// It's accessible by executing the 
+	/// <see cref="EventQueryBuilder.Query{TBaseEvent}"/> extension method
 	/// on an event store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TBaseEvent> Query(StoredEventCriteria criteria);
+	IEnumerable<TBaseEvent> Query(EventQueryCriteria criteria);
 
 	/// <summary>
 	/// Persists all events <see cref="Persist"/>ed so far, effectively commiting 

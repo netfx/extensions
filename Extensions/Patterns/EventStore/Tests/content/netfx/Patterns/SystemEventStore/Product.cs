@@ -5,12 +5,14 @@ using System.Text;
 
 namespace NetFx.Patterns.EventStore.Tests
 {
-	public abstract class DomainEvent { }
+	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	public abstract class SystemEvent { }
 
 	/// <summary>
 	/// Event raised when a new product is created.
 	/// </summary>
-	public class ProductCreatedEvent : DomainEvent
+	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	public class ProductCreatedEvent : SystemEvent
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
@@ -25,7 +27,8 @@ namespace NetFx.Patterns.EventStore.Tests
 	/// <summary>
 	/// Event raised when a new version of a product is published.
 	/// </summary>
-	public class ProductPublishedEvent : DomainEvent
+	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	public class ProductPublishedEvent : SystemEvent
 	{
 		public int Version { get; set; }
 

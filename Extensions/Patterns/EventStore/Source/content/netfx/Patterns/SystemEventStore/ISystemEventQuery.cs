@@ -7,7 +7,7 @@ using System.Text;
 /// Provides a fluent API to filter events from the event store. 
 /// </summary>
 /// <remarks>
-/// This interface is returned from the <see cref="EventQueryExtensions.Query"/> 
+/// This interface is returned from the <see cref="EventQueryBuilder.Query"/> 
 /// extension method for <see cref="IEventStore{TBaseEvent}"/>.
 /// </remarks>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
@@ -15,9 +15,15 @@ using System.Text;
 partial interface IEventQuery<TBaseEvent> : IEnumerable<TBaseEvent>
 {
 	/// <summary>
+	/// Executes the <see cref="Criteria"/> built using the fluent API 
+	/// against the underlying store.
+	/// </summary>
+	IEnumerable<TBaseEvent> Execute();
+
+	/// <summary>
 	/// Gets the criteria that was built using the fluent API so far.
 	/// </summary>
-	StoredEventCriteria Criteria { get; }
+	EventQueryCriteria Criteria { get; }
 
 	/// <summary>
 	/// Filters events that are assignable to the given type. Can be called 
