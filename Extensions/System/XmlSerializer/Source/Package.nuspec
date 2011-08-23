@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.XmlSerializer</id>
+		<version>1.0.0.0</version>
+		<title>NETFx XmlSerializer : ISerializer</title>
+		<description>Implements the core NETFx ISerializer interface using the .NET framework System.Xml.XmlSerializer</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx serializer xml</tags>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net35"/>
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net40"/>
+		</frameworkAssemblies>
+		<dependencies>
+			<dependency id="netfx-Guard" version="1.3" />
+			<dependency id="netfx-System.ISerializer" version="1.0" />
+		</dependencies>		
+	</metadata>
+</package>
