@@ -24,13 +24,13 @@ using System.Reflection;
 /// <summary>
 /// Represents the filter criteria for an event store query.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventStore"/>
-partial class EventQueryCriteria
+/// <nuget id="netfx-Patterns.SystemEventStore"/>
+partial class SystemEventQueryCriteria
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="EventQueryCriteria"/> class.
+	/// Initializes a new instance of the <see cref="SystemEventQueryCriteria"/> class.
 	/// </summary>
-	public EventQueryCriteria()
+	public SystemEventQueryCriteria()
 	{
 		this.EventTypes = new List<Type>();
 	}

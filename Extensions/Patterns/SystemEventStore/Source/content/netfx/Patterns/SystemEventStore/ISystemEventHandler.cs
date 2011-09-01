@@ -21,11 +21,11 @@ using System;
 /// handlers should inherit <see cref="SystemEventHandler{TEventArgs}"/> 
 /// or implement <see cref="ISystemEventHandler{TEventArgs}"/> instead.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventStore" />
+/// <nuget id="netfx-Patterns.SystemEventStore" />
 partial interface ISystemEventHandler
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IEventBus{TBaseEvent}"/> implementation
+	/// Invocation style hint that the <see cref="ISystemEventBus{TBaseEvent}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
 	bool IsAsync { get; }
@@ -46,7 +46,7 @@ partial interface ISystemEventHandler
 /// email sending service).
 /// </remarks>
 /// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventStore" />
+/// <nuget id="netfx-Patterns.SystemEventStore" />
 partial interface ISystemEventHandler<TEventArgs> : ISystemEventHandler
 {
 	/// <summary>

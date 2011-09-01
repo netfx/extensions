@@ -21,8 +21,8 @@ using System;
 /// event handler invocation when a subscribed event is published.
 /// </summary>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventStore"/>
-partial interface IEventBus<TBaseEvent>
+/// <nuget id="netfx-Patterns.SystemEventStore"/>
+partial interface ISystemEventBus<TBaseEvent>
 {
 	/// <summary>
 	/// Publishes the specified event to the bus so that all subscribers are notified.

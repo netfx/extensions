@@ -4,164 +4,19 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:EventBus`1">
-            <summary>
-            Default implementation of an <see cref="T:IEventBus`1"/> that 
-            invokes handlers as events are published, and where handlers are 
-            run in-process (if any handlers are provided).
-            </summary>
-            <remarks>
-            A persistent <see cref="T:IEventStore`1"/> can also be specified 
-            to persist events to a store for later playback or auditing.
-            <para>
-            Handlers with <see cref="P:ISystemEventHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor.
-            </para>
-            </remarks>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventStore"/>
-        </member>
-        <member name="T:IEventBus`1">
+        <member name="T:ISystemEventBus`1">
             <summary>
             Interface implemented by the component that coordinates 
             event handler invocation when a subscribed event is published.
             </summary>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventStore"/>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
         </member>
-        <member name="M:IEventBus`1.Publish(`0)">
+        <member name="M:ISystemEventBus`1.Publish(`0)">
             <summary>
             Publishes the specified event to the bus so that all subscribers are notified.
             </summary>
             <param name="event">The event payload.</param>
-        </member>
-        <member name="M:EventBus`1.#cctor">
-            <summary>
-            Initializes the <see cref="P:EventBus`1.None"/> null object 
-            pattern property.
-            </summary>
-        </member>
-        <member name="M:EventBus`1.#ctor(IEventStore{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:IEventBus`1"/> class
-            with a persistent store for events and no in-memory handlers.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-        </member>
-        <member name="M:EventBus`1.#ctor(System.Collections.Generic.IEnumerable{ISystemEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:IEventBus`1"/> class with 
-            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:EventBus`1.#ctor(IEventStore{`0},System.Collections.Generic.IEnumerable{ISystemEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:IEventBus`1"/> class with 
-            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:EventBus`1.#ctor(System.Collections.Generic.IEnumerable{ISystemEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:IEventBus`1"/> class with 
-            the given async runner.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:ISystemEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:EventBus`1.#ctor(IEventStore{`0},System.Collections.Generic.IEnumerable{ISystemEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:IEventBus`1"/> class with 
-            a persistent store for events, a set of event handlers and a specific async runner.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:ISystemEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:EventBus`1.Publish(`0)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="event">The event payload.</param>
-        </member>
-        <member name="P:EventBus`1.None">
-            <summary>
-            Gets a default domain event bus implementation that 
-            does nothing (a.k.a. Null Object Pattern).
-            </summary>
-        </member>
-        <member name="T:EventBus`1.NullBus">
-            <summary>
-            Provides a null <see cref="T:IEventBus`1"/> implementation 
-            for use when no bus has been configured.
-            </summary>
-        </member>
-        <member name="M:EventBus`1.NullBus.Publish(`0)">
-            <summary>
-            Does nothing.
-            </summary>
-        </member>
-        <member name="T:EventBus`1.NullStore">
-            <summary>
-            Provides a null <see cref="T:IEventStore`1"/> implementation 
-            for use when no store has been configured.
-            </summary>
-        </member>
-        <member name="T:IEventStore`1">
-            <summary>
-            Interface implemented by domain event stores.
-            </summary>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
-            <nuget id="netfx-Patterns.EventStore"/>
-        </member>
-        <member name="M:IEventStore`1.Persist(`0)">
-            <summary>
-            Notifies the store that the given event
-            should be persisted when <see cref="M:IEventStore`1.Commit"/> is called.
-            </summary>
-            <param name="event">The instance containing the event data.</param>
-        </member>
-        <member name="M:IEventStore`1.Query(EventQueryCriteria)">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-            <remarks>
-            Store implementations are advised to provide full support for the 
-            specified criteria, but aren't required to.
-            <para>
-            The more user-friendly querying API in <see cref="T:IEventQuery`1"/> 
-            provides a fluent API over any store to build the criteria object, 
-            and can therefore be used with any event store implementation. 
-            It's accessible by executing the 
-            <see cref="M:EventQueryBuilder.Query``1(IEventStore{``0})"/> extension method
-            on an event store instance.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:IEventStore`1.Commit">
-            <summary>
-            Persists all events <see cref="M:IEventStore`1.Persist(`0)"/>ed so far, effectively commiting 
-            the changes to the underlying store in a unit-of-work style.
-            </summary>
-        </member>
-        <member name="T:SystemEventHandler`1">
-            <summary>
-            Base class for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventStore" />
-        </member>
-        <member name="T:ISystemEventHandler`1">
-            <summary>
-            Base interface for system event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventStore" />
         </member>
         <member name="T:ISystemEventHandler">
             <summary>
@@ -169,11 +24,11 @@
             handlers should inherit <see cref="T:SystemEventHandler`1"/> 
             or implement <see cref="T:ISystemEventHandler`1"/> instead.
             </summary>
-            <nuget id="netfx-Patterns.EventStore"/>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
         </member>
         <member name="P:ISystemEventHandler.IsAsync">
             <summary>
-            Invocation style hint that the <see cref="T:IEventBus`1"/> implementation
+            Invocation style hint that the <see cref="T:ISystemEventBus`1"/> implementation
             can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>
@@ -182,10 +37,216 @@
             Gets the type of the event argument this handler can process.
             </summary>
         </member>
+        <member name="T:ISystemEventHandler`1">
+            <summary>
+            Base interface for system event handlers that handle a specific type of event.
+            </summary>
+            <remarks>
+            Unlike domain/aggregate root specific handlers, system event handlers process 
+            events that do not apply to a single aggregate root and are typically not related 
+            to the domain model but some system-level service or functionality (such as an 
+            email sending service).
+            </remarks>
+            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.SystemEventStore" />
+        </member>
         <member name="M:ISystemEventHandler`1.Handle(`0)">
             <summary>
             Handles the specified event.
             </summary>
+        </member>
+        <member name="T:ISystemEventQuery`1">
+            <summary>
+            Provides a fluent API to filter events from the event store. 
+            </summary>
+            <remarks>
+            This interface is returned from the <see cref="M:SystemEventQueryBuilder.Query``1(ISystemEventStore{``0})"/> 
+            extension method for <see cref="T:ISystemEventStore`1"/>.
+            </remarks>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
+        </member>
+        <member name="M:ISystemEventQuery`1.Execute">
+            <summary>
+            Executes the <see cref="P:ISystemEventQuery`1.Criteria"/> built using the fluent API 
+            against the underlying store.
+            </summary>
+        </member>
+        <member name="M:ISystemEventQuery`1.OfType``1">
+            <summary>
+            Filters events that are assignable to the given type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TEvent">The type of the events to filter.</typeparam>
+        </member>
+        <member name="M:ISystemEventQuery`1.Since(System.DateTime)">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+            <param name="when">The starting date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:ISystemEventQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:ISystemEventQuery`1.Until(System.DateTime)">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+            <param name="when">The ending date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:ISystemEventQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:ISystemEventQuery`1.ExclusiveRange">
+            <summary>
+            Makes the configured <see cref="M:ISystemEventQuery`1.Since(System.DateTime)"/> and/or <see cref="M:ISystemEventQuery`1.Until(System.DateTime)"/> dates 
+            exclusive, changing the default behavior which is to be inclusive.
+            </summary>
+        </member>
+        <member name="P:ISystemEventQuery`1.Criteria">
+            <summary>
+            Gets the criteria that was built using the fluent API so far.
+            </summary>
+        </member>
+        <member name="T:ISystemEventStore`1">
+            <summary>
+            Interface implemented by domain event stores.
+            </summary>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
+        </member>
+        <member name="M:ISystemEventStore`1.Persist(`0)">
+            <summary>
+            Notifies the store that the given event
+            should be persisted when <see cref="M:ISystemEventStore`1.Commit"/> is called.
+            </summary>
+            <param name="event">The instance containing the event data.</param>
+        </member>
+        <member name="M:ISystemEventStore`1.Query(SystemEventQueryCriteria)">
+            <summary>
+            Queries the event store for events that match the given criteria.
+            </summary>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            The more user-friendly querying API in <see cref="T:ISystemEventQuery`1"/> 
+            provides a fluent API over any store to build the criteria object, 
+            and can therefore be used with any event store implementation. 
+            It's accessible by executing the 
+            <see cref="M:SystemEventQueryBuilder.Query``1(ISystemEventStore{``0})"/> extension method
+            on an event store instance.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:ISystemEventStore`1.Commit">
+            <summary>
+            Persists all events <see cref="M:ISystemEventStore`1.Persist(`0)"/>ed so far, effectively commiting 
+            the changes to the underlying store in a unit-of-work style.
+            </summary>
+        </member>
+        <member name="T:SystemEventBus`1">
+            <summary>
+            Default implementation of an <see cref="T:ISystemEventBus`1"/> that 
+            invokes handlers as events are published, and where handlers are 
+            run in-process (if any handlers are provided).
+            </summary>
+            <remarks>
+            A persistent <see cref="T:ISystemEventStore`1"/> can also be specified 
+            to persist events to a store for later playback or auditing.
+            <para>
+            Handlers with <see cref="P:ISystemEventHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
+            </para>
+            </remarks>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
+        </member>
+        <member name="M:SystemEventBus`1.#cctor">
+            <summary>
+            Initializes the <see cref="P:SystemEventBus`1.None"/> null object 
+            pattern property.
+            </summary>
+        </member>
+        <member name="M:SystemEventBus`1.#ctor(ISystemEventStore{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ISystemEventBus`1"/> class
+            with a persistent store for events and no in-memory handlers.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+        </member>
+        <member name="M:SystemEventBus`1.#ctor(System.Collections.Generic.IEnumerable{ISystemEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ISystemEventBus`1"/> class with 
+            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
+        <member name="M:SystemEventBus`1.#ctor(ISystemEventStore{`0},System.Collections.Generic.IEnumerable{ISystemEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ISystemEventBus`1"/> class with 
+            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
+        <member name="M:SystemEventBus`1.#ctor(System.Collections.Generic.IEnumerable{ISystemEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ISystemEventBus`1"/> class with 
+            the given async runner.
+            </summary>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:ISystemEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:SystemEventBus`1.#ctor(ISystemEventStore{`0},System.Collections.Generic.IEnumerable{ISystemEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ISystemEventBus`1"/> class with 
+            a persistent store for events, a set of event handlers and a specific async runner.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:ISystemEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:SystemEventBus`1.Publish(`0)">
+            <summary>
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="event">The event payload.</param>
+        </member>
+        <member name="P:SystemEventBus`1.None">
+            <summary>
+            Gets a default domain event bus implementation that 
+            does nothing (a.k.a. Null Object Pattern).
+            </summary>
+        </member>
+        <member name="T:SystemEventBus`1.NullBus">
+            <summary>
+            Provides a null <see cref="T:ISystemEventBus`1"/> implementation 
+            for use when no bus has been configured.
+            </summary>
+        </member>
+        <member name="M:SystemEventBus`1.NullBus.Publish(`0)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="T:SystemEventBus`1.NullStore">
+            <summary>
+            Provides a null <see cref="T:ISystemEventStore`1"/> implementation 
+            for use when no store has been configured.
+            </summary>
+        </member>
+        <member name="T:SystemEventHandler`1">
+            <summary>
+            Base class for domain event handlers that handle a specific type of event.
+            </summary>
+            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.SystemEventStore" />
         </member>
         <member name="M:SystemEventHandler`1.Handle(`0)">
             <summary>
@@ -200,18 +261,18 @@
         </member>
         <member name="P:SystemEventHandler`1.IsAsync">
             <summary>
-            Invocation style hint that the <see cref="T:IEventBus`1"/> implementation
+            Invocation style hint that the <see cref="T:ISystemEventBus`1"/> implementation
             can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>
-        <member name="T:EventQueryBuilder">
+        <member name="T:SystemEventQueryBuilder">
             <summary>
-            Provides the entry point <see cref="M:EventQueryBuilder.Query``1(IEventStore{``0})"/> for a fluent API 
+            Provides the entry point <see cref="M:SystemEventQueryBuilder.Query``1(ISystemEventStore{``0})"/> for a fluent API 
             that makes building the event store query criteria easier.
             </summary>
-            <nuget id="netfx-Patterns.EventStore"/>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
         </member>
-        <member name="M:EventQueryBuilder.Query``1(IEventStore{``0})">
+        <member name="M:SystemEventQueryBuilder.Query``1(ISystemEventStore{``0})">
             <summary>
             Allows building a query against the event store 
             using a fluent API and automatically executing 
@@ -221,91 +282,36 @@
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
             <param name="store">The domain event store.</param>
         </member>
-        <member name="T:IEventQuery`1">
-            <summary>
-            Provides a fluent API to filter events from the event store. 
-            </summary>
-            <remarks>
-            This interface is returned from the <see cref="M:EventQueryBuilder.Query``1(IEventStore{``0})"/> 
-            extension method for <see cref="T:IEventStore`1"/>.
-            </remarks>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
-            <nuget id="netfx-Patterns.EventStore"/>
-        </member>
-        <member name="M:IEventQuery`1.Execute">
-            <summary>
-            Executes the <see cref="P:IEventQuery`1.Criteria"/> built using the fluent API 
-            against the underlying store.
-            </summary>
-        </member>
-        <member name="M:IEventQuery`1.OfType``1">
-            <summary>
-            Filters events that are assignable to the given type. Can be called 
-            multiple times and will filter for any of the specified types (OR operator).
-            </summary>
-            <typeparam name="TEvent">The type of the events to filter.</typeparam>
-        </member>
-        <member name="M:IEventQuery`1.Since(System.DateTime)">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-            <param name="when">The starting date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IEventQuery`1.ExclusiveRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IEventQuery`1.Until(System.DateTime)">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-            <param name="when">The ending date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IEventQuery`1.ExclusiveRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IEventQuery`1.ExclusiveRange">
-            <summary>
-            Makes the configured <see cref="M:IEventQuery`1.Since(System.DateTime)"/> and/or <see cref="M:IEventQuery`1.Until(System.DateTime)"/> dates 
-            exclusive, changing the default behavior which is to be inclusive.
-            </summary>
-        </member>
-        <member name="P:IEventQuery`1.Criteria">
-            <summary>
-            Gets the criteria that was built using the fluent API so far.
-            </summary>
-        </member>
-        <member name="T:EventQueryCriteria">
+        <member name="T:SystemEventQueryCriteria">
             <summary>
             Represents the filter criteria for an event store query.
             </summary>
-            <nuget id="netfx-Patterns.EventStore"/>
+            <nuget id="netfx-Patterns.SystemEventStore"/>
         </member>
-        <member name="M:EventQueryCriteria.#ctor">
+        <member name="M:SystemEventQueryCriteria.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:EventQueryCriteria"/> class.
+            Initializes a new instance of the <see cref="T:SystemEventQueryCriteria"/> class.
             </summary>
         </member>
-        <member name="P:EventQueryCriteria.EventTypes">
+        <member name="P:SystemEventQueryCriteria.EventTypes">
             <summary>
             List of event type filters. All types added are OR'ed with the 
             others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
             </summary>
         </member>
-        <member name="P:EventQueryCriteria.Since">
+        <member name="P:SystemEventQueryCriteria.Since">
             <summary>
             Filters events that happened after the given starting date.
             </summary>
         </member>
-        <member name="P:EventQueryCriteria.Until">
+        <member name="P:SystemEventQueryCriteria.Until">
             <summary>
             Filters events that happened before the given ending date.
             </summary>
         </member>
-        <member name="P:EventQueryCriteria.IsExclusiveRange">
+        <member name="P:SystemEventQueryCriteria.IsExclusiveRange">
             <summary>
-            If set to <see langword="true"/>, <see cref="P:EventQueryCriteria.Since"/> and <see cref="P:EventQueryCriteria.Until"/> should 
+            If set to <see langword="true"/>, <see cref="P:SystemEventQueryCriteria.Since"/> and <see cref="P:SystemEventQueryCriteria.Until"/> should 
             be considered as exclusive ranges (excludes values with a matching date). 
             Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
             </summary>

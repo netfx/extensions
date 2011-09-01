@@ -23,8 +23,8 @@ using System.Linq.Expressions;
 /// Interface implemented by domain event stores.
 /// </summary>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
-/// <nuget id="netfx-Patterns.EventStore"/>
-partial interface IEventStore<TBaseEvent>
+/// <nuget id="netfx-Patterns.SystemEventStore"/>
+partial interface ISystemEventStore<TBaseEvent>
 {
 	/// <summary>
 	/// Notifies the store that the given event
@@ -40,15 +40,15 @@ partial interface IEventStore<TBaseEvent>
 	/// Store implementations are advised to provide full support for the 
 	/// specified criteria, but aren't required to.
 	/// <para>
-	/// The more user-friendly querying API in <see cref="IEventQuery{TBaseEvent}"/> 
+	/// The more user-friendly querying API in <see cref="ISystemEventQuery{TBaseEvent}"/> 
 	/// provides a fluent API over any store to build the criteria object, 
 	/// and can therefore be used with any event store implementation. 
 	/// It's accessible by executing the 
-	/// <see cref="EventQueryBuilder.Query{TBaseEvent}"/> extension method
+	/// <see cref="SystemEventQueryBuilder.Query{TBaseEvent}"/> extension method
 	/// on an event store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TBaseEvent> Query(EventQueryCriteria criteria);
+	IEnumerable<TBaseEvent> Query(SystemEventQueryCriteria criteria);
 
 	/// <summary>
 	/// Persists all events <see cref="Persist"/>ed so far, effectively commiting 

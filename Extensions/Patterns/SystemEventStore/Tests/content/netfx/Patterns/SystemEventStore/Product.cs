@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NetFx.Patterns.EventStore.Tests
+namespace NetFx.Patterns.SystemEventStore.Tests
 {
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	/// <nuget id="netfx-Patterns.SystemEventStore.Tests.xUnit" />
 	public abstract class SystemEvent { }
 
 	/// <summary>
 	/// Event raised when a new product is created.
 	/// </summary>
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	/// <nuget id="netfx-Patterns.SystemEventStore.Tests.xUnit" />
 	public class ProductCreatedEvent : SystemEvent
 	{
 		public int Id { get; set; }
@@ -27,7 +27,7 @@ namespace NetFx.Patterns.EventStore.Tests
 	/// <summary>
 	/// Event raised when a new version of a product is published.
 	/// </summary>
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
+	/// <nuget id="netfx-Patterns.SystemEventStore.Tests.xUnit" />
 	public class ProductPublishedEvent : SystemEvent
 	{
 		public int Version { get; set; }

@@ -44,15 +44,15 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventStore\EventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\SystemEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\EventQueryBuilder.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\IEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\ISystemEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\IEventQuery.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\IEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\EventQueryCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\EventStore\Visibility.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventQuery.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventQueryBuilder.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventQueryCriteria.cs" />
+    <Compile Include="content\netfx\Patterns\SystemEventStore\Visibility.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.EventStore.Tests.xUnit</id>
+		<id>netfx-Patterns.SystemEventStore.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Event Store Core xUnit Tests</title>
+		<title>NETFx Patterns: System Event Store Core xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventStore</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

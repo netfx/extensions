@@ -26,8 +26,8 @@ using System.Reflection;
 /// Provides the entry point <see cref="Query"/> for a fluent API 
 /// that makes building the event store query criteria easier.
 /// </summary>
-/// <nuget id="netfx-Patterns.EventStore"/>
-static partial class EventQueryBuilder
+/// <nuget id="netfx-Patterns.SystemEventStore"/>
+static partial class SystemEventQueryBuilder
 {
 	/// <summary>
 	/// Allows building a query against the event store 
@@ -37,22 +37,22 @@ static partial class EventQueryBuilder
 	/// </summary>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the system.</typeparam>
 	/// <param name="store">The domain event store.</param>
-	public static IEventQuery<TBaseEvent> Query<TBaseEvent>(this IEventStore<TBaseEvent> store)
+	public static ISystemEventQuery<TBaseEvent> Query<TBaseEvent>(this ISystemEventStore<TBaseEvent> store)
 	{
 		return new EventQuery<TBaseEvent>(store);
 	}
 
-	private class EventQuery<TBaseEvent> : IEventQuery<TBaseEvent>
+	private class EventQuery<TBaseEvent> : ISystemEventQuery<TBaseEvent>
 	{
-		private IEventStore<TBaseEvent> store;
-		private EventQueryCriteria criteria = new EventQueryCriteria();
+		private ISystemEventStore<TBaseEvent> store;
+		private SystemEventQueryCriteria criteria = new SystemEventQueryCriteria();
 
-		public EventQuery(IEventStore<TBaseEvent> store)
+		public EventQuery(ISystemEventStore<TBaseEvent> store)
 		{
 			this.store = store;
 		}
 
-		public EventQueryCriteria Criteria { get { return this.criteria; } }
+		public SystemEventQueryCriteria Criteria { get { return this.criteria; } }
 
 		public IEnumerable<TBaseEvent> Execute()
 		{
@@ -64,7 +64,7 @@ static partial class EventQueryBuilder
 			return Execute().GetEnumerator();
 		}
 
-		public IEventQuery<TBaseEvent> OfType<TEvent>()
+		public ISystemEventQuery<TBaseEvent> OfType<TEvent>()
 			where TEvent : TBaseEvent
 		{
 			this.criteria.EventTypes.Add(typeof(TEvent));
@@ -72,19 +72,19 @@ static partial class EventQueryBuilder
 			return this;
 		}
 
-		public IEventQuery<TBaseEvent> Since(DateTime when)
+		public ISystemEventQuery<TBaseEvent> Since(DateTime when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IEventQuery<TBaseEvent> Until(DateTime when)
+		public ISystemEventQuery<TBaseEvent> Until(DateTime when)
 		{
 			this.criteria.Until = when;
 			return this;
 		}
 
-		public IEventQuery<TBaseEvent> ExclusiveRange()
+		public ISystemEventQuery<TBaseEvent> ExclusiveRange()
 		{
 			this.criteria.IsExclusiveRange = true;
 			return this;

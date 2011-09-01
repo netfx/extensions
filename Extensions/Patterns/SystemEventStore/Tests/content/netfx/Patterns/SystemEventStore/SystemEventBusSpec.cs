@@ -21,33 +21,32 @@ using System.Text;
 using Xunit;
 using Moq;
 
-namespace NetFx.Patterns.EventStore.Tests
+namespace NetFx.Patterns.SystemEventStore.Tests
 {
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
-	public class EventBusSpec
+	public class SystemEventBusSpec
 	{
 		[Fact]
 		public void WhenNullHandlers_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<SystemEvent>(default(IEnumerable<ISystemEventHandler>)));
+			Assert.Throws<ArgumentNullException>(() => new SystemEventBus<SystemEvent>(default(IEnumerable<ISystemEventHandler>)));
 		}
 
 		[Fact]
 		public void WhenNullEventStore_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<SystemEvent>(default(IEventStore<SystemEvent>)));
+			Assert.Throws<ArgumentNullException>(() => new SystemEventBus<SystemEvent>(default(ISystemEventStore<SystemEvent>)));
 		}
 
 		[Fact]
 		public void WhenNullAsyncRunner_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<SystemEvent>(Enumerable.Empty<ISystemEventHandler>(), null));
+			Assert.Throws<ArgumentNullException>(() => new SystemEventBus<SystemEvent>(Enumerable.Empty<ISystemEventHandler>(), null));
 		}
 
 		[Fact]
 		public void WhenPublishNullEvent_ThenThrows()
 		{
-			var bus = new EventBus<SystemEvent>(Enumerable.Empty<ISystemEventHandler>());
+			var bus = new SystemEventBus<SystemEvent>(Enumerable.Empty<ISystemEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish(default(FooArgs)));
 		}
@@ -56,9 +55,9 @@ namespace NetFx.Patterns.EventStore.Tests
 		public void WhenPublishingEvent_ThenSavesToStore()
 		{
 			var args = new FooArgs { Id = 5 };
-			var store = new Mock<IEventStore<SystemEvent>>();
+			var store = new Mock<ISystemEventStore<SystemEvent>>();
 
-			var bus = new EventBus<SystemEvent>(store.Object);
+			var bus = new SystemEventBus<SystemEvent>(store.Object);
 
 			bus.Publish(args);
 
@@ -69,10 +68,10 @@ namespace NetFx.Patterns.EventStore.Tests
 		public void WhenPublishingEvent_ThenSavesToStoreAndInvokesHandler()
 		{
 			var args = new FooArgs { Id = 5 };
-			var store = new Mock<IEventStore<SystemEvent>>();
+			var store = new Mock<ISystemEventStore<SystemEvent>>();
 			var handler = new Mock<SystemEventHandler<BaseArgs>> { CallBase = true };
 
-			var bus = new EventBus<SystemEvent>(store.Object, new[] { handler.Object });
+			var bus = new SystemEventBus<SystemEvent>(store.Object, new[] { handler.Object });
 
 			bus.Publish(args);
 
@@ -84,11 +83,11 @@ namespace NetFx.Patterns.EventStore.Tests
 		public void WhenPublishingEventWithAsyncHandler_ThenSavesToStoreAndInvokesHandler()
 		{
 			var args = new FooArgs { Id = 5 };
-			var store = new Mock<IEventStore<SystemEvent>>();
+			var store = new Mock<ISystemEventStore<SystemEvent>>();
 			var handler = new Mock<SystemEventHandler<BaseArgs>> { CallBase = true };
 			handler.Setup(x => x.IsAsync).Returns(true);
 
-			var bus = new EventBus<SystemEvent>(store.Object, new[] { handler.Object });
+			var bus = new SystemEventBus<SystemEvent>(store.Object, new[] { handler.Object });
 
 			bus.Publish(args);
 
@@ -101,7 +100,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<SystemEventHandler<FooArgs>> { CallBase = true };
 
-			var bus = new EventBus<SystemEvent>(new[] { handler.Object });
+			var bus = new SystemEventBus<SystemEvent>(new[] { handler.Object });
 
 			bus.Publish(args);
 
@@ -114,7 +113,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<SystemEventHandler<BaseArgs>> { CallBase = true };
 
-			var bus = new EventBus<SystemEvent>(new[] { handler.Object });
+			var bus = new SystemEventBus<SystemEvent>(new[] { handler.Object });
 
 			bus.Publish(args);
 
@@ -130,7 +129,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new EventBus<SystemEvent>(new[] { handler.Object }, asyncRunner);
+			var bus = new SystemEventBus<SystemEvent>(new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(args);
 
@@ -147,7 +146,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new EventBus<SystemEvent>(new[] { handler.Object }, asyncRunner);
+			var bus = new SystemEventBus<SystemEvent>(new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(args);
 
@@ -162,7 +161,7 @@ namespace NetFx.Patterns.EventStore.Tests
 			var handler = new Mock<SystemEventHandler<FooArgs>> { CallBase = true };
 			handler.Setup(x => x.IsAsync).Returns(true);
 
-			var bus = new EventBus<SystemEvent>(new[] { handler.Object });
+			var bus = new SystemEventBus<SystemEvent>(new[] { handler.Object });
 
 			bus.Publish(args);
 
@@ -172,7 +171,7 @@ namespace NetFx.Patterns.EventStore.Tests
 		[Fact]
 		public void WhenDefaultEventsRaises_ThenDoesNothing()
 		{
-			EventBus<SystemEvent>.None.Publish(new FooArgs());
+			SystemEventBus<SystemEvent>.None.Publish(new FooArgs());
 		}
 
 		[Fact]
@@ -180,7 +179,7 @@ namespace NetFx.Patterns.EventStore.Tests
 		{
 			var handler = new NonGenericHandler();
 
-			Assert.Throws<ArgumentException>(() => new EventBus<SystemEvent>(new ISystemEventHandler[] { handler }));
+			Assert.Throws<ArgumentException>(() => new SystemEventBus<SystemEvent>(new ISystemEventHandler[] { handler }));
 		}
 
 		[Fact]
@@ -188,13 +187,13 @@ namespace NetFx.Patterns.EventStore.Tests
 		{
 			var handler = new Mock<ISystemEventHandler<FooArgs>>();
 
-			Assert.Throws<ArgumentException>(() => new EventBus<SystemEvent>(new ISystemEventHandler[] { handler.Object }));
+			Assert.Throws<ArgumentException>(() => new SystemEventBus<SystemEvent>(new ISystemEventHandler[] { handler.Object }));
 		}
 
 		[Fact]
 		public void WhenNullHandlerProvided_ThenThrows()
 		{
-			Assert.Throws<ArgumentException>(() => new EventBus<SystemEvent>(new ISystemEventHandler[] { null }));
+			Assert.Throws<ArgumentException>(() => new SystemEventBus<SystemEvent>(new ISystemEventHandler[] { null }));
 		}
 
 		private class HandlerBase : SystemEventHandler<FooArgs>

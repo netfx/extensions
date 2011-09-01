@@ -20,7 +20,7 @@ using System;
 /// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
 /// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventStore" />
+/// <nuget id="netfx-Patterns.SystemEventStore" />
 abstract partial class SystemEventHandler<TEventArgs> : ISystemEventHandler<TEventArgs>
 {
 	/// <summary>
@@ -35,7 +35,7 @@ abstract partial class SystemEventHandler<TEventArgs> : ISystemEventHandler<TEve
 	public Type EventType { get { return typeof(TEventArgs); } }
 
 	/// <summary>
-	/// Invocation style hint that the <see cref="IEventBus{TBaseEvent}"/> implementation
+	/// Invocation style hint that the <see cref="ISystemEventBus{TBaseEvent}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
 	public virtual bool IsAsync { get; protected set; }

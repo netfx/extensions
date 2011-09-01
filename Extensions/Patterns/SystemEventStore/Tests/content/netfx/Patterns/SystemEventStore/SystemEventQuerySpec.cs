@@ -6,15 +6,14 @@ using Xunit;
 using System.Collections;
 using Moq;
 
-namespace NetFx.Patterns.EventStore.Tests
+namespace NetFx.Patterns.SystemEventStore.Tests
 {
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
-	public class EventQuerySpec
+	public class SystemEventQuerySpec
 	{
 		private MemoryEventStore<SystemEvent> store;
 		private Func<DateTime> utcNow = () => DateTime.UtcNow;
 
-		public EventQuerySpec()
+		public SystemEventQuerySpec()
 		{
 			this.store = new MemoryEventStore<SystemEvent>(() => this.utcNow());
 

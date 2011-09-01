@@ -19,13 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace NetFx.Patterns.EventStore.Tests
+namespace NetFx.Patterns.SystemEventStore.Tests
 {
 	/// <summary>
 	/// Simple in-memory store for testing the API.
 	/// </summary>
-	/// <nuget id="netfx-Patterns.EventStore.Tests.xUnit" />
-	partial class MemoryEventStore<TBaseEvent> : IEventStore<TBaseEvent>
+	/// <nuget id="netfx-Patterns.SystemEventStore.Tests.xUnit" />
+	partial class MemoryEventStore<TBaseEvent> : ISystemEventStore<TBaseEvent>
 	{
 		private List<StoredEvent> events = new List<StoredEvent>();
 		private Func<DateTime> utcNow;
@@ -53,7 +53,7 @@ namespace NetFx.Patterns.EventStore.Tests
 		{
 		}
 
-		public IEnumerable<TBaseEvent> Query(EventQueryCriteria criteria)
+		public IEnumerable<TBaseEvent> Query(SystemEventQueryCriteria criteria)
 		{
 			var source = this.events.AsQueryable();
 			var predicate = ToExpression(criteria, this.TypeNameConverter);
@@ -100,17 +100,17 @@ namespace NetFx.Patterns.EventStore.Tests
 		/// used to query an <see cref="IQueryable{T}"/> if the store
 		/// implementation provides one.
 		/// </returns>
-		static Expression<Func<StoredEvent, bool>> ToExpression(EventQueryCriteria criteria, Func<Type, string> typeNameConverter)
+		static Expression<Func<StoredEvent, bool>> ToExpression(SystemEventQueryCriteria criteria, Func<Type, string> typeNameConverter)
 		{
 			return new StoredEventCriteriaBuilder(criteria, typeNameConverter).Build();
 		}
 
 		private class StoredEventCriteriaBuilder
 		{
-			private EventQueryCriteria criteria;
+			private SystemEventQueryCriteria criteria;
 			private Func<Type, string> typeNameConverter;
 
-			public StoredEventCriteriaBuilder(EventQueryCriteria criteria, Func<Type, string> typeNameConverter)
+			public StoredEventCriteriaBuilder(SystemEventQueryCriteria criteria, Func<Type, string> typeNameConverter)
 			{
 				this.criteria = criteria;
 				this.typeNameConverter = typeNameConverter;
