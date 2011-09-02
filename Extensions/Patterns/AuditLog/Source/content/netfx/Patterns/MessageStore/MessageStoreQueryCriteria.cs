@@ -22,32 +22,32 @@ using System.Text;
 using System.Reflection;
 
 /// <summary>
-/// Represents the filter criteria for an event store query.
+/// Represents the filter criteria for a message store query.
 /// </summary>
-/// <nuget id="netfx-Patterns.SystemEventStore"/>
-partial class SystemEventQueryCriteria
+/// <nuget id="netfx-Patterns.MessageStore"/>
+partial class MessageStoreQueryCriteria
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="SystemEventQueryCriteria"/> class.
+	/// Initializes a new instance of the <see cref="MessageStoreQueryCriteria"/> class.
 	/// </summary>
-	public SystemEventQueryCriteria()
+	public MessageStoreQueryCriteria()
 	{
-		this.EventTypes = new List<Type>();
+		this.MessageTypes = new HashSet<Type>();
 	}
 
 	/// <summary>
-	/// List of event type filters. All types added are OR'ed with the 
-	/// others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
+	/// List of message type filters. All types added are OR'ed with the 
+	/// others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
 	/// </summary>
-	public List<Type> EventTypes { get; private set; }
+	public HashSet<Type> MessageTypes { get; private set; }
 
 	/// <summary>
-	/// Filters events that happened after the given starting date.
+	/// Filters messages that happened after the given starting date.
 	/// </summary>
 	public DateTime? Since { get; set; }
 
 	/// <summary>
-	/// Filters events that happened before the given ending date.
+	/// Filters messages that happened before the given ending date.
 	/// </summary>
 	public DateTime? Until { get; set; }
 

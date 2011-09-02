@@ -12,7 +12,7 @@
     <AssemblyName>Source</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <DocumentationFile>lib\netfx-Patterns.EventSourcing.xml</DocumentationFile>
+    <DocumentationFile>lib\netfx-Patterns.MessageStore.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,22 +44,17 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventQuery.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\ISystemEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventQueryBuilder.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\SystemEventQueryCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\SystemEventStore\Visibility.cs" />
+    <Compile Include="content\netfx\Patterns\MessageStore\IMessageStore.cs" />
+    <Compile Include="content\netfx\Patterns\MessageStore\MessageStoreQueryExtension.cs" />
+    <Compile Include="content\netfx\Patterns\MessageStore\MessageStoreQueryCriteria.cs" />
+    <Compile Include="content\netfx\Patterns\MessageStore\Visibility.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </NuSpec>
-    <Content Include="lib\netfx-Patterns.EventSourcing.xml" />
+    <Content Include="lib\netfx-Patterns.MessageStore.xml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

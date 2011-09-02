@@ -15,28 +15,42 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 /// <summary>
-/// Base class for domain event handlers that handle a specific type of event.
+/// Interface implemented by a message stores.
 /// </summary>
-/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.SystemEventStore" />
-abstract partial class SystemEventHandler<TEventArgs> : ISystemEventHandler<TEventArgs>
+/// <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+/// <nuget id="netfx-Patterns.MessageStore"/>
+partial interface IMessageStore<TBaseMessage>
 {
 	/// <summary>
-	/// Handles the specified event.
+	/// Notifies the store that the given message 
+	/// should be persisted when <see cref="Commit"/> is called.
 	/// </summary>
-	public abstract void Handle(TEventArgs @event);
+	/// <param name="message">The message to persist.</param>
+	/// <param name="headers">The headers associated with the message.</param>
+	void Persist(TBaseMessage message, IDictionary<string, object> headers);
 
 	/// <summary>
-	/// Gets the type of the event this handler can process, which equals 
-	/// the generic type parameter of <see cref="SystemEventHandler{TEventArgs}"/>.
+	/// Queries the store for messages that match the given criteria.
 	/// </summary>
-	public Type EventType { get { return typeof(TEventArgs); } }
+	/// <remarks>
+	/// Store implementations are advised to provide full support for the 
+	/// specified criteria, but aren't required to.
+	/// <para>
+	/// The <see cref="MessageStoreQueryExtension.Query{TBaseMessage}"/> extension method  
+	/// can be used with any message store implementation, and provides a fluent 
+	/// API to build the criteria object
+	/// </para>
+	/// </remarks>
+	IEnumerable<TBaseMessage> Query(MessageStoreQueryCriteria criteria);
 
 	/// <summary>
-	/// Invocation style hint that the <see cref="ISystemEventBus{TBaseEvent}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the event publisher.
+	/// Persists all log entries <see cref="Persist"/>ed so far, effectively commiting 
+	/// the changes to the underlying store in a unit-of-work style.
 	/// </summary>
-	public virtual bool IsAsync { get; protected set; }
+	void Commit();
 }
