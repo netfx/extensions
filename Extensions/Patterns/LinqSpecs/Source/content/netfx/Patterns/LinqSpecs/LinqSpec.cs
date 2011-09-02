@@ -8,7 +8,6 @@ using System.Collections.Generic;
 /// Allows creating and combining query specifications using logical And and Or 
 /// operators.
 /// </summary>
-/// <nuget id="netfx-Patterns.LinqSpecs" />
 static partial class LinqSpec
 {
 	/// <summary>
@@ -20,10 +19,13 @@ static partial class LinqSpec
 	}
 
 	/// <summary>
-	/// Converts the given expression to a linq query specification. Typically 
-	/// not needed as the expression can be converted implicitly to a linq 
+	/// Converts the given expression to a linq query specification. Typically
+	/// not needed as the expression can be converted implicitly to a linq
 	/// specification by just assigning it or passing it as such to another method.
 	/// </summary>
+	/// <typeparam name="T">Type of specification value being constrained.</typeparam>
+	/// <param name="specification" this="true">The specification expression to convert to a spec.</param>
+	/// <nuget id="netfx-Patterns.LinqSpecs"/>
 	public static LinqSpec<T> Spec<T>(this Expression<Func<T, bool>> specification)
 	{
 		return specification;

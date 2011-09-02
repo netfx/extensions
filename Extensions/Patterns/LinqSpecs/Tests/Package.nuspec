@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.LinqSpecs.Tests</id>
+		<id>netfx-Patterns.LinqSpecs.Tests.xUnit</id>
 		<version>1.0.0.1</version>
 		<title>NETFx Patterns: Linq Query Specifications xUnit Tests</title>
-		<description>Tests for netfx-Patterns.QuerySpecs</description>
+		<description>xUnit Tests for netfx-Patterns.QuerySpecs</description>
 		<authors>Daniel Cazzulino, Jose Romaniello, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
