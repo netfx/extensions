@@ -1,9 +1,0 @@
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\Tests.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\Tests.pdb
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\Source.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\xunit.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\Source.pdb
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\bin\Release\xunit.xml
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\obj\Release\ResolveAssemblyReference.cache
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\obj\Release\Tests.dll
-D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Tests\obj\Release\Tests.pdb
