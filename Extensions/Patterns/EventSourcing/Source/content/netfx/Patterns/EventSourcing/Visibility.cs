@@ -20,6 +20,12 @@ using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
 
+/***************************************
+ * NOTE: feel free to change this file, 
+ * that's intended. It will never be 
+ * overwritten by NuGet updates later.
+ **************************************/
+
 // These are needed only if you include this package tests 
 // or if you intend to mock any of the included types using 
 // any of the proxy-generating mocking libraries such as 
@@ -33,19 +39,23 @@ using System.Runtime.CompilerServices;
 // likely that your domain model is public and therefore its base 
 // class should too. This base class contains the implementation 
 // to raise and load events into an aggregate root.
+// Typically, in your own project you would derive from this 
+// class your domain specific aggregate root class that provides 
+// the types for both the id and base event, such as:
+// public class AggregateRoot : AggregateRoot<Guid, DomainEvent> { }
 public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 
 // In order to make other types introduced by this package public, 
 // declare a partial type as public here.
-// For example, the following declarations would make public 
-// the core interfaces:
+// For example, the following declarations would make everything public:
 
-// public partial interface IDomainEventBus<TAggregateId, TBaseEvent> { }
-// public partial interface IDomainEventHandler { }
-// public partial interface IDomainEventHandler<TAggregateId, TEventArgs> { }
-// public partial interface IDomainEventQuery<TAggregateId, TBaseEvent> { }
-// public partial interface IDomainEventStore<TAggregateId, TBaseEvent> { }
-// public partial interface IStoredEvent<TAggregateId> { }
-// public partial interface IStoredAggregate<TAggregateId> { }
-// public partial class StoredEventCriteria<TAggregateId> { }
-// public partial class StoredEventAggregateFilter<TAggregateId> { }
+//public partial interface IDomainEventBus<TAggregateId, TBaseEvent> { }
+//public partial interface IDomainEventHandler { }
+//public partial interface IDomainEventHandler<TAggregateId, TEventArgs> { }
+//public partial interface IDomainEventQuery<TAggregateId, TBaseEvent> { }
+//public partial interface IDomainEventStore<TAggregateId, TBaseEvent> { }
+//public partial class DomainEventQueryCriteria<TAggregateId> { }
+//public partial class DomainEventQueryBuilder { }
+
+//public partial class DomainEventHandler<TAggregateId, TEventArgs> { }
+//public partial class DomainEventBus<TAggregateId, TBaseEvent> { }

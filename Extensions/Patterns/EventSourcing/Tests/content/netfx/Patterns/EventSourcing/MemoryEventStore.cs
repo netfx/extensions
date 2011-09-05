@@ -18,13 +18,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	/// <summary>
 	/// Simple in-memory store for testing the API.
 	/// </summary>
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests"/>
 	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IDomainEventStore<TAggregateId, TBaseEvent>
 		where TAggregateId : IComparable
 	{
@@ -43,7 +43,6 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		}
 
 		public Func<Type, string> TypeNameConverter { get; set; }
-		public IQueryable<IStoredEvent<TAggregateId>> AllEvents { get { return this.events.OfType<IStoredEvent<TAggregateId>>().AsQueryable(); } }
 
 		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 		{
@@ -59,10 +58,10 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 		}
 
-		public IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria)
+		public IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria)
 		{
 			var source = this.events.AsQueryable();
-			var predicate = criteria.ToExpression(this.TypeNameConverter);
+			var predicate = ToExpression(criteria, this.TypeNameConverter);
 
 			if (predicate != null)
 				source = source.Where(predicate).Cast<StoredEvent>();
@@ -70,18 +69,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			return source.Select(x => x.EventArgs);
 		}
 
-		public IEnumerable<TBaseEvent> Query(StoredEventCriteria criteria)
-		{
-			var source = this.events.AsQueryable();
-			var predicate = criteria.ToExpression(this.TypeNameConverter);
-
-			if (predicate != null)
-				source = source.Where(predicate).Cast<StoredEvent>();
-
-			return source.Select(x => x.EventArgs);
-		}
-
-		private class StoredEvent : IStoredEvent<TAggregateId>
+		private class StoredEvent
 		{
 			public StoredEvent(TBaseEvent @event)
 			{
@@ -94,7 +82,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				this.Aggregate = new StoredAggregate(sender);
 			}
 
-			public IStoredAggregate<TAggregateId> Aggregate { get; private set; }
+			public StoredAggregate Aggregate { get; private set; }
 			public TBaseEvent EventArgs { get; private set; }
 
 			public Guid EventId { get; set; }
@@ -103,15 +91,15 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			public override string ToString()
 			{
-				return string.Format("{0}, {1} on {2} (payload: {3})", 
-					this.Aggregate == null ? "" : this.Aggregate.ToString(), 
-					this.EventType, 
-					this.Timestamp, 
+				return string.Format("{0}, {1} on {2} (payload: {3})",
+					this.Aggregate == null ? "" : this.Aggregate.ToString(),
+					this.EventType,
+					this.Timestamp,
 					this.EventArgs);
 			}
 		}
 
-		private class StoredAggregate : IStoredAggregate<TAggregateId>
+		private class StoredAggregate
 		{
 			public StoredAggregate(AggregateRoot<TAggregateId, TBaseEvent> sender)
 			{
@@ -128,6 +116,155 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				return string.Format("{0}({1})",
 					this.AggregateType,
 					this.AggregateId);
+			}
+		}
+
+		static Expression<Func<StoredEvent, bool>> ToExpression(DomainEventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
+		{
+			return new StoredEventCriteriaBuilder(criteria, typeNameConverter).Build();
+		}
+
+		private class StoredEventCriteriaBuilder
+		{
+			private static readonly Lazy<PropertyInfo> AggregateProperty = new Lazy<PropertyInfo>(() => typeof(StoredEvent).GetProperty("Aggregate"));
+			private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(StoredAggregate).GetProperty("AggregateId"));
+
+			private DomainEventQueryCriteria<TAggregateId> aggregateCriteria;
+			private Func<Type, string> typeNameConverter;
+
+			public StoredEventCriteriaBuilder(DomainEventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
+			{
+				this.aggregateCriteria = criteria;
+				this.typeNameConverter = typeNameConverter;
+			}
+
+			private Expression<Func<StoredEvent, bool>> AddAggregateIdFilter(Expression<Func<StoredEvent, bool>> result)
+			{
+				if (this.aggregateCriteria == null)
+					return result;
+
+				var criteria = default(Expression<Func<StoredEvent, bool>>);
+
+				foreach (var filter in this.aggregateCriteria.AggregateInstances)
+				{
+					var sourceType = typeNameConverter.Invoke(filter.AggregateType);
+					// Builds: Aggregate != null && Aggregate.AggregateId == id && Aggregate.AggregateType == type
+
+					var predicate = ((Expression<Func<StoredEvent, bool>>)
+						(e => e.Aggregate != null && e.Aggregate.AggregateType == sourceType)).And
+						(BuildEquals(filter.AggregateId));
+
+					// ORs all aggregregate+id filters.
+					criteria = Or(criteria, predicate);
+				}
+
+				if (criteria == null)
+					return result;
+
+				// AND the criteria built so far.
+				return And(result, criteria);
+			}
+
+			private Expression<Func<StoredEvent, bool>> AddAggregateFilter(Expression<Func<StoredEvent, bool>> result)
+			{
+				if (this.aggregateCriteria == null)
+					return result;
+
+				var criteria = default(Expression<Func<StoredEvent, bool>>);
+
+				foreach (var filter in this.aggregateCriteria.AggregateTypes)
+				{
+					var sourceType = typeNameConverter.Invoke(filter);
+
+					// ORs all aggregregate filters.
+					criteria = Or(criteria, e => e.Aggregate != null && e.Aggregate.AggregateType == sourceType);
+				}
+
+				if (criteria == null)
+					return result;
+
+				// AND the criteria built so far.
+				return And(result, criteria);
+			}
+
+			private Expression<Func<StoredEvent, bool>> AddEventFilter(Expression<Func<StoredEvent, bool>> result)
+			{
+				var criteria = default(Expression<Func<StoredEvent, bool>>);
+
+				foreach (var filter in this.aggregateCriteria.EventTypes)
+				{
+					var sourceType = typeNameConverter.Invoke(filter);
+
+					// ORs all aggregregate filters.
+					criteria = Or(criteria, e => e.EventType == sourceType);
+				}
+
+				if (criteria == null)
+					return result;
+
+				// AND the criteria built so far.
+				return And(result, criteria);
+			}
+
+			private Expression<Func<StoredEvent, bool>> And(Expression<Func<StoredEvent, bool>> left, Expression<Func<StoredEvent, bool>> right)
+			{
+				return left == null ? right : left.And(right);
+			}
+
+			private Expression<Func<StoredEvent, bool>> Or(Expression<Func<StoredEvent, bool>> left, Expression<Func<StoredEvent, bool>> right)
+			{
+				return left == null ? right : left.Or(right);
+			}
+
+			/// <devdoc>
+			/// This is needed because == doesn't compile for TAggregateId and calling CompareTo 
+			/// wouldn't work on most non in-memory stores either.
+			/// </devdoc>
+			private Expression<Func<StoredEvent, bool>> BuildEquals(TAggregateId id)
+			{
+				var @event = Expression.Parameter(typeof(StoredEvent), "event");
+				var lambda = Expression.Lambda<Func<StoredEvent, bool>>(
+					Expression.Equal(
+						Expression.MakeMemberAccess(
+							Expression.MakeMemberAccess(
+								@event,
+								AggregateProperty.Value),
+							AggregateIdProperty.Value),
+						Expression.Constant(id, typeof(TAggregateId))), @event);
+
+				return lambda;
+			}
+
+			/// <summary>
+			/// Builds the expression for the criteria.
+			/// </summary>
+			public Expression<Func<StoredEvent, bool>> Build()
+			{
+				var result = default(Expression<Func<StoredEvent, bool>>);
+
+				result = AddAggregateIdFilter(result);
+				result = AddAggregateFilter(result);
+				result = AddEventFilter(result);
+
+				if (this.aggregateCriteria.Since != null)
+				{
+					var since = this.aggregateCriteria.Since.Value.ToUniversalTime();
+					if (this.aggregateCriteria.IsExclusiveRange)
+						result = And(result, e => e.Timestamp > since);
+					else
+						result = And(result, e => e.Timestamp >= since);
+				}
+
+				if (this.aggregateCriteria.Until != null)
+				{
+					var until = this.aggregateCriteria.Until.Value.ToUniversalTime();
+					if (this.aggregateCriteria.IsExclusiveRange)
+						result = And(result, e => e.Timestamp < until);
+					else
+						result = And(result, e => e.Timestamp <= until);
+				}
+
+				return result;
 			}
 		}
 	}

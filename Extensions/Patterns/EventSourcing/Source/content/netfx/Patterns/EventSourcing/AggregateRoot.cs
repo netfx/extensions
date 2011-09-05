@@ -18,8 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
-using System.Linq.Expressions;
 
 /// <summary>
 /// Base class for domain classes that raise and optionally consume 
@@ -57,7 +55,7 @@ abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
 	}
 
 	/// <summary>
-	/// Loads the the domain object sourcing the event state from an even stream.
+	/// Loads the the domain object from an even stream.
 	/// </summary>
 	public virtual void Load(IEnumerable<TBaseEvent> history)
 	{
@@ -72,7 +70,7 @@ abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
 	}
 
 	/// <summary>
-	/// Configures a handler for an event.
+	/// Configures a handler for an event. 
 	/// </summary>
 	protected virtual void Handles<TEvent>(Action<TEvent> handler)
 		where TEvent : TBaseEvent

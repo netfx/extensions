@@ -17,12 +17,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// Base class part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> instead.
+/// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEventHandler : IDomainEventHandler
+abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : IDomainEventHandler<TAggregateId, TEventArgs>
 {
+	/// <summary>
+	/// Gets the type of the event this handler can process, which equals 
+	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
+	/// </summary>
+	public Type EventType { get { return typeof(TEventArgs); } }
+
 	/// <summary>
 	/// Invocation style hint that the <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
@@ -30,27 +37,7 @@ abstract partial class DomainEventHandler : IDomainEventHandler
 	public virtual bool IsAsync { get { return false; } }
 
 	/// <summary>
-	/// Gets the type of the event argument this handler can process.
-	/// </summary>
-	public abstract Type EventType { get; }
-}
-
-/// <summary>
-/// Base class for domain event handlers that handle a specific type of event.
-/// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : DomainEventHandler, IDomainEventHandler<TAggregateId, TEventArgs>
-{
-	/// <summary>
 	/// Handles the specified event.
 	/// </summary>
 	public abstract void Handle(TAggregateId aggregateId, TEventArgs @event);
-
-	/// <summary>
-	/// Gets the type of the event this handler can process, which equals 
-	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
-	/// </summary>
-	public override Type EventType { get { return typeof(TEventArgs); } }
 }

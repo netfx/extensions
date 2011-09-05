@@ -48,6 +48,7 @@
   <ItemGroup>
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>
@@ -63,15 +64,11 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBusSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQuerySpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStoreSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
-    <Compile Include="netfx\Patterns\EventStore\EventQuerySpec.cs" />
-    <Compile Include="netfx\Patterns\EventStore\EventStoreSpec.cs" />
-    <Compile Include="netfx\Patterns\EventStore\MemoryEventStore.cs" />
-    <Compile Include="netfx\Patterns\EventStore\Product.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
   </ItemGroup>
   <ItemGroup>

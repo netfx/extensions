@@ -22,7 +22,6 @@ using Xunit;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests"/>
 	public class AggregateRootSpec
 	{
 		[Fact]

@@ -23,13 +23,12 @@ using Moq;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class DomainEventsSpec
 	{
 		[Fact]
 		public void WhenNullHandlers_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int, DomainEvent>(default(IEnumerable<DomainEventHandler>)));
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int, DomainEvent>(default(IEnumerable<IDomainEventHandler>)));
 		}
 
 		[Fact]
@@ -41,13 +40,13 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenNullAsyncRunner_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int, DomainEvent>(Enumerable.Empty<DomainEventHandler>(), null));
+			Assert.Throws<ArgumentNullException>(() => new DomainEventBus<int, DomainEvent>(Enumerable.Empty<IDomainEventHandler>(), null));
 		}
 
 		[Fact]
 		public void WhenPublishNullEvent_ThenThrows()
 		{
-			var bus = new DomainEventBus<int, DomainEvent>(Enumerable.Empty<DomainEventHandler>());
+			var bus = new DomainEventBus<int, DomainEvent>(Enumerable.Empty<IDomainEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish(new TestAggregate(), default(FooArgs)));
 		}
@@ -55,7 +54,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenPublishNullAggregate_ThenThrows()
 		{
-			var bus = new DomainEventBus<int, DomainEvent>(Enumerable.Empty<DomainEventHandler>());
+			var bus = new DomainEventBus<int, DomainEvent>(Enumerable.Empty<IDomainEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish((AggregateRoot<int, DomainEvent>)null, new FooArgs()));
 		}
@@ -191,21 +190,21 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var handler = new NonGenericHandler();
 
-			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new DomainEventHandler[] { handler }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new IDomainEventHandler[] { handler }));
 		}
 
 		[Fact]
 		public void WhenHandlerExposesNullEventType_ThenThrows()
 		{
-			var handler = new Mock<DomainEventHandler<int, FooArgs>>();
+			var handler = new Mock<IDomainEventHandler<int, FooArgs>>();
 
-			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new DomainEventHandler[] { handler.Object }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new IDomainEventHandler[] { handler.Object }));
 		}
 
 		[Fact]
 		public void WhenNullHandlerProvided_ThenThrows()
 		{
-			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new DomainEventHandler[] { null }));
+			Assert.Throws<ArgumentException>(() => new DomainEventBus<int, DomainEvent>(new IDomainEventHandler[] { null }));
 		}
 
 		private class HandlerBase : DomainEventHandler<int, FooArgs>
@@ -222,26 +221,23 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 		}
 
-		private class NonGenericHandler : DomainEventHandler
+		private class NonGenericHandler : IDomainEventHandler
 		{
-			public override bool IsAsync { get { return false; } }
+			public bool IsAsync { get { return false; } }
 
-			public override Type EventType { get { return typeof(FooArgs); } }
+			public Type EventType { get { return typeof(FooArgs); } }
 		}
 	}
 
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class BaseArgs : DomainEvent
 	{
 	}
 
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class FooArgs : BaseArgs
 	{
 		public int Id { get; set; }
 	}
 
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	internal class TestAggregate : AggregateRoot<int, DomainEvent>
 	{
 		public TestAggregate()

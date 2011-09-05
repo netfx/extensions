@@ -76,7 +76,7 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
 	public DomainEventBus(IEnumerable<IDomainEventHandler> eventHandlers)
-		: this(DomainEventStore<TAggregateId, TBaseEvent>.None, eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
+		: this(new NullStore(), eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
 	{
 	}
 
@@ -98,9 +98,9 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
 	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-	/// that have <see cref="DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+	/// that have <see cref="IDomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
 	public DomainEventBus(IEnumerable<IDomainEventHandler> eventHandlers, Action<Action> asyncActionRunner)
-		: this(DomainEventStore<TAggregateId, TBaseEvent>.None, eventHandlers, asyncActionRunner)
+		: this(new NullStore(), eventHandlers, asyncActionRunner)
 	{
 	}
 
@@ -111,7 +111,7 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 	/// <param name="eventStore">The event store to persist events to.</param>
 	/// <param name="eventHandlers">The event handlers.</param>
 	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-	/// that have <see cref="DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+	/// that have <see cref="IDomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
 	public DomainEventBus(IDomainEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IDomainEventHandler> eventHandlers, Action<Action> asyncActionRunner)
 	{
 		Guard.NotNull(() => eventStore, eventStore);
@@ -188,6 +188,26 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 		/// Does nothing.
 		/// </summary>
 		public void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+		{
+		}
+	}
+
+	private class NullStore : IDomainEventStore<TAggregateId, TBaseEvent>
+	{
+		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+		{
+		}
+
+		public IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria)
+		{
+			return Enumerable.Empty<TBaseEvent>();
+		}
+
+		public void Persist(TBaseEvent @event)
+		{
+		}
+
+		public void Commit()
 		{
 		}
 	}

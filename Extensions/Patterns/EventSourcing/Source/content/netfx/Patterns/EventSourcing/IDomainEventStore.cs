@@ -25,12 +25,12 @@ using System.Linq.Expressions;
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IDomainEventStore<TAggregateId, TBaseEvent> : IEventStore<TBaseEvent>
+partial interface IDomainEventStore<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Notifies the store that the given event raised by the given sender 
-	/// should be persisted when <see cref="IEventStore{TBaseEvent}.Commit"/> is called.
+	/// should be persisted when <see cref="IDomainEventStore{TAggregateId, TBaseEvent}.Commit"/> is called.
 	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
 	/// <param name="args">The instance containing the event data.</param>
@@ -40,20 +40,22 @@ partial interface IDomainEventStore<TAggregateId, TBaseEvent> : IEventStore<TBas
 	/// Queries the event store for events that match the given criteria.
 	/// </summary>
 	/// <remarks>
-	/// This is the only low-level querying method that stores need to implement. 
-	/// <para>
-	/// As a facility for stores that persist events in an <see cref="IQueryable{T}"/> 
-	/// queryable object, the <see cref="StoredEventCriteria{TAggregateId}"/> object 
-	/// can be converted to an expression using the <see cref="StoredEventCriteriaExtensions.ToExpression{TAggregateId}"/> 
-	/// extension method, making the query implementation trivial in that case.
-	/// </para>
+	/// Store implementations are advised to provide full support for the 
+	/// specified criteria, but aren't required to.
 	/// <para>
 	/// The more user-friendly querying API in <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}"/> 
-	/// leverages this method internally and therefore can be used by any 
-	/// event store implementation. It's accessible by executing the 
-	/// <see cref="DomainEventQueryExtensions.Query{TAggregateId, TBaseEvent}"/> over the 
-	/// store instance.
+	/// provides a fluent API over any store to build the criteria object, 
+	/// and can therefore be used with any event store implementation. 
+	/// It's accessible by executing the 
+	/// <see cref="DomainEventQueryBuilder.Query{TAggregateId, TBaseEvent}"/> extension method
+	/// on a domain event store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TBaseEvent> Query(StoredEventCriteria<TAggregateId> criteria);
+	IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria);
+
+	/// <summary>
+	/// Persists all events <see cref="Persist"/>ed so far, effectively commiting 
+	/// the changes to the underlying store in a unit-of-work style.
+	/// </summary>
+	void Commit();
 }

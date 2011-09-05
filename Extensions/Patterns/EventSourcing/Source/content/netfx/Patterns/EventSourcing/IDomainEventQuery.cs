@@ -7,7 +7,7 @@ using System.Text;
 /// Provides a fluent API to filter events from the event store. 
 /// </summary>
 /// <remarks>
-/// This interface is returned from the <see cref="DomainEventQueryExtensions.Query"/> 
+/// This interface is returned from the <see cref="DomainEventQueryBuilder.Query"/> 
 /// extension method for <see cref="IDomainEventStore{TAggregateId, TBaseEvent}"/>.
 /// </remarks>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
@@ -19,7 +19,7 @@ partial interface IDomainEventQuery<TAggregateId, TBaseEvent> : IEnumerable<TBas
 	/// <summary>
 	/// Gets the criteria that was built using the fluent API so far.
 	/// </summary>
-	StoredEventCriteria<TAggregateId> Criteria { get; }
+	DomainEventQueryCriteria<TAggregateId> Criteria { get; }
 
 	/// <summary>
 	/// Filters events that target the given aggregate root type. Can be called 

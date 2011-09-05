@@ -8,7 +8,6 @@ using Moq;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
-	/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
 	public class DomainEventQuerySpec
 	{
 		private MemoryEventStore<int, DomainEvent> store;
@@ -192,22 +191,6 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange();
 
 			Assert.Equal(2, events.Count());
-		}
-
-		[Fact]
-		public void WhenFilteringBySystemEventType_ThenSucceeds()
-		{
-			store.Persist(new SystemEvent { Name = "Shutdown" });
-
-			var events = ((IEventStore<DomainEvent>)store).Query().OfType<SystemEvent>().ToList().OfType<SystemEvent>().ToList();
-
-			Assert.Equal(1, events.Count);
-			Assert.Equal("Shutdown", events[0].Name);
-		}
-
-		public class SystemEvent : DomainEvent
-		{
-			public string Name { get; set; }
 		}
 
 		public class DeactivatedEvent : DomainEvent

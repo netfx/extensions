@@ -47,30 +47,14 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryExtensions.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryBuilder.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IStoredAggregate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="content\netfx\Patterns\EventSourcing\IStoredEvent.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\StoredEventAggregateFilter.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\StoredEventCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\StoredEventCriteriaExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryCriteria.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
-    <Compile Include="netfx\Patterns\EventStore\EventQueryExtensions.cs" />
-    <Compile Include="netfx\Patterns\EventStore\EventStore.cs" />
-    <Compile Include="netfx\Patterns\EventStore\IEventQuery.cs" />
-    <Compile Include="netfx\Patterns\EventStore\IEventStore.cs" />
-    <Compile Include="netfx\Patterns\EventStore\IStoredEvent.cs" />
-    <Compile Include="netfx\Patterns\EventStore\StoredEventCriteria.cs" />
-    <Compile Include="netfx\Patterns\EventStore\StoredEventCriteriaExtensions.cs" />
-    <Compile Include="netfx\Patterns\EventStore\Visibility.cs" />
     <Compile Include="netfx\System\Guard.cs" />
-    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
