@@ -1,0 +1,6 @@
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\bin\Release\Source.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\bin\Release\Source.pdb
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\bin\Release\netfx-Patterns.EventSourcing.AutoWire.xml
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\obj\Release\ResolveAssemblyReference.cache
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\obj\Release\Source.dll
+D:\Code\clarius\netfx\Extensions\Patterns\EventSourcing.AutoWire\Source\obj\Release\Source.pdb
