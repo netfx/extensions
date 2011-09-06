@@ -27,42 +27,42 @@ using System.Reflection;
 /// that makes querying event stores easier.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-static partial class DomainEventQueryBuilder
+static partial class EventQueryBuilder
 {
 	/// <summary>
 	/// Queries the event store for events that match specified 
 	/// criteria via the returned fluent API methods 
-	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.For{TAggregate}()"/> and 
-	/// <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}.OfType{TEvent}()"/>. 
+	/// <see cref="IEventQuery{TAggregateId, TBaseEvent}.For{TAggregate}()"/> and 
+	/// <see cref="IEventQuery{TAggregateId, TBaseEvent}.OfType{TEvent}()"/>. 
 	/// </summary>
 	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <param name="store">The domain event store.</param>
-	public static IDomainEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IDomainEventStore<TAggregateId, TBaseEvent> store)
+	public static IEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IEventStore<TAggregateId, TBaseEvent> store)
 		where TAggregateId : IComparable
 	{
 		return new DomainEventQuery<TAggregateId, TBaseEvent>(store);
 	}
 
-	private class DomainEventQuery<TAggregateId, TBaseEvent> : IDomainEventQuery<TAggregateId, TBaseEvent>
+	private class DomainEventQuery<TAggregateId, TBaseEvent> : IEventQuery<TAggregateId, TBaseEvent>
 		where TAggregateId : IComparable
 	{	
-		private IDomainEventStore<TAggregateId, TBaseEvent> store;
-		private DomainEventQueryCriteria<TAggregateId> criteria = new DomainEventQueryCriteria<TAggregateId>();
+		private IEventStore<TAggregateId, TBaseEvent> store;
+		private EventQueryCriteria<TAggregateId> criteria = new EventQueryCriteria<TAggregateId>();
 
-		public DomainEventQuery(IDomainEventStore<TAggregateId, TBaseEvent> store)
+		public DomainEventQuery(IEventStore<TAggregateId, TBaseEvent> store)
 		{
 			this.store = store;
 		}
 
-		public DomainEventQueryCriteria<TAggregateId> Criteria { get { return this.criteria; } }
+		public EventQueryCriteria<TAggregateId> Criteria { get { return this.criteria; } }
 
 		public IEnumerator<TBaseEvent> GetEnumerator()
 		{
 			return this.store.Query(this.criteria).GetEnumerator();
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>()
+		public IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>()
 		{
 			foreach (var type in GetInheritance<TAggregate>())
 			{
@@ -72,20 +72,20 @@ static partial class DomainEventQueryBuilder
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId)
+		public IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId)
 		{
 			foreach (var type in GetInheritance<TAggregate>())
 			{
-				this.criteria.AggregateInstances.Add(new DomainEventQueryCriteria<TAggregateId>.AggregateFilter(type, aggregateId));
+				this.criteria.AggregateInstances.Add(new EventQueryCriteria<TAggregateId>.AggregateFilter(type, aggregateId));
 			}
 
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> OfType<TEventArgs>()
-			where TEventArgs : TBaseEvent
+		public IEventQuery<TAggregateId, TBaseEvent> OfType<TEvent>()
+			where TEvent : TBaseEvent
 		{
-			foreach (var type in GetInheritance<TEventArgs>())
+			foreach (var type in GetInheritance<TEvent>())
 			{
 				this.criteria.EventTypes.Add(type);
 			}
@@ -93,19 +93,19 @@ static partial class DomainEventQueryBuilder
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> Since(DateTime when)
+		public IEventQuery<TAggregateId, TBaseEvent> Since(DateTime when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> Until(DateTime when)
+		public IEventQuery<TAggregateId, TBaseEvent> Until(DateTime when)
 		{
 			this.criteria.Until = when;
 			return this;
 		}
 
-		public IDomainEventQuery<TAggregateId, TBaseEvent> ExclusiveRange()
+		public IEventQuery<TAggregateId, TBaseEvent> ExclusiveRange()
 		{
 			this.criteria.IsExclusiveRange = true;
 			return this;

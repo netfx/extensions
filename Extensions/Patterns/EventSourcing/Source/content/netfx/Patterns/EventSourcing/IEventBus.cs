@@ -17,35 +17,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// Base interface part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/> 
-/// or implement <see cref="IDomainEventHandler{TAggregateId, TEventArgs}"/> instead.
-/// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IDomainEventHandler
-{
-	/// <summary>
-	/// Invocation style hint that the <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the event publisher.
-	/// </summary>
-	bool IsAsync { get; }
-
-	/// <summary>
-	/// Gets the type of the event argument this handler can process.
-	/// </summary>
-	Type EventType { get; }
-}
-
-/// <summary>
-/// Base interface for domain event handlers that handle a specific type of event.
+/// Interface implemented by the component that coordinates 
+/// event handler invocation when a subscribed event is published.
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IDomainEventHandler<TAggregateId, TEventArgs> : IDomainEventHandler
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
+partial interface IEventBus<TAggregateId, TBaseEvent>
+	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Handles the specified event.
+	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
-	void Handle(TAggregateId aggregateId, TEventArgs @event);
+	/// <param name="sender">The sender of the event.</param>
+	/// <param name="args">The event payload.</param>
+	void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
 }

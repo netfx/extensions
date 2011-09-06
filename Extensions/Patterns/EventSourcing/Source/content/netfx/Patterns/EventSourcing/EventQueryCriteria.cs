@@ -26,13 +26,13 @@ using System.Reflection;
 /// </summary>
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial class DomainEventQueryCriteria<TAggregateId>
+partial class EventQueryCriteria<TAggregateId>
 	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventQueryCriteria&lt;TAggregateId&gt;"/> class.
+	/// Initializes a new instance of the <see cref="EventQueryCriteria&lt;TAggregateId&gt;"/> class.
 	/// </summary>
-	public DomainEventQueryCriteria()
+	public EventQueryCriteria()
 	{
 		this.AggregateInstances = new List<AggregateFilter>();
 		this.AggregateTypes = new List<Type>();

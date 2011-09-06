@@ -45,15 +45,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryBuilder.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventQuery.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IDomainEventStore.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\DomainEventQueryCriteria.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryBuilder.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\IEventBus.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\IEventHandler.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\IEventQuery.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\IEventStore.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryCriteria.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">

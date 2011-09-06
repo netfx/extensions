@@ -8,12 +8,12 @@ using Moq;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
-	public class DomainEventQuerySpec
+	public class EventQuerySpec
 	{
 		private MemoryEventStore<int, DomainEvent> store;
 		private Func<DateTime> utcNow = () => DateTime.UtcNow;
 
-		public DomainEventQuerySpec()
+		public EventQuerySpec()
 		{
 			this.store = new MemoryEventStore<int, DomainEvent>(() => this.utcNow());
 

@@ -24,7 +24,7 @@ namespace Sample
 			var product = new Product { Title = "DevStore" };
 			var context = default(DomainContext);
 			var bus = default(IDomainEventBus);
-			bus = new DomainEventBus(new IDomainEventHandler[] 
+			bus = new DomainEventBus(new IEventHandler[] 
 			{ 
 				new ConsoleHandler(), 
 				new SendMailHandler(new Lazy<DomainContext>(() => context), new Lazy<IDomainEventBus>(() => bus)),

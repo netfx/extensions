@@ -49,13 +49,13 @@ public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 // declare a partial type as public here.
 // For example, the following declarations would make everything public:
 
-//public partial interface IDomainEventBus<TAggregateId, TBaseEvent> { }
-//public partial interface IDomainEventHandler { }
-//public partial interface IDomainEventHandler<TAggregateId, TEventArgs> { }
-//public partial interface IDomainEventQuery<TAggregateId, TBaseEvent> { }
-//public partial interface IDomainEventStore<TAggregateId, TBaseEvent> { }
-//public partial class DomainEventQueryCriteria<TAggregateId> { }
-//public partial class DomainEventQueryBuilder { }
+public partial interface IEventBus<TAggregateId, TBaseEvent> { }
+public partial interface IEventHandler { }
+public partial interface IEventHandler<TAggregateId, TEvent> { }
+public partial interface IEventQuery<TAggregateId, TBaseEvent> { }
+public partial interface IEventStore<TAggregateId, TBaseEvent> { }
+public partial class EventQueryCriteria<TAggregateId> { }
+public partial class EventQueryBuilder { }
 
-//public partial class DomainEventHandler<TAggregateId, TEventArgs> { }
-//public partial class DomainEventBus<TAggregateId, TBaseEvent> { }
+public partial class EventHandler<TAggregateId, TEvent> { }
+public partial class EventBus<TAggregateId, TBaseEvent> { }

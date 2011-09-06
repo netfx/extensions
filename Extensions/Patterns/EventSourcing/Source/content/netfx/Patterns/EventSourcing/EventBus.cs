@@ -22,15 +22,15 @@ using System.Threading;
 using System.Globalization;
 
 /// <summary>
-/// Default implementation of an <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> that 
+/// Default implementation of an <see cref="IEventBus{TAggregateId, TBaseEvent}"/> that 
 /// invokes handlers as events are published, and where handlers are 
 /// run in-process (if any handlers are provided).
 /// </summary>
 /// <remarks>
-/// A persistent <see cref="IDomainEventStore{TAggregateId, TBaseEvent}"/> can also be specified 
+/// A persistent <see cref="IEventStore{TAggregateId, TBaseEvent}"/> can also be specified 
 /// to persist events to a store for later playback or auditing.
 /// <para>
-/// Handlers with <see cref="IDomainEventHandler.IsAsync"/> set to 
+/// Handlers with <see cref="IEventHandler.IsAsync"/> set to 
 /// <see langword="true"/> are invoked through the optional 
 /// async runner delegate passed to the constructor.
 /// </para>
@@ -38,18 +38,20 @@ using System.Globalization;
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggregateId, TBaseEvent>
+partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {
-	private IDomainEventStore<TAggregateId, TBaseEvent> eventStore;
+	private IEventStore<TAggregateId, TBaseEvent> eventStore;
 	private Action<Action> asyncActionRunner;
-	private IEnumerable<IDomainEventHandler> eventHandlers;
+	private List<HandlerDescriptor> handlerDescriptors;
+	// Pipelines indexed by event type, containing two lists: async and sync handlers.
+	private Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>> handlerPipelines = new Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>>();
 
 	/// <summary>
 	/// Initializes the <see cref="None"/> null object 
 	/// pattern property.
 	/// </summary>
-	static DomainEventBus()
+	static EventBus()
 	{
 		None = new NullBus();
 	}
@@ -58,61 +60,61 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 	/// Gets a default domain event bus implementation that 
 	/// does nothing (a.k.a. Null Object Pattern).
 	/// </summary>
-	public static IDomainEventBus<TAggregateId, TBaseEvent> None { get; private set; }
+	public static IEventBus<TAggregateId, TBaseEvent> None { get; private set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus{TAggregateId, TBaseEvent}"/> class
+	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class
 	/// with a persistent store for events and no in-memory handlers.
 	/// </summary>
 	/// <param name="eventStore">The event store to persist events to.</param>
-	public DomainEventBus(IDomainEventStore<TAggregateId, TBaseEvent> eventStore)
-		: this(eventStore, Enumerable.Empty<IDomainEventHandler>())
+	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore)
+		: this(eventStore, Enumerable.Empty<IEventHandler>())
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
 	/// the default async runner that enqueues work in the <see cref="ThreadPool"/>.
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
-	public DomainEventBus(IEnumerable<IDomainEventHandler> eventHandlers)
+	public EventBus(IEnumerable<IEventHandler> eventHandlers)
 		: this(new NullStore(), eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
 	/// a persistent store for events and the default async runner that enqueues work in the <see cref="ThreadPool"/>.
 	/// </summary>
 	/// <param name="eventStore">The event store to persist events to.</param>
 	/// <param name="eventHandlers">The event handlers.</param>
-	public DomainEventBus(IDomainEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IDomainEventHandler> eventHandlers)
+	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers)
 		: this(eventStore, eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
 	{
 	}
 
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
 	/// the given async runner.
 	/// </summary>
 	/// <param name="eventHandlers">The event handlers.</param>
 	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-	/// that have <see cref="IDomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-	public DomainEventBus(IEnumerable<IDomainEventHandler> eventHandlers, Action<Action> asyncActionRunner)
+	/// that have <see cref="IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+	public EventBus(IEnumerable<IEventHandler> eventHandlers, Action<Action> asyncActionRunner)
 		: this(new NullStore(), eventHandlers, asyncActionRunner)
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DomainEventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
 	/// a persistent store for events, a set of event handlers and a specific async runner.
 	/// </summary>
 	/// <param name="eventStore">The event store to persist events to.</param>
 	/// <param name="eventHandlers">The event handlers.</param>
 	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-	/// that have <see cref="IDomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-	public DomainEventBus(IDomainEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IDomainEventHandler> eventHandlers, Action<Action> asyncActionRunner)
+	/// that have <see cref="IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers, Action<Action> asyncActionRunner)
 	{
 		Guard.NotNull(() => eventStore, eventStore);
 		Guard.NotNull(() => eventHandlers, eventHandlers);
@@ -121,22 +123,31 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 		if (eventHandlers.Any(eh => eh == null))
 			throw new ArgumentException("Invalid null handler found.", "eventHandlers");
 
-		if (eventHandlers.Any(eh => eh.EventType == null))
-			throw new ArgumentException(string.Format(
-				CultureInfo.CurrentCulture, 
-				"Invalid handlers with null EventType found: {0}", 
-				string.Join(", ", eventHandlers.Where(eh => eh.EventType == null))), 
-				"eventHandlers");
+		var genericHandler = typeof(IEventHandler<,>);
 
-		if (eventHandlers.Any(eh => !ImplementsGenericHandler(eh.GetType())))
+		this.handlerDescriptors = eventHandlers.Select(handler =>
+			new HandlerDescriptor
+			{
+				Handler = handler,
+				// Grab the type of body from the generic 
+				// type argument, if any.
+				EventType = handler.GetType()
+					.GetInterfaces()
+					.Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericHandler)
+					.Select(x => x.GetGenericArguments()[1])
+					.FirstOrDefault()
+			})
+			.ToList();
+
+		var invalidHandlers = this.handlerDescriptors.Where(x => x.EventType == null).ToList();
+		if (invalidHandlers.Any())
 			throw new ArgumentException(string.Format(
 				CultureInfo.CurrentCulture,
-				"The following event handlers to not implement the generic interface IDomainEventHandler<TAggregateId, TEventArgs>: {0}.", 
-				 string.Join(", ", eventHandlers.Where(eh => !ImplementsGenericHandler(eh.GetType())).Select(eh => eh.GetType().FullName))), 
+				"The following event handlers to not implement the generic interface IEventHandler<TAggregateId, TEvent>: {0}.",
+				 string.Join(", ", invalidHandlers.Select(handler => handler.GetType().FullName))),
 				 "eventHandlers");
 
 		this.eventStore = eventStore;
-		this.eventHandlers = eventHandlers.ToList();
 		this.asyncActionRunner = asyncActionRunner;
 	}
 
@@ -144,45 +155,78 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 	/// Publishes the specified event to the bus so that all subscribers are notified.
 	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	public virtual void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+	/// <param name="event">The event payload.</param>
+	public virtual void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent @event)
 	{
 		Guard.NotNull(() => sender, sender);
-		Guard.NotNull(() => args, args);
+		Guard.NotNull(() => @event, @event);
 
 		// Events are persisted first of all.
-		this.eventStore.Persist(sender, args);
+		this.eventStore.Persist(sender, @event);
 
-		var compatibleHandlers = this.eventHandlers.Where(h => h.EventType.IsAssignableFrom(args.GetType())).ToList();
-		dynamic dynamicEvent = args;
+		var eventType = @event.GetType();
+
+		var pipeline = this.handlerPipelines.GetOrAdd(eventType, type =>
+		{
+			// We calculate the pipeline only once, as handlers can't 
+			// be added after bus construction.
+			// This is also done lazily for each event type received 
+			// to avoid negatively impacting initialization time.
+			var compatibleHandlers = this.handlerDescriptors
+				.Where(h => h.EventType.IsAssignableFrom(eventType))
+				.ToList();
+
+			// We separate the lists of async and sync handlers as they
+			// are invoked separately below.
+			return new Tuple<List<dynamic>, List<dynamic>>(
+				compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList(),
+				compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList());
+		});
 
 		// By making this dynamic, we allow event handlers to subscribe to base classes
-		foreach (dynamic handler in compatibleHandlers.Where(h => !h.IsAsync).AsParallel())
+		foreach (var handler in pipeline.Item1.AsParallel())
 		{
-			handler.Handle(sender.Id, dynamicEvent);
+			OnHandle(handler, sender.Id, @event);
 		}
 
 		// Run background handlers through the async runner.
-		foreach (dynamic handler in compatibleHandlers.Where(h => h.IsAsync).AsParallel())
+		foreach (var handler in pipeline.Item2.AsParallel())
 		{
-			asyncActionRunner(() => handler.Handle(sender.Id, args));
+			asyncActionRunner(() => OnHandle(handler, sender.Id, @event));
 		}
 	}
 
-	private bool ImplementsGenericHandler(Type type)
+	/// <summary>
+	/// Called when invoking the handler for an event with the given headers.
+	/// </summary>
+	/// <remarks>
+	/// Derived classes can change the way handlers are invoked, optimize it, 
+	/// or do pre/post processing right before/after the command is handled.
+	/// </remarks>
+	protected virtual void OnHandle(dynamic handler, TAggregateId aggregateId, dynamic @event)
 	{
-		var genericHandler = typeof(IDomainEventHandler<,>);
+		handler.Handle(aggregateId, @event);
+	}
 
-		return type.GetInterfaces().Any(iface => 
-			iface.IsGenericType && 
-			iface.GetGenericTypeDefinition() == genericHandler);
+	private class HandlerDescriptor
+	{
+		/// <summary>
+		/// Gets or sets the type of event payload the handler can process, 
+		/// retrieved from the handler TEvent generic parameter.
+		/// </summary>
+		public Type EventType { get; set; }
+
+		/// <summary>
+		/// Gets or sets the handler.
+		/// </summary>
+		public IEventHandler Handler { get; set; }
 	}
 
 	/// <summary>
-	/// Provides a null <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation 
+	/// Provides a null <see cref="IEventBus{TAggregateId, TBaseEvent}"/> implementation 
 	/// for use when no events have been configured.
 	/// </summary>
-	private class NullBus : IDomainEventBus<TAggregateId, TBaseEvent>
+	private class NullBus : IEventBus<TAggregateId, TBaseEvent>
 	{
 		/// <summary>
 		/// Does nothing.
@@ -192,13 +236,13 @@ partial class DomainEventBus<TAggregateId, TBaseEvent> : IDomainEventBus<TAggreg
 		}
 	}
 
-	private class NullStore : IDomainEventStore<TAggregateId, TBaseEvent>
+	private class NullStore : IEventStore<TAggregateId, TBaseEvent>
 	{
 		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 		{
 		}
 
-		public IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria)
+		public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria)
 		{
 			return Enumerable.Empty<TBaseEvent>();
 		}

@@ -25,7 +25,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 	/// <summary>
 	/// Simple in-memory store for testing the API.
 	/// </summary>
-	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IDomainEventStore<TAggregateId, TBaseEvent>
+	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IEventStore<TAggregateId, TBaseEvent>
 		where TAggregateId : IComparable
 	{
 		private List<StoredEvent> events = new List<StoredEvent>();
@@ -58,7 +58,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 		}
 
-		public IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria)
+		public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria)
 		{
 			var source = this.events.AsQueryable();
 			var predicate = ToExpression(criteria, this.TypeNameConverter);
@@ -119,7 +119,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			}
 		}
 
-		static Expression<Func<StoredEvent, bool>> ToExpression(DomainEventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
+		static Expression<Func<StoredEvent, bool>> ToExpression(EventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
 		{
 			return new StoredEventCriteriaBuilder(criteria, typeNameConverter).Build();
 		}
@@ -129,10 +129,10 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			private static readonly Lazy<PropertyInfo> AggregateProperty = new Lazy<PropertyInfo>(() => typeof(StoredEvent).GetProperty("Aggregate"));
 			private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(StoredAggregate).GetProperty("AggregateId"));
 
-			private DomainEventQueryCriteria<TAggregateId> aggregateCriteria;
+			private EventQueryCriteria<TAggregateId> aggregateCriteria;
 			private Func<Type, string> typeNameConverter;
 
-			public StoredEventCriteriaBuilder(DomainEventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
+			public StoredEventCriteriaBuilder(EventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
 			{
 				this.aggregateCriteria = criteria;
 				this.typeNameConverter = typeNameConverter;

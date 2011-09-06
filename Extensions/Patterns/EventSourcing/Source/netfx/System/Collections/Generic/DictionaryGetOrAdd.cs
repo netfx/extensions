@@ -15,29 +15,33 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Base class for domain event handlers that handle a specific type of event.
+/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class DomainEventHandler<TAggregateId, TEventArgs> : IDomainEventHandler<TAggregateId, TEventArgs>
+internal static partial class DictionaryGetOrAdd
 {
 	/// <summary>
-	/// Gets the type of the event this handler can process, which equals 
-	/// the generic type parameter of <see cref="DomainEventHandler{TAggregateId, TEventArgs}"/>.
+	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+	/// concurrency assurances, use a concurrent dictionary instead.
 	/// </summary>
-	public Type EventType { get { return typeof(TEventArgs); } }
+	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
+	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+	/// <param name="key">The key to be added to the dictionary</param>
+	/// <param name="valueFactory">The value factory</param>
+	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
+	{
+		var value = default(TValue);
+		if (!dictionary.TryGetValue(key, out value))
+		{
+			value = valueFactory(key);
+			dictionary[key] = value;
+		}
 
-	/// <summary>
-	/// Invocation style hint that the <see cref="IDomainEventBus{TAggregateId, TBaseEvent}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the event publisher.
-	/// </summary>
-	public virtual bool IsAsync { get { return false; } }
-
-	/// <summary>
-	/// Handles the specified event.
-	/// </summary>
-	public abstract void Handle(TAggregateId aggregateId, TEventArgs @event);
+		return value;
+	}
 }

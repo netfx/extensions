@@ -7,6 +7,6 @@ using System.Text;
 /// Fixes the generic bus event source/aggregate ID type, and the 
 /// domain events base class/interface.
 /// </summary>
-internal interface IDomainEventBus : IDomainEventBus<int, DomainEvent>
+internal interface IDomainEventBus : IEventBus<int, DomainEvent>
 {
 }

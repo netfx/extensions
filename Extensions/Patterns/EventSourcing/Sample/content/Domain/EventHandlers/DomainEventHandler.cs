@@ -9,7 +9,7 @@ using System.Text;
 /// fixed the domain object sourcing the event id type which is the same for all 
 /// the domain object sourcing the event in a domain.
 /// </summary>
-internal abstract class DomainEventHandler<TEventArgs> : DomainEventHandler<int, TEventArgs>
-	where TEventArgs : DomainEvent
+internal abstract class DomainEventHandler<TEvent> : EventHandler<int, TEvent>
+	where TEvent : DomainEvent
 {
 }

@@ -15,21 +15,33 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// event handler invocation when a subscribed event is published.
+/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IDomainEventBus<TAggregateId, TBaseEvent>
-	where TAggregateId : IComparable
+internal static partial class DictionaryGetOrAdd
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+	/// concurrency assurances, use a concurrent dictionary instead.
 	/// </summary>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
+	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
+	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+	/// <param name="key">The key to be added to the dictionary</param>
+	/// <param name="valueFactory">The value factory</param>
+	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
+	{
+		var value = default(TValue);
+		if (!dictionary.TryGetValue(key, out value))
+		{
+			value = valueFactory(key);
+			dictionary[key] = value;
+		}
+
+		return value;
+	}
 }

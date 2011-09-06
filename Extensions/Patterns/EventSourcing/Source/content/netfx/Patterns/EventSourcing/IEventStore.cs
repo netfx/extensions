@@ -25,16 +25,16 @@ using System.Linq.Expressions;
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IDomainEventStore<TAggregateId, TBaseEvent>
+partial interface IEventStore<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Notifies the store that the given event raised by the given sender 
-	/// should be persisted when <see cref="IDomainEventStore{TAggregateId, TBaseEvent}.Commit"/> is called.
+	/// should be persisted when <see cref="IEventStore{TAggregateId, TBaseEvent}.Commit"/> is called.
 	/// </summary>
 	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The instance containing the event data.</param>
-	void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
+	/// <param name="event">The instance containing the event data.</param>
+	void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent @event);
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
@@ -43,15 +43,15 @@ partial interface IDomainEventStore<TAggregateId, TBaseEvent>
 	/// Store implementations are advised to provide full support for the 
 	/// specified criteria, but aren't required to.
 	/// <para>
-	/// The more user-friendly querying API in <see cref="IDomainEventQuery{TAggregateId, TBaseEvent}"/> 
+	/// The more user-friendly querying API in <see cref="IEventQuery{TAggregateId, TBaseEvent}"/> 
 	/// provides a fluent API over any store to build the criteria object, 
 	/// and can therefore be used with any event store implementation. 
 	/// It's accessible by executing the 
-	/// <see cref="DomainEventQueryBuilder.Query{TAggregateId, TBaseEvent}"/> extension method
+	/// <see cref="EventQueryBuilder.Query{TAggregateId, TBaseEvent}"/> extension method
 	/// on a domain event store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TBaseEvent> Query(DomainEventQueryCriteria<TAggregateId> criteria);
+	IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria);
 
 	/// <summary>
 	/// Persists all events <see cref="Persist"/>ed so far, effectively commiting 
