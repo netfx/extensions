@@ -38,7 +38,6 @@ using System.IO;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.ISerializer.Tests.xUnit" />
 	public class SerializerExtensionsSpec
 	{
 		[Fact]

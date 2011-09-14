@@ -38,7 +38,6 @@ using System.IO;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.ISerializer.Tests.xUnit" />
 	public abstract partial class SerializerSpec
 	{
 		internal abstract ISerializer CreateSerializer();
