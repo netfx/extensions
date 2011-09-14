@@ -38,7 +38,6 @@ using System.IO;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.GzipSerializer.Tests.xUnit" />
 	public class GzipSerializerSpec : SerializerSpec
 	{
 		[Fact]

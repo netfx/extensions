@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-System.GzipSerializer.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx GzipSerializer Tests</title>
+		<title>NETFx GzipSerializer xUnit Tests</title>
 		<description>xUnit tests for netfx-System.GzipSerializer</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

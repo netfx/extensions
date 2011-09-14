@@ -47,6 +47,7 @@
     <Compile Include="netfx\System\ISerializerSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="tools\install.ps1" />
   </ItemGroup>
