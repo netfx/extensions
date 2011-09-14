@@ -37,7 +37,6 @@ using Xunit;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.Clock.Tests" />
 	public class ClockSpec
 	{
 		[Fact]
