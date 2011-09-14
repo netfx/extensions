@@ -46,7 +46,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\MessageBusSpec.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\MessageBusSpec.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAddSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

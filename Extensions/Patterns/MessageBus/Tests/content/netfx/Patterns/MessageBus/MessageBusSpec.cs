@@ -191,6 +191,56 @@ namespace NetFx.Patterns.MessageBus.Tests
 				Times.Exactly(2));
 		}
 
+		[Fact]
+		public void WhenPublishExtensionOnNullBusEmptyMessages_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish < FooMessage>(null, Enumerable.Empty<FooMessage>()));
+		}
+
+		[Fact]
+		public void WhenPublishExtensionOnNullBus_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish(null, new FooMessage()));
+		}
+
+		[Fact]
+		public void WhenPublishExtensionWithNullMessages_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish(Mock.Of<IMessageBus<FooMessage>>(), default(IEnumerable<FooMessage>)));
+		}
+
+		[Fact]
+		public void WhenPublishExtensionWithNullBusEmptyMessageAndHeaders_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish(default(IMessageBus<FooMessage>), 
+					Enumerable.Empty<FooMessage>(), 
+					new Dictionary<string, object>()));
+		}
+
+		[Fact]
+		public void WhenPublishExtensionWithNullMessagesAndEmptyHeaders_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish(
+					Mock.Of<IMessageBus<FooMessage>>(),
+					default(IEnumerable<FooMessage>),
+					new Dictionary<string, object>()));
+		}
+
+		[Fact]
+		public void WhenPublishExtensionWithNullHeadersAndEmptyMessages_ThenThrowsArgumentNullException()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+				MessageBusExtensions.Publish(
+					Mock.Of<IMessageBus<FooMessage>>(),
+					Enumerable.Empty<FooMessage>(),
+					default(IDictionary<string, object>)));
+		}
+
 		private class HandlerBase : MessageHandler<FooMessage>
 		{
 			public override bool IsAsync { get { return false; } }

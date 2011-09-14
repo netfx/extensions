@@ -30,7 +30,7 @@ using System.Globalization;
 /// This class implements what is known as a Content-Based Publish/Subscribe
 /// message bus, where subscribers are matched based on the type of message 
 /// (content) they can handle, as specified by the generic type parameter to 
-/// <see cref="IMessageHandler{TBaseMessage}"/>.
+/// <see cref="IMessageHandler{TMessage}"/>.
 /// <para>
 /// Handlers with <see cref="IMessageHandler.IsAsync"/> set to 
 /// <see langword="true"/> are invoked through the optional 
@@ -42,7 +42,9 @@ using System.Globalization;
 partial class MessageBus<TBaseMessage> : IMessageBus<TBaseMessage>
 {
 	private Action<Action> asyncActionRunner;
-	private List<HandlerDescriptor> messageHandlers;
+	private List<HandlerDescriptor> handlerDescriptors;
+	// Pipelines indexed by event type, containing two lists: async and sync handlers.
+	private Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>> handlerPipelines = new Dictionary<Type,Tuple<List<dynamic>,List<dynamic>>>();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageBus{TBaseMessage}"/> class with 
@@ -72,7 +74,7 @@ partial class MessageBus<TBaseMessage> : IMessageBus<TBaseMessage>
 
 		var genericHandler = typeof(IMessageHandler<>);
 
-		this.messageHandlers = messageHandlers.Select(handler =>
+		this.handlerDescriptors = messageHandlers.Select(handler =>
 			new HandlerDescriptor
 			{
 				Handler = handler, 
@@ -86,7 +88,7 @@ partial class MessageBus<TBaseMessage> : IMessageBus<TBaseMessage>
 			})
 			.ToList();
 
-		var invalidHandlers = this.messageHandlers.Where(x => x.MessageType == null).ToList();
+		var invalidHandlers = this.handlerDescriptors.Where(x => x.MessageType == null).ToList();
 		if (invalidHandlers.Any())
 			throw new ArgumentException(string.Format(
 				CultureInfo.CurrentCulture,
@@ -96,6 +98,28 @@ partial class MessageBus<TBaseMessage> : IMessageBus<TBaseMessage>
 
 		this.asyncActionRunner = asyncActionRunner;
 	}
+
+	/// <summary>
+	/// Gets or sets whether to match handlers message type 
+	/// polymorphycally, meaning that a handler for a base 
+	/// message type is invoked for derived message types too.
+	/// </summary>
+	/// <remarks>
+	/// For example, the default (true) value for this property 
+	/// causes a handler like 
+	/// <c>BaseHandler : IMessageHandler&lt;Base&gt;</c> to 
+	/// be called for these two classes: 
+	/// <para>
+	/// public class Base { }
+	/// public class Derived : Base { }
+	/// </para>
+	/// If <see cref="ShouldMatchHandlersPolymorphically"/> is 
+	/// set to <see langword="false"/>, the handler will be 
+	/// invoked only for the Base class, not for the derived one. 
+	/// Typical usage is on a command bus, where the concrete 
+	/// handler is the only one invoked.
+	/// </remarks>
+	protected bool ShouldMatchHandlersPolymorphically { get; set; }
 
 	/// <summary>
 	/// Publishes the specified message to the bus so that all 
@@ -108,21 +132,49 @@ partial class MessageBus<TBaseMessage> : IMessageBus<TBaseMessage>
 		Guard.NotNull(() => message, message);
 		Guard.NotNull(() => headers, headers);
 
-		var compatibleHandlers = this.messageHandlers.Where(h => h.MessageType.IsAssignableFrom(message.GetType())).ToList();
-		dynamic dynamicMessage = message;
+		var messageType = message.GetType();
+
+		var pipeline = this.handlerPipelines.GetOrAdd(messageType, type => 
+			{
+				// We calculate the pipeline only once, as handlers can't 
+				// be added after bus construction.
+				// This is also done lazily for each message type received 
+				// to avoid negatively impacting initialization time.
+				var compatibleHandlers = this.handlerDescriptors
+					.Where(h => h.MessageType.IsAssignableFrom(messageType))
+					.ToList();
+
+				// We separate the lists of async and sync handlers as they
+				// are invoked separately below.
+				return new Tuple<List<dynamic>, List<dynamic>>(
+					compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList(),
+					compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList());
+			});
 
 		// By making both handler and message dynamic, we allow message handlers to 
 		// subscribe to base classes
-		foreach (dynamic handler in compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => x.Handler).AsParallel())
+		foreach (var handler in pipeline.Item1.AsParallel())
 		{
-			handler.Handle(dynamicMessage, headers);
+			OnHandle(handler, message, headers);
 		}
 
 		// Run background handlers through the async runner.
-		foreach (dynamic handler in compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => x.Handler).AsParallel())
+		foreach (var handler in pipeline.Item2.AsParallel())
 		{
-			asyncActionRunner(() => handler.Handle(dynamicMessage, headers));
+			asyncActionRunner(() => OnHandle(handler, message, headers));
 		}
+	}
+
+	/// <summary>
+	/// Called when invoking the handler for a message with the given headers.
+	/// </summary>
+	/// <remarks>
+	/// Derived classes can change the way handlers are invoked, optimize it, 
+	/// or do pre/post processing right before/after the command is handled.
+	/// </remarks>
+	protected virtual void OnHandle(dynamic handler, dynamic message, IDictionary<string, object> headers)
+	{
+		handler.Handle(message, headers);
 	}
 
 	private class HandlerDescriptor

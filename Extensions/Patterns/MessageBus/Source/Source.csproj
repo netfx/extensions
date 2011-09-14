@@ -44,12 +44,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\IMessageBus.cs" />
-    <Compile Include="content\netfx\Patterns\IMessageHandler.cs" />
-    <Compile Include="content\netfx\Patterns\MessageBus.cs" />
-    <Compile Include="content\netfx\Patterns\IMessageBusExtensions.cs" />
-    <Compile Include="content\netfx\Patterns\MessageHandler.cs" />
-    <Compile Include="content\netfx\Patterns\Visibility.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\IMessageBus.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\MessageBusExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\IMessageHandler.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\MessageBus.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\MessageHandler.cs" />
+    <Compile Include="content\netfx\Patterns\MessageBus\Visibility.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">

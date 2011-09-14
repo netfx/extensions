@@ -4,49 +4,38 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:IMessageBus`1">
+        <member name="T:MessageBusExtensions">
             <summary>
-            Interface implemented by the component that coordinates 
-            message handler invocation when a subscribed message is published.
+            Adds usability overloads to <see cref="T:IMessageBus`1"/>.
             </summary>
-            <typeparam name="TMessage">The common base type or interface implemented by message payloads.</typeparam>
-            <nuget id="netfx-Patterns.MessageBus"/>
         </member>
-        <member name="M:IMessageBus`1.Publish(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},``0)">
             <summary>
             Publishes the specified message to the bus so that all
             relevant subscribers are notified.
             </summary>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <param name="bus">The bus to publish messages to.</param>
             <param name="message">The message to publish.</param>
-            <param name="headers">The headers associated with the message.</param>
         </member>
-        <member name="T:IMessageHandler">
+        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Base interface part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:MessageHandler`1"/> 
-            or implement <see cref="T:IMessageHandler`1"/> instead.
+            Publishes the specified messages to the bus so that all 
+            relevant subscribers are notified.
             </summary>
-            <nuget id="netfx-Patterns.MessageBus"/>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <param name="bus">The bus to publish messages to.</param>
+            <param name="messages">The messages to publish.</param>
         </member>
-        <member name="P:IMessageHandler.IsAsync">
+        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
-            Invocation style hint that the <see cref="T:IMessageHandler`1"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
+            Publishes the specified messages to the bus so that all
+            relevant subscribers are notified.
             </summary>
-        </member>
-        <member name="T:IMessageHandler`1">
-            <summary>
-            Base interface for message handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TMessage">The base type or interface implemented by the messages this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.MessageBus" />
-        </member>
-        <member name="M:IMessageHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Handles the specified message.
-            </summary>
-            <param name="message">The message to handle.</param>
-            <param name="headers">The headers associated with the message.</param>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <param name="bus">The bus to publish messages to.</param>
+            <param name="messages">The messages to publish.</param>
+            <param name="headers">The headers associated with all messages. The same set of headers is used for each message.</param>
         </member>
         <member name="T:MessageBus`1">
             <summary>
@@ -65,8 +54,24 @@
             async runner delegate passed to the constructor.
             </para>
             </remarks>
-            <typeparam name="TMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
             <nuget id="netfx-Patterns.MessageBus"/>
+        </member>
+        <member name="T:IMessageBus`1">
+            <summary>
+            Interface implemented by the component that coordinates 
+            message handler invocation when a subscribed message is published.
+            </summary>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <nuget id="netfx-Patterns.MessageBus"/>
+        </member>
+        <member name="M:IMessageBus`1.Publish(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Publishes the specified message to the bus so that all
+            relevant subscribers are notified.
+            </summary>
+            <param name="message">The message to publish.</param>
+            <param name="headers">The headers associated with the message.</param>
         </member>
         <member name="M:MessageBus`1.#ctor(System.Collections.Generic.IEnumerable{IMessageHandler})">
             <summary>
@@ -93,6 +98,37 @@
             <param name="message">The message to publish.</param>
             <param name="headers">The headers associated with the message.</param>
         </member>
+        <member name="M:MessageBus`1.OnHandle(System.Object,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Called when invoking the handler for a message with the given headers.
+            </summary>
+            <remarks>
+            Derived classes can change the way handlers are invoked, optimize it, 
+            or do pre/post processing right before/after the command is handled.
+            </remarks>
+        </member>
+        <member name="P:MessageBus`1.ShouldMatchHandlersPolymorphically">
+            <summary>
+            Gets or sets whether to match handlers message type 
+            polymorphycally, meaning that a handler for a base 
+            message type is invoked for derived message types too.
+            </summary>
+            <remarks>
+            For example, the default (true) value for this property 
+            causes a handler like 
+            <c>BaseHandler : IMessageHandler&lt;Base&gt;</c> to 
+            be called for these two classes: 
+            <para>
+            public class Base { }
+            public class Derived : Base { }
+            </para>
+            If <see cref="P:MessageBus`1.ShouldMatchHandlersPolymorphically"/> is 
+            set to <see langword="false"/>, the handler will be 
+            invoked only for the Base class, not for the derived one. 
+            Typical usage is on a command bus, where the concrete 
+            handler is the only one invoked.
+            </remarks>
+        </member>
         <member name="P:MessageBus`1.HandlerDescriptor.MessageType">
             <summary>
             Gets or sets the type of message payload the handler can process, 
@@ -104,44 +140,39 @@
             Gets or sets the handler.
             </summary>
         </member>
-        <member name="T:MessageBusExtensions">
+        <member name="T:IMessageHandler">
             <summary>
-            Adds usability overloads to <see cref="T:IMessageBus`1"/>.
+            Base interface part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:MessageHandler`1"/> 
+            or implement <see cref="T:IMessageHandler`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.MessageBus"/>
+        </member>
+        <member name="P:IMessageHandler.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IMessageHandler`1"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>
-        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},``0)">
+        <member name="T:IMessageHandler`1">
             <summary>
-            Publishes the specified message to the bus so that all
-            relevant subscribers are notified.
+            Base interface for message handlers that handle a specific type of event.
             </summary>
-            <typeparam name="TMessage">The common base type or interface implemented by message payloads.</typeparam>
-            <param name="bus">The bus to publish messages to.</param>
-            <param name="message">The message to publish.</param>
+            <typeparam name="TMessage">The concrete message type this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.MessageBus" />
         </member>
-        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:IMessageHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
-            Publishes the specified messages to the bus so that all 
-            relevant subscribers are notified.
+            Handles the specified message.
             </summary>
-            <typeparam name="TMessage">The common base type or interface implemented by message payloads.</typeparam>
-            <param name="bus">The bus to publish messages to.</param>
-            <param name="messages">The messages to publish.</param>
-        </member>
-        <member name="M:MessageBusExtensions.Publish``1(IMessageBus{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Publishes the specified messages to the bus so that all
-            relevant subscribers are notified.
-            </summary>
-            <typeparam name="TMessage">The common base type or interface implemented by message payloads.</typeparam>
-            <param name="bus">The bus to publish messages to.</param>
-            <param name="messages">The messages to publish.</param>
-            <param name="headers">The headers associated with all messages. The same set of headers is used for each message.</param>
+            <param name="message">The message to handle.</param>
+            <param name="headers">The headers associated with the message.</param>
         </member>
         <member name="T:MessageHandler`1">
             <summary>
             Base class for message handlers that handle a specific type of message body.
             </summary>
-            <typeparam name="TMessage">The base type or interface implemented by the message body this handler can process.</typeparam>
+            <typeparam name="TMessage">The concrete message type this handler can process.</typeparam>
             <nuget id="netfx-Patterns.MessageBus" />
         </member>
         <member name="M:MessageHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
@@ -173,6 +204,18 @@
             Ensures the given string <paramref name="value"/> is not null or empty.
             Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
             <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:DictionaryGetOrAdd">
+            <summary>
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            </summary>
+        </member>
+        <member name="M:DictionaryGetOrAdd.GetOrAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.Func{``0,``1})">
+            <summary>
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+            concurrency assurances, use a concurrent dictionary instead.
             </summary>
         </member>
     </members>

@@ -22,7 +22,7 @@ using System.Text;
 /// <summary>
 /// Adds usability overloads to <see cref="IMessageBus{TBaseMessage}"/>.
 /// </summary>
-static class IMessageBusExtensions
+static partial class MessageBusExtensions
 {
 	/// <summary>
 	/// Publishes the specified message to the bus so that all
@@ -33,6 +33,8 @@ static class IMessageBusExtensions
 	/// <param name="message">The message to publish.</param>
 	public static void Publish<TBaseMessage>(this IMessageBus<TBaseMessage> bus, TBaseMessage message)
 	{
+		Guard.NotNull(() => bus, bus);
+		
 		bus.Publish(message, new Dictionary<string, object>());
 	}
 
@@ -45,6 +47,9 @@ static class IMessageBusExtensions
 	/// <param name="messages">The messages to publish.</param>
 	public static void Publish<TBaseMessage>(this IMessageBus<TBaseMessage> bus, IEnumerable<TBaseMessage> messages)
 	{
+		Guard.NotNull(() => bus, bus);
+		Guard.NotNull(() => messages, messages);
+
 		foreach (var message in messages)
 		{
 			bus.Publish(message, new Dictionary<string, object>());
@@ -61,6 +66,10 @@ static class IMessageBusExtensions
 	/// <param name="headers">The headers associated with all messages. The same set of headers is used for each message.</param>
 	public static void Publish<TBaseMessage>(this IMessageBus<TBaseMessage> bus, IEnumerable<TBaseMessage> messages, IDictionary<string, object> headers)
 	{
+		Guard.NotNull(() => bus, bus);
+		Guard.NotNull(() => messages, messages);
+		Guard.NotNull(() => headers, headers);
+
 		foreach (var message in messages)
 		{
 			bus.Publish(message, headers);

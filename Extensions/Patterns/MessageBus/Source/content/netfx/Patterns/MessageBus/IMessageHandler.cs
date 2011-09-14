@@ -18,22 +18,31 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Base class for message handlers that handle a specific type of message body.
+/// Base interface part of the infrastructure. Concrete 
+/// handlers should inherit <see cref="MessageHandler{TMessage}"/> 
+/// or implement <see cref="IMessageHandler{TMessage}"/> instead.
 /// </summary>
-/// <typeparam name="TBaseMessage">The base type or interface implemented by the message body this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.MessageBus" />
-abstract partial class MessageHandler<TBaseMessage> : IMessageHandler<TBaseMessage>
+partial interface IMessageHandler
+{
+	/// <summary>
+	/// Invocation style hint that the <see cref="IMessageHandler{TMessage}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
+	/// </summary>
+	bool IsAsync { get; }
+}
+
+/// <summary>
+/// Base interface for message handlers that handle a specific type of event.
+/// </summary>
+/// <typeparam name="TMessage">The concrete message type this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.MessageBus" />
+partial interface IMessageHandler<TMessage> : IMessageHandler
 {
 	/// <summary>
 	/// Handles the specified message.
 	/// </summary>
 	/// <param name="message">The message to handle.</param>
 	/// <param name="headers">The headers associated with the message.</param>
-	public abstract void Handle(TBaseMessage message, IDictionary<string, object> headers);
-
-	/// <summary>
-	/// Invocation style hint that the <see cref="IMessageBus{TBaseMessage}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the message publisher.
-	/// </summary>
-	public virtual bool IsAsync { get; protected set; }
+	void Handle(TMessage message, IDictionary<string, object> headers);
 }
