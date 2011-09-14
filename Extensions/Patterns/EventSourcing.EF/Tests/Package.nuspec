@@ -13,8 +13,10 @@
 		<tags>netfx patterns eventsourcing entityframework ef</tags>
 		<dependencies>
 			<dependency id="EntityFramework" version="4.1" />
-			<dependency id="netfx-Patterns.EventSourcing.Core.Tests" version="1.0" />
-			<dependency id="netfx-System.Clock.Tests" version="1.0" />
+			<dependency id="netfx-Patterns.EventSourcing.Queryable.Tests.xUnit" version="1.0" />
+			<dependency id="netfx-System.Clock.Tests.xUnit" version="1.0" />
+			<dependency id="netfx-System.ISerializer.Tests.xUnit" version="1.0" />
+			<dependency id="netfx-System.SequentialGuid.Tests.xUnit" version="1.0.0.0" />
 		</dependencies>
 	</metadata>
 </package>

@@ -12,10 +12,12 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx patterns eventsourcing entityframework ef</tags>
 		<dependencies>
-			<dependency id="netfx-Patterns.EventSourcing.Core" version="1.0" />
+			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
+			<dependency id="netfx-Patterns.EventSourcing.Queryable" version="1.0" />
 			<dependency id="netfx-System.Clock" version="1.0" />
+			<dependency id="netfx-Guard" version="1.3" />
+			<dependency id="netfx-System.SequentialGuid" version="1.0" />
 			<dependency id="EntityFramework" version="4.1" />
-			<dependency id="Newtonsoft.Json" version="4.0" />
 		</dependencies>
 	</metadata>
 </package>

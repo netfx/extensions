@@ -4,20 +4,26 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:StoredEvent`1">
-            <devdoc>
-            Extends the partial class for a concrete 
-            event sourcing store, providing the payload 
-            as a string that will be populated with Json text.
-            </devdoc>
+        <member name="T:SequentialGuid">
             <summary>
-            Represents a persisted event in the <see cref="T:DomainEventStore`2"/> store. 
-            Must be inherited by a concrete non-generic class that specifies the type of <typeparamref name="TAggregateId"/>.
+            A safe managed sequential GUID generator (or Comb) that improves 
+            performance of GUID-style identifiers used in persistence.
             </summary>
-            <typeparam name="TAggregateId">The type of identifiers used by the aggregate roots.</typeparam>
+            <devdoc>Source from NHibernate Guid Comb generator: http://nhibernate.svn.sourceforge.net/viewvc/nhibernate/trunk/nhibernate/src/NHibernate/Id/GuidCombGenerator.cs </devdoc>
+            <nuget id="netfx-System.SequentialGuid" />
+        </member>
+        <member name="M:SequentialGuid.NewGuid">
+            <summary>
+            Creates a new sequential guid.
+            </summary>
+        </member>
+        <member name="T:StoredEvent">
+            <summary>
+            Represents a persisted event in an event store.
+            </summary>
             <nuget id="netfx-Patterns.EventSourcing.EF"/>
         </member>
-        <member name="T:IStoredEvent`1">
+        <member name="T:IStoredEvent`2">
             <summary>
             Represents a persisted event in an event store.
             </summary>
@@ -29,302 +35,58 @@
             representation via this interface would be unnecessarily 
             restrictive and is not needed for the rest of the APIs.
             </remarks>
+            <typeparam name="TStoredAggregate">The type of the stored aggregate root entity.</typeparam>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
         </member>
-        <member name="P:IStoredEvent`1.AggregateId">
+        <member name="P:IStoredEvent`2.EventId">
             <summary>
-            Gets the aggregate root identifier that the event applies to.
+            Gets the event id.
             </summary>
         </member>
-        <member name="P:IStoredEvent`1.AggregateType">
-            <summary>
-            Gets the type of the the domain object that this event applies to.
-            </summary>
-        </member>
-        <member name="P:IStoredEvent`1.EventType">
+        <member name="P:IStoredEvent`2.EventType">
             <summary>
             Gets the type of the event.
             </summary>
         </member>
-        <member name="P:IStoredEvent`1.Timestamp">
+        <member name="P:IStoredEvent`2.Timestamp">
             <summary>
             Gets the UTC timestamp of the event.
             </summary>
         </member>
-        <member name="P:StoredEvent`1.Payload">
+        <member name="P:IStoredEvent`2.Aggregate">
             <summary>
-            Gets or sets the Json payload of the event.
+            Gets the aggregate root associated with this event, if any.
             </summary>
         </member>
-        <member name="P:StoredEvent`1.Id">
+        <member name="P:StoredEvent.EventId">
             <summary>
-            Event identifier in the database.
+            Gets the event id.
             </summary>
         </member>
-        <member name="P:StoredEvent`1.AggregateId">
-            <summary>
-            Gets the aggregate id that the event applies to.
-            </summary>
-        </member>
-        <member name="P:StoredEvent`1.AggregateType">
-            <summary>
-            Gets the type of the aggregate root that this event applies to.
-            </summary>
-        </member>
-        <member name="P:StoredEvent`1.EventType">
+        <member name="P:StoredEvent.EventType">
             <summary>
             Gets the type of the event.
             </summary>
         </member>
-        <member name="P:StoredEvent`1.Timestamp">
+        <member name="P:StoredEvent.Timestamp">
             <summary>
             Gets the UTC timestamp of the event.
             </summary>
         </member>
-        <member name="T:StoredEventCriteria`1">
+        <member name="P:StoredEvent.Aggregate">
             <summary>
-            Represents the filter criteria for a domain event store query.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:StoredEventCriteria`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:StoredEventCriteria`1"/> class.
+            Gets the aggregate root associated with this event, if any.
             </summary>
         </member>
-        <member name="P:StoredEventCriteria`1.AggregateInstances">
+        <member name="P:StoredEvent.Payload">
             <summary>
-            List of source object type + instance identifier filters. The two filters 
-            should be considered by event stores as AND'ed (i.e. 
-            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
-            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
+            Gets or sets the payload of the event.
             </summary>
         </member>
-        <member name="P:StoredEventCriteria`1.AggregateTypes">
+        <member name="P:StoredEvent.RowVersion">
             <summary>
-            List of aggregate root type filters. All types added are OR'ed with the 
-            others (i.e. <c>AggregateType == Product OR AggregateType == Order</c>).
-            </summary>
-            <remarks>
-            To filter by aggregate type and identifier, 
-            use <see cref="P:StoredEventCriteria`1.AggregateInstances"/> instead.
-            </remarks>
-        </member>
-        <member name="P:StoredEventCriteria`1.EventTypes">
-            <summary>
-            List of event type filters. All types added are OR'ed with the 
-            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.Since">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.Until">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-        </member>
-        <member name="P:StoredEventCriteria`1.IsExclusiveDateRange">
-            <summary>
-            If set to <see langword="true"/>, <see cref="P:StoredEventCriteria`1.Since"/> and <see cref="P:StoredEventCriteria`1.Until"/> should 
-            be considered as exclusive date ranges (excludes values with a matching date). 
-            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-            </summary>
-        </member>
-        <member name="T:DomainEventStore`3">
-            <summary>
-            Implements an event store on top of EntityFramework 4.1
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <typeparam name="TStoredEvent">The type of the stored event, which must inherit from <see cref="T:StoredEvent`1"/> for a specific <typeparamref name="TAggregateId"/>.</typeparam>
-            <remarks>
-            This class is abstract and must be inherited by a concrete 
-            store class that provides a fixed type for the <typeparamref name="TAggregateId"/> and 
-            <typeparamref name="TStoredEvent"/> type parameters, as entity framework cannot 
-            work with generic entities.
-            </remarks>
-            <example>
-            The following is an example of a concrete event store leveraging this class:
-            <code>
-            public class DomainEventStore : DomainEventStore&lt;Guid, DomainEvent, StoredEvent&gt;
-            {
-            	public DomainEventStore(string nameOrConnectionString)
-            		: base(nameOrConnectionString)
-            	{
-            	}
-            }
-            
-            public class StoredEvent : StoredEvent&lt;Guid&gt; { }
-            </code>
-            </example>
-            <nuget id="netfx-Patterns.EventSourcing.EF"/>
-            <devdoc>
-            Extends the partial class for a concrete 
-            event sourcing store, providing the behavior 
-            to serialize events as a Json string.
-            </devdoc>
-        </member>
-        <member name="T:IDomainEventStore`2">
-            <summary>
-            Interface implemented by domain event stores.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventStore`2.Persist(AggregateRoot{`0,`1},`1)">
-            <summary>
-            Notifies the store that the given event raised by the given sender 
-            should be persisted when <see cref="M:IDomainEventStore`2.Commit"/> is called.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The instance containing the event data.</param>
-        </member>
-        <member name="M:IDomainEventStore`2.Query(StoredEventCriteria{`0})">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-            <remarks>
-            This is the only low-level querying method that stores need to implement. 
-            <para>
-            As a facility for stores that persist events in an <see cref="T:System.Linq.IQueryable`1"/> 
-            queryable object, the <see cref="T:StoredEventCriteria`1"/> object 
-            can be converted to an expression using the <see cref="M:StoredEventCriteriaExtensions.ToExpression``1(StoredEventCriteria{``0},System.Func{System.Type,System.String})"/> 
-            extension method, making the query implementation trivial in that case.
-            </para>
-            <para>
-            The more user-friendly querying API in <see cref="T:IDomainEventQuery`2"/> 
-            leverages this method internally and therefore can be used by any 
-            event store implementation. It's accessible by executing the 
-            <see cref="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})"/> over the 
-            store instance.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:IDomainEventStore`2.Commit">
-            <summary>
-            Persists all <see cref="M:IDomainEventStore`2.Persist(AggregateRoot{`0,`1},`1)"/>s performed so far, effectively commiting 
-            the changes to the underlying store in a unit-of-work style.
-            </summary>
-        </member>
-        <member name="P:IDomainEventStore`2.TypeNameConverter">
-            <summary>
-            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
-            its string representation in the store. Used to calculate the 
-            values of <see cref="P:IStoredEvent`1.AggregateType"/> and 
-            <see cref="P:IStoredEvent`1.EventType"/>.
-            </summary>
-        </member>
-        <member name="M:DomainEventStore`3.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventStore`2"/> class.
-            </summary>
-            <param name="nameOrConnectionString">The name or connection string.</param>
-        </member>
-        <member name="M:DomainEventStore`3.Query(StoredEventCriteria{`0})">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-        </member>
-        <member name="M:DomainEventStore`3.Persist(AggregateRoot{`0,`1},`1)">
-            <summary>
-            Saves the given event raised by the given sender aggregate root.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The instance containing the event data.</param>
-        </member>
-        <member name="M:DomainEventStore`3.Commit">
-            <summary>
-            Saves the changes to the underlying database.
-            </summary>
-        </member>
-        <member name="P:DomainEventStore`3.TypeNameConverter">
-            <summary>
-            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
-            its string representation in the store. Used to calculate the 
-            values of <see cref="P:IStoredEvent`1.AggregateType"/> and 
-            <see cref="P:IStoredEvent`1.EventType"/>.
-            </summary>
-        </member>
-        <member name="P:DomainEventStore`3.SystemClock">
-            <summary>
-            Gets or sets the system clock to use to calculate the timestamp
-            of persisted events.
-            </summary>
-        </member>
-        <member name="P:DomainEventStore`3.Events">
-            <summary>
-            Gets or sets the events persisted in the store.
-            </summary>
-        </member>
-        <member name="T:IDomainEventQuery`2">
-            <summary>
-            Provides a fluent API to filter events from the event store. 
-            </summary>
-            <remarks>
-            This interface is returned from the <see cref="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})"/> 
-            extension method for <see cref="T:IDomainEventStore`2"/>.
-            </remarks>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventQuery`2.For``1">
-            <summary>
-            Filters events that target the given aggregate root type. Can be called 
-            multiple times and will filter for any of the specified types (OR operator).
-            </summary>
-            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-        </member>
-        <member name="M:IDomainEventQuery`2.For``1(`0)">
-            <summary>
-            Filters events that target the given aggregate root type and identifier. Can be called 
-            multiple times and will filter for any of the specified types and ids (OR operator).
-            </summary>
-            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-            <param name="aggregateId">The aggregate root identifier to filter by.</param>
-        </member>
-        <member name="M:IDomainEventQuery`2.OfType``1">
-            <summary>
-            Filters events that are assignable to the given type. Can be called 
-            multiple times and will filter for any of the specified types (OR operator).
-            </summary>
-            <typeparam name="TEventArgs">The type of the events to filter.</typeparam>
-        </member>
-        <member name="M:IDomainEventQuery`2.Since(System.DateTime)">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-            <param name="when">The starting date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IDomainEventQuery`2.ExclusiveDateRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IDomainEventQuery`2.Until(System.DateTime)">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-            <param name="when">The ending date to filter by.</param>
-            <remarks>
-            By default, includes events with the given date, unless the 
-            <see cref="M:IDomainEventQuery`2.ExclusiveDateRange"/> is called to make the range exclusive.
-            </remarks>
-        </member>
-        <member name="M:IDomainEventQuery`2.ExclusiveDateRange">
-            <summary>
-            Makes the configured <see cref="M:IDomainEventQuery`2.Since(System.DateTime)"/> and/or <see cref="M:IDomainEventQuery`2.Until(System.DateTime)"/> dates 
-            exclusive, changing the default behavior which is to be inclusive.
-            </summary>
-        </member>
-        <member name="P:IDomainEventQuery`2.Criteria">
-            <summary>
-            Gets the criteria that was built using the fluent API so far.
+            Gets or sets the row version, used for ordering events.
             </summary>
         </member>
         <member name="T:Guard">
@@ -345,27 +107,68 @@
             <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
-        <member name="T:StoredEventAggregateFilter`1">
+        <member name="T:IEventStore`2">
             <summary>
-            Filter criteria containing the aggregate type and identifier, 
-            used by the <see cref="T:StoredEventCriteria`1"/>.
+            Interface implemented by domain event stores.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:IEventStore`2.Save(AggregateRoot{`0,`1},`1)">
+            <summary>
+            Saves the given event raised by the aggregate.
+            </summary>
+            <param name="aggregate">The aggregate root raising the event.</param>
+            <param name="event">The instance containing the event data.</param>
+        </member>
+        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
+            <summary>
+            Queries the event store for events that match the given criteria.
+            </summary>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            An alternative fluent API to build the criteria object is available 
+            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
+            extension method on an event store instance.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:StoredAggregate">
+            <summary>
+            Represents the aggregate root information associated 
+            with a persisted event in an event store.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing.EF"/>
+        </member>
+        <member name="T:IStoredAggregate`1">
+            <summary>
+            Represents the aggregate root information associated 
+            with a persisted event in an event store.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
+        </member>
+        <member name="P:IStoredAggregate`1.AggregateId">
+            <summary>
+            Gets the aggregate root identifier that the event applies to.
             </summary>
         </member>
-        <member name="M:StoredEventAggregateFilter`1.#ctor(System.Type,`0)">
+        <member name="P:IStoredAggregate`1.AggregateType">
             <summary>
-            Initializes a new instance of the <see cref="T:StoredEventAggregateFilter`1"/> class.
-            </summary>
-            <param name="aggregateType">Type of the event source to filter by.</param>
-            <param name="aggregateId">The aggregate root identifier to filter by.</param>
-        </member>
-        <member name="P:StoredEventAggregateFilter`1.AggregateType">
-            <summary>
-            Gets or sets the type of the aggregate to filter by.
+            Gets the type of the the domain object that this event applies to.
             </summary>
         </member>
-        <member name="P:StoredEventAggregateFilter`1.AggregateId">
+        <member name="P:StoredAggregate.AggregateId">
             <summary>
-            Gets or sets the aggregate root identifier to filter by.
+            Gets the aggregate root identifier that the event applies to.
+            </summary>
+        </member>
+        <member name="P:StoredAggregate.AggregateType">
+            <summary>
+            Gets the type of the the domain object that this event applies to.
             </summary>
         </member>
         <member name="T:IClock">
@@ -389,74 +192,213 @@
             Current date and time in UTC format.
             </summary>
         </member>
-        <member name="T:DomainEventHandler">
+        <member name="T:IEventBus`2">
             <summary>
-            Base class part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainEventHandler`2"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="T:IDomainEventHandler">
-            <summary>
-            Base interface part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainEventHandler`2"/> 
-            or implement <see cref="T:IDomainEventHandler`2"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="P:IDomainEventHandler.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IDomainEventBus`2"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
-            </summary>
-        </member>
-        <member name="P:IDomainEventHandler.EventType">
-            <summary>
-            Gets the type of the event argument this handler can process.
-            </summary>
-        </member>
-        <member name="P:DomainEventHandler.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IDomainEventBus`2"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
-            </summary>
-        </member>
-        <member name="P:DomainEventHandler.EventType">
-            <summary>
-            Gets the type of the event argument this handler can process.
-            </summary>
-        </member>
-        <member name="T:DomainEventHandler`2">
-            <summary>
-            Base class for domain event handlers that handle a specific type of event.
+            Interface implemented by the component that coordinates 
+            event handler invocation when a subscribed event is published.
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
-        <member name="T:IDomainEventHandler`2">
+        <member name="M:IEventBus`2.Publish(AggregateRoot{`0,`1},`1)">
             <summary>
-            Base interface for domain event handlers that handle a specific type of event.
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The event payload.</param>
+        </member>
+        <member name="T:EventStore`1">
+            <summary>
+            Implements an event store on top of EntityFramework 4.1
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event, which must inherit from <see cref="!:StoredEvent&lt;TAggregateId&gt;"/> for a specific <typeparamref name="TAggregateId"/>.</typeparam>
+            <remarks>
+            This class is abstract and must be inherited by a concrete 
+            store class that provides a fixed type for the <typeparamref name="TAggregateId"/> and 
+            <typeparamref name="TStoredEvent"/> type parameters, as entity framework cannot 
+            work with generic entities.
+            </remarks>
+            <example>
+            The following is an example of a concrete event store leveraging this class:
+            <code>
+            public class DomainEventStore : DomainEventStore&lt;Guid, DomainEvent, StoredEvent&gt;
+            {
+            	public DomainEventStore(string nameOrConnectionString)
+            		: base(nameOrConnectionString)
+            	{
+            	}
+            }
+            
+            public class StoredEvent : StoredEvent&lt;Guid&gt; { }
+            </code>
+            </example>
+            <nuget id="netfx-Patterns.EventSourcing.EF"/>
+        </member>
+        <member name="T:IQueryableEventStore`4">
+            <summary>
+            Provides a common API for event stores that leverage Linq.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <typeparam name="TStoredAggregate">The type of the stored aggregate.</typeparam>
+        </member>
+        <member name="M:EventStore`1.#ctor(System.String,ISerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventStore`1"/> class.
+            </summary>
+            <param name="nameOrConnectionString">The name or connection string.</param>
+        </member>
+        <member name="M:EventStore`1.Query(EventQueryCriteria{System.Guid})">
+            <summary>
+            Queries the event store for events that match the given criteria.
+            </summary>
+        </member>
+        <member name="M:EventStore`1.Save(AggregateRoot{System.Guid,`0},`0)">
+            <summary>
+            Saves the given event raised by the given sender aggregate root.
+            </summary>
+            <param name="aggregate">The sender of the event.</param>
+            <param name="event">The instance containing the event data.</param>
+        </member>
+        <member name="P:EventStore`1.Serializer">
+            <summary>
+            Gets the serializer that converts the event payloads to/from a byte array.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.TypeNameConverter">
+            <summary>
+            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
+            its string representation in the store. Used to calculate the 
+            values of <see cref="!:IStoredEvent&lt;TAggregateId&gt;.AggregateType"/> and 
+            <see cref="!:IStoredEvent&lt;TId&gt;.EventType"/>.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.SystemClock">
+            <summary>
+            Gets or sets the system clock to use to calculate the timestamp
+            of persisted events.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.Events">
+            <summary>
+            Gets or sets the events persisted in the store.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.Aggregates">
+            <summary>
+            Gets or sets the aggregate roots persisted in the store.
+            </summary>
+        </member>
+        <member name="T:DictionaryGetOrAdd">
+            <summary>
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            </summary>
+        </member>
+        <member name="M:DictionaryGetOrAdd.GetOrAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.Func{``0,``1})">
+            <summary>
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+            concurrency assurances, use a concurrent dictionary instead.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd"/>
+            <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+            <param name="key">The key to be added to the dictionary</param>
+            <param name="valueFactory">The value factory</param>
+        </member>
+        <member name="T:EventQueryExtension">
+            <summary>
+            Provides the entry point <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> for a fluent API 
+            that makes querying event stores easier.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:EventQueryExtension.Query``2(IEventStore{``0,``1})">
+            <summary>
+            Queries the event store for events that match specified 
+            criteria via the returned fluent API methods 
+            <see cref="M:EventQueryExtension.IEventQuery`2.For``1"/> and 
+            <see cref="M:EventQueryExtension.IEventQuery`2.OfType``1"/>. 
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TEventArgs">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <param name="store">The domain event store.</param>
         </member>
-        <member name="M:IDomainEventHandler`2.Handle(`0,`1)">
+        <member name="T:EventQueryExtension.IEventQuery`2">
             <summary>
-            Handles the specified event.
+            Provides a fluent API to filter events from the event store. 
+            </summary>
+            <remarks>
+            This interface is returned from the <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
+            extension method for <see cref="T:IEventStore`2"/>.
+            </remarks>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.Execute">
+            <summary>
+            Executes the query built using the fluent API 
+            against the underlying store.
             </summary>
         </member>
-        <member name="M:DomainEventHandler`2.Handle(`0,`1)">
+        <member name="M:EventQueryExtension.IEventQuery`2.For``1">
             <summary>
-            Handles the specified event.
+            Filters events that target the given aggregate root type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.For``1(`0)">
+            <summary>
+            Filters events that target the given aggregate root type and identifier. Can be called 
+            multiple times and will filter for any of the specified types and ids (OR operator).
+            </summary>
+            <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+            <param name="aggregateId">The aggregate root identifier to filter by.</param>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.OfType``1">
+            <summary>
+            Filters events that are assignable to the given type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TEvent">The type of the events to filter.</typeparam>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.Since(System.DateTime)">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+            <param name="when">The starting date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:EventQueryExtension.IEventQuery`2.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.Until(System.DateTime)">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+            <param name="when">The ending date to filter by.</param>
+            <remarks>
+            By default, includes events with the given date, unless the 
+            <see cref="M:EventQueryExtension.IEventQuery`2.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:EventQueryExtension.IEventQuery`2.ExclusiveRange">
+            <summary>
+            Makes the configured <see cref="M:EventQueryExtension.IEventQuery`2.Since(System.DateTime)"/> and/or <see cref="M:EventQueryExtension.IEventQuery`2.Until(System.DateTime)"/> dates 
+            exclusive, changing the default behavior which is to be inclusive.
             </summary>
         </member>
-        <member name="P:DomainEventHandler`2.EventType">
-            <summary>
-            Gets the type of the event this handler can process, which equals 
-            the generic type parameter of <see cref="T:DomainEventHandler`2"/>.
-            </summary>
+        <member name="M:EventQueryExtension.EventQuery`2.GetInheritance``1">
+            <devdoc>
+            Returns a list of the T and all its base types until an 
+            abstract base class is found (can't be persisted therefore) 
+            or System.Object is found (events can't be System.Object either).
+            </devdoc>
         </member>
         <member name="T:SystemClock">
             <summary>
@@ -485,30 +427,71 @@
             Current date and time in UTC format.
             </summary>
         </member>
-        <member name="T:DomainEventQueryExtensions">
+        <member name="T:ISerializer">
             <summary>
-            Provides the entry point <see cref="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})"/> for a fluent API 
-            that makes querying event stores easier.
+            Implementations of this interface are able to serialize and 
+            deserialize an object graph from a stream.
             </summary>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
+            <nuget id="netfx-System.ISerializer" />
         </member>
-        <member name="M:DomainEventQueryExtensions.Query``2(IDomainEventStore{``0,``1})">
+        <member name="M:ISerializer.Deserialize``1(System.IO.Stream)">
             <summary>
-            Queries the event store for events that match specified 
-            criteria via the returned fluent API methods 
-            <see cref="M:IDomainEventQuery`2.For``1"/> and 
-            <see cref="M:IDomainEventQuery`2.OfType``1"/>. 
+            Deserializes an object graph from the given stream.
+            </summary>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:ISerializer.Serialize``1(System.IO.Stream,``0)">
+            <summary>
+            Serializes the provided object graph and writes it to the storage.
+            </summary>
+            <param name="stream">The stream to serialize the graph into.</param>
+            <param name="graph">The object graph to be serialized.</param>
+        </member>
+        <member name="T:EventHandler`2">
+            <summary>
+            Base class for domain event handlers that handle a specific type of event.
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <param name="store">The domain event store.</param>
+            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
-        <member name="M:DomainEventQueryExtensions.DomainEventQuery`2.GetInheritance``1">
-            <devdoc>
-            Returns a list of the T and all its base types until an 
-            abstract base class is found (can't be persisted therefore) 
-            or System.Object is found (events can't be System.Object either).
-            </devdoc>
+        <member name="T:IEventHandler`2">
+            <summary>
+            Base interface for domain event handlers that handle a specific type of event.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
+        </member>
+        <member name="T:IEventHandler">
+            <summary>
+            Base interface part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:EventHandler`2"/> 
+            or implement <see cref="T:IEventHandler`2"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="P:IEventHandler.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
+            </summary>
+        </member>
+        <member name="M:IEventHandler`2.Handle(`0,`1)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="M:EventHandler`2.Handle(`0,`1)">
+            <summary>
+            Handles the specified event.
+            </summary>
+        </member>
+        <member name="P:EventHandler`2.IsAsync">
+            <summary>
+            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
+            </summary>
         </member>
         <member name="T:AggregateRoot`2">
             <summary>
@@ -517,7 +500,7 @@
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core" />
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
         <member name="M:AggregateRoot`2.AcceptChanges">
             <summary>
@@ -532,12 +515,12 @@
         </member>
         <member name="M:AggregateRoot`2.Load(System.Collections.Generic.IEnumerable{`1})">
             <summary>
-            Loads the the domain object sourcing the event state from an even stream.
+            Loads the the domain object from an even stream.
             </summary>
         </member>
         <member name="M:AggregateRoot`2.Handles``1(System.Action{``0})">
             <summary>
-            Configures a handler for an event.
+            Configures a handler for an event. 
             </summary>
         </member>
         <member name="M:AggregateRoot`2.Raise``1(``0)">
@@ -553,6 +536,145 @@
             Gets or sets the identifier of the domain object sourcing the event.
             </summary>
         </member>
+        <member name="T:EventQueryCriteria`1">
+            <summary>
+            Represents the filter criteria for a domain event store query.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:EventQueryCriteria`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventQueryCriteria`1"/> class.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.AggregateInstances">
+            <summary>
+            List of source object type + instance identifier filters. The two filters 
+            should be considered by event stores as AND'ed (i.e. 
+            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
+            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.AggregateTypes">
+            <summary>
+            List of aggregate root type filters. All types added are OR'ed with the 
+            others (i.e. <c>AggregateType == Product OR AggregateType == Order</c>).
+            </summary>
+            <remarks>
+            To filter by aggregate type and identifier, 
+            use <see cref="P:EventQueryCriteria`1.AggregateInstances"/> instead.
+            </remarks>
+        </member>
+        <member name="P:EventQueryCriteria`1.EventTypes">
+            <summary>
+            List of event type filters. All types added are OR'ed with the 
+            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.Since">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.Until">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.IsExclusiveRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:EventQueryCriteria`1.Since"/> and <see cref="P:EventQueryCriteria`1.Until"/> should 
+            be considered as exclusive ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+        <member name="T:EventQueryCriteria`1.AggregateFilter">
+            <summary>
+            Filter criteria containing the aggregate type and identifier. 
+            </summary>
+        </member>
+        <member name="M:EventQueryCriteria`1.AggregateFilter.#ctor(System.Type,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventQueryCriteria`1.AggregateFilter"/> class.
+            </summary>
+            <param name="aggregateType">Type of the event source to filter by.</param>
+            <param name="aggregateId">The aggregate root identifier to filter by.</param>
+        </member>
+        <member name="P:EventQueryCriteria`1.AggregateFilter.AggregateType">
+            <summary>
+            Gets or sets the type of the aggregate to filter by.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.AggregateFilter.AggregateId">
+            <summary>
+            Gets or sets the aggregate root identifier to filter by.
+            </summary>
+        </member>
+        <member name="T:EventBus`2">
+            <summary>
+            Default implementation of an <see cref="T:IEventBus`2"/> that 
+            invokes handlers as events are published, and where handlers are 
+            run in-process (if any handlers are provided).
+            </summary>
+            <remarks>
+            A persistent <see cref="T:IEventStore`2"/> can also be specified 
+            to persist events to a store for later playback or auditing.
+            <para>
+            Handlers with <see cref="P:IEventHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
+            </para>
+            </remarks>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
+            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
+        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
+            a persistent store for events, a set of event handlers and a specific async runner.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:EventBus`2.Publish(AggregateRoot{`0,`1},`1)">
+            <summary>
+            Publishes the specified event to the bus so that all subscribers are notified.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="event">The event payload.</param>
+        </member>
+        <member name="M:EventBus`2.OnHandle(System.Object,`0,System.Object)">
+            <summary>
+            Called when invoking the handler for an event with the given headers.
+            </summary>
+            <remarks>
+            Derived classes can change the way handlers are invoked, optimize it, 
+            or do pre/post processing right before/after the command is handled.
+            </remarks>
+        </member>
+        <member name="P:EventBus`2.HandlerDescriptor.EventType">
+            <summary>
+            Gets or sets the type of event payload the handler can process, 
+            retrieved from the handler TEvent generic parameter.
+            </summary>
+        </member>
+        <member name="P:EventBus`2.HandlerDescriptor.Handler">
+            <summary>
+            Gets or sets the handler.
+            </summary>
+        </member>
         <member name="T:ExpressionCombiner">
             <summary>
             Combines linq expressions using logic operators And and Or.
@@ -563,168 +685,68 @@
             </remarks>
             <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
         </member>
-        <member name="T:StoredEventCriteriaExtensions">
+        <member name="T:SerializationExtensions">
             <summary>
-            Provides helper conversion of <see cref="T:StoredEventCriteria`1"/> 
-            to a Linq <see cref="T:System.Linq.Expressions.Expression"/> that can be applied directly by 
-            stores that have Linq providers to the underlying event stream in 
-            the form of <see cref="T:System.Linq.IQueryable`1"/> of <see cref="T:IStoredEvent`1"/>.
+            Provides simpler serialization and deserialization extension methods 
+            for <see cref="T:ISerializer"/> over a byte array.
             </summary>
         </member>
-        <member name="M:StoredEventCriteriaExtensions.ToExpression``1(StoredEventCriteria{``0},System.Func{System.Type,System.String})">
+        <member name="M:SerializationExtensions.Deserialize``1(ISerializer,System.Byte[])">
             <summary>
-            Converts the criteria object into an expression tree that can be used to
-            run queries against an <see cref="T:System.Linq.IQueryable`1"/>.
+            Deserializes an object graph of type <typeparamref name="T"/> from 
+            the given byte array.
             </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <param name="criteria">The criteria object to convert to a Linq expression.</param>
-            <param name="typeNameConverter">The function that converts a <see cref="T:System.Type"/> to
-            its string representation in the store. Used to calculate the
-            values of <see cref="P:IStoredEvent`1.AggregateType"/> and
-            <see cref="P:IStoredEvent`1.EventType"/>.</param>
-            <returns>
-            The criteria object converted to an expression that can be
-            used to query an <see cref="T:System.Linq.IQueryable`1"/> if the store
-            implementation provides one.
-            </returns>
+            <typeparam name="T">The type of object graph to deserialize.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="serialized">The serialized byte array.</param>
         </member>
-        <member name="M:StoredEventCriteriaExtensions.StoredEventCriteriaBuilder`1.BuildEquals(`0)">
-            <devdoc>
+        <member name="M:SerializationExtensions.Serialize``1(ISerializer,``0)">
+            <summary>
+            Serializes the given object graph as a byte array.
+            </summary>
+            <typeparam name="T">The type of object graph to serialize, inferred by the
+            compiler from the passed-in <paramref name="graph"/>.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="graph">The object graph to serialize.</param>
+            <returns>The byte array containing the serialized object graph.</returns>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.AggregateIdEquals``4(IQueryableEventStore{``0,``1,``2,``3},``0)">
+            <summary>
+            Builds the equals expression that can be used to find a matching aggregate 
+            in a queryable of <see cref="T:IStoredAggregate`1"/> entities using the <c>FirstOrDefault</c> 
+            Linq operator, for example.
+            </summary>
+            <remarks>
             This is needed because == doesn't compile for TAggregateId and calling CompareTo 
             wouldn't work on most non in-memory stores either.
-            </devdoc>
+            </remarks>
         </member>
-        <member name="M:StoredEventCriteriaExtensions.StoredEventCriteriaBuilder`1.Build">
+        <member name="M:QueryableEventStoreExtensions.ToExpression``4(IQueryableEventStore{``0,``1,``2,``3},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <typeparam name="TStoredAggregate">The type of the stored aggregate.</typeparam>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`3.Build">
             <summary>
             Builds the expression for the criteria.
             </summary>
         </member>
-        <member name="T:DomainEventStore`2">
-            <summary>
-            Provides the <see cref="P:DomainEventStore`2.None"/> empty store for use 
-            when no store is needed.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:DomainEventStore`2.#cctor">
-            <summary>
-            Initializes the <see cref="P:DomainEventStore`2.None"/> null object 
-            pattern property.
-            </summary>
-        </member>
-        <member name="P:DomainEventStore`2.None">
-            <summary>
-            Gets a default domain event store implementation that 
-            does nothing (a.k.a. Null Object Pattern).
-            </summary>
-        </member>
-        <member name="T:IDomainEventBus`2">
-            <summary>
-            Interface implemented by the component that coordinates 
-            event handler invocation when a subscribed event is published.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:IDomainEventBus`2.Publish(AggregateRoot{`0,`1},`1)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The event payload.</param>
-        </member>
-        <member name="T:DomainEventBus`2">
-            <summary>
-            Default implementation of an <see cref="T:IDomainEventBus`2"/> that 
-            invokes handlers as events are published, and where handlers are 
-            run in-process (if any handlers are provided).
-            </summary>
-            <remarks>
-            A persistent <see cref="T:IDomainEventStore`2"/> can also be specified 
-            to persist events to a store for later playback or auditing.
-            <para>
-            Handlers with <see cref="P:IDomainEventHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor.
-            </para>
-            </remarks>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Core"/>
-        </member>
-        <member name="M:DomainEventBus`2.#cctor">
-            <summary>
-            Initializes the <see cref="P:DomainEventBus`2.None"/> null object 
-            pattern property.
-            </summary>
-        </member>
-        <member name="M:DomainEventBus`2.#ctor(IDomainEventStore{`0,`1})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`2"/> class
-            with a persistent store for events and no in-memory handlers.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-        </member>
-        <member name="M:DomainEventBus`2.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`2"/> class with 
-            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:DomainEventBus`2.#ctor(IDomainEventStore{`0,`1},System.Collections.Generic.IEnumerable{IDomainEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`2"/> class with 
-            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:DomainEventBus`2.#ctor(System.Collections.Generic.IEnumerable{IDomainEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`2"/> class with 
-            the given async runner.
-            </summary>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:DomainEventBus`2.#ctor(IDomainEventStore{`0,`1},System.Collections.Generic.IEnumerable{IDomainEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainEventBus`2"/> class with 
-            a persistent store for events, a set of event handlers and a specific async runner.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:DomainEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:DomainEventBus`2.Publish(AggregateRoot{`0,`1},`1)">
-            <summary>
-            Publishes the specified event to the bus so that all subscribers are notified.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="args">The event payload.</param>
-        </member>
-        <member name="P:DomainEventBus`2.None">
-            <summary>
-            Gets a default domain event bus implementation that 
-            does nothing (a.k.a. Null Object Pattern).
-            </summary>
-        </member>
-        <member name="T:DomainEventBus`2.NullBus">
-            <summary>
-            Provides a null <see cref="T:IDomainEventBus`2"/> implementation 
-            for use when no events have been configured.
-            </summary>
-        </member>
-        <member name="M:DomainEventBus`2.NullBus.Publish(AggregateRoot{`0,`1},`1)">
-            <summary>
-            Does nothing.
-            </summary>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`3.EventAggregateIdEquals(`0)">
+            <devdoc>
+            This is needed because == doesn't compile for TAggregateId and calling CompareTo 
+            wouldn't work on most non in-memory stores either.
+            </devdoc>
         </member>
     </members>
 </doc>

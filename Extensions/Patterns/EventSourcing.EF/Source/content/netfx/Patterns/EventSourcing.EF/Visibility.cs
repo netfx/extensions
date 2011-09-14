@@ -39,5 +39,5 @@ using System.Runtime.CompilerServices;
 // This package makes public these two types as EF needs that 
 // in order to be able to persist the instances.
 
-public partial interface IStoredEvent<TAggregateId> { }
-public partial class StoredEvent<TAggregateId> { }
+public partial class StoredEvent { }
+public partial class StoredAggregate { }

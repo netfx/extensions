@@ -54,16 +54,19 @@
     <Reference Include="System.Data.Entity" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing.EF\DomainEventStoreSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\AggregateRootSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventBusSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventQuerySpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\DomainEventStoreSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\MemoryEventStore.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\Product.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Core\Sample.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing.EF\EventStoreSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing.Queryable\QueryableEventStoreSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\EventBusSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Sample.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\ISerializerSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
+    <Compile Include="netfx\System\SequentialGuidSpec.cs" />
+    <Compile Include="netfx\System\SerializerExtensionsSpec.cs" />
     <Compile Include="netfx\System\SystemClockSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

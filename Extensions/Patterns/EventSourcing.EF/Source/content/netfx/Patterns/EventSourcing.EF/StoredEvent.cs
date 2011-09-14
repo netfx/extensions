@@ -15,41 +15,48 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 /// <summary>
-/// Represents a persisted event in the <see cref="DomainEventStore{TId, TStoredEvent}"/> store. 
-/// Must be inherited by a concrete non-generic class that specifies the type of <typeparamref name="TAggregateId"/>.
+/// Represents a persisted event in an event store.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifiers used by the aggregate roots.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.EF"/>
-abstract partial class StoredEvent<TAggregateId> : IStoredEvent<TAggregateId>
-	where TAggregateId : IComparable
+partial class StoredEvent : IStoredEvent<StoredAggregate, Guid>
 {
 	/// <summary>
-	/// Event identifier in the database.
+	/// Gets or sets the activity id when this event occurred.
 	/// </summary>
-	public virtual long Id { get; set; }
+	public Guid ActivityId { get; set; }
 
 	/// <summary>
-	/// Gets the aggregate id that the event applies to.
+	/// Gets the event id.
 	/// </summary>
-	public virtual TAggregateId AggregateId { get; set; }
-
-	/// <summary>
-	/// Gets the type of the aggregate root that this event applies to.
-	/// </summary>
-	public virtual string AggregateType { get; set; }
+	[Key]
+	public Guid EventId { get; set; }
 
 	/// <summary>
 	/// Gets the type of the event.
 	/// </summary>
-	public virtual string EventType { get; set; }
+	public string EventType { get; set; }
 
 	/// <summary>
 	/// Gets the UTC timestamp of the event.
 	/// </summary>
-	public virtual DateTime Timestamp { get; set; }
+	public DateTime Timestamp { get; set; }
+
+	/// <summary>
+	/// Gets the aggregate root associated with this event, if any.
+	/// </summary>
+	public StoredAggregate Aggregate { get; set; }
+
+	/// <summary>
+	/// Gets or sets the payload of the event.
+	/// </summary>
+	public byte[] Payload { get; set; }
+
+	/// <summary>
+	/// Gets or sets the row version, used for ordering events.
+	/// </summary>
+	[Timestamp]
+	public byte[] RowVersion { get; set; }
 }
