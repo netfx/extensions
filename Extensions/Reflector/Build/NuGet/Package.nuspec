@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Reflector</id>
-		<version>1.0.0.11</version>
+		<version>1.0.1.0</version>
 		<title>NETFx Reflector</title>
 		<description xml:space="preserve">Strong-typed static reflection via Reflect:
 // Void static method
@@ -24,7 +24,7 @@ MethodInfo pi = Reflect&lt;IViewModel&gt;
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx reflection</tags>
 		<dependencies>
-			<dependency id="netfx-Guard" version="1.0.0.0"/>
+			<dependency id="netfx-Guard" version="1.3"/>
 		</dependencies>
 	</metadata>
 </package>
