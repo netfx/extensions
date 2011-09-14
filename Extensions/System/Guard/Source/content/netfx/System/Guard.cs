@@ -36,6 +36,7 @@ using System.Linq.Expressions;
 /// <summary>
 /// Common guard class for argument validation.
 /// </summary>
+///	<nuget id="netfx-Guard" />
 [DebuggerStepThrough]
 internal static class Guard
 {
