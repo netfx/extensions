@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:SerializationExtensions">
+            <summary>
+            Provides simpler serialization and deserialization extension methods 
+            for <see cref="T:ISerializer"/> over a byte array.
+            </summary>
+        </member>
+        <member name="M:SerializationExtensions.Deserialize``1(ISerializer,System.Byte[])">
+            <summary>
+            Deserializes an object graph of type <typeparamref name="T"/> from 
+            the given byte array.
+            </summary>
+            <typeparam name="T">The type of object graph to deserialize.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="serialized">The serialized byte array.</param>
+        </member>
+        <member name="M:SerializationExtensions.Serialize``1(ISerializer,``0)">
+            <summary>
+            Serializes the given object graph as a byte array.
+            </summary>
+            <typeparam name="T">The type of object graph to serialize, inferred by the
+            compiler from the passed-in <paramref name="graph"/>.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="graph">The object graph to serialize.</param>
+            <returns>The byte array containing the serialized object graph.</returns>
+        </member>
+        <member name="T:IClock">
+            <summary>
+            Represents a clock.
+            </summary>
+            <devdoc>
+            To make this interface public, create a partial interface 
+            definition in another code file and declare it as public.
+            This allows a seamless updates experience.
+            </devdoc>
+            <nuget id="netfx-System.Clock" />
+        </member>
+        <member name="P:IClock.Now">
+            <summary>
+            Current date and time.
+            </summary>
+        </member>
+        <member name="P:IClock.UtcNow">
+            <summary>
+            Current date and time in UTC format.
+            </summary>
+        </member>
+        <member name="T:MessageStore`1">
+            <summary>
+            Provides an implementation of the message store pattern
+            using Entity Framework 4.1+ code first
+            </summary>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <nuget id="netfx-Patterns.MessageStore.EF" />
+        </member>
+        <member name="T:IMessageStore`1">
+            <summary>
+            Interface implemented by a message stores.
+            </summary>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:IMessageStore`1.Save(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Persists the message and headers.
+            </summary>
+            <param name="message">The message to persist.</param>
+            <param name="headers">The headers associated with the message.</param>
+        </member>
+        <member name="M:IMessageStore`1.Query(MessageStoreQueryCriteria)">
+            <summary>
+            Queries the store for messages that match the given criteria.
+            </summary>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            The <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> extension method  
+            can be used with any message store implementation, and provides a fluent 
+            API to build the criteria object
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MessageStore`1.#ctor(System.String,ISerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessageStore`1"/> class 
+            with the given serializer.
+            </summary>
+        </member>
+        <member name="M:MessageStore`1.Save(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Saves the specified message to the store.
+            </summary>
+        </member>
+        <member name="P:MessageStore`1.TypeNameConverter">
+            <summary>
+            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
+            its string representation in the store. Used to calculate the 
+            value of <see cref="P:MessageEntity.Type"/> for a given message.
+            </summary>
+        </member>
+        <member name="P:MessageStore`1.SystemClock">
+            <summary>
+            Gets or sets the system clock to use to calculate the timestamp
+            of persisted events.
+            </summary>
+        </member>
+        <member name="P:MessageStore`1.Messages">
+            <summary>
+            Gets or sets the messages persisted in the store.
+            </summary>
+        </member>
+        <member name="M:MessageStore`1.StoredMessageCriteriaBuilder.Build">
+            <summary>
+            Builds the expression for the criteria.
+            </summary>
+        </member>
+        <member name="T:SequentialGuid">
+            <summary>
+            A safe managed sequential GUID generator (or Comb) that improves 
+            performance of GUID-style identifiers used in persistence.
+            </summary>
+            <devdoc>Source from NHibernate Guid Comb generator: http://nhibernate.svn.sourceforge.net/viewvc/nhibernate/trunk/nhibernate/src/NHibernate/Id/GuidCombGenerator.cs </devdoc>
+            <nuget id="netfx-System.SequentialGuid" />
+        </member>
+        <member name="M:SequentialGuid.NewGuid">
+            <summary>
+            Creates a new sequential guid.
+            </summary>
+        </member>
+        <member name="P:MessageEntity.Id">
+            <summary>
+            Gets or sets the message identifier.
+            </summary>
+        </member>
+        <member name="P:MessageEntity.Type">
+            <summary>
+            Gets or sets the type of the message.
+            </summary>
+        </member>
+        <member name="P:MessageEntity.Timestamp">
+            <summary>
+            Gets or sets the UTC timestamp of the message.
+            </summary>
+        </member>
+        <member name="P:MessageEntity.Headers">
+            <summary>
+            Gets or sets the headers associated with the message.
+            </summary>
+        </member>
+        <member name="P:MessageEntity.Payload">
+            <summary>
+            Gets or sets the payload of the message.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+            <nuget id="netfx-Guard" />
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:ExpressionCombiner">
+            <summary>
+            Combines linq expressions using logic operators And and Or.
+            </summary>
+            <remarks>
+            This code was taken from the MSDN Blog meek: LINQ to Entities: Combining Predicates
+            http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
+            </remarks>
+            <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
+        </member>
+        <member name="T:SystemClock">
+            <summary>
+            Default implementation of <see cref="T:IClock"/> that exposes 
+            the <see cref="T:System.DateTime"/> default members.
+            </summary>
+            <devdoc>
+            To make this class public, create a partial class
+            definition in another code file and declare it as public.
+            This allows a seamless updates experience.
+            </devdoc>
+            <nuget id="netfx-System.Clock"/>
+        </member>
+        <member name="P:SystemClock.Instance">
+            <summary>
+            Gets the singleton instance of the system clock.
+            </summary>
+        </member>
+        <member name="P:SystemClock.Now">
+            <summary>
+            Current date and time.
+            </summary>
+        </member>
+        <member name="P:SystemClock.UtcNow">
+            <summary>
+            Current date and time in UTC format.
+            </summary>
+        </member>
+        <member name="T:ISerializer">
+            <summary>
+            Implementations of this interface are able to serialize and 
+            deserialize an object graph from a stream.
+            </summary>
+            <nuget id="netfx-System.ISerializer" />
+        </member>
+        <member name="M:ISerializer.Deserialize``1(System.IO.Stream)">
+            <summary>
+            Deserializes an object graph from the given stream.
+            </summary>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:ISerializer.Serialize``1(System.IO.Stream,``0)">
+            <summary>
+            Serializes the provided object graph and writes it to the storage.
+            </summary>
+            <param name="stream">The stream to serialize the graph into.</param>
+            <param name="graph">The object graph to be serialized.</param>
+        </member>
+        <member name="T:MessageStoreQueryExtension">
+            <summary>
+            Provides the entry point <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> extension method 
+            for an <see cref="T:IMessageStore`1"/> for a fluent API 
+            that makes building the message query criteria easier.
+            </summary>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})">
+            <summary>
+            Allows building a query against the message store 
+            using a fluent API and automatically executing 
+            it to messages that match built criteria upon 
+            query enumeration or explicit execution.
+            </summary>
+            <typeparam name="TBaseMessage">The base type or interface implemented by log entries in the system.</typeparam>
+            <param name="store">The audit log store.</param>
+        </member>
+        <member name="T:MessageStoreQueryExtension.IQuery`1">
+            <summary>
+            Provides a fluent API to filter messages from a message store. 
+            </summary>
+            <remarks>
+            This interface is returned from the <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> 
+            extension method for <see cref="T:IMessageStore`1"/>.
+            </remarks>
+            <typeparam name="TBaseMessage">The base type or interface implemented by events in the system.</typeparam>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Execute">
+            <summary>
+            Executes the query built using the fluent API 
+            against the underlying store.
+            </summary>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.OfType``1">
+            <summary>
+            Includes messages in the result that are assignable to the given type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TMessage">The type of messages to include.</typeparam>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)">
+            <summary>
+            Includes messages that happened after the given starting date.
+            </summary>
+            <param name="when">The starting date to filter by.</param>
+            <remarks>
+            By default, includes messages with the given date, unless the 
+            <see cref="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)">
+            <summary>
+            Includes events that happened before the given ending date.
+            </summary>
+            <param name="when">The ending date to filter by.</param>
+            <remarks>
+            By default, includes messages with the given date, unless the 
+            <see cref="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange">
+            <summary>
+            Makes the configured <see cref="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)"/> and/or <see cref="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)"/> dates 
+            exclusive, changing the default behavior which is to be inclusive.
+            </summary>
+        </member>
+        <member name="T:MessageStoreQueryCriteria">
+            <summary>
+            Represents the filter criteria for a message store query.
+            </summary>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryCriteria.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessageStoreQueryCriteria"/> class.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.MessageTypes">
+            <summary>
+            List of message type filters. All types added are OR'ed with the 
+            others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Since">
+            <summary>
+            Filters messages that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Until">
+            <summary>
+            Filters messages that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.IsExclusiveRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:MessageStoreQueryCriteria.Since"/> and <see cref="P:MessageStoreQueryCriteria.Until"/> should 
+            be considered as exclusive ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+    </members>
+</doc>

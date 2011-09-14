@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:ISerializer">
+            <summary>
+            Implementations of this interface are able to serialize and 
+            deserialize an object graph from a stream.
+            </summary>
+            <nuget id="netfx-System.ISerializer" />
+        </member>
+        <member name="M:ISerializer.Deserialize``1(System.IO.Stream)">
+            <summary>
+            Deserializes an object graph from the given stream.
+            </summary>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:ISerializer.Serialize``1(System.IO.Stream,``0)">
+            <summary>
+            Serializes the provided object graph and writes it to the storage.
+            </summary>
+            <param name="stream">The stream to serialize the graph into.</param>
+            <param name="graph">The object graph to be serialized.</param>
+        </member>
+        <member name="T:SerializationExtensions">
+            <summary>
+            Provides simpler serialization and deserialization extension methods 
+            for <see cref="T:ISerializer"/> over a byte array.
+            </summary>
+        </member>
+        <member name="M:SerializationExtensions.Deserialize``1(ISerializer,System.Byte[])">
+            <summary>
+            Deserializes an object graph of type <typeparamref name="T"/> from 
+            the given byte array.
+            </summary>
+            <typeparam name="T">The type of object graph to deserialize.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="serialized">The serialized byte array.</param>
+        </member>
+        <member name="M:SerializationExtensions.Serialize``1(ISerializer,``0)">
+            <summary>
+            Serializes the given object graph as a byte array.
+            </summary>
+            <typeparam name="T">The type of object graph to serialize, inferred by the
+            compiler from the passed-in <paramref name="graph"/>.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="graph">The object graph to serialize.</param>
+            <returns>The byte array containing the serialized object graph.</returns>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+    </members>
+</doc>
