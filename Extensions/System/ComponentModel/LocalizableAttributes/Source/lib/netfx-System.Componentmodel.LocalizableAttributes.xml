@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.ComponentModel.CategoryResourceAttribute">
+            <summary>
+            An attribute that provides a localization from a resource file.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.CategoryResourceAttribute.#ctor(System.String,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.ComponentModel.CategoryResourceAttribute"/> class.
+            </summary>
+            <param name="resourceName">The resource name.</param>
+            <param name="resourceType">The type of the resource.</param>
+        </member>
+        <member name="M:System.ComponentModel.CategoryResourceAttribute.GetLocalizedString(System.String)">
+            <summary>
+            Returns the localized string from the resource file.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.CategoryResourceAttribute.ResourceName">
+            <summary>
+            Gets the name of the resource.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.CategoryResourceAttribute.ResourceType">
+            <summary>
+            Gets the type of the resource.
+            </summary>
+        </member>
+        <member name="T:System.ComponentModel.DescriptionResourceAttribute">
+            <summary>
+            An attribute that provides a localization from a resource file.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.DescriptionResourceAttribute.#ctor(System.String,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.ComponentModel.DescriptionResourceAttribute"/> class.
+            </summary>
+            <param name="resourceName">The resource string.</param>
+            <param name="resourceType">Type of the resource.</param>
+        </member>
+        <member name="M:System.ComponentModel.DescriptionResourceAttribute.GetLocalizedString">
+            <summary>
+            Returns the localized string from the resource file.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DescriptionResourceAttribute.Description">
+            <summary>
+            Gets the description stored in this attribute.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DescriptionResourceAttribute.ResourceName">
+            <summary>
+            Gets the name of the resource.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DescriptionResourceAttribute.ResourceType">
+            <summary>
+            Gets the type of the resource.
+            </summary>
+        </member>
+        <member name="T:System.ComponentModel.DisplayNameResourceAttribute">
+            <summary>
+            An attribute that provides a localization from a resource file.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.DisplayNameResourceAttribute.#ctor(System.String,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.ComponentModel.DisplayNameResourceAttribute"/> class.
+            </summary>
+            <param name="resourceName">The resource string.</param>
+            <param name="resourceType">Type of the resource.</param>
+        </member>
+        <member name="M:System.ComponentModel.DisplayNameResourceAttribute.GetLocalizedString">
+            <summary>
+            Returns the localized string from the resource file.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DisplayNameResourceAttribute.DisplayName">
+            <summary>
+            Gets the display name stored in this attribute.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DisplayNameResourceAttribute.ResourceName">
+            <summary>
+            Gets the name of the resource.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DisplayNameResourceAttribute.ResourceType">
+            <summary>
+            Gets the type of the resource.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+            <nuget id="netfx-Guard" />
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+    </members>
+</doc>
