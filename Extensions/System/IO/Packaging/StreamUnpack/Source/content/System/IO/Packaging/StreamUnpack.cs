@@ -25,12 +25,12 @@ using System.IO.Packaging;
 /// Provides unpacking behavior for steams are 
 /// OPC (Open Packaging Convention) packages/zips.
 /// </summary>
+/// <nuget id="netfx-System.IO.Packaging.StreamUnpack" />
 internal static partial class StreamUnpack
 {
 	/// <summary>
 	/// Unzips the given stream onto the target directory.
 	/// </summary>
-	/// <nuget id="netfx-System.IO.Packaging.StreamUnpack" />
 	/// <param name="zipStream" this="true">The stream to unpack</param>
 	/// <param name="targetDir">The target directory where stream will be unpacked</param>
 	/// <remarks>
@@ -59,7 +59,6 @@ internal static partial class StreamUnpack
 	/// From the given stream, unzips the file with the given name 
 	/// onto the given <paramref name="unpacked"/> stream.
 	/// </summary>
-	/// <nuget id="netfx-System.IO.Packaging.StreamUnpack" />
 	/// <param name="zipStream" this="true">The stream to unpack</param>
 	/// <param name="fileToUnpack">The file inside te pack to unpack</param>\
 	/// <param name="unpacked">The stream where the file will be unpacked</param>
@@ -104,7 +103,6 @@ internal static partial class StreamUnpack
 	/// <summary>
 	/// Unzips the selected files from the zip stream onto the target directory.
 	/// </summary>
-	/// <nuget id="netfx-System.IO.Packaging.StreamUnpack" />
 	/// <param name="zipStream" this="true">The stream to unpack</param>
 	/// <param name="targetDir">The target directory where stream will be unpacked</param>
 	/// <param name="filesToUnpack">The files to be unpacked</param>

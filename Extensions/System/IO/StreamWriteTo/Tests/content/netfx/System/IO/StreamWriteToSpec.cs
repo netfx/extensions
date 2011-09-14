@@ -7,7 +7,6 @@ using System.IO;
 
 namespace NetFx.System.IO
 {
-	/// <nuget id="netfx-System.IO.StreamWriteTo.Tests" />
 	public class StreamWriteToSpec
 	{
 		[Fact]

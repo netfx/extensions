@@ -7,7 +7,6 @@ using System.IO;
 
 namespace NetFx.System.IO
 {
-	/// <nuget id="netfx-System.IO.StreamGetBytes.Tests" />
 	public class StreamGetBytesSpec
 	{
 		[Fact]

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.IO.Packaging.StreamUnpack.Tests</id>
+		<id>netfx-System.IO.Packaging.StreamUnpack.Tests.xUnit</id>
 		<version>1.1.0.0</version>
-		<title>NETFx Stream.Unpack Extension Method Tests</title>
-		<description>Tests for netfx-System.IO.Packaging.StreamUnpack</description>
+		<title>NETFx Stream.Unpack Extension Method xUnit Tests</title>
+		<description>xUnit Tests for netfx-System.IO.Packaging.StreamUnpack</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
