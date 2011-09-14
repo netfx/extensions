@@ -37,7 +37,6 @@ using Xunit;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.ValueEventArgs.Tests" />
 	public class ValueEventArgsSpec
 	{
 		[Fact]
