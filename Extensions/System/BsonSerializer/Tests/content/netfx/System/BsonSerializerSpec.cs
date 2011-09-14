@@ -39,7 +39,6 @@ using Newtonsoft.Json;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.BsonSerializer.Tests.xUnit" />
 	public class BsonSerializerSpec : SerializerSpec
 	{
 		[Fact]
