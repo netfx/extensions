@@ -36,7 +36,6 @@ using System.Text;
 using Xunit;
 using System.Windows.Threading;
 
-///	<nuget id="netfx-System.Windows.Threading.DispatcherInvokeExtensions.Tests" />
 public class DispatcherInvokeExtensionsSpec
 {
 	[Fact]
