@@ -23,13 +23,24 @@ using System.Text;
 /// Provides access to the domain aggregate roots.
 /// </summary>
 /// <nuget id="netfx-Patterns.DomainContext" />
-public partial interface IDomainContext<TId> : IDisposable
+partial interface IDomainContext<TId> : IDisposable
 	where TId : IComparable
 {
 	/// <summary>
 	/// Saves all changes made in this context to the underlying database.
 	/// </summary>
-	void SaveChanges();
+	void Commit();
+
+	/// <summary>
+	/// Finds the aggregate root with the specified id.
+	/// </summary>
+	/// <returns>The found aggregate or <see langword="null"/>.</returns>
+	T Find<T>(TId id) where T : class, IAggregateRoot<TId>;
+	
+	/// <summary>
+	/// Inserts or updates the specified aggregate root.
+	/// </summary>
+	void Persist<T>(T entity) where T : class, IAggregateRoot<TId>;
 
 	/// <summary>
 	/// Creates a new instance of an aggregate root.
@@ -43,17 +54,6 @@ public partial interface IDomainContext<TId> : IDisposable
 	/// </remarks>
 	/// <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
 	T New<T>(Action<T> initializer = null) where T : class, IAggregateRoot<TId>;
-
-	/// <summary>
-	/// Finds the aggregate root with the specified id.
-	/// </summary>
-	/// <returns>The found aggregate or <see langword="null"/>.</returns>
-	T Find<T>(TId id) where T : class, IAggregateRoot<TId>;
-
-	/// <summary>
-	/// Inserts or updates the specified aggregate root.
-	/// </summary>
-	void Save<T>(T entity) where T : class, IAggregateRoot<TId>;
 
 	/// <summary>
 	/// Logically deletes the specified aggregate root.

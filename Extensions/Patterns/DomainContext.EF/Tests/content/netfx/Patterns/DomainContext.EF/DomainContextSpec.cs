@@ -29,7 +29,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo" };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -52,7 +52,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo" };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -75,7 +75,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo" };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -89,7 +89,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -101,12 +101,32 @@ namespace Tests
 		}
 
 		[Fact]
+		public void WhenSavingWithCircularReference_ThenSucceeds()
+		{
+			var foo = new Foo { Name = "Foo" };
+			var bar = new Bar { Parent = foo };
+			foo.Bars.Add(bar);
+			using (var db = new TestContext())
+			{
+				db.Persist(foo);
+				db.SaveChanges();
+			}
+
+			using (var db = new TestContext())
+			{
+				var saved = db.Foos.FirstOrDefault(x => x.Name == foo.Name);
+				Assert.Equal(1, saved.Bars.Count);
+				Assert.Same(saved, saved.Bars[0].Parent);
+			}
+		}
+
+		[Fact]
 		public void WhenIncludingDependent_ThenSucceeds()
 		{
 			var foo = new Foo { Name = "Foo", Baz = { new Baz() } };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -119,13 +139,13 @@ namespace Tests
 			}
 		}
 
-		[Fact(Skip = "Can't figure out how to make string paths work")]
+		[Fact(Skip = "Can't figure out how to use string paths :S")]
 		public void WhenIncludingDependentAsString_ThenSucceeds()
 		{
-			var foo = new Foo { Name = "Foo", Bars = { new Bar { Baz = new Baz() } } };
+			var foo = new Foo { Name = "Foo", Bars = { new Bar { Baz = { new Baz() } } } };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 			
@@ -139,25 +159,6 @@ namespace Tests
 		}
 
 		[Fact]
-		public void WhenSavingInvalidEntity_ThenThrowsValidationException()
-		{
-			var foo = new AggregateRootWithRequiredProperty();
-			using (var db = new TestContext())
-			{
-				db.Save(foo);
-				try
-				{
-					db.SaveChanges();
-					Assert.False(true, "Didn't throw");
-				}
-				catch (DbEntityValidationException ex)
-				{
-					Assert.Contains("Name", ex.Message);
-				}
-			}
-		}
-
-		[Fact]
 		public void WhenNewEntity_ThenCanInitializeAndFindIt()
 		{
 			var id = default(long);
@@ -165,7 +166,7 @@ namespace Tests
 			{
 				var foo = db.New<Foo>(x => x.Name = "foo");
 
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 
 				id = foo.Id;
@@ -194,7 +195,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -209,7 +210,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -236,7 +237,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -251,7 +252,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -279,7 +280,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -294,7 +295,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -322,7 +323,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -337,7 +338,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -359,7 +360,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo", Content = new Content { Payload = "Hello" } };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -374,7 +375,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -394,7 +395,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo", Content = new Content { Payload = "Hello" } };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -409,7 +410,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -432,7 +433,7 @@ namespace Tests
 			var foo = new Foo { Name = "Foo", Content = new Content { Payload = "Hello" } };
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -447,7 +448,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -478,7 +479,7 @@ namespace Tests
 			};
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -493,7 +494,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -528,7 +529,7 @@ namespace Tests
 			};
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -543,7 +544,7 @@ namespace Tests
 
 			using (var db = new TestContext())
 			{
-				db.Save(foo);
+				db.Persist(foo);
 				db.SaveChanges();
 			}
 
@@ -562,62 +563,9 @@ namespace Tests
 		}
 
 		[Fact]
-		public void WhenContextContainsNonIndentifiableQueryable_ThenThrowsNotSupportedException()
-		{
-			var init = Assert.Throws<TypeInitializationException>(() => new InvalidContextRoot());
-			Assert.True(init.InnerException is NotSupportedException);
-		}
-
-		[Fact]
-		public void WhenInvalidContextIdType_ThenThrowsNotSupportedException()
-		{
-			var init = Assert.Throws<TypeInitializationException>(() => new ContextWithInvalidIdType());
-			Assert.True(init.InnerException is NotSupportedException);
-		}
-
-		[Fact]
 		public void WhenContextWithIdType_ThenSucceeds()
 		{
 			var context = new ContextWithStringIdType();
-		}
-
-		[Fact]
-		public void WhenSavingNonIdentifiableReferenceEntry_ThenThrowsNotSupportedException()
-		{
-			System.Data.Entity.Database.SetInitializer<ValidContextWithNonIdentiableDependentEntity>(
-				new System.Data.Entity.DropCreateDatabaseAlways<ValidContextWithNonIdentiableDependentEntity>());
-
-			using (var context = new ValidContextWithNonIdentiableDependentEntity())
-			{
-				var root = new AggregateRootWithNonIdentifiableReference
-				{
-					NonIdentifiable = new NonIdentifable(),
-				};
-
-				context.Save(root);
-				Assert.Throws<NotSupportedException>(() => context.SaveChanges());
-			}
-		}
-
-		[Fact]
-		public void WhenSavingNonIdentifiableReferenceCollectionEntry_ThenThrowsNotSupportedException()
-		{
-			System.Data.Entity.Database.SetInitializer<ValidContextWithNonIdentiableDependentEntity>(
-				new System.Data.Entity.DropCreateDatabaseAlways<ValidContextWithNonIdentiableDependentEntity>());
-
-			using (var context = new ValidContextWithNonIdentiableDependentEntity())
-			{
-				var root = new AggregateRootWithNonIdentifiableReference
-				{
-					NonIdentifiables = 
-					{
-						new NonIdentifable(),
-					}
-				};
-
-				context.Save(root);
-				Assert.Throws<NotSupportedException>(() => context.SaveChanges());
-			}
 		}
 
 		[Fact]
@@ -640,7 +588,7 @@ namespace Tests
 					},
 				};
 
-				context.Save(root);
+				context.Persist(root);
 				context.SaveChanges();
 
 				originalDependentId = root.Dependent.Id;
@@ -661,7 +609,7 @@ namespace Tests
 					Blob = new Blob { File = "file2.txt" },
 				};
 
-				context.Save(root);
+				context.Persist(root);
 				context.SaveChanges();
 			}
 
@@ -689,7 +637,7 @@ namespace Tests
 				Assert.NotNull(root.Context);
 				Assert.Same(db, root.Context);
 
-				db.Save(root);
+				db.Persist(root);
 				db.SaveChanges();
 			}
 
@@ -711,7 +659,7 @@ namespace Tests
 		public virtual bool IsDeleted { get; set; }
 	}
 
-	public class TestContext : DomainContext<TestContext, long>
+	internal class TestContext : DomainContext<TestContext, long>
 	{
 		public TestContext()
 			: base("EntityContextSpec")
@@ -726,47 +674,19 @@ namespace Tests
 		}
 
 		public virtual System.Data.Entity.DbSet<AggregateRootContextAccessor> ContextConsumer { get; set; }
-		public virtual System.Data.Entity.DbSet<AggregateRootWithRequiredProperty> RequiredProperties { get; set; }
 		public virtual System.Data.Entity.DbSet<Foo> Foos { get; set; }
 		public virtual System.Data.Entity.DbSet<Baz> Baz { get; set; }
 		public virtual System.Data.Entity.DbSet<User> Users { get; set; }
 	}
 
-	public class AggregateRootContextAccessor : AggregateRoot, IDomainContextAccessor<TestContext>
+	internal class AggregateRootContextAccessor : AggregateRoot, IDomainContextAccessor<TestContext>
 	{
 		[NotMapped]
 		public TestContext Context { get; set; }
 	}
 
-	public class InvalidContextRoot : DomainContext<InvalidContextRoot, long>
+	internal class ContextWithStringIdType : DomainContext<ContextWithStringIdType, string>
 	{
-		public System.Data.Entity.DbSet<NonAggregateRoot> NonRoot { get; set; }
-	}
-
-	public class ValidContextWithNonIdentiableDependentEntity : DomainContext<ValidContextWithNonIdentiableDependentEntity, long>
-	{
-		public System.Data.Entity.DbSet<AggregateRootWithNonIdentifiableReference> Root { get; set; }
-	}
-
-	public class ContextWithStringIdType : DomainContext<ContextWithStringIdType, string>
-	{
-	}
-
-	public class ContextWithInvalidIdType : DomainContext<ContextWithInvalidIdType, ContextWithInvalidIdType.InvalidKeyType>
-	{
-		public class InvalidKeyType : IComparable
-		{
-			public int CompareTo(object obj)
-			{
-				return 0;
-			}
-		}
-	}
-
-	public class AggregateRootWithRequiredProperty : AggregateRoot
-	{
-		[Required]
-		public virtual string Name { get; set; }
 	}
 
 	public class Foo : AggregateRoot
@@ -777,9 +697,10 @@ namespace Tests
 			this.Baz = new List<Baz>();
 			this.Customers = new List<User>();
 		}
+
 		public virtual string Name { get; set; }
-		public virtual List<Bar> Bars { get; set; }
-		public virtual List<Baz> Baz { get; set; }
+		public virtual IList<Bar> Bars { get; set; }
+		public virtual IList<Baz> Baz { get; set; }
 
 		public virtual User User { get; set; }
 
@@ -787,14 +708,19 @@ namespace Tests
 		public virtual User Owner { get; set; }
 
 		[ReadOnly(true)]
-		public virtual ICollection<User> Customers { get; set; }
+		public virtual IList<User> Customers { get; set; }
 
 		public virtual Content Content { get; set; }
 	}
 
 	public class Bar : AggregateRoot
 	{
-		public virtual Baz Baz { get; set; }
+		public Bar()
+		{
+			this.Baz = new List<Baz>();
+		}
+
+		public virtual IList<Baz> Baz { get; set; }
 		public virtual Foo Parent { get; set; }
 	}
 
@@ -837,32 +763,7 @@ namespace Tests
 		public virtual DateTime BirthDate { get; set; }
 	}
 
-	public class AggregateRootWithNonIdentifiableReference : IAggregateRoot<long>
-	{
-		public AggregateRootWithNonIdentifiableReference()
-		{
-			this.NonIdentifiables = new HashSet<NonIdentifable>();
-		}
-
-		public virtual bool IsDeleted { get; set; }
-		public virtual long Id { get; set; }
-
-		public virtual NonIdentifable NonIdentifiable { get; set; }
-
-		public virtual ICollection<NonIdentifable> NonIdentifiables { get; set; }
-	}
-
-	public class NonAggregateRoot
-	{
-	}
-
-	public class NonIdentifable
-	{
-		public virtual int Id { get; set; }
-		public virtual string Title { get; set; }
-	}
-
-	public class ContextWithRootWithGeneratedIdDepedent : DomainContext<ContextWithStringIdType, long>
+	internal class ContextWithRootWithGeneratedIdDepedent : DomainContext<ContextWithStringIdType, long>
 	{
 		public virtual System.Data.Entity.DbSet<RootWithGeneratedIdDependent> Roots { get; set; }
 	}

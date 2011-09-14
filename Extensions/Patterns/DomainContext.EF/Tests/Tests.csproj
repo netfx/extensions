@@ -69,7 +69,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\DomainContext\DomainContextSpec.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContext.EF\ValidationsSpec.cs" />
+    <Compile Include="content\netfx\Patterns\DomainContext.EF\DomainContextSpec.cs" />
     <Compile Include="DomainContextExtensibility.cs" />
     <Compile Include="netfx\System\Dynamic\ReflectionDynamicObjectSpec.cs" />
   </ItemGroup>

@@ -32,7 +32,7 @@ namespace Tests
 		{
 			using (var context = new TestContext())
 			{
-				context.Save(new Foo());
+				context.Persist(new Foo());
 
 				context.SaveChanges();
 
@@ -47,7 +47,7 @@ namespace Tests
 			using (var context = new TestContext())
 			{
 				var foo = new Foo();
-				context.Save(foo);
+				context.Persist(foo);
 
 				Assert.Equal(1, context.OnEntitySavingCalls.Count);
 				Assert.Equal(1, context.OnEntitySavedCalls.Count);
@@ -62,7 +62,7 @@ namespace Tests
 			using (var context = new TestContext())
 			{
 				var foo = new Foo { Content = new Content() };
-				context.Save(foo);
+				context.Persist(foo);
 
 				Assert.Equal(1, context.OnEntitySavingCalls.Count);
 				Assert.Equal(1, context.OnEntitySavedCalls.Count);
@@ -77,7 +77,7 @@ namespace Tests
 			var foo = new Foo { Content = new Content() };
 			using (var context = new TestContext())
 			{
-				context.Save(foo);
+				context.Persist(foo);
 
 				context.SaveChanges();
 			}
@@ -88,7 +88,7 @@ namespace Tests
 
 				saved.Content.Payload = "foo";
 
-				context.Save(saved);
+				context.Persist(saved);
 				context.SaveChanges();
 
 				Assert.Equal(2, context.OnEntitySavingCalls.Count);

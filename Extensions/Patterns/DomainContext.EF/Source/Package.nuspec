@@ -4,7 +4,7 @@
 		<id>netfx-Patterns.DomainContext.EF</id>
 		<version>1.0.0.0</version>
 		<title>NETFx Patterns: Domain Context for Entity Framework</title>
-		<description>Implements the DomainContext pattern for EntityFramework 4.1, by extending the DbContext with support for rich domain modeling capabilities for aggregate roots and dependent entities, including automatic graph saving, logical deletes and more.</description>
+		<description>Implements the Domain Context pattern for EntityFramework 4.1, by extending the DbContext with support for rich domain modeling capabilities for persistence ignorant aggregate roots and dependent entities, including automatic graph saving, logical deletes and more.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
@@ -18,7 +18,7 @@
 			<frameworkAssembly assemblyName="System.Data.Entity" targetFramework="net40"/>
 		</frameworkAssemblies>
 		<dependencies>
-			<dependency id="netfx-Patterns.DomainContext.Core" version="1.0" />
+			<dependency id="netfx-Patterns.DomainContext" version="1.0" />
 			<dependency id="netfx-System.Dynamic.Reflection" version="1.1" />
 			<dependency id="EntityFramework" version="4.1" />
 			<dependency id="Tracer" version="0.9" />

@@ -4,55 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:System.Dynamic.RefValue">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
-            <summary>
-            Creates a value getter/setter delegating reference
-            to be used by reference when invoking the 
-            dynamic object.
-            </summary>
-            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
-            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
-        </member>
-        <member name="P:System.Dynamic.RefValue.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.RefValue`1">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.RefValue`1.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:IIdentifiable`1">
-            <summary>
-            Base interface that must be implented by all domain entities. 
-            Types that do not have their separate table (a.k.a. "complex types" 
-            in EF or "components" in NH) just don't implement this interface.
-            </summary>
-            <nuget id="netfx-Patterns.DomainContext" />
-        </member>
-        <member name="P:IIdentifiable`1.Id">
-            <summary>
-            Gets or sets the id.
-            </summary>
-        </member>
         <member name="T:DomainContext`2">
             <summary>
             Base class for domain contexts. 
@@ -100,9 +51,20 @@
             </summary>
             <nuget id="netfx-Patterns.DomainContext" />
         </member>
-        <member name="M:IDomainContext`1.SaveChanges">
+        <member name="M:IDomainContext`1.Commit">
             <summary>
             Saves all changes made in this context to the underlying database.
+            </summary>
+        </member>
+        <member name="M:IDomainContext`1.Find``1(`0)">
+            <summary>
+            Finds the aggregate root with the specified id.
+            </summary>
+            <returns>The found aggregate or <see langword="null"/>.</returns>
+        </member>
+        <member name="M:IDomainContext`1.Persist``1(``0)">
+            <summary>
+            Inserts or updates the specified aggregate root.
             </summary>
         </member>
         <member name="M:IDomainContext`1.New``1(System.Action{``0})">
@@ -117,17 +79,6 @@
             the entity changes, create a proxy for it, etc.
             </remarks>
             <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
-        </member>
-        <member name="M:IDomainContext`1.Find``1(`0)">
-            <summary>
-            Finds the aggregate root with the specified id.
-            </summary>
-            <returns>The found aggregate or <see langword="null"/>.</returns>
-        </member>
-        <member name="M:IDomainContext`1.Save``1(``0)">
-            <summary>
-            Inserts or updates the specified aggregate root.
-            </summary>
         </member>
         <member name="M:IDomainContext`1.Delete``1(`0)">
             <summary>
@@ -162,6 +113,11 @@
             with the given connection string or name.
             </summary>
         </member>
+        <member name="M:DomainContext`2.Commit">
+            <summary>
+            Commits changes to all entities that were persisted in this context so far.
+            </summary>
+        </member>
         <member name="M:DomainContext`2.SaveChanges">
             <summary>
             Saves all changes made in this context to the underlying database.
@@ -184,7 +140,7 @@
             Finds the aggregate root with the specified id.
             </summary>
         </member>
-        <member name="M:DomainContext`2.Save``1(``0)">
+        <member name="M:DomainContext`2.Persist``1(``0)">
             <summary>
             Inserts or updates the specified aggregate root.
             </summary>
@@ -404,6 +360,19 @@
             </remarks>
             <nuget id="netfx-Patterns.DomainContext"/>
         </member>
+        <member name="T:IIdentifiable`1">
+            <summary>
+            Base interface that must be implented by all domain entities. 
+            Types that do not have their separate table (a.k.a. "complex types" 
+            in EF or "components" in NH) just don't implement this interface.
+            </summary>
+            <nuget id="netfx-Patterns.DomainContext" />
+        </member>
+        <member name="P:IIdentifiable`1.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
         <member name="P:IAggregateRoot`1.IsDeleted">
             <summary>
             Gets or sets a value indicating whether the entity is deleted. 
@@ -432,22 +401,6 @@
         <member name="P:IDomainContextAccessor`1.Context">
             <summary>
             Gets or sets the owning domain context.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.TypeParameter">
-            <summary>
-            Represents a runtime type parameter to use to 
-            make a generic method invocation.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.TypeParameter.Type">
-            <summary>
-            Gets the type.
             </summary>
         </member>
         <member name="T:System.Dynamic.DynamicReflection">
@@ -523,6 +476,58 @@
         <member name="P:System.Dynamic.OutValue`1.Value">
             <summary>
             Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
+            <summary>
+            Creates a value getter/setter delegating reference
+            to be used by reference when invoking the 
+            dynamic object.
+            </summary>
+            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
+            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.RefValue.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue`1">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.RefValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.TypeParameter">
+            <summary>
+            Represents a runtime type parameter to use to 
+            make a generic method invocation.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.TypeParameter.Type">
+            <summary>
+            Gets the type.
             </summary>
         </member>
     </members>

@@ -70,9 +70,20 @@
             </summary>
             <nuget id="netfx-Patterns.DomainContext" />
         </member>
-        <member name="M:IDomainContext`1.SaveChanges">
+        <member name="M:IDomainContext`1.Commit">
             <summary>
             Saves all changes made in this context to the underlying database.
+            </summary>
+        </member>
+        <member name="M:IDomainContext`1.Find``1(`0)">
+            <summary>
+            Finds the aggregate root with the specified id.
+            </summary>
+            <returns>The found aggregate or <see langword="null"/>.</returns>
+        </member>
+        <member name="M:IDomainContext`1.Persist``1(``0)">
+            <summary>
+            Inserts or updates the specified aggregate root.
             </summary>
         </member>
         <member name="M:IDomainContext`1.New``1(System.Action{``0})">
@@ -87,17 +98,6 @@
             the entity changes, create a proxy for it, etc.
             </remarks>
             <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
-        </member>
-        <member name="M:IDomainContext`1.Find``1(`0)">
-            <summary>
-            Finds the aggregate root with the specified id.
-            </summary>
-            <returns>The found aggregate or <see langword="null"/>.</returns>
-        </member>
-        <member name="M:IDomainContext`1.Save``1(``0)">
-            <summary>
-            Inserts or updates the specified aggregate root.
-            </summary>
         </member>
         <member name="M:IDomainContext`1.Delete``1(`0)">
             <summary>

@@ -85,6 +85,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// Entity types that have been already been validated for IIdentifiable recursively.
 	/// </summary>
 	private Dictionary<Type, Type> validatedTypes = new Dictionary<Type, Type>();
+
 	private ITraceSource tracer;
 
 	/// <summary>
@@ -149,7 +150,10 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 		Initialize();
 	}
 
-	void IDomainContext<TId>.SaveChanges()
+	/// <summary>
+	/// Commits changes to all entities that were persisted in this context so far.
+	/// </summary>
+	public void Commit()
 	{
 		this.SaveChanges();
 	}
@@ -206,10 +210,21 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Inserts or updates the specified aggregate root.
 	/// </summary>
-	public void Save<T>(T entity)
+	public void Persist<T>(T entity)
 		where T : class, IAggregateRoot<TId>
 	{
-		SaveOrUpdate<T>(entity, new ConcurrentDictionary<Type, HashSet<object>>());
+		var detectChanges = this.Configuration.AutoDetectChangesEnabled;
+		this.Configuration.AutoDetectChangesEnabled = false;
+		try
+		{
+			// Must temporarily disable change detection as it causes 
+			// an exception deep down in EF the way we track entities.
+			SaveOrUpdate<T>(entity, new ConcurrentDictionary<Type, HashSet<object>>());
+		}
+		finally
+		{
+			this.Configuration.AutoDetectChangesEnabled = detectChanges;
+		}
 	}
 
 	/// <summary>
@@ -325,12 +340,14 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entry, IDictionary<object, object> items)
 	{
 		var result = base.ValidateEntity(entry, items);
-
-		Type entityType = GetEntityType(entry);
+		var entityType = GetEntityType(entry);
 
 		if (!validatedTypes.ContainsKey(entityType))
 		{
 			ThrowIfNotIdentifiable(entityType);
+
+			// Save so we validate only once per entity type.
+			validatedTypes.Add(entityType, entityType);
 
 			// Build cache of generic methods for faster calls?
 			var validateMethod = ValidateEntityMethod.MakeGenericMethod(new Type[] { entityType });
@@ -455,7 +472,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 					// For aggregate roots, we just delete the relationship.
 					foreach (var storedReference in storedReferences.Where(x => !references.Any(r => r.Id == x.Id)).ToArray())
 					{
-						DeleteRelationship<TEntity>(entity, property, referenceEntityType, storedReference.Id);
+						this.DeleteRelationship<TEntity>(entity, property, referenceEntityType, (object)storedReference.Id);
 					}
 				}
 				else
@@ -465,7 +482,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 					// are not aggregate roots.
 					foreach (var storedReference in storedReferences.Where(x => !references.Any(r => r.Id == x.Id)).ToArray())
 					{
-						DeleteStoredEntity(referenceEntityType, entity, (object)storedReference.Id);
+						this.DeleteStoredEntity(referenceEntityType, entity, (object)storedReference.Id);
 					}
 				}
 			}
@@ -759,7 +776,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 			return DbExtensions.Include(source, path);
 		}
 
-		public IQueryable<T> Include<T>(IQueryable<T> source, string path) 
+		public IQueryable<T> Include<T>(IQueryable<T> source, string path)
 			where T : class
 		{
 			return DbExtensions.Include(source, path);
