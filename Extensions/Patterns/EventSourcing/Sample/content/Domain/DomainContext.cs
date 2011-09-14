@@ -7,18 +7,18 @@ using System.Text;
 /// Very simple in-memory context. See netfx-Patterns.DomainContext.EF for a 
 /// persistent EF domain context.
 /// </summary>
-internal class DomainContext
+internal class DomainContext : IDomainContext
 {
 	private List<AggregateRoot> aggregates = new List<AggregateRoot>();
-	private IDomainEventBus bus;
+	private IDomainEventBus eventBus;
 
-	public DomainContext(IDomainEventBus bus, params AggregateRoot[] sources)
+	public DomainContext(IDomainEventBus eventBus, params AggregateRoot[] sources)
 	{
-		this.bus = bus;
+		this.eventBus = eventBus;
 		this.aggregates.AddRange(sources);
 	}
 
-	public T Find<T>(int id)
+	public T Find<T>(Guid id)
 		where T : AggregateRoot
 	{
 		return aggregates.OfType<T>().FirstOrDefault(x => x.Id == id);
@@ -35,7 +35,7 @@ internal class DomainContext
 		foreach (var @event in this.aggregates
 			.SelectMany(x => x.GetChanges().Select(e => new { Source = x, Event = e })))
 		{
-			this.bus.Publish(@event.Source, @event.Event);
+			this.eventBus.Publish(@event.Source, @event.Event);
 		}
 
 		foreach (var source in this.aggregates)

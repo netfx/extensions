@@ -47,10 +47,9 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryBuilder.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryExtension.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventHandler.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IEventQuery.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryCriteria.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />

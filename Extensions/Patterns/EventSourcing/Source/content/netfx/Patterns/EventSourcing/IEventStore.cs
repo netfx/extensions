@@ -29,12 +29,11 @@ partial interface IEventStore<TAggregateId, TBaseEvent>
 	where TAggregateId : IComparable
 {
 	/// <summary>
-	/// Notifies the store that the given event raised by the given sender 
-	/// should be persisted when <see cref="IEventStore{TAggregateId, TBaseEvent}.Commit"/> is called.
+	/// Saves the given event raised by the aggregate.
 	/// </summary>
-	/// <param name="sender">The sender of the event.</param>
+	/// <param name="aggregate">The aggregate root raising the event.</param>
 	/// <param name="event">The instance containing the event data.</param>
-	void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent @event);
+	void Save(AggregateRoot<TAggregateId, TBaseEvent> aggregate, TBaseEvent @event);
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
@@ -43,19 +42,10 @@ partial interface IEventStore<TAggregateId, TBaseEvent>
 	/// Store implementations are advised to provide full support for the 
 	/// specified criteria, but aren't required to.
 	/// <para>
-	/// The more user-friendly querying API in <see cref="IEventQuery{TAggregateId, TBaseEvent}"/> 
-	/// provides a fluent API over any store to build the criteria object, 
-	/// and can therefore be used with any event store implementation. 
-	/// It's accessible by executing the 
-	/// <see cref="EventQueryBuilder.Query{TAggregateId, TBaseEvent}"/> extension method
-	/// on a domain event store instance.
+	/// An alternative fluent API to build the criteria object is available 
+	/// by executing the  <see cref="EventQueryExtension.Query{TAggregateId, TBaseEvent}"/> 
+	/// extension method on an event store instance.
 	/// </para>
 	/// </remarks>
 	IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria);
-
-	/// <summary>
-	/// Persists all events <see cref="Persist"/>ed so far, effectively commiting 
-	/// the changes to the underlying store in a unit-of-work style.
-	/// </summary>
-	void Commit();
 }

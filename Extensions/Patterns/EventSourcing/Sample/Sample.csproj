@@ -47,16 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\Domain\DomainBus.cs" />
     <Compile Include="content\Domain\DomainContext.cs" />
-    <Compile Include="content\Domain\DomainEvent.cs" />
-    <Compile Include="content\Domain\DomainEventBus.cs" />
-    <Compile Include="content\Domain\EventHandlers\DomainEventHandler.cs" />
+    <Compile Include="content\Domain\IDomainContext.cs" />
+    <Compile Include="content\Domain\IDomainEvent.cs" />
     <Compile Include="content\Domain\EventHandlers\SendMailHandler.cs" />
-    <Compile Include="content\Domain\EventSource.cs" />
+    <Compile Include="content\Domain\AggregateRoot.cs" />
     <Compile Include="content\Domain\Events\EmailSentEvent.cs" />
     <Compile Include="content\Domain\Events\ProductCreatedEvent.cs" />
     <Compile Include="content\Domain\Events\ProductPublishedEvent.cs" />
-    <Compile Include="content\Domain\IDomainEventBus.cs" />
     <Compile Include="content\Domain\Product.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="Program.cs" />

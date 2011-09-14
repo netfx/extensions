@@ -10,59 +10,45 @@ namespace NetFx.Patterns.EventSourcing.Tests
 {
 	public class EventQuerySpec
 	{
-		private MemoryEventStore<int, DomainEvent> store;
+		private MemoryEventStore<Guid, DomainEvent> store;
 		private Func<DateTime> utcNow = () => DateTime.UtcNow;
+
+		private Guid id1 = Guid.NewGuid();
+		private Guid id2 = Guid.NewGuid();
 
 		public EventQuerySpec()
 		{
-			this.store = new MemoryEventStore<int, DomainEvent>(() => this.utcNow());
+			this.store = new MemoryEventStore<Guid, DomainEvent>(() => this.utcNow());
 
-			var product = new Product(5, "DevStore");
+			var product = new Product(id1, "DevStore");
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Persist(product, e));
+				.ForEach(e => store.Save(product, e));
 
-			product = new Product(6, "WoVS");
+			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Persist(product, e));
-		}
-
-		[Fact]
-		public void WhenGettingEmptyQueryEnumerable_ThenEmptyList()
-		{
-			var store = new MemoryEventStore<int, DomainEvent>(() => this.utcNow());
-			var enumerable = store.Query() as IEnumerable;
-
-			Assert.False(enumerable.GetEnumerator().MoveNext());
+				.ForEach(e => store.Save(product, e));
 		}
 
 		[Fact]
 		public void WhenLoadingFromEventsForSourceTypeAndId_ThenStateIsUpdated()
 		{
 			var product = new Product();
-			product.Load(store.Query().For<Product>(6));
+			product.Load(store.Query().For<Product>(id2).Execute());
 
-			Assert.Equal(6, product.Id);
+			Assert.Equal(id2, product.Id);
 			Assert.Equal("WoVS", product.Title);
 			Assert.Equal(2, product.Version);
 		}
 
 		[Fact]
-		public void WhenQuerying_ThenCanAccessCriteria()
-		{
-			var criteria = store.Query().Criteria;
-
-			Assert.NotNull(criteria);
-		}
-
-		[Fact]
 		public void WhenFilteringBySourceTypeAndIdAndEventType_ThenSucceeds()
 		{
-			var events = store.Query().For<Product>(5).OfType<Product.PublishedEvent>();
+			var events = store.Query().For<Product>(id1).OfType<Product.PublishedEvent>().Execute();
 
 			Assert.Equal(3, events.Count());
 			Assert.True(events.All(x => x is Product.PublishedEvent));
@@ -71,7 +57,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenFilteringBySourceTypeAndEventType_ThenSucceeds()
 		{
-			var events = store.Query().For<Product>().OfType<Product.PublishedEvent>();
+			var events = store.Query().For<Product>().OfType<Product.PublishedEvent>().Execute();
 
 			Assert.Equal(5, events.Count());
 			Assert.True(events.All(x => x is Product.PublishedEvent));
@@ -80,7 +66,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenFilteringBySourceType_ThenSucceeds()
 		{
-			var events = store.Query().For<Product>();
+			var events = store.Query().For<Product>().Execute();
 
 			Assert.Equal(7, events.Count());
 		}
@@ -88,7 +74,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenFilteringByEventType_ThenSucceeds()
 		{
-			var events = store.Query().OfType<Product.CreatedEvent>();
+			var events = store.Query().OfType<Product.CreatedEvent>().Execute();
 
 			Assert.Equal(2, events.Count());
 		}
@@ -97,23 +83,23 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public void WhenFilteringByDateSince_ThenSucceeds()
 		{
 			var product = new Product();
-			product.Load(store.Query().For<Product>(6));
+			product.Load(store.Query().For<Product>(id2).Execute());
 
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => when;
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Since(when);
+			var events = store.Query().OfType<DeactivatedEvent>().Since(when).Execute();
 
 			Assert.Equal(2, events.Count());
 		}
@@ -122,23 +108,23 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public void WhenFilteringByDateSinceExclusive_ThenSucceeds()
 		{
 			var product = new Product();
-			product.Load(store.Query().For<Product>(6));
+			product.Load(store.Query().For<Product>(id2).Execute());
 
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => when;
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveRange();
+			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
 
 			Assert.Equal(1, events.Count());
 		}
@@ -147,23 +133,23 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public void WhenFilteringByDateUntil_ThenSucceeds()
 		{
 			var product = new Product();
-			product.Load(store.Query().For<Product>(6));
+			product.Load(store.Query().For<Product>(id2).Execute());
 
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => when;
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Until(when);
+			var events = store.Query().OfType<DeactivatedEvent>().Until(when).Execute();
 
 			Assert.Equal(3, events.Count());
 		}
@@ -172,23 +158,23 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public void WhenFilteringByDateUntilExclusive_ThenSucceeds()
 		{
 			var product = new Product();
-			product.Load(store.Query().For<Product>(6));
+			product.Load(store.Query().For<Product>(id2).Execute());
 
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => when;
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(product, new DeactivatedEvent());
+			store.Save(product, new DeactivatedEvent());
 
-			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange();
+			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
 
 			Assert.Equal(2, events.Count());
 		}

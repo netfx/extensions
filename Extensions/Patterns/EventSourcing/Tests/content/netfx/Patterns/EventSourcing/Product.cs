@@ -5,9 +5,10 @@ using System.Text;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
+	[Serializable]
 	public class DomainEvent { }
 
-	public abstract class AggregateRoot : AggregateRoot<int, DomainEvent> { }
+	public abstract class AggregateRoot : AggregateRoot<Guid, DomainEvent> { }
 
 	/// <summary>
 	/// Product is an the domain object sourcing the event with domain logic.
@@ -17,9 +18,10 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		/// <summary>
 		/// Event raised when a new product is created.
 		/// </summary>
+		[Serializable]
 		public class CreatedEvent : DomainEvent
 		{
-			public int Id { get; set; }
+			public Guid Id { get; set; }
 			public string Title { get; set; }
 
 			public override string ToString()
@@ -32,6 +34,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		/// <summary>
 		/// Event raised when a new version of a product is published.
 		/// </summary>
+		[Serializable]
 		public class PublishedEvent : DomainEvent
 		{
 			public int Version { get; set; }
@@ -59,14 +62,14 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		/// Initializes a product and shows how even the 
 		/// constructor parameters are processed as an event.
 		/// </summary>
-		public Product(int id, string title)
+		public Product(Guid id, string title)
 			// Calling this is essential as it configures the 
 			// internal event handler map.
 			: this()
 		{
 			// Showcases that validation is the only thing that happens in domain 
 			// public methods (even the constructor).
-			if (id < 0)
+			if (id == Guid.Empty)
 				throw new ArgumentException("id");
 			if (string.IsNullOrEmpty(title))
 				throw new ArgumentException("title");

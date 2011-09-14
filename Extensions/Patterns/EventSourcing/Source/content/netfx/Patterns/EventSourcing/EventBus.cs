@@ -48,41 +48,6 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 	private Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>> handlerPipelines = new Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>>();
 
 	/// <summary>
-	/// Initializes the <see cref="None"/> null object 
-	/// pattern property.
-	/// </summary>
-	static EventBus()
-	{
-		None = new NullBus();
-	}
-
-	/// <summary>
-	/// Gets a default domain event bus implementation that 
-	/// does nothing (a.k.a. Null Object Pattern).
-	/// </summary>
-	public static IEventBus<TAggregateId, TBaseEvent> None { get; private set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class
-	/// with a persistent store for events and no in-memory handlers.
-	/// </summary>
-	/// <param name="eventStore">The event store to persist events to.</param>
-	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore)
-		: this(eventStore, Enumerable.Empty<IEventHandler>())
-	{
-	}
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
-	/// the default async runner that enqueues work in the <see cref="ThreadPool"/>.
-	/// </summary>
-	/// <param name="eventHandlers">The event handlers.</param>
-	public EventBus(IEnumerable<IEventHandler> eventHandlers)
-		: this(new NullStore(), eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
-	{
-	}
-
-	/// <summary>
 	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
 	/// a persistent store for events and the default async runner that enqueues work in the <see cref="ThreadPool"/>.
 	/// </summary>
@@ -90,19 +55,6 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 	/// <param name="eventHandlers">The event handlers.</param>
 	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers)
 		: this(eventStore, eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
-	{
-	}
-
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
-	/// the given async runner.
-	/// </summary>
-	/// <param name="eventHandlers">The event handlers.</param>
-	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-	/// that have <see cref="IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-	public EventBus(IEnumerable<IEventHandler> eventHandlers, Action<Action> asyncActionRunner)
-		: this(new NullStore(), eventHandlers, asyncActionRunner)
 	{
 	}
 
@@ -162,7 +114,7 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 		Guard.NotNull(() => @event, @event);
 
 		// Events are persisted first of all.
-		this.eventStore.Persist(sender, @event);
+		this.eventStore.Save(sender, @event);
 
 		var eventType = @event.GetType();
 
@@ -220,39 +172,5 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 		/// Gets or sets the handler.
 		/// </summary>
 		public IEventHandler Handler { get; set; }
-	}
-
-	/// <summary>
-	/// Provides a null <see cref="IEventBus{TAggregateId, TBaseEvent}"/> implementation 
-	/// for use when no events have been configured.
-	/// </summary>
-	private class NullBus : IEventBus<TAggregateId, TBaseEvent>
-	{
-		/// <summary>
-		/// Does nothing.
-		/// </summary>
-		public void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
-		{
-		}
-	}
-
-	private class NullStore : IEventStore<TAggregateId, TBaseEvent>
-	{
-		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
-		{
-		}
-
-		public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria)
-		{
-			return Enumerable.Empty<TBaseEvent>();
-		}
-
-		public void Persist(TBaseEvent @event)
-		{
-		}
-
-		public void Commit()
-		{
-		}
 	}
 }

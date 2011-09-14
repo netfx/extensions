@@ -27,39 +27,42 @@ namespace NetFx.Patterns.EventSourcing.Tests
 {
 	public class Sample
 	{
-		[Fact]
+		[Fact(Skip = "Demo code")]
 		public void WhenEventPersisted_ThenCanObserveIt()
 		{
-			var store = new MemoryEventStore<int, DomainEvent>();
-			var product = new Product(5, "DevStore");
+			var id1 = Guid.NewGuid();
+			var id2 = Guid.NewGuid();
+
+			var store = new MemoryEventStore<Guid, DomainEvent>();
+			var product = new Product(id1, "DevStore");
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Persist(product, e));
+				.ForEach(e => store.Save(product, e));
 
-			product = new Product(6, "WoVS");
+			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 			product.GetChanges().ToList()
-				.ForEach(e => store.Persist(product, e));
+				.ForEach(e => store.Save(product, e));
 
 			var product2 = new Product();
-			product2.Load(store.Query().For<Product>(6));
+			product2.Load(store.Query().For<Product>(id2).Execute());
 
 			Assert.Equal(product.Id, product2.Id);
 			Assert.Equal(product.Version, product2.Version);
 
-			var events = store.Query().For<Product>(5).OfType<Product.PublishedEvent>();
+			var events = store.Query().For<Product>(id1).OfType<Product.PublishedEvent>().Execute();
 			Assert.Equal(3, events.Count());
 
-			Console.WriteLine("For product 5, of type published:");
+			Console.WriteLine("For first product, of type published:");
 			foreach (var e in events)
 			{
 				Console.WriteLine("\t" + e);
 			}
 
-			events = store.Query().For<Product>().OfType<Product.PublishedEvent>();
+			events = store.Query().For<Product>().OfType<Product.PublishedEvent>().Execute();
 			Assert.Equal(5, events.Count());
 
 			Console.WriteLine();
@@ -69,7 +72,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				Console.WriteLine("\t" + e);
 			}
 
-			events = store.Query().For<Product>();
+			events = store.Query().For<Product>().Execute();
 			Assert.Equal(7, events.Count());
 			
 			Console.WriteLine();
@@ -79,7 +82,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				Console.WriteLine("\t" + e);
 			}
 
-			events = store.Query().OfType<Product.CreatedEvent>();
+			events = store.Query().OfType<Product.CreatedEvent>().Execute();
 			Assert.Equal(2, events.Count());
 
 			Console.WriteLine();

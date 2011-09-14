@@ -27,7 +27,7 @@ using System.Reflection;
 /// that makes querying event stores easier.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-static partial class EventQueryBuilder
+static partial class EventQueryExtension
 {
 	/// <summary>
 	/// Queries the event store for events that match specified 
@@ -41,25 +41,91 @@ static partial class EventQueryBuilder
 	public static IEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IEventStore<TAggregateId, TBaseEvent> store)
 		where TAggregateId : IComparable
 	{
-		return new DomainEventQuery<TAggregateId, TBaseEvent>(store);
+		return new EventQuery<TAggregateId, TBaseEvent>(store);
 	}
 
-	private class DomainEventQuery<TAggregateId, TBaseEvent> : IEventQuery<TAggregateId, TBaseEvent>
+	/// <summary>
+	/// Provides a fluent API to filter events from the event store. 
+	/// </summary>
+	/// <remarks>
+	/// This interface is returned from the <see cref="EventQueryExtension.Query"/> 
+	/// extension method for <see cref="IEventStore{TAggregateId, TBaseEvent}"/>.
+	/// </remarks>
+	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+	/// <nuget id="netfx-Patterns.EventSourcing"/>
+	public partial interface IEventQuery<TAggregateId, TBaseEvent>
+		where TAggregateId : IComparable
+	{
+		/// <summary>
+		/// Executes the query built using the fluent API 
+		/// against the underlying store.
+		/// </summary>
+		IEnumerable<TBaseEvent> Execute();
+
+		/// <summary>
+		/// Filters events that target the given aggregate root type. Can be called 
+		/// multiple times and will filter for any of the specified types (OR operator).
+		/// </summary>
+		/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+		IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>();
+
+		/// <summary>
+		/// Filters events that target the given aggregate root type and identifier. Can be called 
+		/// multiple times and will filter for any of the specified types and ids (OR operator).
+		/// </summary>
+		/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
+		/// <param name="aggregateId">The aggregate root identifier to filter by.</param>
+		IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId);
+
+		/// <summary>
+		/// Filters events that are assignable to the given type. Can be called 
+		/// multiple times and will filter for any of the specified types (OR operator).
+		/// </summary>
+		/// <typeparam name="TEvent">The type of the events to filter.</typeparam>
+		IEventQuery<TAggregateId, TBaseEvent> OfType<TEvent>() where TEvent : TBaseEvent;
+
+		/// <summary>
+		/// Filters events that happened after the given starting date.
+		/// </summary>
+		/// <param name="when">The starting date to filter by.</param>
+		/// <remarks>
+		/// By default, includes events with the given date, unless the 
+		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
+		/// </remarks>
+		IEventQuery<TAggregateId, TBaseEvent> Since(DateTime when);
+
+		/// <summary>
+		/// Filters events that happened before the given ending date.
+		/// </summary>
+		/// <param name="when">The ending date to filter by.</param>
+		/// <remarks>
+		/// By default, includes events with the given date, unless the 
+		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
+		/// </remarks>
+		IEventQuery<TAggregateId, TBaseEvent> Until(DateTime when);
+
+		/// <summary>
+		/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
+		/// exclusive, changing the default behavior which is to be inclusive.
+		/// </summary>
+		IEventQuery<TAggregateId, TBaseEvent> ExclusiveRange();
+	}
+
+	private class EventQuery<TAggregateId, TBaseEvent> : IEventQuery<TAggregateId, TBaseEvent>
 		where TAggregateId : IComparable
 	{	
 		private IEventStore<TAggregateId, TBaseEvent> store;
 		private EventQueryCriteria<TAggregateId> criteria = new EventQueryCriteria<TAggregateId>();
 
-		public DomainEventQuery(IEventStore<TAggregateId, TBaseEvent> store)
+		public EventQuery(IEventStore<TAggregateId, TBaseEvent> store)
 		{
 			this.store = store;
 		}
 
-		public EventQueryCriteria<TAggregateId> Criteria { get { return this.criteria; } }
-
-		public IEnumerator<TBaseEvent> GetEnumerator()
+		public IEnumerable<TBaseEvent> Execute()
 		{
-			return this.store.Query(this.criteria).GetEnumerator();
+			return this.store.Query(this.criteria);
 		}
 
 		public IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>()
@@ -124,11 +190,6 @@ static partial class EventQueryBuilder
 				yield return current;
 				current = current.BaseType;
 			}
-		}
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
 		}
 	}
 }

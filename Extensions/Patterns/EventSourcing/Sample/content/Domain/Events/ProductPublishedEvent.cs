@@ -6,7 +6,7 @@ using System.Text;
 /// <summary>
 /// Event raised when a new version of a product is published.
 /// </summary>
-public class ProductPublishedEvent : DomainEvent
+public class ProductPublishedEvent : IDomainEvent
 {
 	public int Version { get; set; }
 

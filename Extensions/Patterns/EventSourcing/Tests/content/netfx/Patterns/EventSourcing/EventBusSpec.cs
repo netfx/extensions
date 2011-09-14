@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 using Moq;
+using System.Threading;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
@@ -28,25 +29,25 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenNullHandlers_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(default(IEnumerable<IEventHandler>)));
+			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), default(IEnumerable<IEventHandler>)));
 		}
 
 		[Fact]
 		public void WhenNullEventStore_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(default(IEventStore<int, DomainEvent>)));
+			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(default(IEventStore<int, DomainEvent>), Enumerable.Empty<IEventHandler>()));
 		}
 
 		[Fact]
 		public void WhenNullAsyncRunner_ThenThrows()
 		{
-			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(Enumerable.Empty<IEventHandler>(), null));
+			Assert.Throws<ArgumentNullException>(() => new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>(), null));
 		}
 
 		[Fact]
 		public void WhenPublishNullEvent_ThenThrows()
 		{
-			var bus = new EventBus<int, DomainEvent>(Enumerable.Empty<IEventHandler>());
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish(new TestAggregate(), default(FooArgs)));
 		}
@@ -54,7 +55,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		[Fact]
 		public void WhenPublishNullAggregate_ThenThrows()
 		{
-			var bus = new EventBus<int, DomainEvent>(Enumerable.Empty<IEventHandler>());
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>());
 
 			Assert.Throws<ArgumentNullException>(() => bus.Publish((AggregateRoot<int, DomainEvent>)null, new FooArgs()));
 		}
@@ -66,11 +67,11 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var aggregate = new TestAggregate();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
 
-			var bus = new EventBus<int, DomainEvent>(store.Object);
+			var bus = new EventBus<int, DomainEvent>(store.Object, Enumerable.Empty<IEventHandler>());
 
 			bus.Publish(aggregate, args);
 
-			store.Verify(x => x.Persist(aggregate, args));
+			store.Verify(x => x.Save(aggregate, args));
 		}
 
 		[Fact]
@@ -85,7 +86,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			bus.Publish(aggregate, args);
 
-			store.Verify(x => x.Persist(aggregate, args));
+			store.Verify(x => x.Save(aggregate, args));
 			handler.Verify(x => x.Handle(5, It.IsAny<BaseArgs>()));
 		}
 
@@ -102,7 +103,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			bus.Publish(aggregate, args);
 
-			store.Verify(x => x.Persist(aggregate, args));
+			store.Verify(x => x.Save(aggregate, args));
 		}
 
 		[Fact]
@@ -111,7 +112,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<EventHandler<int, FooArgs>> { CallBase = true };
 
-			var bus = new EventBus<int, DomainEvent>(new[] { handler.Object });
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -124,7 +125,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<EventHandler<int, BaseArgs>> { CallBase = true };
 
-			var bus = new EventBus<int, DomainEvent>(new[] { handler.Object });
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -140,7 +141,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new EventBus<int, DomainEvent>(new[] { handler.Object }, asyncRunner);
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -157,7 +158,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new EventBus<int, DomainEvent>(new[] { handler.Object }, asyncRunner);
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
 			bus.Publish(new TestAggregate(), args);
 
@@ -170,19 +171,21 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var args = new FooArgs { Id = 5 };
 			var handler = new Mock<EventHandler<int, FooArgs>> { CallBase = true };
+			var asyncCalled = false;
 			handler.Setup(x => x.IsAsync).Returns(true);
+			handler.Setup(x => x.Handle(It.IsAny<int>(), It.IsAny<FooArgs>()))
+				.Callback(() => asyncCalled = true);
 
-			var bus = new EventBus<int, DomainEvent>(new[] { handler.Object });
+			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
 
 			bus.Publish(new TestAggregate(), args);
 
-			handler.Verify(x => x.Handle(5, args), Times.Never());
-		}
+			while (!asyncCalled)
+			{
+				Thread.Sleep(1);
+			}
 
-		[Fact]
-		public void WhenDefaultDomainEventsRaises_ThenDoesNothing()
-		{
-			EventBus<int, DomainEvent>.None.Publish(new TestAggregate(), new FooArgs());
+			handler.Verify(x => x.Handle(5, args));
 		}
 
 		[Fact]
@@ -190,13 +193,13 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var handler = new NonGenericHandler();
 
-			Assert.Throws<ArgumentException>(() => new EventBus<int, DomainEvent>(new IEventHandler[] { handler }));
+			Assert.Throws<ArgumentException>(() => new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new IEventHandler[] { handler }));
 		}
 
 		[Fact]
 		public void WhenNullHandlerProvided_ThenThrows()
 		{
-			Assert.Throws<ArgumentException>(() => new EventBus<int, DomainEvent>(new IEventHandler[] { null }));
+			Assert.Throws<ArgumentException>(() => new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new IEventHandler[] { null }));
 		}
 
 		private class HandlerBase : EventHandler<int, FooArgs>

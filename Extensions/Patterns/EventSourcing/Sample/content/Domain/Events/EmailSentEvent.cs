@@ -6,7 +6,7 @@ using System.Text;
 /// <summary>
 /// Event raised when an email was sent.
 /// </summary>
-public class EmailSentEvent : DomainEvent
+public class EmailSentEvent : IDomainEvent
 {
 	public string From { get; set; }
 	public string To { get; set; }

@@ -52,10 +52,9 @@ public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 public partial interface IEventBus<TAggregateId, TBaseEvent> { }
 public partial interface IEventHandler { }
 public partial interface IEventHandler<TAggregateId, TEvent> { }
-public partial interface IEventQuery<TAggregateId, TBaseEvent> { }
 public partial interface IEventStore<TAggregateId, TBaseEvent> { }
 public partial class EventQueryCriteria<TAggregateId> { }
-public partial class EventQueryBuilder { }
+public partial class EventQueryExtension { }
 
 public partial class EventHandler<TAggregateId, TEvent> { }
 public partial class EventBus<TAggregateId, TBaseEvent> { }

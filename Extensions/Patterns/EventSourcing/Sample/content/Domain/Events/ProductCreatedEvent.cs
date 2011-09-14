@@ -6,9 +6,9 @@ using System.Text;
 /// <summary>
 /// Event raised when a new product is created.
 /// </summary>
-public class ProductCreatedEvent : DomainEvent
+public class ProductCreatedEvent : IDomainEvent
 {
-	public int Id { get; set; }
+	public Guid Id { get; set; }
 	public string Title { get; set; }
 
 	public override string ToString()

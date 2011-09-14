@@ -25,7 +25,7 @@ public class Product : AggregateRoot
 	/// Initializes a product and shows how even the 
 	/// constructor parameters are processed as an event.
 	/// </summary>
-	public Product(int id, string title)
+	public Product(Guid id, string title)
 		// Calling this is essential as it configures the 
 		// internal event handler map. Could be a separate
 		// Initialize() method called in the body instead.
@@ -33,7 +33,7 @@ public class Product : AggregateRoot
 	{
 		// Showcases that validation is the only thing that happens in domain 
 		// public methods (even the constructor).
-		if (id < 0)
+		if (id == Guid.Empty)
 			throw new ArgumentException("id");
 		if (string.IsNullOrEmpty(title))
 			throw new ArgumentException("title");
@@ -43,8 +43,8 @@ public class Product : AggregateRoot
 
 	// Technically, these members wouldn't even need a public setter 
 	// at all, but an ORM would need it.
-	public string Title { get; set; }
-	public int Version { get; set; }
+	public string Title { get; private set; }
+	public int Version { get; private set; }
 
 	public void Publish(int version)
 	{

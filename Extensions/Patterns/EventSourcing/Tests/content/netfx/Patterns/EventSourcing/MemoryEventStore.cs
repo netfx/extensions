@@ -44,7 +44,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 		public Func<Type, string> TypeNameConverter { get; set; }
 
-		public void Persist(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+		public void Save(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
 		{
 			this.events.Add(new StoredEvent(sender, args) { Timestamp = this.utcNow() });
 		}
