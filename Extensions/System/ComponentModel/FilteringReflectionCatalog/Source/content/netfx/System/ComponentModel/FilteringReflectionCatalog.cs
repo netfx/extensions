@@ -23,6 +23,7 @@ using System.ComponentModel.Composition.ReflectionModel;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition;
 
+/// <nuget id="netfx-System.ComponentModel.FilteringReflectionCatalog" />
 internal class FilteringReflectionCatalog : ComposablePartCatalog, ICompositionElement
 {
 	private bool initialized;
