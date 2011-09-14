@@ -52,7 +52,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <NuSpec Include="Package.nuspec" />
+    <NuSpec Include="Package.nuspec">
+      <SubType>Designer</SubType>
+    </NuSpec>
   </ItemGroup>
   <ItemGroup>
     <Content Include="tools\install.ps1" />

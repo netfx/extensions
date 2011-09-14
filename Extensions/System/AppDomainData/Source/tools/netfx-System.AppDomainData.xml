@@ -8,6 +8,7 @@
             <summary>
             Provides strong-typed access to AppDomain storage data.
             </summary>
+            <nuget id="netfx-System.AppDomainData" />
         </member>
         <member name="M:AppDomainData.SetData``1(``0)">
             <summary>
@@ -27,7 +28,6 @@
             <see cref="T:System.IDisposable"/> can be used to remove the state 
             when disposed.
             </summary>
-            <nuget packageId="netfx-System.AppDomainData"/>
             <param name="domain" this="true">The domain to set the data on.</param>
             <param name="data">The data to save.</param>
         </member>
@@ -35,7 +35,6 @@
             <summary>
             Gets the data from the <see cref="T:System.AppDomain"/> storage.
             </summary>
-            <nuget packageId="netfx-System.AppDomainData"/>
             <param name="domain" this="true">The domain to get the data.</param>
         </member>
     </members>

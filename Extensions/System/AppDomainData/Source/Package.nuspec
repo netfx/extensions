@@ -8,7 +8,7 @@
 
 Usage: AppDomain.CurrentDomain.SetData&lt;Foo&gt;(foo);
 var saved = AppDomain.CurrentDomain.GetData&lt;Foo&gt;();</description>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

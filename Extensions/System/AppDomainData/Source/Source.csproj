@@ -49,7 +49,9 @@
     <Compile Include="content\netfx\System\AppDomainData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NuSpec Include="Package.nuspec" />
+    <NuSpec Include="Package.nuspec">
+      <SubType>Designer</SubType>
+    </NuSpec>
   </ItemGroup>
   <ItemGroup>
     <Content Include="tools\netfx-System.AppDomainData.xml" />

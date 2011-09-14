@@ -22,6 +22,7 @@ using System.Text;
 /// <summary>
 /// Provides strong-typed access to AppDomain storage data.
 /// </summary>
+/// <nuget id="netfx-System.AppDomainData" />
 internal static class AppDomainData
 {
 	/// <summary>
@@ -49,7 +50,6 @@ internal static class AppDomainData
 	/// <see cref="IDisposable"/> can be used to remove the state 
 	/// when disposed.
 	/// </summary>
-	/// <nuget packageId="netfx-System.AppDomainData" />
 	///	<param name="domain" this="true">The domain to set the data on.</param>
 	///	<param name="data">The data to save.</param>
 	public static IDisposable SetData<T>(this AppDomain domain, T data)
@@ -61,7 +61,6 @@ internal static class AppDomainData
 	/// <summary>
 	/// Gets the data from the <see cref="AppDomain"/> storage.
 	/// </summary>
-	/// <nuget packageId="netfx-System.AppDomainData" />
 	/// <param name="domain" this="true">The domain to get the data.</param>
 	public static T GetData<T>(this AppDomain domain)
 		where T : class
