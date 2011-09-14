@@ -45,6 +45,7 @@
             This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
             and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
             </summary>
+            <nuget id="netfx-System.Dynamic.Reflection"/>
         </member>
         <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
             <summary>

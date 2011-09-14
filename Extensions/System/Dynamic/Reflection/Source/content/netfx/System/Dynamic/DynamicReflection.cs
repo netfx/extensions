@@ -31,6 +31,7 @@ namespace System.Dynamic
 	/// This class provides the extension methods <see cref="AsDynamicReflection(object)"/> 
 	/// and <see cref="AsDynamicReflection(Type)"/> as entry points.
 	/// </summary>
+	/// <nuget id="netfx-System.Dynamic.Reflection" />
 	static partial class DynamicReflection
 	{
 		/// <summary>
