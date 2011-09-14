@@ -26,13 +26,13 @@ using System.Collections;
 /// Provides extension methods that allow to treat collections, enumerables and lists as 
 /// covariant of a generic type other than their constructed type (i.e. for down-casting collections).
 /// </summary>
+/// <nuget id="netfx-System.Collections.Generic.CovariantExtensions" />
 internal static class CovariantExtensions
 {
     /// <summary>
     /// Allows for covariance of generic ICollections. Adapts a collection of type
     /// <typeparam name="T" /> into a collection of type <typeparam name="U" />
     /// </summary>
-	/// <nuget id="netfx-System.Collections.Generic.CovariantExtensions"></nuget>
 	/// <param name="source" this="true">The collection where covariant will be applied</param>
     public static ICollection<U> ToCovariant<T, U>(this ICollection<T> source)
         where T : U
@@ -44,7 +44,6 @@ internal static class CovariantExtensions
     /// Allows for covariance of generic ILists. Adapts a collection of type
     /// <typeparam name="T" /> into a collection of type <typeparam name="U" />
     /// </summary>
-	/// <nuget id="netfx-System.Collections.Generic.CovariantExtensions"></nuget>
 	/// <param name="source" this="true">The list where covariant will be applied</param>
     public static IList<U> ToCovariant<T, U>(this IList<T> source)
         where T : U
@@ -56,7 +55,6 @@ internal static class CovariantExtensions
     /// Allows for covariance of generic IEnumerables. Adapts a collection of type
     /// <typeparam name="T" /> into a collection of type <typeparam name="U" />
     /// </summary>
-	/// <nuget id="netfx-System.Collections.Generic.CovariantExtensions"></nuget>
 	/// <param name="source" this="true">The enumerable where covariant will be applied</param>
     public static IEnumerable<U> ToCovariant<T, U>(this IEnumerable<T> source)
         where T : U

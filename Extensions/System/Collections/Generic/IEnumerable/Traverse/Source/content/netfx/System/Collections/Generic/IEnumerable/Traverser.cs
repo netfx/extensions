@@ -25,6 +25,7 @@ using System.Text;
 /// a stack or queue based approach (no recursion), allowing infinitely 
 /// deep trees.
 /// </summary>
+/// <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
 internal static class Traverser
 {
 	/// <summary>
@@ -33,6 +34,7 @@ internal static class Traverser
 	/// <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
 	/// <typeparam name="T">Type of the items to traverse, which can be inferred by the compiler so it's not necessary to specify it.</typeparam>
 	/// <param name="source" this="true">The root items for the traversal, which are always included in the result of the traversal.</param>
+	/// <param name="kind">Traversal style to use. See <see cref="TraverseKind"/>.</param>
 	/// <param name="traverser">The traversing function that is applied to the current item of the type <typeparamref name="T"/>.</param>
 	/// <returns>A flattened enumeration of the traversal, lazily evaluated.</returns>
 	public static IEnumerable<T> Traverse<T>(this IEnumerable<T> source, TraverseKind kind, Func<T, IEnumerable<T>> traverser)

@@ -7,7 +7,7 @@
 		<description xml:space="preserve">Hate checking for nulls in Linq queries? Turn any null enumerable into an empty one as needed! 
 
 var id = schema.Elements.EmptyIfNull().FirstOrDefault(x => x == "Id")</description>
-		<authors>Daniel</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

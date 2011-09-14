@@ -23,6 +23,7 @@ using System.Text;
 /// Provides streamlined creation of value pairs by avoiding 
 /// need to specify the type of the key and value.
 /// </summary>
+/// <nuget id="netfx-System.Collections.Generic.KeyValuePair" />
 internal static class KeyValuePair
 {
 	/// <summary>
