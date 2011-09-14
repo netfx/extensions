@@ -4,204 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:DomainCommandStore`1">
-            <summary>
-            Provides the <see cref="P:DomainCommandStore`1.None"/> empty default implementation 
-            for domains that do not wish persist commands.
-            </summary>
-            <typeparam name="TBaseCommand">The base type or interface of the commands used in the domain.</typeparam>
-        </member>
-        <member name="M:DomainCommandStore`1.#cctor">
-            <summary>
-            Initializes the <see cref="T:DomainCommandStore`1"/> class.
-            </summary>
-        </member>
-        <member name="P:DomainCommandStore`1.None">
-            <summary>
-            Gets a default domain command store implementation that 
-            does nothing (a.k.a. Null Object Pattern).
-            </summary>
-        </member>
-        <member name="T:IDomainCommandStore`1">
-            <summary>
-            Interface implemented by domain command stores.
-            </summary>
-            <typeparam name="TBaseCommand">The base type that all persisted 
-            commands inherit from, or a common interface for all. Can even 
-            be <see cref="T:System.Object"/> if the store can deal with any kind of 
-            command object.</typeparam>
-            <remarks>
-            This interface is intentionally simple and devoid of
-            context information on the <see cref="M:IDomainCommandStore`1.Persist(`0)"/> operation,
-            because the intended design is that specific implementations
-            should get whatever context they need in their constructors
-            as dependencies (i.e. the current user) or by augmenting
-            the commands themselves.
-            </remarks>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="M:IDomainCommandStore`1.Persist(`0)">
-            <summary>
-            Notifies the store that the given command 
-            should be persisted when <see cref="M:IDomainCommandStore`1.Commit"/> is called.
-            </summary>
-            <param name="command">The command instance to persist.</param>
-        </member>
-        <member name="M:IDomainCommandStore`1.Commit">
-            <summary>
-            Persists all <see cref="M:IDomainCommandStore`1.Persist(`0)"/>s performed so far, effectively commiting 
-            the changes to the underlying store in a unit-of-work style.
-            </summary>
-        </member>
-        <member name="T:IDomainCommandHandler">
-            <summary>
-            Base interface part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainCommandHandler`1"/> or 
-            implement <see cref="T:IDomainCommandHandler`1"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="P:IDomainCommandHandler.IsAsync">
-            <summary>
-            Gets a value indicating whether this handler should be executed asynchronously.
-            </summary>
-        </member>
-        <member name="T:IDomainCommandHandler`1">
-            <summary>
-            Base interface for domain command handlers that subscribe to specific type of command.
-            </summary>
-            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core" />
-        </member>
-        <member name="M:IDomainCommandHandler`1.Handle(`0)">
-            <summary>
-            Handles the specified command.
-            </summary>
-        </member>
-        <member name="T:DomainCommandBus`1">
-            <summary>
-            Default implementation of an <see cref="T:IDomainCommandBus`1"/> that 
-            invokes in-memory command handlers registered for a given command.
-            <para>
-            Handlers with <see cref="P:IDomainCommandHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor. If no async 
-            runner is specified, the <see cref="M:System.Threading.ThreadPool.QueueUserWorkItem(System.Threading.WaitCallback)"/>
-            will be used automatically.
-            </para>
-            </summary>
-            <typeparam name="TBaseCommand">The base type that all persisted 
-            commands inherit from, or a common interface for all. Can even 
-            be <see cref="T:System.Object"/> if the store can deal with any kind of 
-            command object.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="T:IDomainCommandBus`1">
-            <summary>
-            Interface implemented by the component that coordinates 
-            command handler invocation when a subscribed command is executed.
-            </summary>
-            <typeparam name="TBaseCommand">The base type that all persisted 
-            commands inherit from, or a common interface for all. Can even 
-            be <see cref="T:System.Object"/> if the store can deal with any kind of 
-            command object.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="M:IDomainCommandBus`1.Execute``1(``0)">
-            <summary>
-            Executes the specified command.
-            </summary>
-        </member>
-        <member name="M:DomainCommandBus`1.#cctor">
-            <summary>
-            Initializes the <see cref="P:DomainCommandBus`1.None"/> null object 
-            pattern property.
-            </summary>
-        </member>
-        <member name="M:DomainCommandBus`1.#ctor(System.Collections.Generic.IEnumerable{IDomainCommandHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainCommandBus`1"/> class with 
-            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="commandHandlers">The command handlers.</param>
-        </member>
-        <member name="M:DomainCommandBus`1.#ctor(IDomainCommandStore{`0},System.Collections.Generic.IEnumerable{IDomainCommandHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainCommandBus`1"/> class with 
-            the given command storage implementation and list of available command handlers.
-            </summary>
-            <param name="commandStore">The command store.</param>
-            <param name="commandHandlers">The command handlers.</param>
-        </member>
-        <member name="M:DomainCommandBus`1.#ctor(System.Collections.Generic.IEnumerable{IDomainCommandHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainCommandBus`1"/> class with
-            the given list of available command handlers and an async runner for command 
-            handlers that must be executed asynchronously.
-            </summary>
-            <param name="commandHandlers">The available command handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke command handlers
-            that have <see cref="P:DomainCommandHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:DomainCommandBus`1.#ctor(IDomainCommandStore{`0},System.Collections.Generic.IEnumerable{IDomainCommandHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:DomainCommandBus`1"/> class with
-            the given command storage implementation, list of available command handlers 
-            and an async runner for command handlers that must be executed asynchronously.
-            </summary>
-            <param name="commandStore">The command store.</param>
-            <param name="commandHandlers">The command handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke command handlers
-            that have <see cref="P:DomainCommandHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:DomainCommandBus`1.Execute``1(``0)">
-            <summary>
-            Executes all handlers registered to receive the given command.
-            </summary>
-            <typeparam name="T">Type of command, typically inferred by the compiler based on the received <paramref name="command"/>.</typeparam>
-            <param name="command">The command payload.</param>
-        </member>
-        <member name="P:DomainCommandBus`1.None">
-            <summary>
-            Gets a default domain command bus implementation that 
-            does nothing (a.k.a. Null Object Pattern).
-            </summary>
-        </member>
-        <member name="T:DomainCommandBus`1.NullBus">
-            <summary>
-            Provides a null bus implementation 
-            for use when no command bus has been configured.
-            </summary>
-        </member>
-        <member name="M:DomainCommandBus`1.NullBus.Execute``1(``0)">
-            <summary>
-            Does nothing.
-            </summary>
-        </member>
-        <member name="T:DomainCommandHandler">
-            <summary>
-            Base class part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:DomainCommandHandler`1"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="P:DomainCommandHandler.IsAsync">
-            <summary>
-            Gets a value indicating whether this handler should be executed asynchronously.
-            </summary>
-        </member>
-        <member name="T:DomainCommandHandler`1">
-            <summary>
-            Base class for domain command handlers that subscribe to specific type of command.
-            </summary>
-            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core" />
-        </member>
-        <member name="M:DomainCommandHandler`1.Handle(`0)">
-            <summary>
-            Handles the specified command.
-            </summary>
-        </member>
         <member name="T:Guard">
             <summary>
             Common guard class for argument validation.
@@ -218,6 +20,304 @@
             Ensures the given string <paramref name="value"/> is not null or empty.
             Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
             <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:ICommandHandler">
+            <summary>
+            Base interface part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:CommandHandler`1"/> or 
+            implement <see cref="T:ICommandHandler`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands.Core"/>
+        </member>
+        <member name="P:ICommandHandler.IsAsync">
+            <summary>
+            Gets a value indicating whether this handler should be executed asynchronously.
+            </summary>
+        </member>
+        <member name="T:ICommandHandler`1">
+            <summary>
+            Base interface for domain command handlers that subscribe to specific type of command.
+            </summary>
+            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands.Core" />
+        </member>
+        <member name="M:ICommandHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Handles the specified command.
+            </summary>
+            <param name="command">The command to handle.</param>
+            <param name="headers">The headers associated with the command.</param>
+        </member>
+        <member name="T:CommandBus`1">
+            <summary>
+            Default implementation of an <see cref="T:ICommandBus`1"/> that 
+            invokes in-memory command handlers registered for a given command.
+            <para>
+            Handlers with <see cref="P:ICommandHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor. If no async 
+            runner is specified, the <see cref="M:System.Threading.ThreadPool.QueueUserWorkItem(System.Threading.WaitCallback)"/>
+            will be used automatically.
+            </para>
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands.Core"/>
+        </member>
+        <member name="T:ICommandBus`1">
+            <summary>
+            Interface implemented by the component that coordinates 
+            command handler invocation when a subscribed command is executed.
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands"/>
+        </member>
+        <member name="M:ICommandBus`1.Execute(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Executes the specified command.
+            </summary>
+            <param name="command">The command to execute.</param>
+            <param name="headers">The headers associated with the command.</param>
+        </member>
+        <member name="M:CommandBus`1.#ctor(System.Collections.Generic.IEnumerable{ICommandHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CommandBus`1"/> class with 
+            the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="commandHandlers">The command handlers.</param>
+        </member>
+        <member name="M:CommandBus`1.#ctor(IMessageStore{`0},System.Collections.Generic.IEnumerable{ICommandHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CommandBus`1"/> class with 
+            the given command storage implementation and list of available command handlers.
+            </summary>
+            <param name="commandStore">The command store.</param>
+            <param name="commandHandlers">The command handlers.</param>
+        </member>
+        <member name="M:CommandBus`1.#ctor(System.Collections.Generic.IEnumerable{ICommandHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CommandBus`1"/> class with
+            the given list of available command handlers and an async runner for command 
+            handlers that must be executed asynchronously.
+            </summary>
+            <param name="commandHandlers">The available command handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke command handlers
+            that have <see cref="P:ICommandHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:CommandBus`1.#ctor(IMessageStore{`0},System.Collections.Generic.IEnumerable{ICommandHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CommandBus`1"/> class with
+            the given command storage implementation, list of available command handlers 
+            and an async runner for command handlers that must be executed asynchronously.
+            </summary>
+            <param name="commandStore">The command store.</param>
+            <param name="commandHandlers">The command handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke command handlers
+            that have <see cref="P:ICommandHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:CommandBus`1.Execute(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Executes all handlers registered to receive the given command.
+            </summary>
+            <param name="command">The command payload.</param>
+            <param name="headers">The headers for the command.</param>
+        </member>
+        <member name="M:CommandBus`1.OnExecute(System.Object,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Called when invoking the handler for a command with the given headers.
+            </summary>
+            <remarks>
+            Derived classes can change the way handlers are invoked, optimize it, 
+            or do pre/post processing right before/after the command is handled.
+            </remarks>
+        </member>
+        <member name="T:CommandBusExtensions">
+            <summary>
+            Adds usability overloads to <see cref="T:ICommandBus`1"/>.
+            </summary>
+        </member>
+        <member name="M:CommandBusExtensions.Execute``1(ICommandBus{``0},``0)">
+            <summary>
+            Executes the specified command with empty headers.
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <param name="bus">The command bus to execute the command on.</param>
+            <param name="command">The command to execute.</param>
+        </member>
+        <member name="M:CommandBusExtensions.Execute``1(ICommandBus{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Executes the specified command.
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <param name="bus">The command bus to execute the command on.</param>
+            <param name="commands">The commands to execute.</param>
+        </member>
+        <member name="M:CommandBusExtensions.Execute``1(ICommandBus{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Executes the specified command.
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <param name="bus">The command bus to execute the command on.</param>
+            <param name="commands">The commands to execute.</param>
+            <param name="headers">The headers for the commands.</param>
+        </member>
+        <member name="T:CommandHandler`1">
+            <summary>
+            Base class for domain command handlers that subscribe to specific type of command.
+            </summary>
+            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands.Core" />
+        </member>
+        <member name="M:CommandHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Handles the specified command.
+            </summary>
+            <param name="command">The command to handle.</param>
+            <param name="headers">The headers associated with the command.</param>
+        </member>
+        <member name="P:CommandHandler`1.IsAsync">
+            <summary>
+            Gets a value indicating whether this handler should be executed asynchronously.
+            </summary>
+        </member>
+        <member name="T:IMessageStore`1">
+            <summary>
+            Interface implemented by a message stores.
+            </summary>
+            <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:IMessageStore`1.Save(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Persists the message and headers.
+            </summary>
+            <param name="message">The message to persist.</param>
+            <param name="headers">The headers associated with the message.</param>
+        </member>
+        <member name="M:IMessageStore`1.Query(MessageStoreQueryCriteria)">
+            <summary>
+            Queries the store for messages that match the given criteria.
+            </summary>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            The <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> extension method  
+            can be used with any message store implementation, and provides a fluent 
+            API to build the criteria object
+            </para>
+            </remarks>
+        </member>
+        <member name="T:MessageStoreQueryCriteria">
+            <summary>
+            Represents the filter criteria for a message store query.
+            </summary>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryCriteria.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessageStoreQueryCriteria"/> class.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.MessageTypes">
+            <summary>
+            List of message type filters. All types added are OR'ed with the 
+            others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Since">
+            <summary>
+            Filters messages that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Until">
+            <summary>
+            Filters messages that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.IsExclusiveRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:MessageStoreQueryCriteria.Since"/> and <see cref="P:MessageStoreQueryCriteria.Until"/> should 
+            be considered as exclusive ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+        <member name="T:MessageStoreQueryExtension">
+            <summary>
+            Provides the entry point <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> extension method 
+            for an <see cref="T:IMessageStore`1"/> for a fluent API 
+            that makes building the message query criteria easier.
+            </summary>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})">
+            <summary>
+            Allows building a query against the message store 
+            using a fluent API and automatically executing 
+            it to messages that match built criteria upon 
+            query enumeration or explicit execution.
+            </summary>
+            <typeparam name="TBaseMessage">The base type or interface implemented by log entries in the system.</typeparam>
+            <param name="store">The audit log store.</param>
+        </member>
+        <member name="T:MessageStoreQueryExtension.IQuery`1">
+            <summary>
+            Provides a fluent API to filter messages from a message store. 
+            </summary>
+            <remarks>
+            This interface is returned from the <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> 
+            extension method for <see cref="T:IMessageStore`1"/>.
+            </remarks>
+            <typeparam name="TBaseMessage">The base type or interface implemented by events in the system.</typeparam>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Execute">
+            <summary>
+            Executes the query built using the fluent API 
+            against the underlying store.
+            </summary>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.OfType``1">
+            <summary>
+            Includes messages in the result that are assignable to the given type. Can be called 
+            multiple times and will filter for any of the specified types (OR operator).
+            </summary>
+            <typeparam name="TMessage">The type of messages to include.</typeparam>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)">
+            <summary>
+            Includes messages that happened after the given starting date.
+            </summary>
+            <param name="when">The starting date to filter by.</param>
+            <remarks>
+            By default, includes messages with the given date, unless the 
+            <see cref="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)">
+            <summary>
+            Includes events that happened before the given ending date.
+            </summary>
+            <param name="when">The ending date to filter by.</param>
+            <remarks>
+            By default, includes messages with the given date, unless the 
+            <see cref="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange"/> is called to make the range exclusive.
+            </remarks>
+        </member>
+        <member name="M:MessageStoreQueryExtension.IQuery`1.ExclusiveRange">
+            <summary>
+            Makes the configured <see cref="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)"/> and/or <see cref="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)"/> dates 
+            exclusive, changing the default behavior which is to be inclusive.
             </summary>
         </member>
     </members>

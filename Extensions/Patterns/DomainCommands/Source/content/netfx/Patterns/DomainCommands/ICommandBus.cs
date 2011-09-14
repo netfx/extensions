@@ -15,20 +15,22 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// Interface implemented by the component that coordinates 
 /// command handler invocation when a subscribed command is executed.
 /// </summary>
-/// <typeparam name="TBaseCommand">The base type that all persisted 
-/// commands inherit from, or a common interface for all. Can even 
-/// be <see cref="object"/> if the store can deal with any kind of 
-/// command object.</typeparam>
-/// <nuget id="netfx-Patterns.DomainCommands.Core" />
-partial interface IDomainCommandBus<TBaseCommand>
+/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+/// or a common interface for all. Can even be <see cref="object"/> if no 
+/// common interface is needed.</typeparam>
+/// <nuget id="netfx-Patterns.DomainCommands" />
+partial interface ICommandBus<TBaseCommand> 
 {
 	/// <summary>
 	/// Executes the specified command.
 	/// </summary>
-	void Execute<T>(T command) where T : TBaseCommand;
+	/// <param name="command">The command to execute.</param>
+	/// <param name="headers">The headers associated with the command.</param>
+	void Execute(TBaseCommand command, IDictionary<string, object> headers);
 }

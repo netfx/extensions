@@ -17,37 +17,44 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Reflection;
 
 /// <summary>
-/// Provides the <see cref="None"/> empty default implementation 
-/// for domains that do not wish persist commands.
+/// Represents the filter criteria for a message store query.
 /// </summary>
-/// <typeparam name="TBaseCommand">The base type or interface of the commands used in the domain.</typeparam>
-partial class DomainCommandStore<TBaseCommand>
+/// <nuget id="netfx-Patterns.MessageStore"/>
+partial class MessageStoreQueryCriteria
 {
 	/// <summary>
-	/// Initializes the <see cref="DomainCommandStore{TBaseCommand}"/> class.
+	/// Initializes a new instance of the <see cref="MessageStoreQueryCriteria"/> class.
 	/// </summary>
-	static DomainCommandStore()
+	public MessageStoreQueryCriteria()
 	{
-		None = new NullStore();
+		this.MessageTypes = new HashSet<Type>();
 	}
 
 	/// <summary>
-	/// Gets a default domain command store implementation that 
-	/// does nothing (a.k.a. Null Object Pattern).
+	/// List of message type filters. All types added are OR'ed with the 
+	/// others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
 	/// </summary>
-	public static IDomainCommandStore<TBaseCommand> None { get; private set; }
+	public HashSet<Type> MessageTypes { get; private set; }
 
-	private class NullStore : IDomainCommandStore<TBaseCommand>
-	{
-		public void Persist(TBaseCommand command)
-		{
-		}
+	/// <summary>
+	/// Filters messages that happened after the given starting date.
+	/// </summary>
+	public DateTime? Since { get; set; }
 
-		public void Commit()
-		{
-		}
-	}
+	/// <summary>
+	/// Filters messages that happened before the given ending date.
+	/// </summary>
+	public DateTime? Until { get; set; }
+
+	/// <summary>
+	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
+	/// be considered as exclusive ranges (excludes values with a matching date). 
+	/// Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+	/// </summary>
+	public bool IsExclusiveRange { get; set; }
 }

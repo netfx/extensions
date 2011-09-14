@@ -46,7 +46,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\DomainCommandsSpec.cs" />
+    <Compile Include="content\netfx\Patterns\DomainCommands\CommandsSpec.cs" />
+    <Compile Include="netfx\Patterns\MessageStore\MessageStoreQuerySpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

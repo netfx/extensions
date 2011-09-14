@@ -18,35 +18,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Reflection;
 
 /// <summary>
-/// Interface implemented by domain command stores.
+/// Represents the filter criteria for a message store query.
 /// </summary>
-/// <typeparam name="TBaseCommand">The base type that all persisted 
-/// commands inherit from, or a common interface for all. Can even 
-/// be <see cref="object"/> if the store can deal with any kind of 
-/// command object.</typeparam>
-/// <remarks>
-/// This interface is intentionally simple and devoid of
-/// context information on the <see cref="Persist"/> operation,
-/// because the intended design is that specific implementations
-/// should get whatever context they need in their constructors
-/// as dependencies (i.e. the current user) or by augmenting
-/// the commands themselves.
-/// </remarks>
-/// <nuget id="netfx-Patterns.DomainCommands.Core"/>
-partial interface IDomainCommandStore<TBaseCommand>
+/// <nuget id="netfx-Patterns.MessageStore"/>
+partial class MessageStoreQueryCriteria
 {
 	/// <summary>
-	/// Notifies the store that the given command 
-	/// should be persisted when <see cref="Commit"/> is called.
+	/// Initializes a new instance of the <see cref="MessageStoreQueryCriteria"/> class.
 	/// </summary>
-	/// <param name="command">The command instance to persist.</param>
-	void Persist(TBaseCommand command);
+	public MessageStoreQueryCriteria()
+	{
+		this.MessageTypes = new HashSet<Type>();
+	}
 
 	/// <summary>
-	/// Persists all <see cref="Persist"/>s performed so far, effectively commiting 
-	/// the changes to the underlying store in a unit-of-work style.
+	/// List of message type filters. All types added are OR'ed with the 
+	/// others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
 	/// </summary>
-	void Commit();
+	public HashSet<Type> MessageTypes { get; private set; }
+
+	/// <summary>
+	/// Filters messages that happened after the given starting date.
+	/// </summary>
+	public DateTime? Since { get; set; }
+
+	/// <summary>
+	/// Filters messages that happened before the given ending date.
+	/// </summary>
+	public DateTime? Until { get; set; }
+
+	/// <summary>
+	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
+	/// be considered as exclusive ranges (excludes values with a matching date). 
+	/// Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+	/// </summary>
+	public bool IsExclusiveRange { get; set; }
 }
