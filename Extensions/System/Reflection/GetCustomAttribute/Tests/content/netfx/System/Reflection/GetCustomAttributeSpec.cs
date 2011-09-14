@@ -36,7 +36,6 @@ using System.Text;
 using Xunit;
 using System.ComponentModel;
 
-///	<nuget id="netfx-System.Reflection.GetCustomAttribute.Tests" />
 public class GetCustomAttributeSpec
 {
 	[Fact]
