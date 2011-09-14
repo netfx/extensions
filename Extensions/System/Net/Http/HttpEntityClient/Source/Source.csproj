@@ -12,7 +12,7 @@
     <AssemblyName>Source</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <DocumentationFile>lib\netfx-System.Net.Http.HttpEntityClient</DocumentationFile>
+    <DocumentationFile>lib\netfx-System.Net.Http.HttpEntityClient.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

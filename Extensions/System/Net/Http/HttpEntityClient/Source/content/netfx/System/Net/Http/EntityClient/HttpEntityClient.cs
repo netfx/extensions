@@ -51,7 +51,7 @@ namespace System.Net.Http
 	/// Select expressions in the query cause it to be executed and 
 	/// materialized locally, so that further operations can be 
 	/// performed even if they are in the 
-	/// <see cref="http://msdn.microsoft.com/en-us/library/ee622463.aspx#unsupportedMethods">unsupported methods</see> 
+	/// http://msdn.microsoft.com/en-us/library/ee622463.aspx#unsupportedMethods
 	/// list. If anything fails in the expression, you can always call 
 	/// ToList and use Linq to Objects from that point on. This is 
 	/// automatic after a Select.
