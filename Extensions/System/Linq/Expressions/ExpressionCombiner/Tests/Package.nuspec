@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.Linq.Expressions.ExpressionCombiner.Tests</id>
+		<id>netfx-System.Linq.Expressions.ExpressionCombiner.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Linq Expression Combiner Tests</title>
-		<description>Tests for netfx-System.Linq.Expressions.ExpressionCombiner</description>
+		<title>NETFx Linq Expression Combiner xUnit Tests</title>
+		<description>xUnit Tests for netfx-System.Linq.Expressions.ExpressionCombiner</description>
 		<authors>meek, Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
