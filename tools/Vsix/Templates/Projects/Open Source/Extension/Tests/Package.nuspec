@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>$Identifier$.Tests</id>
+		<id>$Identifier$.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>$Title$ Tests</title>
+		<title>$Title$ xUnit Tests</title>
 		<description>xUnit tests for $Identifier$</description>
 		<authors>$Authors$</authors>
 		<language>en-US</language>

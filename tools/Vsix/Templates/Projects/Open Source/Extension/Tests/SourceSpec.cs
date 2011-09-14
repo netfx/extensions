@@ -37,7 +37,6 @@ using Xunit;
 
 namespace NetFx.$TargetNamespace$
 {
-	///	<nuget id="$Identifier$.Tests" />
 	public class $safesolutionname$Spec
 	{
 		[Fact]

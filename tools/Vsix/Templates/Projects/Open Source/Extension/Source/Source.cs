@@ -44,7 +44,7 @@ using System.Text;
 /// $Description$
 /// </summary>
 ///	<nuget id="$Identifier$" />
-internal static partial class $safesolutionname$
+static partial class $safesolutionname$
 {
 	// NOTE: Extension methods must annotate the <param> element with a this="true" 
 	// attribute for the parameter that is extended by the extension method. This
