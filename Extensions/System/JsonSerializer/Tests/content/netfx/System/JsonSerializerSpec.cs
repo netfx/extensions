@@ -38,7 +38,6 @@ using System.IO;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.JsonSerializer.Tests.xUnit" />
 	public class JsonSerializerSpec : SerializerSpec
 	{
 		[Fact]
