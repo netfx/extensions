@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:DateTimeToNaturalTimeExtension">
+            <summary>
+            Converts a date time to a readable natural time (i.e. '10 hours', '2 years') or relative time (i.e. '5 days ago').
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.DateTimeToNaturalTime"/>
+        </member>
+        <member name="M:DateTimeToNaturalTimeExtension.ToNaturalRelativeTime(System.DateTime)">
+            <summary>
+            Renders the given date as a natural language string, appending the
+            "ago" suffix like "10 minutes ago".
+            </summary>
+            <param name="date" this="true">The date to convert.</param>
+        </member>
+        <member name="M:DateTimeToNaturalTimeExtension.ToNaturalTime(System.DateTime)">
+            <summary>
+            Renders the given date as a natural language string, like "10 minutes".
+            </summary>
+            <param name="date" this="true">The date to convert.</param>
+        </member>
+        <member name="M:DateTimeToNaturalTimeExtension.ToNaturalRelativeTime(System.DateTimeOffset)">
+            <summary>
+            Renders the given date as a natural language string, appending the
+            "ago" suffix like "10 minutes ago".
+            </summary>
+            <param name="date" this="true">The date to convert.</param>
+        </member>
+        <member name="M:DateTimeToNaturalTimeExtension.ToNaturalTime(System.DateTimeOffset)">
+            <summary>
+            Renders the given date as a natural language string, like "10 minutes".
+            </summary>
+            <param name="date" this="true">The date to convert.</param>
+        </member>
+    </members>
+</doc>
