@@ -6,7 +6,7 @@
     <members>
         <member name="T:BinarySerializer">
             <summary>
-            Implements the core NETFx ISerializer interface using the .NET framework runtime BinaryFormatter/
+            Implements the core NETFx ISerializer interface using the .NET framework runtime BinaryFormatter.
             </summary>
             <nuget id="netfx-System.BinarySerializer" />
         </member>

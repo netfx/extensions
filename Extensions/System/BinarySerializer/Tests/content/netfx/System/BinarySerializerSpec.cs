@@ -37,7 +37,6 @@ using Xunit;
 
 namespace NetFx.System
 {
-	///	<nuget id="netfx-System.BinarySerializer.Tests.xUnit" />
 	public class BinarySerializerSpec : SerializerSpec
 	{
 		[Fact]
