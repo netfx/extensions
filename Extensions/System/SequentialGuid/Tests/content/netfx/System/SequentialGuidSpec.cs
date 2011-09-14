@@ -34,14 +34,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using System.Threading;
 
-///	<nuget id="netfx-System.SequentialGuid.Tests" />
 public class SequentialGuidSpec
 {
 	[Fact]
 	public void WhenGeneratingMultipleGuids_ThenTheyAreAscending()
 	{
 		var guid1 = SequentialGuid.NewGuid();
+		Thread.Sleep(1);
 		var guid2 = SequentialGuid.NewGuid();
 
 		Assert.Equal(1, guid2.CompareTo(guid1));

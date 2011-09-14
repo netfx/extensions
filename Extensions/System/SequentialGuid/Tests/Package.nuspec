@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-System.SequentialGuid.Tests</id>
+		<id>netfx-System.SequentialGuid.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Sequential Guid Tests</title>
+		<title>NETFx Sequential Guid xUnit Tests</title>
 		<description>xUnit tests for netfx-System.SequentialGuid</description>
 		<authors>Daniel Cazzulino, kzu, NHibernate, Clarius</authors>
 		<language>en-US</language>
