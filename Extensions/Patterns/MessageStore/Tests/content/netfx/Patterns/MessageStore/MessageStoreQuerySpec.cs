@@ -5,12 +5,15 @@ using System.Text;
 using Xunit;
 using System.Collections;
 using Moq;
+using System.Reflection;
 
 namespace NetFx.Patterns.SystemEventStore.Tests
 {
 	public class MessageStoreQueryExtensionSpec
 	{
 		private IMessageStore<Message> store;
+		private Func<object, MessageStoreQueryCriteria> GetCriteria = query =>
+			(MessageStoreQueryCriteria)query.GetType().GetField("criteria", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(query);
 
 		public MessageStoreQueryExtensionSpec()
 		{
@@ -20,7 +23,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		[Fact]
 		public void WhenEmptyQuery_ThenSinceUntilAreNull()
 		{
-			var query = store.Query().Criteria;
+			var query = GetCriteria(store.Query());
 
 			Assert.Null(query.Since);
 			Assert.Null(query.Until);
@@ -29,7 +32,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		[Fact]
 		public void WhenEmptyQuery_ThenIsExclusiveRangeIsFalse()
 		{
-			var query = store.Query().Criteria;
+			var query = GetCriteria(store.Query());
 
 			Assert.False(query.IsExclusiveRange);
 		}
@@ -37,7 +40,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		[Fact]
 		public void WhenSettingExclusiveRange_ThenSetsIsExclusiveRange()
 		{
-			var query = store.Query().ExclusiveRange().Criteria;
+			var query = GetCriteria(store.Query().ExclusiveRange());
 
 			Assert.True(query.IsExclusiveRange);
 		}
@@ -46,7 +49,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		public void WhenSettingSince_ThenPopulatesSinceCriteria()
 		{
 			var date = DateTime.UtcNow;
-			var query = store.Query().Since(date).Criteria;
+			var query = GetCriteria(store.Query().Since(date));
 
 			Assert.Equal(date, query.Since);
 		}
@@ -55,7 +58,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		public void WhenSettingUntil_ThenPopulatesUntilCriteria()
 		{
 			var date = DateTime.UtcNow;
-			var query = store.Query().Until(date).Criteria;
+			var query = GetCriteria(store.Query().Until(date));
 
 			Assert.Equal(date, query.Until);
 		}
@@ -63,28 +66,28 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 		[Fact]
 		public void WhenSpecifyingOfType_ThenAddsMessageType()
 		{
-			var query = store.Query().OfType<CreateUser>();
+			var criteria = GetCriteria(store.Query().OfType<CreateUser>());
 
-			Assert.Equal(1, query.Criteria.MessageTypes.Count);
-			Assert.Equal(typeof(CreateUser), query.Criteria.MessageTypes.First());
+			Assert.Equal(1, criteria.MessageTypes.Count);
+			Assert.Equal(typeof(CreateUser), criteria.MessageTypes.First());
 		}
 
 		[Fact]
 		public void WhenSpecifyingMultipleOfType_ThenAddsAllMessageTypes()
 		{
-			var query = store.Query().OfType<CreateUser>().OfType<DeactivateUser>();
+			var criteria = GetCriteria(store.Query().OfType<CreateUser>().OfType<DeactivateUser>());
 
-			Assert.Equal(2, query.Criteria.MessageTypes.Count);
-			Assert.True(query.Criteria.MessageTypes.Any(type => type == typeof(CreateUser)));
-			Assert.True(query.Criteria.MessageTypes.Any(type => type == typeof(DeactivateUser)));
+			Assert.Equal(2, criteria.MessageTypes.Count);
+			Assert.True(criteria.MessageTypes.Any(type => type == typeof(CreateUser)));
+			Assert.True(criteria.MessageTypes.Any(type => type == typeof(DeactivateUser)));
 		}
 
 		[Fact]
 		public void WhenSpecifyingDuplicateOfType_ThenAddsOnlyOnce()
 		{
-			var query = store.Query().OfType<CreateUser>().OfType<CreateUser>();
+			var criteria = GetCriteria(store.Query().OfType<CreateUser>().OfType<CreateUser>());
 
-			Assert.Equal(1, query.Criteria.MessageTypes.Count);
+			Assert.Equal(1, criteria.MessageTypes.Count);
 		}
 
 		[Fact]
@@ -94,7 +97,7 @@ namespace NetFx.Patterns.SystemEventStore.Tests
 				.Since(DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)))
 				.OfType<CreateUser>();
 
-			var criteria = query.Criteria;
+			var criteria = GetCriteria(query);
 
 			query.Execute();
 

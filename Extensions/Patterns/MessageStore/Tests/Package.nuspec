@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.MessgeStore.Tests.xUnit</id>
+		<id>netfx-Patterns.MessageStore.Tests.xUnit</id>
 		<version>1.0.0.0</version>
 		<title>NETFx Patterns: Message Store Core xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.MessageStore</description>

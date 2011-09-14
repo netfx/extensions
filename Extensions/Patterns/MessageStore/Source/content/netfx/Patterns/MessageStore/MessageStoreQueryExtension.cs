@@ -57,15 +57,10 @@ static partial class MessageStoreQueryExtension
 	public interface IQuery<TBaseMessage>
 	{
 		/// <summary>
-		/// Executes the <see cref="Criteria"/> built using the fluent API 
+		/// Executes the query built using the fluent API 
 		/// against the underlying store.
 		/// </summary>
 		IEnumerable<TBaseMessage> Execute();
-
-		/// <summary>
-		/// Gets the criteria that was built using the fluent API so far.
-		/// </summary>
-		MessageStoreQueryCriteria Criteria { get; }
 
 		/// <summary>
 		/// Includes messages in the result that are assignable to the given type. Can be called 
@@ -110,8 +105,6 @@ static partial class MessageStoreQueryExtension
 		{
 			this.store = store;
 		}
-
-		public MessageStoreQueryCriteria Criteria { get { return this.criteria; } }
 
 		public IEnumerable<TBaseMessage> Execute()
 		{

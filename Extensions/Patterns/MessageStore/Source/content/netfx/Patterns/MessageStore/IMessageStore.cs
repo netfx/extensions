@@ -27,12 +27,11 @@ using System.Linq.Expressions;
 partial interface IMessageStore<TBaseMessage>
 {
 	/// <summary>
-	/// Notifies the store that the given message 
-	/// should be persisted when <see cref="Commit"/> is called.
+	/// Persists the message and headers.
 	/// </summary>
 	/// <param name="message">The message to persist.</param>
 	/// <param name="headers">The headers associated with the message.</param>
-	void Persist(TBaseMessage message, IDictionary<string, object> headers);
+	void Save(TBaseMessage message, IDictionary<string, object> headers);
 
 	/// <summary>
 	/// Queries the store for messages that match the given criteria.
@@ -47,10 +46,4 @@ partial interface IMessageStore<TBaseMessage>
 	/// </para>
 	/// </remarks>
 	IEnumerable<TBaseMessage> Query(MessageStoreQueryCriteria criteria);
-
-	/// <summary>
-	/// Persists all log entries <see cref="Persist"/>ed so far, effectively commiting 
-	/// the changes to the underlying store in a unit-of-work style.
-	/// </summary>
-	void Commit();
 }
