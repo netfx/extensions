@@ -54,18 +54,13 @@ static partial class MessageStoreQueryExtension
 	/// </remarks>
 	/// <typeparam name="TBaseMessage">The base type or interface implemented by events in the system.</typeparam>
 	/// <nuget id="netfx-Patterns.MessageStore"/>
-	public interface IQuery<TBaseMessage> : IEnumerable<TBaseMessage>
+	public interface IQuery<TBaseMessage>
 	{
 		/// <summary>
-		/// Executes the <see cref="Criteria"/> built using the fluent API 
+		/// Executes the query built using the fluent API 
 		/// against the underlying store.
 		/// </summary>
 		IEnumerable<TBaseMessage> Execute();
-
-		/// <summary>
-		/// Gets the criteria that was built using the fluent API so far.
-		/// </summary>
-		MessageStoreQueryCriteria Criteria { get; }
 
 		/// <summary>
 		/// Includes messages in the result that are assignable to the given type. Can be called 
@@ -111,17 +106,10 @@ static partial class MessageStoreQueryExtension
 			this.store = store;
 		}
 
-		public MessageStoreQueryCriteria Criteria { get { return this.criteria; } }
-
 		public IEnumerable<TBaseMessage> Execute()
 		{
 			return this.store.Query(this.criteria);
 		}		
-
-		public IEnumerator<TBaseMessage> GetEnumerator()
-		{
-			return Execute().GetEnumerator();
-		}
 
 		public IQuery<TBaseMessage> OfType<TEvent>()
 			where TEvent : TBaseMessage
@@ -147,11 +135,6 @@ static partial class MessageStoreQueryExtension
 		{
 			this.criteria.IsExclusiveRange = true;
 			return this;
-		}
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
 		}
 	}
 }

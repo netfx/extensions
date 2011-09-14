@@ -46,11 +46,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\MessageStore\MessageStoreQuerySpec.cs" />
+    <Compile Include="content\netfx\Patterns\MessageStore\MemoryMessageStoreSpec.cs" />
+    <Compile Include="netfx\Patterns\MessageStore\MessageStoreQuerySpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="tools\install.ps1" />
   </ItemGroup>

@@ -41,13 +41,9 @@ partial class MemoryMessageStore<TBaseMessage> : IMessageStore<TBaseMessage>
 	public Func<Type, string> TypeNameConverter { get; set; }
 	public IQueryable<StoredMessage> AllMessages { get { return this.messages.AsQueryable(); } }
 
-	public void Persist(TBaseMessage message, IDictionary<string, object> headers)
+	public void Save(TBaseMessage message, IDictionary<string, object> headers)
 	{
 		this.messages.Add(new StoredMessage(message, headers) { Timestamp = this.utcNow() });
-	}
-
-	public void Commit()
-	{
 	}
 
 	public IEnumerable<TBaseMessage> Query(MessageStoreQueryCriteria criteria)
@@ -88,21 +84,21 @@ partial class MemoryMessageStore<TBaseMessage> : IMessageStore<TBaseMessage>
 
 	private static Expression<Func<StoredMessage, bool>> ToExpression(MessageStoreQueryCriteria criteria, Func<Type, string> typeNameConverter)
 	{
-		return new StoredEventCriteriaBuilder(criteria, typeNameConverter).Build();
+		return new StoredMessageCriteriaBuilder(criteria, typeNameConverter).Build();
 	}
 
-	private class StoredEventCriteriaBuilder
+	private class StoredMessageCriteriaBuilder
 	{
 		private MessageStoreQueryCriteria criteria;
 		private Func<Type, string> typeNameConverter;
 
-		public StoredEventCriteriaBuilder(MessageStoreQueryCriteria criteria, Func<Type, string> typeNameConverter)
+		public StoredMessageCriteriaBuilder(MessageStoreQueryCriteria criteria, Func<Type, string> typeNameConverter)
 		{
 			this.criteria = criteria;
 			this.typeNameConverter = typeNameConverter;
 		}
 
-		private Expression<Func<StoredMessage, bool>> AddEventFilter(Expression<Func<StoredMessage, bool>> result)
+		private Expression<Func<StoredMessage, bool>> AddMessageFilter(Expression<Func<StoredMessage, bool>> result)
 		{
 			var criteria = default(Expression<Func<StoredMessage, bool>>);
 
@@ -137,7 +133,7 @@ partial class MemoryMessageStore<TBaseMessage> : IMessageStore<TBaseMessage>
 		public Expression<Func<StoredMessage, bool>> Build()
 		{
 			var result = default(Expression<Func<StoredMessage, bool>>);
-			result = AddEventFilter(result);
+			result = AddMessageFilter(result);
 
 			if (this.criteria.Since != null)
 			{

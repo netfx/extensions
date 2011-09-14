@@ -11,10 +11,9 @@
             <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
             <nuget id="netfx-Patterns.MessageStore"/>
         </member>
-        <member name="M:IMessageStore`1.Persist(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+        <member name="M:IMessageStore`1.Save(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
-            Notifies the store that the given message 
-            should be persisted when <see cref="M:IMessageStore`1.Commit"/> is called.
+            Persists the message and headers.
             </summary>
             <param name="message">The message to persist.</param>
             <param name="headers">The headers associated with the message.</param>
@@ -32,12 +31,6 @@
             API to build the criteria object
             </para>
             </remarks>
-        </member>
-        <member name="M:IMessageStore`1.Commit">
-            <summary>
-            Persists all log entries <see cref="M:IMessageStore`1.Persist(`0,System.Collections.Generic.IDictionary{System.String,System.Object})"/>ed so far, effectively commiting 
-            the changes to the underlying store in a unit-of-work style.
-            </summary>
         </member>
         <member name="T:MessageStoreQueryExtension">
             <summary>
@@ -70,7 +63,7 @@
         </member>
         <member name="M:MessageStoreQueryExtension.IQuery`1.Execute">
             <summary>
-            Executes the <see cref="P:MessageStoreQueryExtension.IQuery`1.Criteria"/> built using the fluent API 
+            Executes the query built using the fluent API 
             against the underlying store.
             </summary>
         </member>
@@ -105,11 +98,6 @@
             <summary>
             Makes the configured <see cref="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)"/> and/or <see cref="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)"/> dates 
             exclusive, changing the default behavior which is to be inclusive.
-            </summary>
-        </member>
-        <member name="P:MessageStoreQueryExtension.IQuery`1.Criteria">
-            <summary>
-            Gets the criteria that was built using the fluent API so far.
             </summary>
         </member>
         <member name="T:MessageStoreQueryCriteria">

@@ -32,14 +32,14 @@ partial class MessageStoreQueryCriteria
 	/// </summary>
 	public MessageStoreQueryCriteria()
 	{
-		this.MessageTypes = new List<Type>();
+		this.MessageTypes = new HashSet<Type>();
 	}
 
 	/// <summary>
 	/// List of message type filters. All types added are OR'ed with the 
 	/// others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
 	/// </summary>
-	public List<Type> MessageTypes { get; private set; }
+	public HashSet<Type> MessageTypes { get; private set; }
 
 	/// <summary>
 	/// Filters messages that happened after the given starting date.

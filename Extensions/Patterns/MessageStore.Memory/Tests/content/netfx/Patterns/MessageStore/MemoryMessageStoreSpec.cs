@@ -19,20 +19,14 @@ namespace NetFx.Patterns.MessageStore.Memory
 		{
 			this.store = new MemoryMessageStore<Message>(() => this.utcNow());
 
-			this.store.Persist(new CreateProduct { Id = 5, Title = "DevStore" }, emptyHeaders);
-			this.store.Persist(new PublishProduct { Version = 1 }, emptyHeaders);
-			this.store.Persist(new PublishProduct { Version = 2 }, emptyHeaders);
-			this.store.Persist(new PublishProduct { Version = 3 }, emptyHeaders);
+			this.store.Save(new CreateProduct { Id = 5, Title = "DevStore" }, emptyHeaders);
+			this.store.Save(new PublishProduct { Version = 1 }, emptyHeaders);
+			this.store.Save(new PublishProduct { Version = 2 }, emptyHeaders);
+			this.store.Save(new PublishProduct { Version = 3 }, emptyHeaders);
 
-			this.store.Persist(new CreateProduct { Id = 6, Title = "WoVS" }, emptyHeaders);
-			this.store.Persist(new PublishProduct { Version = 1 }, emptyHeaders);
-			this.store.Persist(new PublishProduct { Version = 2 }, emptyHeaders);
-		}
-
-		[Fact]
-		public void WhenCommitting_ThenNoOp()
-		{
-			this.store.Commit();
+			this.store.Save(new CreateProduct { Id = 6, Title = "WoVS" }, emptyHeaders);
+			this.store.Save(new PublishProduct { Version = 1 }, emptyHeaders);
+			this.store.Save(new PublishProduct { Version = 2 }, emptyHeaders);
 		}
 
 		[Fact]
@@ -40,7 +34,7 @@ namespace NetFx.Patterns.MessageStore.Memory
 		{
 			this.store = new MemoryMessageStore<Message>();
 
-			this.store.Persist(new CreateProduct { Id = 5, Title = "DevStore" }, emptyHeaders);
+			this.store.Save(new CreateProduct { Id = 5, Title = "DevStore" }, emptyHeaders);
 
 			Thread.Sleep(1);
 
@@ -51,7 +45,7 @@ namespace NetFx.Patterns.MessageStore.Memory
 		public void WhenGettingEmptyQueryEnumerable_ThenEmptyList()
 		{
 			var store = new MemoryMessageStore<Message>(() => this.utcNow());
-			var enumerable = store.Query() as IEnumerable;
+			var enumerable = store.Query().Execute() as IEnumerable;
 
 			Assert.False(enumerable.GetEnumerator().MoveNext());
 		}
@@ -67,17 +61,9 @@ namespace NetFx.Patterns.MessageStore.Memory
 		[Fact]
 		public void WhenFilteringByMessageType_ThenSucceeds()
 		{
-			var messages = store.Query().OfType<CreateProduct>();
+			var messages = store.Query().OfType<CreateProduct>().Execute();
 
 			Assert.Equal(2, messages.Count());
-		}
-
-		[Fact]
-		public void WhenFilteringByMessageType_ThenCanAccessCriteria()
-		{
-			var messages = store.Query().OfType<CreateProduct>();
-
-			Assert.Equal(1, messages.Criteria.MessageTypes.Count);
 		}
 
 		[Fact]
@@ -86,18 +72,18 @@ namespace NetFx.Patterns.MessageStore.Memory
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => when;
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
-			var messages = store.Query().OfType<Deactivate>().Since(when);
+			var messages = store.Query().OfType<Deactivate>().Since(when).Execute();
 
 			Assert.Equal(2, messages.Count());
 		}
@@ -108,18 +94,18 @@ namespace NetFx.Patterns.MessageStore.Memory
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => when;
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
-			var messages = store.Query().OfType<Deactivate>().Since(when).ExclusiveRange();
+			var messages = store.Query().OfType<Deactivate>().Since(when).ExclusiveRange().Execute();
 
 			Assert.Equal(1, messages.Count());
 		}
@@ -130,18 +116,18 @@ namespace NetFx.Patterns.MessageStore.Memory
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => when;
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
-			var messages = store.Query().OfType<Deactivate>().Until(when);
+			var messages = store.Query().OfType<Deactivate>().Until(when).Execute();
 
 			Assert.Equal(3, messages.Count());
 		}
@@ -152,18 +138,18 @@ namespace NetFx.Patterns.MessageStore.Memory
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => when;
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Persist(new Deactivate(), emptyHeaders);
+			store.Save(new Deactivate(), emptyHeaders);
 
-			var messages = store.Query().OfType<Deactivate>().Until(when).ExclusiveRange();
+			var messages = store.Query().OfType<Deactivate>().Until(when).ExclusiveRange().Execute();
 
 			Assert.Equal(2, messages.Count());
 		}

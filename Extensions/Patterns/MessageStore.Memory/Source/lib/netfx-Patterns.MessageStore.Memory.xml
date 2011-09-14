@@ -16,10 +16,9 @@
             <typeparam name="TBaseMessage">The common base type or interface implemented by message payloads.</typeparam>
             <nuget id="netfx-Patterns.MessageStore"/>
         </member>
-        <member name="M:IMessageStore`1.Persist(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+        <member name="M:IMessageStore`1.Save(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
-            Notifies the store that the given message 
-            should be persisted when <see cref="M:IMessageStore`1.Commit"/> is called.
+            Persists the message and headers.
             </summary>
             <param name="message">The message to persist.</param>
             <param name="headers">The headers associated with the message.</param>
@@ -38,13 +37,7 @@
             </para>
             </remarks>
         </member>
-        <member name="M:IMessageStore`1.Commit">
-            <summary>
-            Persists all log entries <see cref="M:IMessageStore`1.Persist(`0,System.Collections.Generic.IDictionary{System.String,System.Object})"/>ed so far, effectively commiting 
-            the changes to the underlying store in a unit-of-work style.
-            </summary>
-        </member>
-        <member name="M:MemoryMessageStore`1.StoredEventCriteriaBuilder.Build">
+        <member name="M:MemoryMessageStore`1.StoredMessageCriteriaBuilder.Build">
             <summary>
             Builds the expression for the criteria.
             </summary>
@@ -83,24 +76,6 @@
             Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
             </summary>
         </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
         <member name="T:MessageStoreQueryExtension">
             <summary>
             Provides the entry point <see cref="M:MessageStoreQueryExtension.Query``1(IMessageStore{``0})"/> extension method 
@@ -132,7 +107,7 @@
         </member>
         <member name="M:MessageStoreQueryExtension.IQuery`1.Execute">
             <summary>
-            Executes the <see cref="P:MessageStoreQueryExtension.IQuery`1.Criteria"/> built using the fluent API 
+            Executes the query built using the fluent API 
             against the underlying store.
             </summary>
         </member>
@@ -169,9 +144,22 @@
             exclusive, changing the default behavior which is to be inclusive.
             </summary>
         </member>
-        <member name="P:MessageStoreQueryExtension.IQuery`1.Criteria">
+        <member name="T:Guard">
             <summary>
-            Gets the criteria that was built using the fluent API so far.
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
         <member name="T:ExpressionCombiner">
