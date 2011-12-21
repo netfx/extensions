@@ -32,15 +32,9 @@ internal class DomainContext : IDomainContext
 
 	public void SaveChanges()
 	{
-		foreach (var @event in this.aggregates
-			.SelectMany(x => x.GetChanges().Select(e => new { Source = x, Event = e })))
+		foreach (var aggregate in this.aggregates)
 		{
-			this.eventBus.Publish(@event.Source, @event.Event);
-		}
-
-		foreach (var source in this.aggregates)
-		{
-			source.AcceptChanges();
+			this.eventBus.PublishChanges(aggregate);
 		}
 	}
 }

@@ -36,14 +36,17 @@ internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
 
 		// Invoke an email sending service here.
 
-		// Optionally notify the bus that we sent an email for the given product.
-		this.eventBus.Value.Publish(product, new EmailSentEvent
+		Console.WriteLine(@"Sent email:
+	To: {To}
+	From: {From}
+	Title: {Title}
+	Body: {Body}".FormatWith(new
 		{
 			To = "joe@netfx.com",
 			From = "webmaster@netfx.com",
 			Title = "New version {Version} has been published for product '{Title}'"
 				.FormatWith(new { Version = @event.Version, Title = product.Title }),
 			Body = "Download it now!",
-		});
+		}));
 	}
 }

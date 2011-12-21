@@ -24,14 +24,13 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
-			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+			store.SaveChanges(product);
 
 			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
-			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+
+			store.SaveChanges(product);
 		}
 
 		[Fact]
@@ -88,18 +87,22 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => when;
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
-			var events = store.Query().OfType<DeactivatedEvent>().Since(when).Execute();
+			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).Execute();
 
 			Assert.Equal(2, events.Count());
 		}
@@ -113,18 +116,22 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => when;
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
-			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
+			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
 
 			Assert.Equal(1, events.Count());
 		}
@@ -138,18 +145,22 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => when;
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
-			var events = store.Query().OfType<DeactivatedEvent>().Until(when).Execute();
+			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).Execute();
 
 			Assert.Equal(3, events.Count());
 		}
@@ -163,28 +174,24 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => when;
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			store.Save(product, new DeactivatedEvent());
+			product.Deactivate();
+			store.SaveChanges(product);
 
-			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
+			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
 
 			Assert.Equal(2, events.Count());
-		}
-
-		public class DeactivatedEvent : DomainEvent
-		{
-			public override string ToString()
-			{
-				return this.GetType().Name;
-			}
 		}
 	}
 }

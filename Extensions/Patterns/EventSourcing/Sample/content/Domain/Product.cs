@@ -6,7 +6,7 @@ using System.Text;
 /// <summary>
 /// Product is an the domain object sourcing the event with domain logic.
 /// </summary>
-public class Product : AggregateRoot
+internal class Product : AggregateRoot
 {
 	/// <summary>
 	/// Initializes the internal event handler map.

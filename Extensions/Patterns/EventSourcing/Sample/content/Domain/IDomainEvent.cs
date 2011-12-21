@@ -6,6 +6,6 @@ using System.Text;
 /// <summary>
 /// Base class for our domain events.
 /// </summary>
-public interface IDomainEvent
+internal interface IDomainEvent : ITimestamped
 {
 }

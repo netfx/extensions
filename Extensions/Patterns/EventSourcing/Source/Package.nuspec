@@ -2,10 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing</id>
-		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Event Sourcing Core</title>
-		<description>Provides the core APIs to implement the event sourcing pattern and a domain event bus.
-Event persistence can be layered on top if needed.</description>
+		<version>1.0.0.1</version>
+		<title>NETFx Patterns: Event Sourcing</title>
+		<description>Provides the core APIs to implement the event sourcing pattern and an application event bus.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

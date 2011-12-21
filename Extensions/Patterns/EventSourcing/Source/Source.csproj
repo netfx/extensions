@@ -52,10 +52,12 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryCriteria.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\ITimestamped.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

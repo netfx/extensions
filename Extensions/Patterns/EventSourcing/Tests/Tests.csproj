@@ -67,10 +67,12 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAddSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
+    <Compile Include="Visibility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

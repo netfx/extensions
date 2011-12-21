@@ -38,14 +38,14 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
-			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+
+			store.SaveChanges(product);
 
 			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
-			product.GetChanges().ToList()
-				.ForEach(e => store.Save(product, e));
+
+			store.SaveChanges(product);
 
 			var product2 = new Product();
 			product2.Load(store.Query().For<Product>(id2).Execute());
@@ -91,16 +91,6 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			{
 				Console.WriteLine("\t" + e);
 			}
-
-			//product.Load(store.Events.For<Product>(23));
-
-			//var player = new DomainEventPlayer(store);
-			//player.Observe<ProductPublishedEvent>();
-
-			//player.Replay(from: null, to: null);
-			//store.Events.Where(
-			//store.Events.Where(x => x.SourceTypes == "Product" &&
-			//    x.EventType == "Published");
 		}
 	}
 }

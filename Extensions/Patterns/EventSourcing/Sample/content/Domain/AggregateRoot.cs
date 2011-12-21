@@ -7,6 +7,6 @@ using System.Text;
 /// Fixes the generic event source/aggregate ID type, and the 
 /// domain events base class/interface.
 /// </summary>
-public abstract class AggregateRoot : AggregateRoot<Guid, IDomainEvent>
+internal abstract class AggregateRoot : AggregateRoot<Guid, IDomainEvent>
 {
 }

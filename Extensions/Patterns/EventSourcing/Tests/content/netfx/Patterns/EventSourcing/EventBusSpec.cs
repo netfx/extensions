@@ -45,147 +45,138 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		}
 
 		[Fact]
-		public void WhenPublishNullEvent_ThenThrows()
-		{
-			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>());
-
-			Assert.Throws<ArgumentNullException>(() => bus.Publish(new TestAggregate(), default(FooArgs)));
-		}
-
-		[Fact]
 		public void WhenPublishNullAggregate_ThenThrows()
 		{
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>());
 
-			Assert.Throws<ArgumentNullException>(() => bus.Publish((AggregateRoot<int, DomainEvent>)null, new FooArgs()));
+			Assert.Throws<ArgumentNullException>(() => bus.PublishChanges((AggregateRoot<int, DomainEvent>)null));
 		}
 
 		[Fact]
-		public void WhenPublishingEvent_ThenSavesToStore()
+		public void WhenPublishingAggregateWithChangedEvent_ThenSavesToStore()
 		{
-			var args = new FooArgs { Id = 5 };
 			var aggregate = new TestAggregate();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
 
 			var bus = new EventBus<int, DomainEvent>(store.Object, Enumerable.Empty<IEventHandler>());
 
-			bus.Publish(aggregate, args);
+			aggregate.Foo();
+			bus.PublishChanges(aggregate);
 
-			store.Verify(x => x.Save(aggregate, args));
+			store.Verify(x => x.SaveChanges(aggregate));
 		}
 
 		[Fact]
-		public void WhenPublishingEvent_ThenSavesToStoreAndInvokesHandler()
+		public void WhenPublishingAggregateWithChangedEvent_ThenAcceptsChanges()
 		{
-			var args = new FooArgs { Id = 5 };
 			var aggregate = new TestAggregate();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
-			var handler = new Mock<EventHandler<int, BaseArgs>> { CallBase = true };
 
-			var bus = new EventBus<int, DomainEvent>(store.Object, new[] { handler.Object });
+			var bus = new EventBus<int, DomainEvent>(store.Object, Enumerable.Empty<IEventHandler>());
 
-			bus.Publish(aggregate, args);
+			bus.PublishChanges(aggregate);
 
-			store.Verify(x => x.Save(aggregate, args));
-			handler.Verify(x => x.Handle(5, It.IsAny<BaseArgs>()));
+			Assert.False(aggregate.GetChanges().Any());
 		}
 
 		[Fact]
-		public void WhenPublishingEventWithAsyncHandler_ThenSavesToStoreAndInvokesHandler()
+		public void WhenPublishingEvent_ThenInvokesHandler()
 		{
-			var args = new FooArgs { Id = 5 };
 			var aggregate = new TestAggregate();
+			aggregate.Foo();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
-			var handler = new Mock<EventHandler<int, BaseArgs>> { CallBase = true };
-			handler.Setup(x => x.IsAsync).Returns(true);
+			var handler = new Mock<EventHandler<int, BaseEvent>> { CallBase = true };
 
 			var bus = new EventBus<int, DomainEvent>(store.Object, new[] { handler.Object });
 
-			bus.Publish(aggregate, args);
+			bus.PublishChanges(aggregate);
 
-			store.Verify(x => x.Save(aggregate, args));
+			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()));
 		}
 
 		[Fact]
 		public void WhenHandlerRegisteredForSpecificType_ThenHandlesOnRaise()
 		{
-			var args = new FooArgs { Id = 5 };
-			var handler = new Mock<EventHandler<int, FooArgs>> { CallBase = true };
-
+			var handler = new Mock<EventHandler<int, FooEvent>> { CallBase = true };
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
+			var aggregate = new TestAggregate();
+			aggregate.Foo();
 
-			bus.Publish(new TestAggregate(), args);
+			bus.PublishChanges(aggregate);
 
-			handler.Verify(x => x.Handle(5, args));
+			handler.Verify(x => x.Handle(5, It.IsAny<FooEvent>()));
 		}
 
 		[Fact]
 		public void WhenHandlerRegisteredForBaseType_ThenHandlesOnRaise()
 		{
-			var args = new FooArgs { Id = 5 };
-			var handler = new Mock<EventHandler<int, BaseArgs>> { CallBase = true };
-
+			var handler = new Mock<EventHandler<int, BaseEvent>> { CallBase = true };
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
+			var aggregate = new TestAggregate();
+			aggregate.Foo();
 
-			bus.Publish(new TestAggregate(), args);
+			bus.PublishChanges(aggregate);
 
-			handler.Verify(x => x.Handle(5, It.IsAny<BaseArgs>()));
+			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()));
 		}
 
 		[Fact]
 		public void WhenAsyncHandlerRegisteredForSpecificType_ThenInvokesAsyncRunner()
 		{
-			var args = new FooArgs { Id = 5 };
-			var handler = new Mock<EventHandler<int, FooArgs>> { CallBase = true };
+			var handler = new Mock<EventHandler<int, FooEvent>> { CallBase = true };
 			handler.Setup(x => x.IsAsync).Returns(true);
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
+			var aggregate = new TestAggregate();
+			aggregate.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
-			bus.Publish(new TestAggregate(), args);
+			bus.PublishChanges(aggregate);
 
-			handler.Verify(x => x.Handle(5, args), Times.Never());
+			handler.Verify(x => x.Handle(5, It.IsAny<FooEvent>()), Times.Never());
 			Assert.True(asyncCalled);
 		}
 
 		[Fact]
 		public void WhenAsyncHandlerRegisteredForBaseType_ThenHandlesOnRaise()
 		{
-			var args = new FooArgs { Id = 5 };
-			var handler = new Mock<EventHandler<int, BaseArgs>> { CallBase = true };
+			var handler = new Mock<EventHandler<int, BaseEvent>> { CallBase = true };
 			handler.Setup(x => x.IsAsync).Returns(true);
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
+			var aggregate = new TestAggregate();
+			aggregate.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
-			bus.Publish(new TestAggregate(), args);
+			bus.PublishChanges(aggregate);
 
-			handler.Verify(x => x.Handle(5, It.IsAny<BaseArgs>()), Times.Never());
+			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()), Times.Never());
 			Assert.True(asyncCalled);
 		}
 
 		[Fact]
 		public void WhenAsyncHandlerRegisteredForSpecificType_ThenCanUseDefaultAsynRunner()
 		{
-			var args = new FooArgs { Id = 5 };
-			var handler = new Mock<EventHandler<int, FooArgs>> { CallBase = true };
+			var handler = new Mock<EventHandler<int, FooEvent>> { CallBase = true };
 			var asyncCalled = false;
 			handler.Setup(x => x.IsAsync).Returns(true);
-			handler.Setup(x => x.Handle(It.IsAny<int>(), It.IsAny<FooArgs>()))
+			handler.Setup(x => x.Handle(It.IsAny<int>(), It.IsAny<FooEvent>()))
 				.Callback(() => asyncCalled = true);
+			var aggregate = new TestAggregate();
+			aggregate.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
 
-			bus.Publish(new TestAggregate(), args);
+			bus.PublishChanges(aggregate);
 
 			while (!asyncCalled)
 			{
 				Thread.Sleep(1);
 			}
 
-			handler.Verify(x => x.Handle(5, args));
+			handler.Verify(x => x.Handle(5, It.IsAny<FooEvent>()));
 		}
 
 		[Fact]
@@ -202,11 +193,11 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			Assert.Throws<ArgumentException>(() => new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new IEventHandler[] { null }));
 		}
 
-		private class HandlerBase : EventHandler<int, FooArgs>
+		private class HandlerBase : EventHandler<int, FooEvent>
 		{
 			public override bool IsAsync { get { return false; } }
 
-			public override void Handle(int aggregateId, FooArgs @event)
+			public override void Handle(int aggregateId, FooEvent @event)
 			{
 				throw new NotImplementedException();
 			}
@@ -220,15 +211,15 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			public bool IsAsync { get { return false; } }
 
-			public Type EventType { get { return typeof(FooArgs); } }
+			public Type EventType { get { return typeof(FooEvent); } }
 		}
 	}
 
-	public class BaseArgs : DomainEvent
+	internal class BaseEvent : DomainEvent
 	{
 	}
 
-	public class FooArgs : BaseArgs
+	internal class FooEvent : BaseEvent
 	{
 		public int Id { get; set; }
 	}
@@ -238,6 +229,16 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public TestAggregate()
 		{
 			this.Id = 5;
+		}
+
+		public void Foo()
+		{
+			base.Raise(new FooEvent { Id = this.Id });
+		}
+
+		public void Base()
+		{
+			base.Raise(new BaseEvent());
 		}
 	}
 }

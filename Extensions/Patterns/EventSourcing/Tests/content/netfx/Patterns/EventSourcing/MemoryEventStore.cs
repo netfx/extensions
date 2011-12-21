@@ -26,7 +26,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 	/// Simple in-memory store for testing the API.
 	/// </summary>
 	partial class MemoryEventStore<TAggregateId, TBaseEvent> : IEventStore<TAggregateId, TBaseEvent>
-		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 	{
 		private List<StoredEvent> events = new List<StoredEvent>();
 		private Func<DateTime> utcNow;
@@ -44,9 +44,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 		public Func<Type, string> TypeNameConverter { get; set; }
 
-		public void Save(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args)
+		public void SaveChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate)
 		{
-			this.events.Add(new StoredEvent(sender, args) { Timestamp = this.utcNow() });
+			this.events.AddRange(aggregate.GetChanges().Select(x =>
+				new StoredEvent(aggregate, x) { Timestamp = this.utcNow() }));
+
+			aggregate.AcceptChanges();
 		}
 
 		public void Persist(TBaseEvent @event)

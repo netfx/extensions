@@ -6,14 +6,24 @@ using System.Text;
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	[Serializable]
-	public class DomainEvent { }
+	internal class DomainEvent : ITimestamped
+	{
+		protected DomainEvent()
+		{
+			this.Timestamp = DateTimeOffset.UtcNow;
+		}
 
-	public abstract class AggregateRoot : AggregateRoot<Guid, DomainEvent> { }
+		public virtual DateTimeOffset Timestamp { get; protected set; }
+	}
+
+	internal abstract class AggregateRoot : AggregateRoot<Guid, DomainEvent> 
+	{
+	}
 
 	/// <summary>
 	/// Product is an the domain object sourcing the event with domain logic.
 	/// </summary>
-	public class Product : AggregateRoot
+	internal class Product : AggregateRoot
 	{
 		/// <summary>
 		/// Event raised when a new product is created.
@@ -28,6 +38,18 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			{
 				return string.Format("Created new product with Id={0} and Title='{1}'.",
 					this.Id, this.Title);
+			}
+		}
+
+		/// <summary>
+		/// Event raised when the product is deactivated.
+		/// </summary>
+		[Serializable]
+		public class DeactivatedEvent : DomainEvent
+		{
+			public override string ToString()
+			{
+				return this.GetType().Name;
 			}
 		}
 
@@ -103,6 +125,11 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		private void OnPublished(PublishedEvent @event)
 		{
 			this.Version = @event.Version;
+		}
+
+		public void Deactivate()
+		{
+			base.Raise(new DeactivatedEvent());
 		}
 	}
 }

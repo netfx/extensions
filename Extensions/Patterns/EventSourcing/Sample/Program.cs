@@ -24,6 +24,16 @@ namespace Sample
 		{
 			private List<IDomainEvent> events = new List<IDomainEvent>();
 
+			public void SaveChanges(AggregateRoot<Guid, IDomainEvent> aggregate)
+			{
+				foreach (var @event in aggregate.GetChanges())
+				{
+					Save(aggregate, @event);
+				}
+
+				aggregate.AcceptChanges();
+			}
+
 			public void Save(AggregateRoot<Guid, IDomainEvent> sender, IDomainEvent @event)
 			{
 				this.events.Add(@event);
