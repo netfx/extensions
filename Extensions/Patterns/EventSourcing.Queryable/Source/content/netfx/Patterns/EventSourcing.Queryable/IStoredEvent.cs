@@ -32,7 +32,6 @@ using System;
 /// <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
 partial interface IStoredEvent<TStoredAggregate, TAggregateId>
 	where TStoredAggregate : IStoredAggregate<TAggregateId>
-	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Gets the event id.

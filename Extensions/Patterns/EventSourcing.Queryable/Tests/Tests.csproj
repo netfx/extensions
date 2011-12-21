@@ -53,16 +53,18 @@
     <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Sample.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAddSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
+    <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NuSpec>
-    <Content Include="tools\install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
+    <Folder Include="tools\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">

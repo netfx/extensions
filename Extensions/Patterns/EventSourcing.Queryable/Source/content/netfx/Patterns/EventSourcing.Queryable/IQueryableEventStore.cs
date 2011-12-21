@@ -12,8 +12,17 @@ using System.Text;
 /// <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
 /// <typeparam name="TStoredAggregate">The type of the stored aggregate.</typeparam>
 partial interface IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> : IEventStore<TAggregateId, TBaseEvent>
-	where TAggregateId : IComparable
+	where TBaseEvent : ITimestamped
 	where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
 	where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
 {
+	/// <summary>
+	/// Gets the aggregates that contain events persisted by the store.
+	/// </summary>
+	IQueryable<TStoredAggregate> Aggregates { get; }
+
+	/// <summary>
+	/// Gets the stream of events persisted by the store.
+	/// </summary>
+	IQueryable<TStoredEvent> Events { get; }
 }

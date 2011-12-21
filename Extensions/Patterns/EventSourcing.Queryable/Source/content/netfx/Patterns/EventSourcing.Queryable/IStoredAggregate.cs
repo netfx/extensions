@@ -23,7 +23,6 @@ using System;
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
 partial interface IStoredAggregate<TAggregateId>
-	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Gets the aggregate root identifier that the event applies to.

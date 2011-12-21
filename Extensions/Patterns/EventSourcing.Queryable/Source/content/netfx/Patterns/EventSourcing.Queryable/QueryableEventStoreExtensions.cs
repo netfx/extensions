@@ -21,6 +21,7 @@ static partial class QueryableEventStoreExtensions
 	public static Expression<Func<TStoredAggregate, bool>> AggregateIdEquals<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent>(
 		this IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> store, TAggregateId id)
 		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 		where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
 		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
 	{
@@ -54,6 +55,7 @@ static partial class QueryableEventStoreExtensions
 		EventQueryCriteria<TAggregateId> criteria, 
 		Func<Type, string> typeNameConverter)
 		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 		where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
 		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
 	{
