@@ -15,42 +15,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
-/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+/// Interface implemented by the component that coordinates 
+/// event handler invocation when a subscribed event is published.
 /// </summary>
-internal static partial class DictionaryGetOrAdd
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing"/>
+partial interface IEventBus<TAggregateId, TBaseEvent>
+	where TBaseEvent : ITimestamped
 {
 	/// <summary>
-	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
-	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
-	/// concurrency assurances, use a concurrent dictionary instead.
+	/// Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
 	/// </summary>
-	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
-	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
-	/// <param name="key">The key to be added to the dictionary</param>
-	/// <param name="valueFactory">The value factory</param>
-	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
-	{
-		var value = default(TValue);
-		if (!dictionary.TryGetValue(key, out value))
-		{
-			// ConcurrentDictionary does a bucket-level lock, which is more efficient.
-			// We don't have access to the inner buckets, so we have to look the entire 
-			// dictionary.
-			lock (dictionary)
-			{
-				if (!dictionary.TryGetValue(key, out value))
-				{
-					value = valueFactory(key);
-					dictionary[key] = value;
-				}
-			}
-		}
-
-		return value;
-	}
+	/// <param name="aggregate">The aggregate root which may contain pending changes.</param>
+	/// <remarks>
+	/// Default <see cref="EventBus{TAggregateId, TBaseEvent}"/> also calls 
+	/// <see cref="AggregateRoot{TAggregateId, TBaseEvent}.AcceptChanges"/> after 
+	/// saving the changes to the <see cref="IEventStore{TAggregateId, TBaseEvent}"/> store.
+	/// </remarks>
+	void PublishChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate);
 }

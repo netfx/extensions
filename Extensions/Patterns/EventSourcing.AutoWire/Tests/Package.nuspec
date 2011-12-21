@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.AutoWire.Tests.xUnit</id>
-		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Event Sourcing Auto Wire Tests</title>
+		<version>1.0.0.1</version>
+		<title>NETFx Patterns: Event Sourcing Auto Wire xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.AutoWire</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -12,6 +12,7 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx event sourcing ddd patterns</tags>
 		<dependencies>
+			<dependency id="xunit" version="1.8" />
 			<dependency id="netfx-Patterns.EventSourcing.Tests.xUnit" version="1.0" />
 			<dependency id="netfx-System.Collections.Generic.DictionaryGetOrAdd.Tests.xUnit" version="1.0" />
 		</dependencies>

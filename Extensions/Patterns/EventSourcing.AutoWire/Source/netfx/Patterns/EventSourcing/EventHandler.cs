@@ -15,42 +15,23 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
-/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+/// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
-internal static partial class DictionaryGetOrAdd
+/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
+/// <nuget id="netfx-Patterns.EventSourcing" />
+abstract partial class EventHandler<TAggregateId, TEvent> : IEventHandler<TAggregateId, TEvent>
 {
 	/// <summary>
-	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
-	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
-	/// concurrency assurances, use a concurrent dictionary instead.
+	/// Invocation style hint that the <see cref="IEventBus{TAggregateId, TBaseEvent}"/> implementation
+	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
-	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
-	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
-	/// <param name="key">The key to be added to the dictionary</param>
-	/// <param name="valueFactory">The value factory</param>
-	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
-	{
-		var value = default(TValue);
-		if (!dictionary.TryGetValue(key, out value))
-		{
-			// ConcurrentDictionary does a bucket-level lock, which is more efficient.
-			// We don't have access to the inner buckets, so we have to look the entire 
-			// dictionary.
-			lock (dictionary)
-			{
-				if (!dictionary.TryGetValue(key, out value))
-				{
-					value = valueFactory(key);
-					dictionary[key] = value;
-				}
-			}
-		}
+	public virtual bool IsAsync { get { return false; } }
 
-		return value;
-	}
+	/// <summary>
+	/// Handles the specified event.
+	/// </summary>
+	public abstract void Handle(TAggregateId aggregateId, TEvent @event);
 }

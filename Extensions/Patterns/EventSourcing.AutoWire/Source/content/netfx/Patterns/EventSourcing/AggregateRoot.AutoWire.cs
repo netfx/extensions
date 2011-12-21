@@ -65,7 +65,7 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 	/// package and not part of the very simple aggregate root for plain 
 	/// event sourcing. 
 	/// Perf. is about 8-15x slower than manual code, but still 5x faster than 
-	/// cached compiled lambdas and way more than plain reflection.
+	/// cached compiled lambdas and orders of magnitude than plain reflection.
 	/// </devdoc>
 	protected void AutoWireHandlers()
 	{

@@ -48,10 +48,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </NuSpec>
-    <Content Include="tools\install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
+    <Folder Include="tools\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">
