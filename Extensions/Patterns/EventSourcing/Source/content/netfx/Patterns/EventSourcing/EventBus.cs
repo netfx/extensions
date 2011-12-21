@@ -20,6 +20,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Reflection;
 
 /// <summary>
 /// Default implementation of an <see cref="IEventBus{TAggregateId, TBaseEvent}"/> that 
@@ -39,13 +41,13 @@ using System.Globalization;
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
 partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBaseEvent>
-	where TAggregateId : IComparable
+	where TBaseEvent : ITimestamped
 {
 	private IEventStore<TAggregateId, TBaseEvent> eventStore;
 	private Action<Action> asyncActionRunner;
 	private List<HandlerDescriptor> handlerDescriptors;
 	// Pipelines indexed by event type, containing two lists: async and sync handlers.
-	private Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>> handlerPipelines = new Dictionary<Type, Tuple<List<dynamic>, List<dynamic>>>();
+	private Dictionary<Type, Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>> handlerPipelines = new Dictionary<Type, Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>>();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
@@ -77,26 +79,32 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 
 		var genericHandler = typeof(IEventHandler<,>);
 
-		this.handlerDescriptors = eventHandlers.Select(handler =>
-			new HandlerDescriptor
-			{
-				Handler = handler,
-				// Grab the type of body from the generic 
-				// type argument, if any.
-				EventType = handler.GetType()
-					.GetInterfaces()
-					.Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericHandler)
-					.Select(x => x.GetGenericArguments()[1])
-					.FirstOrDefault()
-			})
-			.ToList();
+		this.handlerDescriptors = (from handler in eventHandlers
+								   let handlerInterface = handler.GetType()
+									   .GetInterfaces()
+									   .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericHandler)
+									   .FirstOrDefault()
+								   where handlerInterface != null
+								   select new HandlerDescriptor
+								   {
+									   Handler = handler,
+									   // Grab the type of body from the generic type argument
+									   EventType = handlerInterface.GetGenericArguments()[1], 
+									   HandleMethod = handler.GetType().GetInterfaceMap(handlerInterface).TargetMethods[0],
+								   }).ToList();
 
-		var invalidHandlers = this.handlerDescriptors.Where(x => x.EventType == null).ToList();
+
+		var invalidHandlers = eventHandlers.Select(handler => new
+			{
+				HandlerType = handler.GetType(),
+				GenericType = handler.GetType().GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericHandler)
+			}).Where(x => x.GenericType == null);
+
 		if (invalidHandlers.Any())
 			throw new ArgumentException(string.Format(
 				CultureInfo.CurrentCulture,
-				"The following event handlers to not implement the generic interface IEventHandler<TAggregateId, TEvent>: {0}.",
-				 string.Join(", ", invalidHandlers.Select(handler => handler.GetType().FullName))),
+				"The following event handlers to not implement exactly once the generic interface IEventHandler<TAggregateId, TEvent>: {0}.",
+				 string.Join(", ", invalidHandlers.Select(handler => handler.HandlerType.FullName))),
 				 "eventHandlers");
 
 		this.eventStore = eventStore;
@@ -104,60 +112,80 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 	}
 
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
 	/// </summary>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="event">The event payload.</param>
-	public virtual void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent @event)
+	/// <param name="aggregate">The aggregate root which may contain pending changes.</param>
+	/// <remarks>
+	/// Also persists the aggregate changes to the event store.
+	/// </remarks>
+	public virtual void PublishChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate)
 	{
-		Guard.NotNull(() => sender, sender);
-		Guard.NotNull(() => @event, @event);
+		Guard.NotNull(() => aggregate, aggregate);
+
+		var events = aggregate.GetChanges().ToList();
 
 		// Events are persisted first of all.
-		this.eventStore.Save(sender, @event);
+		this.eventStore.SaveChanges(aggregate);
 
-		var eventType = @event.GetType();
-
-		var pipeline = this.handlerPipelines.GetOrAdd(eventType, type =>
+		foreach (var @event in events)
 		{
-			// We calculate the pipeline only once, as handlers can't 
-			// be added after bus construction.
-			// This is also done lazily for each event type received 
-			// to avoid negatively impacting initialization time.
-			var compatibleHandlers = this.handlerDescriptors
-				.Where(h => h.EventType.IsAssignableFrom(eventType))
-				.ToList();
+			var eventType = @event.GetType();
 
-			// We separate the lists of async and sync handlers as they
-			// are invoked separately below.
-			return new Tuple<List<dynamic>, List<dynamic>>(
-				compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList(),
-				compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => (dynamic)x.Handler).ToList());
-		});
+			var pipeline = this.handlerPipelines.GetOrAdd(eventType, type =>
+			{
+				// We calculate the pipeline only once, as handlers can't 
+				// be added after bus construction.
+				// This is also done lazily for each event type received 
+				// to avoid negatively impacting initialization time.
+				var compatibleHandlers = this.handlerDescriptors
+					.Where(h => h.EventType.IsAssignableFrom(eventType))
+					.ToList();
 
-		// By making this dynamic, we allow event handlers to subscribe to base classes
-		foreach (var handler in pipeline.Item1.AsParallel())
-		{
-			OnHandle(handler, sender.Id, @event);
-		}
+				// We separate the lists of async and sync handlers as they
+				// are invoked separately below.
+				return new Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>(
+					compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => CreateInvoker(x)).ToList(),
+					compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => CreateInvoker(x)).ToList());
+			});
 
-		// Run background handlers through the async runner.
-		foreach (var handler in pipeline.Item2.AsParallel())
-		{
-			asyncActionRunner(() => OnHandle(handler, sender.Id, @event));
+			foreach (var handler in pipeline.Item1.AsParallel())
+			{
+				handler.Invoke(aggregate.Id, @event);
+			}
+
+			// Run background handlers through the async runner.
+			foreach (var handler in pipeline.Item2.AsParallel())
+			{
+				asyncActionRunner(() => handler.Invoke(aggregate.Id, @event));
+			}
 		}
 	}
 
 	/// <summary>
-	/// Called when invoking the handler for an event with the given headers.
+	/// Called when an event was published to the bus.
 	/// </summary>
-	/// <remarks>
-	/// Derived classes can change the way handlers are invoked, optimize it, 
-	/// or do pre/post processing right before/after the command is handled.
-	/// </remarks>
-	protected virtual void OnHandle(dynamic handler, TAggregateId aggregateId, dynamic @event)
+	/// <param name="aggregateId">The identifier of the aggregate root entity that published the event.</param>
+	/// <param name="event">The published event.</param>
+	protected virtual void OnPublished(TAggregateId aggregateId, TBaseEvent @event) { }
+
+	// Caches a compiled delegate that invokes in a strong-typed fashion the 
+	// underlying handler, casting the generic event type to the concrete 
+	// type supported by the handler IEventHandler generic implementation.
+	private Action<TAggregateId, TBaseEvent> CreateInvoker(HandlerDescriptor descriptor)
 	{
-		handler.Handle(aggregateId, @event);
+		var idParam = Expression.Parameter(typeof(TAggregateId), "aggregateId");
+		var eventParam = Expression.Parameter(typeof(TBaseEvent), "event");
+		// (id, event) => handler.Handle(id, (TConcreteEvent)event);
+		var invoker = Expression.Lambda<Action<TAggregateId, TBaseEvent>>(
+			Expression.Call(
+				Expression.Constant(descriptor.Handler), 
+				descriptor.HandleMethod,
+				idParam, 
+				Expression.Convert(eventParam, descriptor.EventType)), 
+			idParam, 
+			eventParam);
+
+		return invoker.Compile();
 	}
 
 	private class HandlerDescriptor
@@ -167,6 +195,12 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 		/// retrieved from the handler TEvent generic parameter.
 		/// </summary>
 		public Type EventType { get; set; }
+
+		/// <summary>
+		/// Gets or sets the handle method that implements 
+		/// the <see cref="IEventHandler{TAggregateId, TEvent}"/>.
+		/// </summary>
+		public MethodInfo HandleMethod { get; set; }
 
 		/// <summary>
 		/// Gets or sets the handler.

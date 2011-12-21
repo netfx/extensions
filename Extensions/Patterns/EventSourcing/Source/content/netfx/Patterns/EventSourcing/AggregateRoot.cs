@@ -27,7 +27,6 @@ using System.Text;
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
 abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
-	where TAggregateId : IComparable
 {
 	private Dictionary<Type, Action<TBaseEvent>> handlers = new Dictionary<Type, Action<TBaseEvent>>();
 	private List<TBaseEvent> changes = new List<TBaseEvent>();
@@ -55,17 +54,21 @@ abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
 	}
 
 	/// <summary>
+	/// Gets a value indicating whether this aggregate has pending changes.
+	/// </summary>
+	public virtual bool HasChanges
+	{
+		get { return this.changes.Any(); }
+	}
+
+	/// <summary>
 	/// Loads the the domain object from an even stream.
 	/// </summary>
 	public virtual void Load(IEnumerable<TBaseEvent> history)
 	{
 		foreach (var e in history)
 		{
-			var handler = default(Action<TBaseEvent>);
-			if (this.handlers.TryGetValue(e.GetType(), out handler))
-			{
-				handler.Invoke(e);
-			}
+			ApplyChange(e, false);
 		}
 	}
 
@@ -87,17 +90,31 @@ abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
 	protected virtual void Raise<TEvent>(TEvent @event)
 		where TEvent : TBaseEvent
 	{
-		ApplyChangeImpl(@event, true);
+		ApplyChange(@event, true);
 	}
 
-	private void ApplyChangeImpl<TEvent>(TEvent @event, bool isNew)
-		where TEvent : TBaseEvent
+	/// <summary>
+	/// Called whenever an event is handled by the aggregate 
+	/// root. Useful to mark the object as dirty if needed 
+	/// for persistence, beyond the <see cref="HasChanges"/> 
+	/// property which reports if there are new events 
+	/// in the object, but not if it actually handled an 
+	/// event itself at all (changing its internal state).
+	/// </summary>
+	protected virtual void OnEventHandled(TBaseEvent e)
+	{
+	}
+
+	private void ApplyChange(TBaseEvent e, bool isNew)
 	{
 		var handler = default(Action<TBaseEvent>);
-		if (this.handlers.TryGetValue(typeof(TEvent), out handler))
-			handler.Invoke(@event);
+		if (this.handlers.TryGetValue(e.GetType(), out handler))
+		{
+			handler.Invoke(e);
+			OnEventHandled(e);
+		}
 
-		if (isNew) 
-			this.changes.Add(@event);
+		if (isNew)
+			this.changes.Add(e);
 	}
 }

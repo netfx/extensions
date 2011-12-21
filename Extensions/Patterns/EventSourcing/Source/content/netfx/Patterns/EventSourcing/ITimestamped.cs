@@ -15,37 +15,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 /// <summary>
-/// Interface implemented by domain event stores.
+/// Minimum requirement interface for events that are persisted 
+/// by the event store, as events need to be timestamped.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IEventStore<TAggregateId, TBaseEvent>
-	where TBaseEvent : ITimestamped
+partial interface ITimestamped
 {
 	/// <summary>
-	/// Saves the pending changes in the aggregate and accepts 
-	/// the changes.
+	/// Gets the timestamp of the event.
 	/// </summary>
-	/// <param name="aggregate">The aggregate root raising the event.</param>
-	void SaveChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate);
-
-	/// <summary>
-	/// Queries the event store for events that match the given criteria.
-	/// </summary>
-	/// <remarks>
-	/// Store implementations are advised to provide full support for the 
-	/// specified criteria, but aren't required to.
-	/// <para>
-	/// An alternative fluent API to build the criteria object is available 
-	/// by executing the  <see cref="EventQueryExtension.Query{TAggregateId, TBaseEvent}"/> 
-	/// extension method on an event store instance.
-	/// </para>
-	/// </remarks>
-	IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria);
+	DateTimeOffset Timestamp { get; }
 }

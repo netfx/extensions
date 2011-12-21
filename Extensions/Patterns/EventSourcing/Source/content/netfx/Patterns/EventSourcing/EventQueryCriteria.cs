@@ -27,7 +27,6 @@ using System.Reflection;
 /// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
 partial class EventQueryCriteria<TAggregateId>
-	where TAggregateId : IComparable
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EventQueryCriteria&lt;TAggregateId&gt;"/> class.

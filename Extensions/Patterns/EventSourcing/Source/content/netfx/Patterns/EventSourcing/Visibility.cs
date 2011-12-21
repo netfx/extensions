@@ -43,18 +43,20 @@ using System.Runtime.CompilerServices;
 // class your domain specific aggregate root class that provides 
 // the types for both the id and base event, such as:
 // public class AggregateRoot : AggregateRoot<Guid, DomainEvent> { }
-public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 
 // In order to make other types introduced by this package public, 
 // declare a partial type as public here.
 // For example, the following declarations would make everything public:
 
-public partial interface IEventBus<TAggregateId, TBaseEvent> { }
-public partial interface IEventHandler { }
-public partial interface IEventHandler<TAggregateId, TEvent> { }
-public partial interface IEventStore<TAggregateId, TBaseEvent> { }
-public partial class EventQueryCriteria<TAggregateId> { }
-public partial class EventQueryExtension { }
+//public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
 
-public partial class EventHandler<TAggregateId, TEvent> { }
-public partial class EventBus<TAggregateId, TBaseEvent> { }
+//public partial interface IEventBus<TAggregateId, TBaseEvent> { }
+//public partial interface IEventHandler { }
+//public partial interface IEventHandler<TAggregateId, TEvent> { }
+//public partial interface IEventStore<TAggregateId, TBaseEvent> { }
+//public partial interface ITimestamped { }
+//public partial class EventQueryCriteria<TAggregateId> { }
+//public partial class EventQueryExtension { }
+
+//public partial class EventHandler<TAggregateId, TEvent> { }
+//public partial class EventBus<TAggregateId, TBaseEvent> { }

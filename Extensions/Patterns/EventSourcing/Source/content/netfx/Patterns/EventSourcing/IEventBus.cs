@@ -24,12 +24,16 @@ using System;
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
 partial interface IEventBus<TAggregateId, TBaseEvent>
-	where TAggregateId : IComparable
+	where TBaseEvent : ITimestamped
 {
 	/// <summary>
-	/// Publishes the specified event to the bus so that all subscribers are notified.
+	/// Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
 	/// </summary>
-	/// <param name="sender">The sender of the event.</param>
-	/// <param name="args">The event payload.</param>
-	void Publish(AggregateRoot<TAggregateId, TBaseEvent> sender, TBaseEvent args);
+	/// <param name="aggregate">The aggregate root which may contain pending changes.</param>
+	/// <remarks>
+	/// Default <see cref="EventBus{TAggregateId, TBaseEvent}"/> also calls 
+	/// <see cref="AggregateRoot{TAggregateId, TBaseEvent}.AcceptChanges"/> after 
+	/// saving the changes to the <see cref="IEventStore{TAggregateId, TBaseEvent}"/> store.
+	/// </remarks>
+	void PublishChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate);
 }

@@ -39,7 +39,7 @@ static partial class EventQueryExtension
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <param name="store">The domain event store.</param>
 	public static IEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IEventStore<TAggregateId, TBaseEvent> store)
-		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 	{
 		return new EventQuery<TAggregateId, TBaseEvent>(store);
 	}
@@ -55,7 +55,7 @@ static partial class EventQueryExtension
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <nuget id="netfx-Patterns.EventSourcing"/>
 	public partial interface IEventQuery<TAggregateId, TBaseEvent>
-		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 	{
 		/// <summary>
 		/// Executes the query built using the fluent API 
@@ -113,7 +113,7 @@ static partial class EventQueryExtension
 	}
 
 	private class EventQuery<TAggregateId, TBaseEvent> : IEventQuery<TAggregateId, TBaseEvent>
-		where TAggregateId : IComparable
+		where TBaseEvent : ITimestamped
 	{	
 		private IEventStore<TAggregateId, TBaseEvent> store;
 		private EventQueryCriteria<TAggregateId> criteria = new EventQueryCriteria<TAggregateId>();
