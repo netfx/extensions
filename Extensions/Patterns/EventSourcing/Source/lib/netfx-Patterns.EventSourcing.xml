@@ -4,6 +4,83 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:AggregateRoot`2">
+            <summary>
+            Base class for domain classes that raise and optionally consume 
+            as their persistence mechanism.
+            </summary>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
+        </member>
+        <member name="M:AggregateRoot`2.AcceptChanges">
+            <summary>
+            Clears the internal events retrieved from <see cref="M:AggregateRoot`2.GetChanges"/>, 
+            signaling that all pending events have been commited.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`2.GetChanges">
+            <summary>
+            Gets the pending changes.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`2.Load(System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Loads the the domain object from an even stream.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`2.Handles``1(System.Action{``0})">
+            <summary>
+            Configures a handler for an event. 
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`2.Raise``1(``0)">
+            <summary>
+            Applies a change to the entity state via an event. 
+            The derived class should invoke <see cref="M:AggregateRoot`2.Handles``1(System.Action{``0})"/> 
+            to configure the handlers for specific types of events. The 
+            handlers perform the actual state changes to the entity.
+            </summary>
+        </member>
+        <member name="M:AggregateRoot`2.OnEventHandled(`1)">
+            <summary>
+            Called whenever an event is handled by the aggregate 
+            root. Useful to mark the object as dirty if needed 
+            for persistence, beyond the <see cref="P:AggregateRoot`2.HasChanges"/> 
+            property which reports if there are new events 
+            in the object, but not if it actually handled an 
+            event itself at all (changing its internal state).
+            </summary>
+        </member>
+        <member name="P:AggregateRoot`2.Id">
+            <summary>
+            Gets or sets the identifier of the domain object sourcing the event.
+            </summary>
+        </member>
+        <member name="P:AggregateRoot`2.HasChanges">
+            <summary>
+            Gets a value indicating whether this aggregate has pending changes.
+            </summary>
+        </member>
+        <member name="T:EventBus`2">
+            <summary>
+            Default implementation of an <see cref="T:IEventBus`2"/> that 
+            invokes handlers as events are published, and where handlers are 
+            run in-process (if any handlers are provided).
+            </summary>
+            <remarks>
+            A persistent <see cref="T:IEventStore`2"/> can also be specified 
+            to persist events to a store for later playback or auditing.
+            <para>
+            Handlers with <see cref="P:IEventHandler.IsAsync"/> set to 
+            <see langword="true"/> are invoked through the optional 
+            async runner delegate passed to the constructor.
+            </para>
+            </remarks>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
         <member name="T:IEventBus`2">
             <summary>
             Interface implemented by the component that coordinates 
@@ -24,52 +101,72 @@
             saving the changes to the <see cref="T:IEventStore`2"/> store.
             </remarks>
         </member>
-        <member name="T:Guard">
+        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler})">
             <summary>
-            Common guard class for argument validation.
+            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
+            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+        </member>
+        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler},System.Action{System.Action})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
+            a persistent store for events, a set of event handlers and a specific async runner.
+            </summary>
+            <param name="eventStore">The event store to persist events to.</param>
+            <param name="eventHandlers">The event handlers.</param>
+            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
+            that have <see cref="P:IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
+        </member>
+        <member name="M:EventBus`2.PublishChanges(AggregateRoot{`0,`1})">
+            <summary>
+            Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
+            </summary>
+            <param name="aggregate">The aggregate root which may contain pending changes.</param>
+            <remarks>
+            Also persists the aggregate changes to the event store.
+            </remarks>
+        </member>
+        <member name="M:EventBus`2.OnPublished(`0,`1)">
+            <summary>
+            Called when an event was published to the bus.
+            </summary>
+            <param name="aggregateId">The identifier of the aggregate root entity that published the event.</param>
+            <param name="event">The published event.</param>
+        </member>
+        <member name="P:EventBus`2.HandlerDescriptor.EventType">
+            <summary>
+            Gets or sets the type of event payload the handler can process, 
+            retrieved from the handler TEvent generic parameter.
             </summary>
         </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+        <member name="P:EventBus`2.HandlerDescriptor.HandleMethod">
             <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            Gets or sets the handle method that implements 
+            the <see cref="T:IEventHandler`2"/>.
             </summary>
         </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+        <member name="P:EventBus`2.HandlerDescriptor.Handler">
             <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
+            Gets or sets the handler.
             </summary>
         </member>
-        <member name="T:IEventStore`2">
+        <member name="T:EventHandler`2">
             <summary>
-            Interface implemented by domain event stores.
+            Base class for domain event handlers that handle a specific type of event.
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
+            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
-        <member name="M:IEventStore`2.SaveChanges(AggregateRoot{`0,`1})">
+        <member name="T:IEventHandler`2">
             <summary>
-            Saves the pending changes in the aggregate and accepts 
-            the changes.
+            Base interface for domain event handlers that handle a specific type of event.
             </summary>
-            <param name="aggregate">The aggregate root raising the event.</param>
-        </member>
-        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-            <remarks>
-            Store implementations are advised to provide full support for the 
-            specified criteria, but aren't required to.
-            <para>
-            An alternative fluent API to build the criteria object is available 
-            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
-            extension method on an event store instance.
-            </para>
-            </remarks>
+            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
         <member name="T:IEventHandler">
             <summary>
@@ -85,28 +182,20 @@
             can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>
-        <member name="T:IEventHandler`2">
-            <summary>
-            Base interface for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
         <member name="M:IEventHandler`2.Handle(`0,`1)">
             <summary>
             Handles the specified event.
             </summary>
         </member>
-        <member name="T:ITimestamped">
+        <member name="M:EventHandler`2.Handle(`0,`1)">
             <summary>
-            Minimum requirement interface for events that are persisted 
-            by the event store, as events need to be timestamped.
+            Handles the specified event.
             </summary>
         </member>
-        <member name="P:ITimestamped.Timestamp">
+        <member name="P:EventHandler`2.IsAsync">
             <summary>
-            Gets the timestamp of the event.
+            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
+            can use to invoke a handler asynchronously with regards to the event publisher.
             </summary>
         </member>
         <member name="T:EventQueryExtension">
@@ -200,98 +289,34 @@
             or System.Object is found (events can't be System.Object either).
             </devdoc>
         </member>
-        <member name="T:AggregateRoot`2">
+        <member name="T:IEventStore`2">
             <summary>
-            Base class for domain classes that raise and optionally consume 
-            as their persistence mechanism.
+            Interface implemented by domain event stores.
             </summary>
             <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
-        <member name="M:AggregateRoot`2.AcceptChanges">
+        <member name="M:IEventStore`2.SaveChanges(AggregateRoot{`0,`1})">
             <summary>
-            Clears the internal events retrieved from <see cref="M:AggregateRoot`2.GetChanges"/>, 
-            signaling that all pending events have been commited.
+            Saves the pending changes in the aggregate and accepts 
+            the changes.
             </summary>
+            <param name="aggregate">The aggregate root raising the event.</param>
         </member>
-        <member name="M:AggregateRoot`2.GetChanges">
+        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
             <summary>
-            Gets the pending changes.
+            Queries the event store for events that match the given criteria.
             </summary>
-        </member>
-        <member name="M:AggregateRoot`2.Load(System.Collections.Generic.IEnumerable{`1})">
-            <summary>
-            Loads the the domain object from an even stream.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`2.Handles``1(System.Action{``0})">
-            <summary>
-            Configures a handler for an event. 
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`2.Raise``1(``0)">
-            <summary>
-            Applies a change to the entity state via an event. 
-            The derived class should invoke <see cref="M:AggregateRoot`2.Handles``1(System.Action{``0})"/> 
-            to configure the handlers for specific types of events. The 
-            handlers perform the actual state changes to the entity.
-            </summary>
-        </member>
-        <member name="M:AggregateRoot`2.OnEventHandled(`1)">
-            <summary>
-            Called whenever an event is handled by the aggregate 
-            root. Useful to mark the object as dirty if needed 
-            for persistence, beyond the <see cref="P:AggregateRoot`2.HasChanges"/> 
-            property which reports if there are new events 
-            in the object, but not if it actually handled an 
-            event itself at all (changing its internal state).
-            </summary>
-        </member>
-        <member name="P:AggregateRoot`2.Id">
-            <summary>
-            Gets or sets the identifier of the domain object sourcing the event.
-            </summary>
-        </member>
-        <member name="P:AggregateRoot`2.HasChanges">
-            <summary>
-            Gets a value indicating whether this aggregate has pending changes.
-            </summary>
-        </member>
-        <member name="T:EventHandler`2">
-            <summary>
-            Base class for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
-        <member name="M:EventHandler`2.Handle(`0,`1)">
-            <summary>
-            Handles the specified event.
-            </summary>
-        </member>
-        <member name="P:EventHandler`2.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
-            </summary>
-        </member>
-        <member name="T:DictionaryGetOrAdd">
-            <summary>
-            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
-            </summary>
-        </member>
-        <member name="M:DictionaryGetOrAdd.GetOrAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.Func{``0,``1})">
-            <summary>
-            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
-            No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
-            concurrency assurances, use a concurrent dictionary instead.
-            </summary>
-            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd"/>
-            <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
-            <param name="key">The key to be added to the dictionary</param>
-            <param name="valueFactory">The value factory</param>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            An alternative fluent API to build the criteria object is available 
+            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
+            extension method on an event store instance.
+            </para>
+            </remarks>
         </member>
         <member name="T:EventQueryCriteria`1">
             <summary>
@@ -368,74 +393,49 @@
             Gets or sets the aggregate root identifier to filter by.
             </summary>
         </member>
-        <member name="T:EventBus`2">
+        <member name="T:ITimestamped">
             <summary>
-            Default implementation of an <see cref="T:IEventBus`2"/> that 
-            invokes handlers as events are published, and where handlers are 
-            run in-process (if any handlers are provided).
-            </summary>
-            <remarks>
-            A persistent <see cref="T:IEventStore`2"/> can also be specified 
-            to persist events to a store for later playback or auditing.
-            <para>
-            Handlers with <see cref="P:IEventHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor.
-            </para>
-            </remarks>
-            <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
-            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
-            a persistent store for events, a set of event handlers and a specific async runner.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:EventBus`2.PublishChanges(AggregateRoot{`0,`1})">
-            <summary>
-            Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
-            </summary>
-            <param name="aggregate">The aggregate root which may contain pending changes.</param>
-            <remarks>
-            Also persists the aggregate changes to the event store.
-            </remarks>
-        </member>
-        <member name="M:EventBus`2.OnPublished(`0,`1)">
-            <summary>
-            Called when an event was published to the bus.
-            </summary>
-            <param name="aggregateId">The identifier of the aggregate root entity that published the event.</param>
-            <param name="event">The published event.</param>
-        </member>
-        <member name="P:EventBus`2.HandlerDescriptor.EventType">
-            <summary>
-            Gets or sets the type of event payload the handler can process, 
-            retrieved from the handler TEvent generic parameter.
+            Minimum requirement interface for events that are persisted 
+            by the event store, as events need to be timestamped.
             </summary>
         </member>
-        <member name="P:EventBus`2.HandlerDescriptor.HandleMethod">
+        <member name="P:ITimestamped.Timestamp">
             <summary>
-            Gets or sets the handle method that implements 
-            the <see cref="T:IEventHandler`2"/>.
+            Gets the timestamp of the event.
             </summary>
         </member>
-        <member name="P:EventBus`2.HandlerDescriptor.Handler">
+        <member name="T:DictionaryGetOrAdd">
             <summary>
-            Gets or sets the handler.
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            </summary>
+        </member>
+        <member name="M:DictionaryGetOrAdd.GetOrAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.Func{``0,``1})">
+            <summary>
+            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
+            No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+            concurrency assurances, use a concurrent dictionary instead.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd"/>
+            <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+            <param name="key">The key to be added to the dictionary</param>
+            <param name="valueFactory">The value factory</param>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
     </members>
