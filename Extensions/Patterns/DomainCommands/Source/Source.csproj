@@ -42,20 +42,24 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\DomainCommands\CommandBus.cs" />
+    <Compile Include="content\netfx\Patterns\DomainCommands\CommandRegistry.cs" />
     <Compile Include="content\netfx\Patterns\DomainCommands\CommandHandler.cs" />
-    <Compile Include="content\netfx\Patterns\DomainCommands\CommandBusExtensions.cs" />
-    <Compile Include="content\netfx\Patterns\DomainCommands\ICommandBus.cs" />
+    <Compile Include="content\netfx\Patterns\DomainCommands\CommandRegistryExtensions.cs" />
+    <Compile Include="content\netfx\Patterns\DomainCommands\ICommandRegistry.cs" />
     <Compile Include="content\netfx\Patterns\DomainCommands\ICommandHandler.cs" />
     <Compile Include="content\netfx\Patterns\DomainCommands\Visibility.cs" />
     <Compile Include="netfx\Patterns\MessageStore\IMessageStore.cs" />
     <Compile Include="netfx\Patterns\MessageStore\MessageStoreQueryCriteria.cs" />
     <Compile Include="netfx\Patterns\MessageStore\MessageStoreQueryExtension.cs" />
     <Compile Include="netfx\Patterns\MessageStore\Visibility.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryFind.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

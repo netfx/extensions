@@ -18,9 +18,9 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Adds usability overloads to <see cref="ICommandBus{TBaseCommand}"/>.
+/// Adds usability overloads to <see cref="ICommandRegistry{TBaseCommand}"/>.
 /// </summary>
-static partial class CommandBusExtensions
+static partial class CommandRegistryExtensions
 {
 	/// <summary>
 	/// Executes the specified command with empty headers.
@@ -28,13 +28,13 @@ static partial class CommandBusExtensions
 	/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
 	/// or a common interface for all. Can even be <see cref="object"/> if no 
 	/// common interface is needed.</typeparam>
-	/// <param name="bus">The command bus to execute the command on.</param>
+	/// <param name="registry">The command registry to execute the command on.</param>
 	/// <param name="command">The command to execute.</param>
-	public static void Execute<TBaseCommand>(this ICommandBus<TBaseCommand> bus, TBaseCommand command)
+	public static void Execute<TBaseCommand>(this ICommandRegistry<TBaseCommand> registry, TBaseCommand command)
 	{
-		Guard.NotNull(() => bus, bus);
+		Guard.NotNull(() => registry, registry);
 
-		bus.Execute(command, new Dictionary<string, object>());
+		registry.Execute(command, new Dictionary<string, object>());
 	}
 
 	/// <summary>
@@ -43,16 +43,16 @@ static partial class CommandBusExtensions
 	/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
 	/// or a common interface for all. Can even be <see cref="object"/> if no 
 	/// common interface is needed.</typeparam>
-	/// <param name="bus">The command bus to execute the command on.</param>
+	/// <param name="registry">The command registry to execute the command on.</param>
 	/// <param name="commands">The commands to execute.</param>
-	public static void Execute<TBaseCommand>(this ICommandBus<TBaseCommand> bus, IEnumerable<TBaseCommand> commands)
+	public static void Execute<TBaseCommand>(this ICommandRegistry<TBaseCommand> registry, IEnumerable<TBaseCommand> commands)
 	{
-		Guard.NotNull(() => bus, bus);
+		Guard.NotNull(() => registry, registry);
 		Guard.NotNull(() => commands, commands);
 
 		foreach (var command in commands)
 		{
-			bus.Execute(command, new Dictionary<string, object>());
+			registry.Execute(command, new Dictionary<string, object>());
 		}
 	}
 
@@ -62,18 +62,18 @@ static partial class CommandBusExtensions
 	/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
 	/// or a common interface for all. Can even be <see cref="object"/> if no 
 	/// common interface is needed.</typeparam>
-	/// <param name="bus">The command bus to execute the command on.</param>
+	/// <param name="registry">The command registry to execute the command on.</param>
 	/// <param name="commands">The commands to execute.</param>
 	/// <param name="headers">The headers for the commands.</param>
-	public static void Execute<TBaseCommand>(this ICommandBus<TBaseCommand> bus, IEnumerable<TBaseCommand> commands, IDictionary<string, object> headers)
+	public static void Execute<TBaseCommand>(this ICommandRegistry<TBaseCommand> registry, IEnumerable<TBaseCommand> commands, IDictionary<string, object> headers)
 	{
-		Guard.NotNull(() => bus, bus);
+		Guard.NotNull(() => registry, registry);
 		Guard.NotNull(() => commands, commands);
 		Guard.NotNull(() => headers, headers);
 
 		foreach (var command in commands)
 		{
-			bus.Execute(command, new Dictionary<string, object>(headers));
+			registry.Execute(command, new Dictionary<string, object>(headers));
 		}
 	}
 }

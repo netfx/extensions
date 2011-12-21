@@ -18,31 +18,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Runtime.CompilerServices;
 
-// These are needed only if you include this package tests 
-// or if you intend to mock any of the included types using 
-// any of the proxy-generating mocking libraries such as 
-// Moq, Rhino Mocks, etc.
-// Otherwise, feel free to comment this out or wrap it in 
-// an #if DEBUG directive.
+/// <summary>
+/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+/// </summary>
+internal static partial class DictionaryGetOrAdd
+{
+	/// <summary>
+	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+	/// concurrency assurances, use a concurrent dictionary instead.
+	/// </summary>
+	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
+	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+	/// <param name="key">The key to be added to the dictionary</param>
+	/// <param name="valueFactory">The value factory</param>
+	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
+	{
+		var value = default(TValue);
+		if (!dictionary.TryGetValue(key, out value))
+		{
+			// ConcurrentDictionary does a bucket-level lock, which is more efficient.
+			// We don't have access to the inner buckets, so we have to look the entire 
+			// dictionary.
+			lock (dictionary)
+			{
+				if (!dictionary.TryGetValue(key, out value))
+				{
+					value = valueFactory(key);
+					dictionary[key] = value;
+				}
+			}
+		}
 
-/* Assembly visibility for tests, if added */
-// For signed projects:
-//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-// For unsigned projects:
-//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-
-// In order to make types introduced by this package public, 
-// declare a partial type as public here.
-// For example, the following declarations would make public 
-// the core interfaces:
-
-/* Interfaces */
-//public partial interface ICommandRegistry<TBaseCommand> { }
-//public partial interface ICommandHandler { }
-//public partial interface ICommandHandler<TCommand> { }
-
-/* Implementations */
-//public partial class CommandRegistry<TBaseCommand> { }
-//public partial class CommandHandler<TCommand> { }
+		return value;
+	}
+}

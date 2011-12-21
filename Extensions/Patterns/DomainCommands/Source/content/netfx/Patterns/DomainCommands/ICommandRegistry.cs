@@ -16,33 +16,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.CompilerServices;
 
-// These are needed only if you include this package tests 
-// or if you intend to mock any of the included types using 
-// any of the proxy-generating mocking libraries such as 
-// Moq, Rhino Mocks, etc.
-// Otherwise, feel free to comment this out or wrap it in 
-// an #if DEBUG directive.
-
-/* Assembly visibility for tests, if added */
-// For signed projects:
-//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-// For unsigned projects:
-//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-
-// In order to make types introduced by this package public, 
-// declare a partial type as public here.
-// For example, the following declarations would make public 
-// the core interfaces:
-
-/* Interfaces */
-//public partial interface ICommandRegistry<TBaseCommand> { }
-//public partial interface ICommandHandler { }
-//public partial interface ICommandHandler<TCommand> { }
-
-/* Implementations */
-//public partial class CommandRegistry<TBaseCommand> { }
-//public partial class CommandHandler<TCommand> { }
+/// <summary>
+/// Interface implemented by the component that executes 
+/// the registered command handler for a given command.
+/// </summary>
+/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+/// or a common interface for all. Can even be <see cref="object"/> if no 
+/// common interface is needed.</typeparam>
+/// <nuget id="netfx-Patterns.DomainCommands" />
+partial interface ICommandRegistry<TBaseCommand> 
+{
+	/// <summary>
+	/// Executes the specified command with a registered command handler.
+	/// </summary>
+	/// <param name="command">The command to execute.</param>
+	/// <param name="headers">The headers associated with the command.</param>
+	void Execute(TBaseCommand command, IDictionary<string, object> headers);
+}

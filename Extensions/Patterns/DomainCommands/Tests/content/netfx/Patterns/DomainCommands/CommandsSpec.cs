@@ -15,7 +15,7 @@ namespace NetFx.Patterns.DomainCommands
 			var command = new FooCommand { Id = 5 };
 			var handler = Mock.Of<ICommandHandler<FooCommand>>(x => x.IsAsync == true);
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler });
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler });
 
 			bus.Execute(command);
 		}
@@ -26,7 +26,7 @@ namespace NetFx.Patterns.DomainCommands
 			var command = new FooCommand { Id = 5 };
 			var handler = new Mock<CommandHandler<FooCommand>> { CallBase = true };
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler.Object });
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler.Object });
 
 			bus.Execute(command);
 
@@ -39,7 +39,7 @@ namespace NetFx.Patterns.DomainCommands
 			var command = new FooCommand { Id = 5 };
 			var handler = Mock.Of<ICommandHandler<BaseCommand>>();
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler });
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler });
 
 			Assert.Throws<InvalidOperationException>(() => bus.Execute(command));
 		}
@@ -50,7 +50,7 @@ namespace NetFx.Patterns.DomainCommands
 			var command = new FooCommand { Id = 5 };
 			var handler = Mock.Of<ICommandHandler<BaseCommand>>();
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler }, action => action());
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler }, action => action());
 
 			Assert.Throws<InvalidOperationException>(() => bus.Execute(command));
 		}
@@ -64,7 +64,7 @@ namespace NetFx.Patterns.DomainCommands
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler.Object }, asyncRunner);
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler.Object }, asyncRunner);
 
 			bus.Execute(command);
 
@@ -78,7 +78,7 @@ namespace NetFx.Patterns.DomainCommands
 			var command = new FooCommand { Id = 5 };
 			var handler = Mock.Of<ICommandHandler<FooCommand>>();
 			var store = new Mock<IMessageStore<IDomainCommand>>();
-			var bus = new CommandBus<IDomainCommand>(store.Object, new[] { handler });
+			var bus = new CommandRegistry<IDomainCommand>(store.Object, new[] { handler });
 
 			bus.Execute(command);
 
@@ -95,7 +95,7 @@ namespace NetFx.Patterns.DomainCommands
 			handler.Setup(x => x.Handle(It.IsAny<FooCommand>(), It.IsAny<IDictionary<string, object>>()))
 				.Callback<FooCommand, IDictionary<string, object>>((c, h) => handlerCalled = true);
 
-			var bus = new CommandBus<IDomainCommand>(new[] { handler.Object });
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler.Object });
 
 			bus.Execute(command);
 
@@ -114,7 +114,7 @@ namespace NetFx.Patterns.DomainCommands
 			var handlerCalled = false;
 			handler.Setup(x => x.Handle(It.IsAny<FooCommand>(), It.IsAny<IDictionary<string, object>>()))
 				.Callback<FooCommand, IDictionary<string, object>>((c, h) => handlerCalled = true);
-			var bus = new CommandBus<IDomainCommand>(new[] { handler.Object });
+			var bus = new CommandRegistry<IDomainCommand>(new[] { handler.Object });
 
 			bus.Execute(command);
 
@@ -136,7 +136,7 @@ namespace NetFx.Patterns.DomainCommands
 
 			var store = new Mock<IMessageStore<IDomainCommand>>();
 
-			var bus = new CommandBus<IDomainCommand>(store.Object, new[] { handler.Object });
+			var bus = new CommandRegistry<IDomainCommand>(store.Object, new[] { handler.Object });
 
 			bus.Execute(command);
 
@@ -152,29 +152,29 @@ namespace NetFx.Patterns.DomainCommands
 		{
 			var handler = new NonGenericHandler();
 
-			Assert.Throws<ArgumentException>(() => new CommandBus<IDomainCommand>(new ICommandHandler[] { handler }));
+			Assert.Throws<ArgumentException>(() => new CommandRegistry<IDomainCommand>(new ICommandHandler[] { handler }));
 		}
 
 		[Fact]
 		public void WhenDuplicateHandlerIsRegisteredForSameCommandType_ThenThrows()
 		{
 			Assert.Throws<ArgumentException>(() =>
-				new CommandBus<IDomainCommand>(new ICommandHandler[] { new FooCommandHandler(), new FooCommandHandler() }));
+				new CommandRegistry<IDomainCommand>(new ICommandHandler[] { new FooCommandHandler(), new FooCommandHandler() }));
 		}
 
 		[Fact]
 		public void WhenNullHandlerProvided_ThenThrowsArgumentException()
 		{
 			Assert.Throws<ArgumentException>(() =>
-				new CommandBus<IDomainCommand>(new ICommandHandler[] { null }));
+				new CommandRegistry<IDomainCommand>(new ICommandHandler[] { null }));
 		}
 
 		[Fact]
 		public void WhenExecuteExtensionOnNullBus_ThenThrowsArgumentNullException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				CommandBusExtensions.Execute(
-					default(ICommandBus<BaseCommand>),
+				CommandRegistryExtensions.Execute(
+					default(ICommandRegistry<BaseCommand>),
 					new FooCommand()));
 		}
 
@@ -182,8 +182,8 @@ namespace NetFx.Patterns.DomainCommands
 		public void WhenExecuteExtensionOnNullBusWithEmptyCommands_ThenThrowsArgumentNullException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				CommandBusExtensions.Execute(
-					default(ICommandBus<BaseCommand>),
+				CommandRegistryExtensions.Execute(
+					default(ICommandRegistry<BaseCommand>),
 					Enumerable.Empty<BaseCommand>()));
 		}
 
@@ -191,8 +191,8 @@ namespace NetFx.Patterns.DomainCommands
 		public void WhenExecuteExtensionWithNullCommands_ThenThrowsArgumentNullException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				CommandBusExtensions.Execute(
-					Mock.Of<ICommandBus<BaseCommand>>(),
+				CommandRegistryExtensions.Execute(
+					Mock.Of<ICommandRegistry<BaseCommand>>(),
 					default(IEnumerable<BaseCommand>)));
 		}
 
@@ -200,8 +200,8 @@ namespace NetFx.Patterns.DomainCommands
 		public void WhenExecuteExtensionWithNullHeadersAndCommands_ThenThrowsArgumentNullException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				CommandBusExtensions.Execute(
-					Mock.Of<ICommandBus<BaseCommand>>(),
+				CommandRegistryExtensions.Execute(
+					Mock.Of<ICommandRegistry<BaseCommand>>(),
 					Enumerable.Empty<BaseCommand>(),
 					default(IDictionary<string, object>)));
 		}
@@ -212,9 +212,9 @@ namespace NetFx.Patterns.DomainCommands
 			var headers = new Dictionary<string, object>();
 			headers.Add("IP", "localhost");
 
-			var bus = new Mock<ICommandBus<BaseCommand>>();
+			var bus = new Mock<ICommandRegistry<BaseCommand>>();
 
-			CommandBusExtensions.Execute(
+			CommandRegistryExtensions.Execute(
 					bus.Object,
 					new BaseCommand[] { new FooCommand() },
 					headers);
@@ -228,12 +228,12 @@ namespace NetFx.Patterns.DomainCommands
 		public void WhenExecuteExtensionWithCommands_ThenCreatesNewHeadersForEach()
 		{
 			var headers = new HashSet<IDictionary<string, object>>();
-			var bus = new Mock<ICommandBus<BaseCommand>>();
+			var bus = new Mock<ICommandRegistry<BaseCommand>>();
 
 			bus.Setup(x => x.Execute(It.IsAny<BaseCommand>(), It.IsAny<IDictionary<string, object>>()))
 				.Callback((BaseCommand cmd, IDictionary<string, object> h) => headers.Add(h));
 
-			CommandBusExtensions.Execute(
+			CommandRegistryExtensions.Execute(
 					bus.Object,
 					new BaseCommand[] { new FooCommand(), new FooCommand() });
 

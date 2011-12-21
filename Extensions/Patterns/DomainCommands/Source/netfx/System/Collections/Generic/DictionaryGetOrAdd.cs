@@ -16,21 +16,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 /// <summary>
-/// Interface implemented by the component that coordinates 
-/// command handler invocation when a subscribed command is executed.
+/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
 /// </summary>
-/// <typeparam name="TBaseCommand">The base type that all commands inherit from, 
-/// or a common interface for all. Can even be <see cref="object"/> if no 
-/// common interface is needed.</typeparam>
-/// <nuget id="netfx-Patterns.DomainCommands" />
-partial interface ICommandBus<TBaseCommand> 
+internal static partial class DictionaryGetOrAdd
 {
 	/// <summary>
-	/// Executes the specified command.
+	/// Adds a key/value pair to the <see cref="IDictionary{TKey, TValue}"/> if the key does not already exist. 
+	/// No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
+	/// concurrency assurances, use a concurrent dictionary instead.
 	/// </summary>
-	/// <param name="command">The command to execute.</param>
-	/// <param name="headers">The headers associated with the command.</param>
-	void Execute(TBaseCommand command, IDictionary<string, object> headers);
+	/// <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
+	/// <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
+	/// <param name="key">The key to be added to the dictionary</param>
+	/// <param name="valueFactory">The value factory</param>
+	public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
+	{
+		var value = default(TValue);
+		if (!dictionary.TryGetValue(key, out value))
+		{
+			// ConcurrentDictionary does a bucket-level lock, which is more efficient.
+			// We don't have access to the inner buckets, so we have to look the entire 
+			// dictionary.
+			lock (dictionary)
+			{
+				if (!dictionary.TryGetValue(key, out value))
+				{
+					value = valueFactory(key);
+					dictionary[key] = value;
+				}
+			}
+		}
+
+		return value;
+	}
 }
