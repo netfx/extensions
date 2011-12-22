@@ -110,6 +110,7 @@
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Tests\Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Templates\Projects\Open Source\Extension\Tests\tools\install.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

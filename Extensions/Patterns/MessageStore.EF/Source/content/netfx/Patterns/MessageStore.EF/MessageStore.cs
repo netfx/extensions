@@ -46,15 +46,21 @@ using System.Diagnostics;
 partial class MessageStore<TBaseMessage> : DbContext, IMessageStore<TBaseMessage>
 {
 	private ISerializer serializer;
+	private string tableName;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="MessageStore{TBaseMessage}"/> class 
+	/// Initializes a new instance of the <see cref="MessageStore{TBaseMessage}"/> class
 	/// with the given serializer.
 	/// </summary>
-	public MessageStore(string nameOrConnectionString, ISerializer serializer)
+	/// <param name="nameOrConnectionString">The name or connection string for the target entity framework database.</param>
+	/// <param name="serializer">The serializer to use to persist the entities.</param>
+	/// <param name="tableName">Optional name of the table.</param>
+	public MessageStore(string nameOrConnectionString, ISerializer serializer, string tableName = null)
+		: base(nameOrConnectionString)
 	{
 		Guard.NotNull(() => serializer, serializer);
 
+		this.tableName = tableName;
 		this.serializer = serializer;
 		this.TypeNameConverter = type => type.Name;
 		this.SystemClock = global::SystemClock.Instance;
@@ -122,15 +128,27 @@ partial class MessageStore<TBaseMessage> : DbContext, IMessageStore<TBaseMessage
 	}
 
 	/// <summary>
+	/// Optionally modifies the destination table name for messages if provided in the constructor.
+	/// </summary>
+	protected override void OnModelCreating(DbModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+		if (!string.IsNullOrEmpty(this.tableName))
+		{
+			modelBuilder.Entity<MessageEntity>().ToTable(this.tableName);
+		}
+	}
+
+	/// <summary>
 	/// Called before adding the message entity to the database, provides a chance 
-	/// for extending the schema of the entity being saved via a partial class, 
+	/// for extending the schema of the entity being saved, 
 	/// with properties that can be pulled from the message headers for easier 
 	/// querying.
 	/// </summary>
 	/// <param name="message">The message to persist.</param>
 	/// <param name="entity">The entity created to persist the message.</param>
 	/// <param name="headers">The headers associated with the message that is being persisted.</param>
-	partial void OnPersisting(MessageEntity entity, TBaseMessage message, IDictionary<string, object> headers);
+	protected virtual void OnPersisting(MessageEntity entity, TBaseMessage message, IDictionary<string, object> headers) { }
 
 	private static Expression<Func<MessageEntity, bool>> ToExpression(MessageStoreQueryCriteria criteria, Func<Type, string> typeNameConverter)
 	{

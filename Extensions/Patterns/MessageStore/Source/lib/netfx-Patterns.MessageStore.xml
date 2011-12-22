@@ -4,58 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:MessageStoreQueryCriteria">
-            <summary>
-            Represents the filter criteria for a message store query.
-            </summary>
-            <nuget id="netfx-Patterns.MessageStore"/>
-        </member>
-        <member name="M:MessageStoreQueryCriteria.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:MessageStoreQueryCriteria"/> class.
-            </summary>
-        </member>
-        <member name="P:MessageStoreQueryCriteria.MessageTypes">
-            <summary>
-            List of message type filters. All types added are OR'ed with the 
-            others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
-            </summary>
-        </member>
-        <member name="P:MessageStoreQueryCriteria.Since">
-            <summary>
-            Filters messages that happened after the given starting date.
-            </summary>
-        </member>
-        <member name="P:MessageStoreQueryCriteria.Until">
-            <summary>
-            Filters messages that happened before the given ending date.
-            </summary>
-        </member>
-        <member name="P:MessageStoreQueryCriteria.IsExclusiveRange">
-            <summary>
-            If set to <see langword="true"/>, <see cref="P:MessageStoreQueryCriteria.Since"/> and <see cref="P:MessageStoreQueryCriteria.Until"/> should 
-            be considered as exclusive ranges (excludes values with a matching date). 
-            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-            </summary>
-        </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
         <member name="T:IMessageStore`1">
             <summary>
             Interface implemented by a message stores.
@@ -150,6 +98,58 @@
             <summary>
             Makes the configured <see cref="M:MessageStoreQueryExtension.IQuery`1.Since(System.DateTime)"/> and/or <see cref="M:MessageStoreQueryExtension.IQuery`1.Until(System.DateTime)"/> dates 
             exclusive, changing the default behavior which is to be inclusive.
+            </summary>
+        </member>
+        <member name="T:MessageStoreQueryCriteria">
+            <summary>
+            Represents the filter criteria for a message store query.
+            </summary>
+            <nuget id="netfx-Patterns.MessageStore"/>
+        </member>
+        <member name="M:MessageStoreQueryCriteria.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessageStoreQueryCriteria"/> class.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.MessageTypes">
+            <summary>
+            List of message type filters. All types added are OR'ed with the 
+            others (i.e. <c>MessageType == InvalidServerAddress OR MessageType == ServerMemoryLow</c>).
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Since">
+            <summary>
+            Filters messages that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.Until">
+            <summary>
+            Filters messages that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:MessageStoreQueryCriteria.IsExclusiveRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:MessageStoreQueryCriteria.Since"/> and <see cref="P:MessageStoreQueryCriteria.Until"/> should 
+            be considered as exclusive ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
     </members>

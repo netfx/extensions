@@ -155,6 +155,42 @@
             Logically deletes the aggregate root with the specified identifier.
             </summary>
         </member>
+        <member name="M:DomainContext`2.OnContextCreated">
+            <summary>
+            Called when the context is created.
+            </summary>
+        </member>
+        <member name="M:DomainContext`2.OnEntityCreated(System.Object)">
+            <summary>
+            Called when an entity has been created either by calling 
+            <see cref="M:DomainContext`2.New``1(System.Action{``0})"/> or by loading it from the underlying 
+            storage.
+            </summary>
+        </member>
+        <member name="M:DomainContext`2.OnContextSavedChanges">
+            <summary>
+            Called when pending changes have been saved.
+            </summary>
+        </member>
+        <member name="M:DomainContext`2.OnContextSavingChanges">
+            <summary>
+            Called before saving changes in the context.
+            </summary>
+        </member>
+        <member name="M:DomainContext`2.OnEntitySaving``1(``0)">
+            <summary>
+            Called before saving an entity in the context. This occurs 
+            before the context changes have been saved and persisted 
+            to the underlying storage.
+            </summary>
+        </member>
+        <member name="M:DomainContext`2.OnEntitySaved``1(``0)">
+            <summary>
+            Called after saving an entity in the context. This occurs 
+            before the context changes have been saved and persisted 
+            to the underlying storage.
+            </summary>
+        </member>
         <member name="M:DomainContext`2.Initialize">
             <summary>
             Initializes default settings for the context.
@@ -247,24 +283,6 @@
             Invokes the specified action and rethrows the inner exception if a
             reflection target invocation exception happens.
             </summary>
-        </member>
-        <member name="F:DomainContext`2.OnContextCreatedCalled">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntityCreatedCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntitySavingCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnEntitySavedCalls">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnContextSavingChangesCalled">
-            <summary />
-        </member>
-        <member name="F:DomainContext`2.OnContextSavedChangesCalled">
-            <summary />
         </member>
         <member name="P:DomainContext`2.ObjectContext">
             <summary>

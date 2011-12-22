@@ -73,7 +73,6 @@ using System.Dynamic;
 /// <nuget id="netfx-Patterns.DomainContext.EF" />
 abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomainContext<TId>
 	where TContextInterface : class
-	where TId : IComparable
 {
 	private static MethodInfo SaveOrUpdateMethod;
 	private static MethodInfo ValidateEntityMethod;
@@ -153,7 +152,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Commits changes to all entities that were persisted in this context so far.
 	/// </summary>
-	public void Commit()
+	public virtual void Commit()
 	{
 		this.SaveChanges();
 	}
@@ -184,7 +183,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// Creates a new instance of an aggregate root.
 	/// </summary>
 	/// <typeparam name="T">Type of aggregate root to instantiate.</typeparam>
-	public T New<T>(Action<T> initializer = null)
+	public virtual T New<T>(Action<T> initializer = null)
 		where T : class, IAggregateRoot<TId>
 	{
 		var entity = ((IObjectContextAdapter)this).ObjectContext.CreateObject<T>();
@@ -201,7 +200,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Finds the aggregate root with the specified id.
 	/// </summary>
-	public T Find<T>(TId id)
+	public virtual T Find<T>(TId id)
 		where T : class, IAggregateRoot<TId>
 	{
 		return this.Set<T>().Find(id);
@@ -210,7 +209,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Inserts or updates the specified aggregate root.
 	/// </summary>
-	public void Persist<T>(T entity)
+	public virtual void Persist<T>(T entity)
 		where T : class, IAggregateRoot<TId>
 	{
 		var detectChanges = this.Configuration.AutoDetectChangesEnabled;
@@ -230,7 +229,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Logically deletes the specified aggregate root.
 	/// </summary>
-	public void Delete<T>(T entity)
+	public virtual void Delete<T>(T entity)
 		where T : class, IAggregateRoot<TId>
 	{
 		var saved = this.Set<T>().Find(entity.Id);
@@ -241,7 +240,7 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Logically deletes the aggregate root with the specified identifier.
 	/// </summary>
-	public void Delete<T>(TId id)
+	public virtual void Delete<T>(TId id)
 		where T : class, IAggregateRoot<TId>
 	{
 		var saved = this.Set<T>().Find(id);
@@ -252,38 +251,38 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 	/// <summary>
 	/// Called when the context is created.
 	/// </summary>
-	partial void OnContextCreated();
+	protected virtual void OnContextCreated() { }
 
 	/// <summary>
 	/// Called when an entity has been created either by calling 
 	/// <see cref="New"/> or by loading it from the underlying 
 	/// storage.
 	/// </summary>
-	partial void OnEntityCreated(object entity);
+	protected virtual void OnEntityCreated(object entity) { }
 
 	/// <summary>
 	/// Called when pending changes have been saved.
 	/// </summary>
-	partial void OnContextSavedChanges();
+	protected virtual void OnContextSavedChanges() { }
 
 	/// <summary>
 	/// Called before saving changes in the context.
 	/// </summary>
-	partial void OnContextSavingChanges();
+	protected virtual void OnContextSavingChanges() { }
 
 	/// <summary>
 	/// Called before saving an entity in the context. This occurs 
 	/// before the context changes have been saved and persisted 
 	/// to the underlying storage.
 	/// </summary>
-	partial void OnEntitySaving<T>(T entity);
+	protected virtual void OnEntitySaving<T>(T entity) { }
 
 	/// <summary>
 	/// Called after saving an entity in the context. This occurs 
 	/// before the context changes have been saved and persisted 
 	/// to the underlying storage.
 	/// </summary>
-	partial void OnEntitySaved<T>(T entity);
+	protected virtual void OnEntitySaved<T>(T entity) { }
 
 	/// <summary>
 	/// Initializes default settings for the context.
@@ -406,10 +405,10 @@ abstract partial class DomainContext<TContextInterface, TId> : DbContext, IDomai
 		OnEntitySaving(entity);
 
 		var idType = GetIdType(typeof(TEntity));
-		IComparable defaultId = idType.IsValueType ? (IComparable)Activator.CreateInstance(idType) : (IComparable)null;
-		IComparable entityId = ((dynamic)entity).Id;
+		object defaultId = idType.IsValueType ? Activator.CreateInstance(idType) : default(TId);
+		object entityId = ((dynamic)entity).Id;
 
-		if (entityId.CompareTo(defaultId) == 0)
+		if (Object.Equals(defaultId, entityId))
 		{
 			this.Entry(entity).State = EntityState.Added;
 		}

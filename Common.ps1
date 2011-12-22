@@ -13,7 +13,7 @@ function Push-Packages
 
 	Write-Progress -Activity "Pushing NETFx" -Status "Publishing built packages recursively"
 
-	Get-ChildItem -Path $relativePath -Recurse -Filter *.nupkg | Where-Object { $_.DirectoryName.EndsWith("bin\Release") }  | %{ Lib\NuGet.exe Push -Source http://packages.nuget.org/v1/ $_.FullName $apiKey }
+	Get-ChildItem -Path $relativePath -Recurse -Filter *.nupkg | Where-Object { $_.DirectoryName.EndsWith("bin\Release") }  | %{ Lib\NuGet.exe Push $_.FullName $apiKey }
 
 	Write-Progress -Activity "Pushing NETFx" -Status "Done!" -Completed
 }

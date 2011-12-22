@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\DomainContext.EF\DomainContext.cs" />
     <Compile Include="content\netfx\Patterns\DomainContext.EF\Visibility.cs" />
-    <Compile Include="DomainContextHooks.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IAggregateRoot.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContext.cs" />
     <Compile Include="netfx\Patterns\DomainContext\IDomainContextAccessor.cs" />

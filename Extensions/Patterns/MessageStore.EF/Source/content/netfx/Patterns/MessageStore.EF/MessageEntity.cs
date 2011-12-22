@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 partial class MessageEntity
 {
@@ -38,5 +39,6 @@ partial class MessageEntity
 	/// <summary>
 	/// Gets or sets the row version.
 	/// </summary>
+	[Timestamp]
 	public byte[] RowVersion { get; set; }
 }
