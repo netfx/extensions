@@ -51,6 +51,19 @@ namespace NetFx.Patterns.EventSourcing
 			Assert.True(root.GetChanges().OfType<TestPublished>().Any(x => x.Version == 5));
 		}
 
+		[Fact]
+		public void WhenSubsequentAutoWiredDomainActionPerformed_ThenRootChangesStateThroughEvent()
+		{
+			var root = new AutoWiredTestRoot();
+			root.Publish(5);
+
+			Assert.True(root.IsPublished);
+			
+			root.Unpublish();
+
+			Assert.False(root.IsPublished);
+		}
+
 		//[Fact]
 		public void WhenComparingManualVsAutoWired_ThenItIsRelativelyFast()
 		{
@@ -96,11 +109,26 @@ namespace NetFx.Patterns.EventSourcing
 				base.Raise(new TestPublished { Version = version });
 			}
 
+			public void Unpublish()
+			{
+				if (!this.IsPublished)
+					throw new ArgumentException();
+
+				base.Raise(new TestUnpublished());
+			}
+
 			public int LatestVersion { get; set; }
+			public bool IsPublished { get; set; }
 
 			private void OnPublished(TestPublished published)
 			{
 				this.LatestVersion = published.Version;
+				this.IsPublished = true;
+			}
+
+			private void OnUnpublished(TestUnpublished published)
+			{
+				this.IsPublished = false;
 			}
 		}
 
@@ -134,6 +162,10 @@ namespace NetFx.Patterns.EventSourcing
 		}
 
 		public class DomainEvent { }
+
+		public class TestUnpublished : DomainEvent
+		{
+		}
 
 		public class TestPublished : DomainEvent
 		{

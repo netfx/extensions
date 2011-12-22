@@ -89,8 +89,10 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 
 		var methods = from method in this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
 					  let parameters = method.GetParameters()
-					  // Selet all methods with one parameter that inherits from TBaseEvent
-					  where parameters.Length == 1 && typeof(TBaseEvent).IsAssignableFrom(parameters[0].ParameterType)
+					  // Select all methods with one parameter that inherits from TBaseEvent
+					  where parameters.Length == 1 && typeof(TBaseEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+							// Skip this base class own virtual event handler.
+							method.DeclaringType != typeof(AggregateRoot<TAggregateId, TBaseEvent>)
 					  select method;
 
 		foreach (var method in methods)
@@ -110,8 +112,10 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 			gen.Emit(OpCodes.Newobj, handlerActionCtor);
 			gen.Emit(OpCodes.Callvirt, handlesConcrete);
 			gen.Emit(OpCodes.Nop);
-			gen.Emit(OpCodes.Ret);
 		}
+
+		gen.Emit(OpCodes.Nop);
+		gen.Emit(OpCodes.Ret);
 
 		return (Action<AggregateRoot<TAggregateId, TBaseEvent>>)initialize.CreateDelegate(typeof(Action<AggregateRoot<TAggregateId, TBaseEvent>>));
 	}
