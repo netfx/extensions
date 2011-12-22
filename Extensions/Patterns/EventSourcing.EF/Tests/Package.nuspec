@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>netfx-Patterns.EventSourcing.EF.Tests</id>
-		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Tests for Event Sourcing for Entity Framework</title>
+		<id>netfx-Patterns.EventSourcing.EF.Tests.xUnit</id>
+		<version>1.0.0.1</version>
+		<title>NETFx Patterns: Event Sourcing for Entity Framework xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.EF</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -12,11 +12,10 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx patterns eventsourcing entityframework ef</tags>
 		<dependencies>
-			<dependency id="EntityFramework" version="4.1" />
+			<dependency id="EntityFramework" version="4.2" />
+			<dependency id="xunit" version="1.8" />
 			<dependency id="netfx-Patterns.EventSourcing.Queryable.Tests.xUnit" version="1.0" />
-			<dependency id="netfx-System.Clock.Tests.xUnit" version="1.0" />
 			<dependency id="netfx-System.ISerializer.Tests.xUnit" version="1.0" />
-			<dependency id="netfx-System.SequentialGuid.Tests.xUnit" version="1.0.0.0" />
 		</dependencies>
 	</metadata>
 </package>

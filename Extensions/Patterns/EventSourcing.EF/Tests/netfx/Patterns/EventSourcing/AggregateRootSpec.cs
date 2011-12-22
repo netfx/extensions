@@ -25,6 +25,19 @@ namespace NetFx.Patterns.EventSourcing.Tests
 	public class AggregateRootSpec
 	{
 		[Fact]
+		public void WhenDomainActionPerformed_ThenAggregateHasChanges()
+		{
+			var root = new TestRoot();
+			root.Publish(5);
+
+			Assert.True(root.HasChanges);
+
+			root.AcceptChanges();
+
+			Assert.False(root.HasChanges);
+		}
+
+		[Fact]
 		public void WhenDomainActionPerformed_ThenRootChangesStateThroughEvent()
 		{
 			var root = new TestRoot();

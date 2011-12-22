@@ -59,10 +59,7 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id, "DevStore");
 				product.Publish(1);
 
-				foreach (var e in product.GetChanges())
-				{
-					store.Save(product, e);
-				}
+				store.SaveChanges(product);
 
 				var events = store.Query().Execute().ToList();
 
@@ -88,20 +85,14 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id1, "DevStore");
 				product.Publish(1);
 
-				foreach (var e in product.GetChanges())
-				{
-					store.Save(product, e);
-				}
+				store.SaveChanges(product);
 
 				product = new Product(id2, "WoVS");
 				product.Publish(1);
 				product.Publish(2);
 				product.Publish(3);
 
-				foreach (var e in product.GetChanges())
-				{
-					store.Save(product, e);
-				}
+				store.SaveChanges(product);
 
 				var saved = new Product();
 				var events = store.Query().For<Product>(id2).Execute().ToList();
@@ -110,6 +101,31 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				Assert.Equal(3, saved.Version);
 				Assert.Equal("WoVS", saved.Title);
 				Assert.Equal(id2, saved.Id);
+			}
+		}
+
+		[Fact]
+		public void WhenSavingEvents_ThenAcceptsChangesOnAggregate()
+		{
+			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
+			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
+			{
+				store.Database.Initialize(true);
+			}
+
+			var id = Guid.NewGuid();
+			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
+			{
+				var product = new Product(id, "DevStore");
+				product.Publish(1);
+
+				store.SaveChanges(product);
+
+				var events = store.Query().Execute().ToList();
+
+				Assert.Equal(2, events.Count);
+				Assert.True(events.OfType<Product.CreatedEvent>().Any(x => x.Id == id && x.Title == "DevStore"));
+				Assert.True(events.OfType<Product.PublishedEvent>().Any(x => x.Version == 1));
 			}
 		}
 

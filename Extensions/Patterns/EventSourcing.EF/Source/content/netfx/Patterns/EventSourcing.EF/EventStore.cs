@@ -27,36 +27,16 @@ using System.Diagnostics;
 /// <summary>
 /// Implements an event store on top of EntityFramework 4.1
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-/// <typeparam name="TStoredEvent">The type of the stored event, which must inherit from <see cref="StoredEvent{TAggregateId}"/> for a specific <typeparamref name="TAggregateId"/>.</typeparam>
-/// <remarks>
-/// This class is abstract and must be inherited by a concrete 
-/// store class that provides a fixed type for the <typeparamref name="TAggregateId"/> and 
-/// <typeparamref name="TStoredEvent"/> type parameters, as entity framework cannot 
-/// work with generic entities.
-/// </remarks>
-/// <example>
-/// The following is an example of a concrete event store leveraging this class:
-/// <code>
-/// public class DomainEventStore : DomainEventStore&lt;Guid, DomainEvent, StoredEvent&gt;
-/// {
-/// 	public DomainEventStore(string nameOrConnectionString)
-/// 		: base(nameOrConnectionString)
-/// 	{
-/// 	}
-/// }
-/// 
-/// public class StoredEvent : StoredEvent&lt;Guid&gt; { }
-/// </code>
-/// </example>
 /// <nuget id="netfx-Patterns.EventSourcing.EF"/>
-partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>
+partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
+	where TBaseEvent : ITimestamped
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EventStore{TBaseEvent}"/> class.
 	/// </summary>
 	/// <param name="nameOrConnectionString">The name or connection string.</param>
+	/// <param name="serializer">The serializer to use to persist the events.</param>
 	public EventStore(string nameOrConnectionString, ISerializer serializer)
 		: base(nameOrConnectionString)
 	{
@@ -64,7 +44,6 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 
 		this.Serializer = serializer;
 		this.TypeNameConverter = type => type.Name;
-		this.SystemClock = global::SystemClock.Instance;
 	}
 
 	/// <summary>
@@ -75,16 +54,10 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 	/// <summary>
 	/// Gets or sets the function that converts a <see cref="Type"/> to 
 	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="IStoredEvent{TAggregateId}.AggregateType"/> and 
-	/// <see cref="IStoredEvent{TId}.EventType"/>.
+	/// values of <see cref="StoredAggregate.AggregateType"/> and 
+	/// <see cref="StoredEvent.EventType"/>.
 	/// </summary>
 	public Func<Type, string> TypeNameConverter { get; set; }
-
-	/// <summary>
-	/// Gets or sets the system clock to use to calculate the timestamp
-	/// of persisted events.
-	/// </summary>
-	public IClock SystemClock { get; set; }
 
 	/// <summary>
 	/// Gets or sets the events persisted in the store.
@@ -116,11 +89,30 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 	}
 
 	/// <summary>
-	/// Saves the given event raised by the given sender aggregate root.
+	/// Saves the given events raised by the given sender aggregate root.
 	/// </summary>
-	/// <param name="aggregate">The sender of the event.</param>
-	/// <param name="event">The instance containing the event data.</param>
-	public void Save(AggregateRoot<Guid, TBaseEvent> aggregate, TBaseEvent @event)
+	/// <param name="aggregate">The aggregate raising the events.</param>
+	public void SaveChanges(AggregateRoot<Guid, TBaseEvent> aggregate)
+	{
+		foreach (var @event in aggregate.GetChanges().ToList())
+		{
+			SaveEvent(aggregate, @event);
+		}
+
+		aggregate.AcceptChanges();
+	}
+
+	IQueryable<StoredAggregate> IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>.Aggregates 
+	{
+		get { return this.Aggregates; } 
+	}
+
+	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>.Events
+	{
+		get { return this.Events; }
+	}	
+
+	private void SaveEvent(AggregateRoot<Guid, TBaseEvent> aggregate, TBaseEvent @event)
 	{
 		var aggregateFilter = this.AggregateIdEquals(aggregate.Id);
 		// First look at the in-memory entities.
@@ -131,13 +123,13 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 
 		if (storedAggregate == null)
 		{
-			storedAggregate = this.Aggregates.Add(new StoredAggregate 
-			{ 
-				AggregateId = aggregate.Id, 
-				AggregateType = this.TypeNameConverter.Invoke(aggregate.GetType()) 
+			storedAggregate = this.Aggregates.Add(new StoredAggregate
+			{
+				AggregateId = aggregate.Id,
+				AggregateType = this.TypeNameConverter.Invoke(aggregate.GetType())
 			});
 
-			OnSavingAggregate(aggregate, storedAggregate); 
+			OnSavingAggregate(aggregate, storedAggregate);
 		}
 
 		var stored = new StoredEvent
@@ -145,7 +137,7 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 			ActivityId = Trace.CorrelationManager.ActivityId,
 			EventId = SequentialGuid.NewGuid(),
 			EventType = this.TypeNameConverter.Invoke(@event.GetType()),
-			Timestamp = this.SystemClock.UtcNow,
+			Timestamp = @event.Timestamp.UtcDateTime,
 			Payload = this.Serializer.Serialize(@event),
 			Aggregate = storedAggregate,
 		};
@@ -165,7 +157,7 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 	/// </summary>
 	/// <param name="aggregate">The aggregate being persisted for the first time in this event store.</param>
 	/// <param name="entity">The entity that will be saved to the underlying database.</param>
-	partial void OnSavingAggregate(AggregateRoot<Guid, TBaseEvent> aggregate, StoredAggregate entity);
+	protected virtual void OnSavingAggregate(AggregateRoot<Guid, TBaseEvent> aggregate, StoredAggregate entity) { }
 
 	/// <summary>
 	/// Extensibility hook called when an event is being saved to the 
@@ -173,5 +165,5 @@ partial class EventStore<TBaseEvent> : DbContext, IQueryableEventStore<Guid, TBa
 	/// </summary>
 	/// <param name="event">The event that will be persisted.</param>
 	/// <param name="entity">The entity that was created to persist to the underlying database.</param>
-	partial void OnSavingEvent(TBaseEvent @event, StoredEvent entity);
+	protected virtual void OnSavingEvent(TBaseEvent @event, StoredEvent entity) { }
 }
