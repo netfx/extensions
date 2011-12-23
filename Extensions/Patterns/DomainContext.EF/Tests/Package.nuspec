@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.DomainContext.EF.Tests.xUnit</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.2</version>
 		<title>NETFx Patterns: Domain Context for Entity Framework xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.DomainContext.EF</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
@@ -16,8 +16,11 @@
 			<frameworkAssembly assemblyName="System.Data.Entity" targetFramework="net40"/>
 		</frameworkAssemblies>
 		<dependencies>
-			<dependency id="EntityFramework" version="4.1" />
-			<dependency id="netfx-System.Dynamic.Reflection.Tests" version="1.1" />
+			<dependency id="EntityFramework" version="4.2" />
+			<dependency id="xunit" version="1.8" />
+			<dependency id="Moq" version="4.0" />
+			<dependency id="netfx-System.Diagnostics.Tracer.Tests.xUnit" version="1.0" />
+			<dependency id="netfx-System.Dynamic.Reflection.Tests.xUnit" version="1.1" />
 		</dependencies>
 	</metadata>
 </package>

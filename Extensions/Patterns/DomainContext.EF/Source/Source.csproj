@@ -39,8 +39,9 @@
   </PropertyGroup>
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -48,8 +49,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="Tracer">
-      <HintPath>..\packages\Tracer.0.9.0.0\lib\NET40\Tracer.dll</HintPath>
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.8.0.1549\lib\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +62,29 @@
     <Compile Include="netfx\Patterns\DomainContext\IIdentifiable.cs" />
     <Compile Include="netfx\Patterns\DomainContext\QueryableExtensions.cs" />
     <Compile Include="netfx\Patterns\DomainContext\Visibility.cs" />
+    <Compile Include="netfx\System\AppDomainData.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Events\DataTraceEvent.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Events\ExceptionTraceEvent.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Events\MessageTraceEvent.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Events\TransferTraceEvent.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\AggregateTraceSource.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\DiagnosticsTracer.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\IDiagnosticsTraceSource.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\ITracer.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\ITraceSourceConfiguration.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\ITraceSourceEntry.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\SourceName.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Extensibility\TracerExtensibility.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\ITraceSource.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\TraceEvent.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\Tracer.cs" />
+    <Compile Include="netfx\System\Diagnostics\Tracer\TracerSourceExtensions.cs" />
     <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
     <Compile Include="netfx\System\Dynamic\OutValue.cs" />
     <Compile Include="netfx\System\Dynamic\RefValue.cs" />
     <Compile Include="netfx\System\Dynamic\TypeParameter.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
