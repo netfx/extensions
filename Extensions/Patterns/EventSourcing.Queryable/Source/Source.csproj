@@ -66,6 +66,7 @@
     <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="lib\netfx-Patterns.EventSourcing.Queryable.xml" />
   </ItemGroup>

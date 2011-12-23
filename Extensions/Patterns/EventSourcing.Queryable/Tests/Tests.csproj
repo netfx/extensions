@@ -60,6 +60,7 @@
     <Compile Include="Visibility.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>

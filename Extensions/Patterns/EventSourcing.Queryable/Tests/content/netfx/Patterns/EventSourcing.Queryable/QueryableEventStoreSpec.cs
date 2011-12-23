@@ -291,7 +291,6 @@ namespace NetFx.Patterns.EventSourcing.Queryable
 			this.utcNow = utcNow;
 		}
 
-		public IQueryable<StoredAggregate> Aggregates { get { return this.aggregates.AsQueryable(); } }
 		public IQueryable<StoredEvent> Events { get { return this.events.AsQueryable(); } }
 
 		public void SaveChanges(AggregateRoot<Guid, DomainEvent> aggregate)
