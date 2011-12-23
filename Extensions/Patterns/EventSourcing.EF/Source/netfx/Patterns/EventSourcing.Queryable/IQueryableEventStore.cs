@@ -13,14 +13,9 @@ using System.Text;
 /// <typeparam name="TStoredAggregate">The type of the stored aggregate.</typeparam>
 partial interface IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> : IEventStore<TAggregateId, TBaseEvent>
 	where TBaseEvent : ITimestamped
-	where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
-	where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
+	where TStoredAggregate : class, IStoredAggregate<TAggregateId>
+	where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
 {
-	/// <summary>
-	/// Gets the aggregates that contain events persisted by the store.
-	/// </summary>
-	IQueryable<TStoredAggregate> Aggregates { get; }
-
 	/// <summary>
 	/// Gets the stream of events persisted by the store.
 	/// </summary>

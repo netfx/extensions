@@ -22,8 +22,8 @@ static partial class QueryableEventStoreExtensions
 		this IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> store, TAggregateId id)
 		where TAggregateId : IComparable
 		where TBaseEvent : ITimestamped
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
+		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
+		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
 	{
 		var idProperty = aggregateIdProperties.GetOrAdd(typeof(TStoredAggregate), type => type.GetProperty("AggregateId"));
 
@@ -56,16 +56,16 @@ static partial class QueryableEventStoreExtensions
 		Func<Type, string> typeNameConverter)
 		where TAggregateId : IComparable
 		where TBaseEvent : ITimestamped
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
+		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
+		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
 	{
 		return new CriteriaBuilder<TAggregateId, TStoredAggregate, TStoredEvent>(criteria, typeNameConverter).Build();
 	}
 
 	private class CriteriaBuilder<TAggregateId, TStoredAggregate, TStoredEvent>
 		where TAggregateId : IComparable
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>, new()
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>, new()
+		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
+		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
 	{
 		private static readonly Lazy<PropertyInfo> AggregateProperty = new Lazy<PropertyInfo>(() => typeof(TStoredEvent).GetProperty("Aggregate"));
 		private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(TStoredAggregate).GetProperty("AggregateId"));

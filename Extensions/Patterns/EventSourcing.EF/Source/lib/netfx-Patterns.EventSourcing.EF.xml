@@ -62,11 +62,6 @@
             </para>
             </remarks>
         </member>
-        <member name="P:IQueryableEventStore`4.Aggregates">
-            <summary>
-            Gets the aggregates that contain events persisted by the store.
-            </summary>
-        </member>
         <member name="P:IQueryableEventStore`4.Events">
             <summary>
             Gets the stream of events persisted by the store.

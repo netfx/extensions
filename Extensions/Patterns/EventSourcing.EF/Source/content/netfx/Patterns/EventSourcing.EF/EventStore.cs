@@ -102,11 +102,6 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 		aggregate.AcceptChanges();
 	}
 
-	IQueryable<StoredAggregate> IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>.Aggregates 
-	{
-		get { return this.Aggregates; } 
-	}
-
 	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>.Events
 	{
 		get { return this.Events; }
