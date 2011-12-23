@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-Patterns.MessageStore.Tests.xUnit</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Message Store Core xUnit Tests</title>
+		<title>NETFx Patterns: Message Store xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.MessageStore</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -13,6 +13,7 @@
 		<tags>netfx pattern message store</tags>
 		<dependencies>
 			<dependency id="Moq" version="4.0" />
+			<dependency id="xunit" version="1.8" />
 			<dependency id="netfx-Guard.Tests.xUnit" version="1.3" />
 		</dependencies>
 	</metadata>

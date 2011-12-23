@@ -3,7 +3,7 @@
 	<metadata>
 		<id>netfx-Patterns.MessageStore</id>
 		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Message Store Core</title>
+		<title>NETFx Patterns: Message Store</title>
 		<description>Provides the core APIs to implement a message store.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>

@@ -7,7 +7,7 @@ using System.Collections;
 using Moq;
 using System.Reflection;
 
-namespace NetFx.Patterns.SystemEventStore.Tests
+namespace NetFx.Patterns.MessageStore.Tests
 {
 	public class MessageStoreQueryExtensionSpec
 	{
