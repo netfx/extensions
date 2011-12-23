@@ -37,6 +37,11 @@
             </summary>
             <param name="command">The command to execute.</param>
             <param name="headers">The headers associated with the command.</param>
+            <remarks>
+            Implementations should throw if the command cannot be mapped to 
+            a registered handler, and also propagate any exceptions the handlers
+            might throw.
+            </remarks>
         </member>
         <member name="M:CommandRegistry`1.#ctor(System.Collections.Generic.IEnumerable{ICommandHandler})">
             <summary>
@@ -100,6 +105,12 @@
             </summary>
             <param name="command">The command payload.</param>
             <param name="headers">The headers for the command.</param>
+            <exception cref="T:System.InvalidOperationException">No command handler is registered for the given command.</exception>
+            <remarks>
+            If the registered command handler throws an exception, the exception will be persisted as a header named 'Exception' 
+            and the exception will be propagated to the caller, after saving the command to the underlying store, 
+            which happens always once a registered handler is found.
+            </remarks>
         </member>
         <member name="M:CommandRegistry`1.OnExecute``1(ICommandHandler{``0},``0,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>

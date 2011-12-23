@@ -245,6 +245,24 @@ namespace NetFx.Patterns.DomainCommands
 			Assert.Equal(3, headers.Count);
 		}
 
+		[Fact]
+		public void WhenExecutedCommandThrows_ThenSavesExceptionAsHeader()
+		{
+			var headers = new Dictionary<string, object>();
+			headers.Add("IP", "localhost");
+
+			var handler = new Mock<ICommandHandler<FooCommand>>();
+			var store = new Mock<IMessageStore<IDomainCommand>>();
+			var registry = new CommandRegistry<IDomainCommand>(store.Object, new[] { handler.Object });
+
+			handler.Setup(x => x.Handle(It.IsAny<FooCommand>(), headers))
+				.Throws(new ArgumentException("foo"));
+
+			registry.Execute(new FooCommand(), headers);
+
+			Assert.True(headers.ContainsKey("Exception"));
+		}
+
 		private class FooCommandHandler : CommandHandler<FooCommand>
 		{
 			public override void Handle(FooCommand command, IDictionary<string, object> headers)

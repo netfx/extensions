@@ -142,6 +142,12 @@ partial class CommandRegistry<TBaseCommand> : ICommandRegistry<TBaseCommand>
 	/// </summary>
 	/// <param name="command">The command payload.</param>
 	/// <param name="headers">The headers for the command.</param>
+	/// <exception cref="InvalidOperationException">No command handler is registered for the given command.</exception>
+	/// <remarks>
+	/// If the registered command handler throws an exception, the exception will be persisted as a header named 'Exception' 
+	/// and the exception will be propagated to the caller, after saving the command to the underlying store, 
+	/// which happens always once a registered handler is found.
+	/// </remarks>
 	public virtual void Execute(TBaseCommand command, IDictionary<string, object> headers)
 	{
 		Guard.NotNull(() => command, command);
@@ -187,13 +193,22 @@ partial class CommandRegistry<TBaseCommand> : ICommandRegistry<TBaseCommand>
 		{
 			handler.Handle(command, headers);
 		}
+		catch (Exception ex)
+		{
+			if (headers == null)
+				headers = new Dictionary<string, object>();
+
+			headers.Add(new KeyValuePair<string, object>("Exception", ex));
+			// Let caller of the registry decide how to communicate the failure externally.
+			throw;
+		}
 		finally
 		{
 			if (this.commandStore != null)
 			{
 				// Supressing the ambient transaction is required as the registry should 
 				// always persist received commands, regardless of their execution 
-				// result. This makes our bus friendly to environments where ambient 
+				// result. This makes our command registry friendly to environments where ambient 
 				// transactions are used for other parts of the system, like updating 
 				// views or logs that live in a database, etc.
 				using (var tx = new TransactionScope(TransactionScopeOption.Suppress))

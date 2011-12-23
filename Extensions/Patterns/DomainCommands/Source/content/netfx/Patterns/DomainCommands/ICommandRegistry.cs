@@ -32,5 +32,10 @@ partial interface ICommandRegistry<TBaseCommand>
 	/// </summary>
 	/// <param name="command">The command to execute.</param>
 	/// <param name="headers">The headers associated with the command.</param>
+	/// <remarks>
+	/// Implementations should throw if the command cannot be mapped to 
+	/// a registered handler, and also propagate any exceptions the handlers
+	/// might throw.
+	/// </remarks>
 	void Execute(TBaseCommand command, IDictionary<string, object> headers);
 }
