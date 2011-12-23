@@ -38,14 +38,14 @@ using Moq;
 using System.Threading;
 using System.Collections;
 using System.Data.Entity;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NetFx.Patterns.MessageStore.EF
 {
 	public class MessageStoreSpec : IDisposable
 	{
 		private MessageStore<Message> store;
-		private ISerializer serializer = new JsonSerializer(Newtonsoft.Json.JsonSerializer.Create(
-			new Newtonsoft.Json.JsonSerializerSettings { TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects }));
+		private ISerializer serializer = new SimpleSerializer();
 
 		private Func<DateTime> utcNow = () => DateTime.UtcNow;
 		private IDictionary<string, object> emptyHeaders = new Dictionary<string, object>();
@@ -237,6 +237,7 @@ namespace NetFx.Patterns.MessageStore.EF
 			Assert.Equal(2, messages.Count());
 		}
 
+		[Serializable]
 		public class Deactivate : Message
 		{
 			public override string ToString()
@@ -245,8 +246,10 @@ namespace NetFx.Patterns.MessageStore.EF
 			}
 		}
 
+		[Serializable]
 		public abstract class Message { }
 
+		[Serializable]
 		public class CreateProduct : Message
 		{
 			public int Id { get; set; }
@@ -259,6 +262,7 @@ namespace NetFx.Patterns.MessageStore.EF
 			}
 		}
 
+		[Serializable]
 		public class PublishProduct : Message
 		{
 			public int Version { get; set; }
@@ -266,6 +270,19 @@ namespace NetFx.Patterns.MessageStore.EF
 			public override string ToString()
 			{
 				return "Published new product version " + this.Version + ".";
+			}
+		}
+
+		private class SimpleSerializer : ISerializer
+		{
+			public T Deserialize<T>(global::System.IO.Stream stream)
+			{
+				return (T)new BinaryFormatter().Deserialize(stream);
+			}
+
+			public void Serialize<T>(global::System.IO.Stream stream, T graph)
+			{
+				new BinaryFormatter().Serialize(stream, graph);
 			}
 		}
 	}
