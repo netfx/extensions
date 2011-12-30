@@ -44,7 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRoot.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainObject.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventBus.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryExtension.cs" />
@@ -64,8 +64,17 @@
     </NuSpec>
     <Content Include="lib\netfx-Patterns.EventSourcing.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="content\netfx\Patterns\EventSourcing\EventPublishFlow.sequencediagram.layout">
+      <DependentUpon>EventPublishFlow.sequencediagram</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="content\netfx\Patterns\EventSourcing\StateChangeFlow.sequencediagram.layout">
+      <DependentUpon>StateChangeFlow.sequencediagram</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="content\netfx\Patterns\EventSourcing\EventPublishFlow.sequencediagram" />
+    <None Include="content\netfx\Patterns\EventSourcing\StateChangeFlow.sequencediagram" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

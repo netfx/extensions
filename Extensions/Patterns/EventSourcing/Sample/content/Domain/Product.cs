@@ -6,7 +6,7 @@ using System.Text;
 /// <summary>
 /// Product is an the domain object sourcing the event with domain logic.
 /// </summary>
-internal class Product : AggregateRoot
+internal class Product : DomainObject
 {
 	/// <summary>
 	/// Initializes the internal event handler map.
@@ -38,7 +38,7 @@ internal class Product : AggregateRoot
 		if (string.IsNullOrEmpty(title))
 			throw new ArgumentException("title");
 
-		this.Raise(new ProductCreatedEvent { Id = id, Title = title });
+		this.Apply(new ProductCreatedEvent { Id = id, Title = title });
 	}
 
 	// Technically, these members wouldn't even need a public setter 
@@ -55,7 +55,7 @@ internal class Product : AggregateRoot
 		// When we're ready to apply state changes, we 
 		// apply them through an event that calls back 
 		// the OnCreated method as mapped in the ctor.
-		this.Raise(new ProductPublishedEvent { Version = version });
+		this.Apply(new ProductPublishedEvent { Version = version });
 	}
 
 	private void OnCreated(ProductCreatedEvent @event)

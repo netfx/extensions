@@ -21,55 +21,47 @@ using System.Text;
 
 /// <summary>
 /// Base class for domain classes that raise and optionally consume 
-/// as their persistence mechanism.
+/// event objects in an event sourcing pattern style implementation.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
-/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain object.</typeparam>
+/// <typeparam name="TBaseEvent">The base type or interface implemented by events.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
+abstract partial class DomainObject<TObjectId, TBaseEvent>
 {
 	private Dictionary<Type, Action<TBaseEvent>> handlers = new Dictionary<Type, Action<TBaseEvent>>();
-	private List<TBaseEvent> changes = new List<TBaseEvent>();
+	private List<TBaseEvent> events = new List<TBaseEvent>();
 
 	/// <summary>
-	/// Gets or sets the identifier of the domain object sourcing the event.
+	/// Initializes a new instance of the <see cref="DomainObject{TObjectId, TBaseEvent}"/> class.
 	/// </summary>
-	public virtual TAggregateId Id { get; set; }
+	/// <remarks>
+	/// Derived classes decide if they allow direct instantiation or 
+	/// if instantiation always has to happen from a stream of events.
+	/// </remarks>
+	protected DomainObject()
+	{
+	}
 
 	/// <summary>
-	/// Clears the internal events retrieved from <see cref="GetChanges"/>, 
+	/// Gets or sets the identifier of the domain object.
+	/// </summary>
+	public virtual TObjectId Id { get; set; }
+
+	/// <summary>
+	/// Clears the internal events retrieved from <see cref="GetEvents"/>, 
 	/// signaling that all pending events have been commited.
 	/// </summary>
-	public virtual void AcceptChanges()
+	public virtual void AcceptEvents()
 	{
-		this.changes.Clear();
+		this.events.Clear();
 	}
 
 	/// <summary>
-	/// Gets the pending changes.
+	/// Gets the new events that were applied by the domain object.
 	/// </summary>
-	public virtual IEnumerable<TBaseEvent> GetChanges()
+	public virtual IEnumerable<TBaseEvent> GetEvents()
 	{
-		return this.changes.AsReadOnly();
-	}
-
-	/// <summary>
-	/// Gets a value indicating whether this aggregate has pending changes.
-	/// </summary>
-	public virtual bool HasChanges
-	{
-		get { return this.changes.Any(); }
-	}
-
-	/// <summary>
-	/// Loads the the domain object from an even stream.
-	/// </summary>
-	public virtual void Load(IEnumerable<TBaseEvent> history)
-	{
-		foreach (var e in history)
-		{
-			ApplyChange(e, false);
-		}
+		return this.events.AsReadOnly();
 	}
 
 	/// <summary>
@@ -82,39 +74,31 @@ abstract partial class AggregateRoot<TAggregateId, TBaseEvent>
 	}
 
 	/// <summary>
-	/// Applies a change to the entity state via an event. 
+	/// Loads the the domain object from an even stream.
+	/// </summary>
+	protected void Load(IEnumerable<TBaseEvent> events)
+	{
+		foreach (var args in events)
+		{
+			var handler = default(Action<TBaseEvent>);
+			if (this.handlers.TryGetValue(args.GetType(), out handler))
+				handler.Invoke(args);
+		}
+	}
+
+	/// <summary>
+	/// Applies an event to the entity. 
 	/// The derived class should invoke <see cref="Handles{TEvent}"/> 
 	/// to configure the handlers for specific types of events. The 
 	/// handlers perform the actual state changes to the entity.
 	/// </summary>
-	protected virtual void Raise<TEvent>(TEvent @event)
+	protected virtual void Apply<TEvent>(TEvent @event)
 		where TEvent : TBaseEvent
 	{
-		ApplyChange(@event, true);
-	}
-
-	/// <summary>
-	/// Called whenever an event is handled by the aggregate 
-	/// root. Useful to mark the object as dirty if needed 
-	/// for persistence, beyond the <see cref="HasChanges"/> 
-	/// property which reports if there are new events 
-	/// in the object, but not if it actually handled an 
-	/// event itself at all (changing its internal state).
-	/// </summary>
-	protected virtual void OnEventHandled(TBaseEvent e)
-	{
-	}
-
-	private void ApplyChange(TBaseEvent e, bool isNew)
-	{
 		var handler = default(Action<TBaseEvent>);
-		if (this.handlers.TryGetValue(e.GetType(), out handler))
-		{
-			handler.Invoke(e);
-			OnEventHandled(e);
-		}
+		if (this.handlers.TryGetValue(@event.GetType(), out handler))
+			handler.Invoke(@event);
 
-		if (isNew)
-			this.changes.Add(e);
+		this.events.Add(@event);
 	}
 }

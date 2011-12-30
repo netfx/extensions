@@ -44,6 +44,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.8.0.1549\lib\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <NuSpec Include="Package.nuspec">
@@ -62,17 +65,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventBusSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\Sample.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAddSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
-    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
-    <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
     <Compile Include="Visibility.cs" />
   </ItemGroup>
   <ItemGroup>

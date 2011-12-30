@@ -18,14 +18,14 @@ using System;
 
 /// <summary>
 /// Base interface part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="EventHandler{TAggregateId, TEvent}"/> 
-/// or implement <see cref="IEventHandler{TAggregateId, TEvent}"/> instead.
+/// handlers should inherit <see cref="EventHandler{TObjectId, TEvent}"/> 
+/// or implement <see cref="IEventHandler{TObjectId, TEvent}"/> instead.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing" />
 partial interface IEventHandler
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IEventBus{TAggregateId, TBaseEvent}"/> implementation
+	/// Invocation style hint that the <see cref="IEventBus{TObjectId, TBaseEvent}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
 	bool IsAsync { get; }
@@ -34,13 +34,13 @@ partial interface IEventHandler
 /// <summary>
 /// Base interface for domain event handlers that handle a specific type of event.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IEventHandler<TAggregateId, TEvent> : IEventHandler
+partial interface IEventHandler<TObjectId, TEvent> : IEventHandler
 {
 	/// <summary>
 	/// Handles the specified event.
 	/// </summary>
-	void Handle(TAggregateId aggregateId, TEvent @event);
+	void Handle(TObjectId objectId, TEvent @event);
 }

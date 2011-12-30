@@ -22,19 +22,19 @@ using Xunit;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
-	public class AggregateRootSpec
+	public class DomainObjectSpec
 	{
 		[Fact]
-		public void WhenDomainActionPerformed_ThenAggregateHasChanges()
+		public void WhenDomainActionPerformed_ThenObjectHasEvents()
 		{
 			var root = new TestRoot();
 			root.Publish(5);
 
-			Assert.True(root.HasChanges);
+			Assert.True(root.GetEvents().Any());
 
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.HasChanges);
+			Assert.False(root.GetEvents().Any());
 		}
 
 		[Fact]
@@ -44,37 +44,41 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			root.Publish(5);
 
 			Assert.Equal(5, root.LatestVersion);
-			Assert.True(root.GetChanges().Any());
-			Assert.True(root.GetChanges().OfType<TestPublished>().Any(x => x.Version == 5));
+			Assert.True(root.GetEvents().Any());
+			Assert.True(root.GetEvents().OfType<TestPublished>().Any(x => x.Version == 5));
 
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 		}
 
 		[Fact]
 		public void WhenLoadingFromEvent_ThenRootChangesState()
 		{
-			var root = new TestRoot();
 			var events = new DomainEvent[] { new TestPublished { Version = 5 } };
-
-			root.Load(events);
+			var root = new TestRoot(events);
 
 			Assert.Equal(5, root.LatestVersion);
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 
 			// This should be no-op now.
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 		}
 
 		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
-		internal class TestRoot : AggregateRoot<Guid, DomainEvent>
+		internal class TestRoot : DomainObject<Guid, DomainEvent>
 		{
 			public TestRoot()
 			{
 				Handles<TestPublished>(this.Apply);
+			}
+
+			public TestRoot(IEnumerable<DomainEvent> events)
+				: this()
+			{
+				base.Load(events);
 			}
 
 			public void Publish(int version)
@@ -82,7 +86,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.Raise(new TestPublished { Version = version });
+				base.Apply(new TestPublished { Version = version });
 			}
 
 			public int LatestVersion { get; set; }

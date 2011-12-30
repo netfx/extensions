@@ -45,51 +45,51 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		}
 
 		[Fact]
-		public void WhenPublishNullAggregate_ThenThrows()
+		public void WhenPublishNullObject_ThenThrows()
 		{
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), Enumerable.Empty<IEventHandler>());
 
-			Assert.Throws<ArgumentNullException>(() => bus.PublishChanges((AggregateRoot<int, DomainEvent>)null));
+			Assert.Throws<ArgumentNullException>(() => bus.PublishChanges((DomainObject<int, DomainEvent>)null));
 		}
 
 		[Fact]
-		public void WhenPublishingAggregateWithChangedEvent_ThenSavesToStore()
+		public void WhenPublishingObjectWithChangedEvent_ThenSavesToStore()
 		{
-			var aggregate = new TestAggregate();
+			var entity = new TestObject();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
 
 			var bus = new EventBus<int, DomainEvent>(store.Object, Enumerable.Empty<IEventHandler>());
 
-			aggregate.Foo();
-			bus.PublishChanges(aggregate);
+			entity.Foo();
+			bus.PublishChanges(entity);
 
-			store.Verify(x => x.SaveChanges(aggregate));
+			store.Verify(x => x.SaveChanges(entity));
 		}
 
 		[Fact]
-		public void WhenPublishingAggregateWithChangedEvent_ThenAcceptsChanges()
+		public void WhenPublishingObjectWithChangedEvent_ThenAcceptsChanges()
 		{
-			var aggregate = new TestAggregate();
+			var entity = new TestObject();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
 
 			var bus = new EventBus<int, DomainEvent>(store.Object, Enumerable.Empty<IEventHandler>());
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
-			Assert.False(aggregate.GetChanges().Any());
+			Assert.False(entity.GetEvents().Any());
 		}
 
 		[Fact]
 		public void WhenPublishingEvent_ThenInvokesHandler()
 		{
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 			var store = new Mock<IEventStore<int, DomainEvent>>();
 			var handler = new Mock<EventHandler<int, BaseEvent>> { CallBase = true };
 
 			var bus = new EventBus<int, DomainEvent>(store.Object, new[] { handler.Object });
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()));
 		}
@@ -99,10 +99,10 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var handler = new Mock<EventHandler<int, FooEvent>> { CallBase = true };
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			handler.Verify(x => x.Handle(5, It.IsAny<FooEvent>()));
 		}
@@ -112,10 +112,10 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var handler = new Mock<EventHandler<int, BaseEvent>> { CallBase = true };
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()));
 		}
@@ -127,12 +127,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			handler.Setup(x => x.IsAsync).Returns(true);
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			handler.Verify(x => x.Handle(5, It.IsAny<FooEvent>()), Times.Never());
 			Assert.True(asyncCalled);
@@ -145,12 +145,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			handler.Setup(x => x.IsAsync).Returns(true);
 			var asyncCalled = false;
 			Action<Action> asyncRunner = action => asyncCalled = true;
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object }, asyncRunner);
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			handler.Verify(x => x.Handle(5, It.IsAny<BaseEvent>()), Times.Never());
 			Assert.True(asyncCalled);
@@ -164,12 +164,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			handler.Setup(x => x.IsAsync).Returns(true);
 			handler.Setup(x => x.Handle(It.IsAny<int>(), It.IsAny<FooEvent>()))
 				.Callback(() => asyncCalled = true);
-			var aggregate = new TestAggregate();
-			aggregate.Foo();
+			var entity = new TestObject();
+			entity.Foo();
 
 			var bus = new EventBus<int, DomainEvent>(Mock.Of<IEventStore<int, DomainEvent>>(), new[] { handler.Object });
 
-			bus.PublishChanges(aggregate);
+			bus.PublishChanges(entity);
 
 			while (!asyncCalled)
 			{
@@ -197,7 +197,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			public override bool IsAsync { get { return false; } }
 
-			public override void Handle(int aggregateId, FooEvent @event)
+			public override void Handle(int objectId, FooEvent @event)
 			{
 				throw new NotImplementedException();
 			}
@@ -224,21 +224,21 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public int Id { get; set; }
 	}
 
-	internal class TestAggregate : AggregateRoot<int, DomainEvent>
+	internal class TestObject : DomainObject<int, DomainEvent>
 	{
-		public TestAggregate()
+		public TestObject()
 		{
 			this.Id = 5;
 		}
 
 		public void Foo()
 		{
-			base.Raise(new FooEvent { Id = this.Id });
+			base.Apply(new FooEvent { Id = this.Id });
 		}
 
 		public void Base()
 		{
-			base.Raise(new BaseEvent());
+			base.Apply(new BaseEvent());
 		}
 	}
 }

@@ -9,32 +9,32 @@ using System.Text;
 /// </summary>
 internal class DomainContext : IDomainContext
 {
-	private List<AggregateRoot> aggregates = new List<AggregateRoot>();
+	private List<DomainObject> objects = new List<DomainObject>();
 	private IDomainEventBus eventBus;
 
-	public DomainContext(IDomainEventBus eventBus, params AggregateRoot[] sources)
+	public DomainContext(IDomainEventBus eventBus, params DomainObject[] sources)
 	{
 		this.eventBus = eventBus;
-		this.aggregates.AddRange(sources);
+		this.objects.AddRange(sources);
 	}
 
 	public T Find<T>(Guid id)
-		where T : AggregateRoot
+		where T : DomainObject
 	{
-		return aggregates.OfType<T>().FirstOrDefault(x => x.Id == id);
+		return objects.OfType<T>().FirstOrDefault(x => x.Id == id);
 	}
 
 	public void Save<T>(T entity)
-		where T : AggregateRoot
+		where T : DomainObject
 	{
-		this.aggregates.Add(entity);
+		this.objects.Add(entity);
 	}
 
 	public void SaveChanges()
 	{
-		foreach (var aggregate in this.aggregates)
+		foreach (var @object in this.objects)
 		{
-			this.eventBus.PublishChanges(aggregate);
+			this.eventBus.PublishChanges(@object);
 		}
 	}
 }

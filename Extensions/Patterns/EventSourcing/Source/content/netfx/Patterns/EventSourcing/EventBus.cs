@@ -24,12 +24,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 /// <summary>
-/// Default implementation of an <see cref="IEventBus{TAggregateId, TBaseEvent}"/> that 
+/// Default implementation of an <see cref="IEventBus{TObjectId, TBaseEvent}"/> that 
 /// invokes handlers as events are published, and where handlers are 
 /// run in-process (if any handlers are provided).
 /// </summary>
 /// <remarks>
-/// A persistent <see cref="IEventStore{TAggregateId, TBaseEvent}"/> can also be specified 
+/// A persistent <see cref="IEventStore{TObjectId, TBaseEvent}"/> can also be specified 
 /// to persist events to a store for later playback or auditing.
 /// <para>
 /// Handlers with <see cref="IEventHandler.IsAsync"/> set to 
@@ -37,38 +37,38 @@ using System.Reflection;
 /// async runner delegate passed to the constructor.
 /// </para>
 /// </remarks>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBaseEvent>
+partial class EventBus<TObjectId, TBaseEvent> : IEventBus<TObjectId, TBaseEvent>
 	where TBaseEvent : ITimestamped
 {
-	private IEventStore<TAggregateId, TBaseEvent> eventStore;
+	private IEventStore<TObjectId, TBaseEvent> eventStore;
 	private Action<Action> asyncActionRunner;
 	private List<HandlerDescriptor> handlerDescriptors;
 	// Pipelines indexed by event type, containing two lists: async and sync handlers.
-	private Dictionary<Type, Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>> handlerPipelines = new Dictionary<Type, Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>>();
+	private Dictionary<Type, Tuple<List<Action<TObjectId, TBaseEvent>>, List<Action<TObjectId, TBaseEvent>>>> handlerPipelines = new Dictionary<Type, Tuple<List<Action<TObjectId, TBaseEvent>>, List<Action<TObjectId, TBaseEvent>>>>();
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TObjectId, TBaseEvent}"/> class with 
 	/// a persistent store for events and the default async runner that enqueues work in the <see cref="ThreadPool"/>.
 	/// </summary>
 	/// <param name="eventStore">The event store to persist events to.</param>
 	/// <param name="eventHandlers">The event handlers.</param>
-	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers)
+	public EventBus(IEventStore<TObjectId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers)
 		: this(eventStore, eventHandlers, action => ThreadPool.QueueUserWorkItem(state => action()))
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="EventBus{TAggregateId, TBaseEvent}"/> class with 
+	/// Initializes a new instance of the <see cref="EventBus{TObjectId, TBaseEvent}"/> class with 
 	/// a persistent store for events, a set of event handlers and a specific async runner.
 	/// </summary>
 	/// <param name="eventStore">The event store to persist events to.</param>
 	/// <param name="eventHandlers">The event handlers.</param>
 	/// <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
 	/// that have <see cref="IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-	public EventBus(IEventStore<TAggregateId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers, Action<Action> asyncActionRunner)
+	public EventBus(IEventStore<TObjectId, TBaseEvent> eventStore, IEnumerable<IEventHandler> eventHandlers, Action<Action> asyncActionRunner)
 	{
 		Guard.NotNull(() => eventStore, eventStore);
 		Guard.NotNull(() => eventHandlers, eventHandlers);
@@ -103,7 +103,7 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 		if (invalidHandlers.Any())
 			throw new ArgumentException(string.Format(
 				CultureInfo.CurrentCulture,
-				"The following event handlers to not implement exactly once the generic interface IEventHandler<TAggregateId, TEvent>: {0}.",
+				"The following event handlers to not implement exactly once the generic interface IEventHandler<TObjectId, TBaseEvent>: {0}.",
 				 string.Join(", ", invalidHandlers.Select(handler => handler.HandlerType.FullName))),
 				 "eventHandlers");
 
@@ -112,20 +112,20 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 	}
 
 	/// <summary>
-	/// Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
+	/// Publishes the pending changes in the given domain object, so that all subscribers are notified. 
 	/// </summary>
-	/// <param name="aggregate">The aggregate root which may contain pending changes.</param>
+	/// <param name="entity">The domain object which may contain pending changes.</param>
 	/// <remarks>
-	/// Also persists the aggregate changes to the event store.
+	/// Also persists the object changes to the event store.
 	/// </remarks>
-	public virtual void PublishChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate)
+	public virtual void PublishChanges(DomainObject<TObjectId, TBaseEvent> entity)
 	{
-		Guard.NotNull(() => aggregate, aggregate);
+		Guard.NotNull(() => entity, entity);
 
-		var events = aggregate.GetChanges().ToList();
+		var events = entity.GetEvents().ToList();
 
 		// Events are persisted first of all.
-		this.eventStore.SaveChanges(aggregate);
+		this.eventStore.SaveChanges(entity);
 
 		foreach (var @event in events)
 		{
@@ -143,20 +143,20 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 
 				// We separate the lists of async and sync handlers as they
 				// are invoked separately below.
-				return new Tuple<List<Action<TAggregateId, TBaseEvent>>, List<Action<TAggregateId, TBaseEvent>>>(
+				return new Tuple<List<Action<TObjectId, TBaseEvent>>, List<Action<TObjectId, TBaseEvent>>>(
 					compatibleHandlers.Where(h => !h.Handler.IsAsync).Select(x => CreateInvoker(x)).ToList(),
 					compatibleHandlers.Where(h => h.Handler.IsAsync).Select(x => CreateInvoker(x)).ToList());
 			});
 
 			foreach (var handler in pipeline.Item1.AsParallel())
 			{
-				handler.Invoke(aggregate.Id, @event);
+				handler.Invoke(entity.Id, @event);
 			}
 
 			// Run background handlers through the async runner.
 			foreach (var handler in pipeline.Item2.AsParallel())
 			{
-				asyncActionRunner(() => handler.Invoke(aggregate.Id, @event));
+				asyncActionRunner(() => handler.Invoke(entity.Id, @event));
 			}
 		}
 	}
@@ -164,19 +164,19 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 	/// <summary>
 	/// Called when an event was published to the bus.
 	/// </summary>
-	/// <param name="aggregateId">The identifier of the aggregate root entity that published the event.</param>
+	/// <param name="objectId">The identifier of the domain object that published the event.</param>
 	/// <param name="event">The published event.</param>
-	protected virtual void OnPublished(TAggregateId aggregateId, TBaseEvent @event) { }
+	protected virtual void OnPublished(TObjectId objectId, TBaseEvent @event) { }
 
 	// Caches a compiled delegate that invokes in a strong-typed fashion the 
 	// underlying handler, casting the generic event type to the concrete 
 	// type supported by the handler IEventHandler generic implementation.
-	private Action<TAggregateId, TBaseEvent> CreateInvoker(HandlerDescriptor descriptor)
+	private Action<TObjectId, TBaseEvent> CreateInvoker(HandlerDescriptor descriptor)
 	{
-		var idParam = Expression.Parameter(typeof(TAggregateId), "aggregateId");
+		var idParam = Expression.Parameter(typeof(TObjectId), "objectId");
 		var eventParam = Expression.Parameter(typeof(TBaseEvent), "event");
 		// (id, event) => handler.Handle(id, (TConcreteEvent)event);
-		var invoker = Expression.Lambda<Action<TAggregateId, TBaseEvent>>(
+		var invoker = Expression.Lambda<Action<TObjectId, TBaseEvent>>(
 			Expression.Call(
 				Expression.Constant(descriptor.Handler), 
 				descriptor.HandleMethod,
@@ -198,7 +198,7 @@ partial class EventBus<TAggregateId, TBaseEvent> : IEventBus<TAggregateId, TBase
 
 		/// <summary>
 		/// Gets or sets the handle method that implements 
-		/// the <see cref="IEventHandler{TAggregateId, TEvent}"/>.
+		/// the <see cref="IEventHandler{TObjectId, TEvent}"/>.
 		/// </summary>
 		public MethodInfo HandleMethod { get; set; }
 

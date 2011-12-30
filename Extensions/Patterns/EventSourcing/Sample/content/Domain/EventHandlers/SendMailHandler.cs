@@ -13,8 +13,8 @@ internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
 	private Lazy<IDomainEventBus> eventBus;
 
 	/// <summary>
-	/// The domain context is used to retrieve the related aggregate 
-	/// root if needed for the event processing.
+	/// The domain context is used to retrieve the related domain 
+	/// object if needed for the event processing.
 	/// </summary>
 	public SendMailHandler(Lazy<IDomainContext> context, Lazy<IDomainEventBus> eventBus)
 	{
@@ -27,12 +27,12 @@ internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
 		this.eventBus = eventBus;
 	}
 
-	public override void Handle(Guid aggregateId, ProductPublishedEvent @event)
+	public override void Handle(Guid objectId, ProductPublishedEvent @event)
 	{
 		// If the same context as the one the entity lives in 
 		// is passed to the constructor (typical for in-proc sync 
 		// handlers), most ORMs would make a quick in-memory lookup for this.
-		var product = this.context.Value.Find<Product>(aggregateId);
+		var product = this.context.Value.Find<Product>(objectId);
 
 		// Invoke an email sending service here.
 

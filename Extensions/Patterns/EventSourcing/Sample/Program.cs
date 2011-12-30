@@ -14,7 +14,7 @@ namespace Sample
 
 		internal class ConsoleHandler : DomainEventHandler<IDomainEvent>
 		{
-			public override void Handle(Guid aggregateId, IDomainEvent @event)
+			public override void Handle(Guid objectId, IDomainEvent @event)
 			{
 				Console.WriteLine(@event);
 			}
@@ -24,17 +24,17 @@ namespace Sample
 		{
 			private List<IDomainEvent> events = new List<IDomainEvent>();
 
-			public void SaveChanges(AggregateRoot<Guid, IDomainEvent> aggregate)
+			public void SaveChanges(DomainObject<Guid, IDomainEvent> entity)
 			{
-				foreach (var @event in aggregate.GetChanges())
+				foreach (var @event in entity.GetEvents())
 				{
-					Save(aggregate, @event);
+					Save(entity, @event);
 				}
 
-				aggregate.AcceptChanges();
+				entity.AcceptEvents();
 			}
 
-			public void Save(AggregateRoot<Guid, IDomainEvent> sender, IDomainEvent @event)
+			public void Save(DomainObject<Guid, IDomainEvent> sender, IDomainEvent @event)
 			{
 				this.events.Add(@event);
 				Console.WriteLine("Saved event {0} to the store.", @event);
@@ -65,7 +65,7 @@ namespace Sample
 			context.Save(product);
 
 			// Save changes and cause publication of pending events 
-			// in the newly created aggregate root.
+			// in the newly created domain object.
 			context.SaveChanges();
 
 			Console.WriteLine();

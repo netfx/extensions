@@ -16,14 +16,15 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		public virtual DateTimeOffset Timestamp { get; protected set; }
 	}
 
-	internal abstract class AggregateRoot : AggregateRoot<Guid, DomainEvent> 
+	internal abstract class DomainObject : DomainObject<Guid, DomainEvent> 
 	{
+		protected DomainObject() { }
 	}
 
 	/// <summary>
 	/// Product is an the domain object sourcing the event with domain logic.
 	/// </summary>
-	internal class Product : AggregateRoot
+	internal class Product : DomainObject
 	{
 		/// <summary>
 		/// Event raised when a new product is created.
@@ -80,6 +81,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			this.Handles<PublishedEvent>(this.OnPublished);
 		}
 
+		public Product(IEnumerable<DomainEvent> events)
+			: this()
+		{
+			base.Load(events);
+		}
+
 		/// <summary>
 		/// Initializes a product and shows how even the 
 		/// constructor parameters are processed as an event.
@@ -96,7 +103,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			if (string.IsNullOrEmpty(title))
 				throw new ArgumentException("title");
 
-			this.Raise(new CreatedEvent { Id = id, Title = title });
+			this.Apply(new CreatedEvent { Id = id, Title = title });
 		}
 
 		// Technically, these members wouldn't even need a public setter 
@@ -113,7 +120,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			// When we're ready to apply state changes, we 
 			// apply them through an event that calls back 
 			// the OnCreated method as mapped in the ctor.
-			this.Raise(new PublishedEvent { Version = version });
+			this.Apply(new PublishedEvent { Version = version });
 		}
 
 		private void OnCreated(CreatedEvent @event)
@@ -129,7 +136,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 		public void Deactivate()
 		{
-			base.Raise(new DeactivatedEvent());
+			base.Apply(new DeactivatedEvent());
 		}
 	}
 }
