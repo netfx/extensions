@@ -27,11 +27,11 @@ using System;
 /// representation via this interface would be unnecessarily 
 /// restrictive and is not needed for the rest of the APIs.
 /// </remarks>
-/// <typeparam name="TStoredAggregate">The type of the stored aggregate root entity.</typeparam>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TStoredObject">The type of the stored domain object entity.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
-partial interface IStoredEvent<TStoredAggregate, TAggregateId>
-	where TStoredAggregate : IStoredAggregate<TAggregateId>
+partial interface IStoredEvent<TStoredObject, TObjectId>
+	where TStoredObject : IStoredObject<TObjectId>
 {
 	/// <summary>
 	/// Gets the event id.
@@ -49,7 +49,7 @@ partial interface IStoredEvent<TStoredAggregate, TAggregateId>
 	DateTime Timestamp { get; set; }
 
 	/// <summary>
-	/// Gets the aggregate root associated with this event, if any.
+	/// Gets the domain object associated with this event, if any.
 	/// </summary>
-	TStoredAggregate Aggregate { get; set; }
+	TStoredObject TargetObject { get; set; }
 }

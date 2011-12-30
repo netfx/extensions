@@ -32,16 +32,16 @@ static partial class EventQueryExtension
 	/// <summary>
 	/// Queries the event store for events that match specified 
 	/// criteria via the returned fluent API methods 
-	/// <see cref="IEventQuery{TAggregateId, TBaseEvent}.For{TAggregate}()"/> and 
-	/// <see cref="IEventQuery{TAggregateId, TBaseEvent}.OfType{TEvent}()"/>. 
+	/// <see cref="IEventQuery{TObjectId, TBaseEvent}.For{TObject}()"/> and 
+	/// <see cref="IEventQuery{TObjectId, TBaseEvent}.OfType{TEvent}()"/>. 
 	/// </summary>
-	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+	/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <param name="store">The domain event store.</param>
-	public static IEventQuery<TAggregateId, TBaseEvent> Query<TAggregateId, TBaseEvent>(this IEventStore<TAggregateId, TBaseEvent> store)
+	public static IEventQuery<TObjectId, TBaseEvent> Query<TObjectId, TBaseEvent>(this IEventStore<TObjectId, TBaseEvent> store)
 		where TBaseEvent : ITimestamped
 	{
-		return new EventQuery<TAggregateId, TBaseEvent>(store);
+		return new EventQuery<TObjectId, TBaseEvent>(store);
 	}
 
 	/// <summary>
@@ -49,12 +49,12 @@ static partial class EventQueryExtension
 	/// </summary>
 	/// <remarks>
 	/// This interface is returned from the <see cref="EventQueryExtension.Query"/> 
-	/// extension method for <see cref="IEventStore{TAggregateId, TBaseEvent}"/>.
+	/// extension method for <see cref="IEventStore{TObjectId, TBaseEvent}"/>.
 	/// </remarks>
-	/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+	/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <nuget id="netfx-Patterns.EventSourcing"/>
-	public partial interface IEventQuery<TAggregateId, TBaseEvent>
+	public partial interface IEventQuery<TObjectId, TBaseEvent>
 		where TBaseEvent : ITimestamped
 	{
 		/// <summary>
@@ -64,26 +64,26 @@ static partial class EventQueryExtension
 		IEnumerable<TBaseEvent> Execute();
 
 		/// <summary>
-		/// Filters events that target the given aggregate root type. Can be called 
+		/// Filters events that target the given domain object type. Can be called 
 		/// multiple times and will filter for any of the specified types (OR operator).
 		/// </summary>
-		/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-		IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>();
+		/// <typeparam name="TObject">The type of the domain object to filter events for.</typeparam>
+		IEventQuery<TObjectId, TBaseEvent> For<TObject>();
 
 		/// <summary>
-		/// Filters events that target the given aggregate root type and identifier. Can be called 
+		/// Filters events that target the given domain object type and identifier. Can be called 
 		/// multiple times and will filter for any of the specified types and ids (OR operator).
 		/// </summary>
-		/// <typeparam name="TAggregate">The type of the aggregate root to filter events for.</typeparam>
-		/// <param name="aggregateId">The aggregate root identifier to filter by.</param>
-		IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId);
+		/// <typeparam name="TObject">The type of the domain object to filter events for.</typeparam>
+		/// <param name="objectId">The domain object identifier to filter by.</param>
+		IEventQuery<TObjectId, TBaseEvent> For<TObject>(TObjectId objectId);
 
 		/// <summary>
 		/// Filters events that are assignable to the given type. Can be called 
 		/// multiple times and will filter for any of the specified types (OR operator).
 		/// </summary>
 		/// <typeparam name="TEvent">The type of the events to filter.</typeparam>
-		IEventQuery<TAggregateId, TBaseEvent> OfType<TEvent>() where TEvent : TBaseEvent;
+		IEventQuery<TObjectId, TBaseEvent> OfType<TEvent>() where TEvent : TBaseEvent;
 
 		/// <summary>
 		/// Filters events that happened after the given starting date.
@@ -93,7 +93,7 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TAggregateId, TBaseEvent> Since(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Since(DateTime when);
 
 		/// <summary>
 		/// Filters events that happened before the given ending date.
@@ -103,22 +103,22 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TAggregateId, TBaseEvent> Until(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Until(DateTime when);
 
 		/// <summary>
 		/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
 		/// exclusive, changing the default behavior which is to be inclusive.
 		/// </summary>
-		IEventQuery<TAggregateId, TBaseEvent> ExclusiveRange();
+		IEventQuery<TObjectId, TBaseEvent> ExclusiveRange();
 	}
 
-	private class EventQuery<TAggregateId, TBaseEvent> : IEventQuery<TAggregateId, TBaseEvent>
+	private class EventQuery<TObjectId, TBaseEvent> : IEventQuery<TObjectId, TBaseEvent>
 		where TBaseEvent : ITimestamped
 	{	
-		private IEventStore<TAggregateId, TBaseEvent> store;
-		private EventQueryCriteria<TAggregateId> criteria = new EventQueryCriteria<TAggregateId>();
+		private IEventStore<TObjectId, TBaseEvent> store;
+		private EventQueryCriteria<TObjectId> criteria = new EventQueryCriteria<TObjectId>();
 
-		public EventQuery(IEventStore<TAggregateId, TBaseEvent> store)
+		public EventQuery(IEventStore<TObjectId, TBaseEvent> store)
 		{
 			this.store = store;
 		}
@@ -128,27 +128,27 @@ static partial class EventQueryExtension
 			return this.store.Query(this.criteria);
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>()
+		public IEventQuery<TObjectId, TBaseEvent> For<TObject>()
 		{
-			foreach (var type in GetInheritance<TAggregate>())
+			foreach (var type in GetInheritance<TObject>())
 			{
-				this.criteria.AggregateTypes.Add(type);
+				this.criteria.ObjectTypes.Add(type);
 			}
 
 			return this;
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> For<TAggregate>(TAggregateId aggregateId)
+		public IEventQuery<TObjectId, TBaseEvent> For<TObject>(TObjectId objectId)
 		{
-			foreach (var type in GetInheritance<TAggregate>())
+			foreach (var type in GetInheritance<TObject>())
 			{
-				this.criteria.AggregateInstances.Add(new EventQueryCriteria<TAggregateId>.AggregateFilter(type, aggregateId));
+				this.criteria.ObjectInstances.Add(new EventQueryCriteria<TObjectId>.ObjectFilter(type, objectId));
 			}
 
 			return this;
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> OfType<TEvent>()
+		public IEventQuery<TObjectId, TBaseEvent> OfType<TEvent>()
 			where TEvent : TBaseEvent
 		{
 			foreach (var type in GetInheritance<TEvent>())
@@ -159,19 +159,19 @@ static partial class EventQueryExtension
 			return this;
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> Since(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Since(DateTime when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> Until(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Until(DateTime when)
 		{
 			this.criteria.Until = when;
 			return this;
 		}
 
-		public IEventQuery<TAggregateId, TBaseEvent> ExclusiveRange()
+		public IEventQuery<TObjectId, TBaseEvent> ExclusiveRange()
 		{
 			this.criteria.IsExclusiveRange = true;
 			return this;

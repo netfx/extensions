@@ -38,43 +38,60 @@ using System.Text;
 /// Provides an in-memory event store, useful for testing domains that leverage event sourcing
 /// </summary>
 ///	<nuget id="netfx-Patterns.EventSourcing.InMemory" />
-partial class MemoryStore<TAggregateId, TBaseEvent> : IQueryableEventStore<TAggregateId, TBaseEvent, 
-	MemoryStore<TAggregateId, TBaseEvent>.StoredAggregate, 
-	MemoryStore<TAggregateId, TBaseEvent>.StoredEvent>
-	where TAggregateId : IComparable
+partial class MemoryStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectId, TBaseEvent,
+	MemoryStore<TObjectId, TBaseEvent>.StoredObject,
+	MemoryStore<TObjectId, TBaseEvent>.StoredEvent>
+	where TObjectId : IComparable
 	where TBaseEvent : ITimestamped
 {
-	private List<StoredAggregate> aggregates = new List<StoredAggregate>();
+	private List<StoredObject> objects = new List<StoredObject>();
 	private List<StoredEvent> events = new List<StoredEvent>();
+	private Func<TBaseEvent, DateTime> utcNow;
+
+	public MemoryStore()
+		: this(() => DateTime.UtcNow)
+	{
+	}
+
+	/// <summary>
+	/// Initializes the store with a specific way to calculate the current time, useful 
+	/// in tests when there's a need to simulate events happening at specific times.
+	/// </summary>
+	/// <param name="utcNow">The current date time, in UTC form.</param>
+	public MemoryStore(Func<DateTime> utcNow)
+	{
+		// If the events have their own time, use that, otherwise, use the provided time.
+		this.utcNow = change => change.Timestamp != DateTimeOffset.MinValue ? change.Timestamp.UtcDateTime : utcNow();
+	}
 
 	/// <summary>
 	/// Gets the aggregates that contain events persisted by the store.
 	/// </summary>
-	public IQueryable<StoredAggregate> Aggregates { get { return this.aggregates.AsQueryable(); } }
+	public IQueryable<StoredObject> DomainObjects { get { return this.objects.AsQueryable(); } }
 
 	/// <summary>
 	/// Gets the stream of events persisted by the store.
 	/// </summary>
 	public IQueryable<StoredEvent> Events { get { return this.events.AsQueryable(); } }
 
-	public void SaveChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate)
+	public void SaveChanges(DomainObject<TObjectId, TBaseEvent> domainObject)
 	{
-		var stored = this.Aggregates.FirstOrDefault(this.AggregateIdEquals(aggregate.Id));
+		var stored = this.DomainObjects.FirstOrDefault(this.ObjectIdEquals(domainObject.Id));
 		if (stored == null)
 		{
-			stored = new StoredAggregate(aggregate);
-			this.aggregates.Add(stored);
+			stored = new StoredObject(domainObject);
+			this.objects.Add(stored);
 		}
 
-		foreach (var change in aggregate.GetChanges())
+		foreach (var change in domainObject.GetChanges())
 		{
-			this.events.Add(new StoredEvent(stored, change));
+			this.events.Add(new StoredEvent(stored, change) { Timestamp = this.utcNow(change) });
 		}
 
-		aggregate.AcceptChanges();
+		domainObject.AcceptChanges();
 	}
 
-	public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria)
+	public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TObjectId> criteria)
 	{
 		return this.Events.Where(this.ToExpression(criteria, type => type.FullName)).Select(x => x.Event);
 	}
@@ -82,30 +99,30 @@ partial class MemoryStore<TAggregateId, TBaseEvent> : IQueryableEventStore<TAggr
 	/// <summary>
 	/// Internal storage representation of the aggregate header information.
 	/// </summary>
-	public class StoredAggregate : IStoredAggregate<TAggregateId>
+	public class StoredObject : IStoredObject<TObjectId>
 	{
-		public StoredAggregate(AggregateRoot<TAggregateId, TBaseEvent> aggregate)
+		public StoredObject(DomainObject<TObjectId, TBaseEvent> entity)
 		{
-			this.Aggregate = aggregate;
-			this.AggregateId = aggregate.Id;
-			this.AggregateType = aggregate.GetType().FullName;
+			this.Object = entity;
+			this.ObjectId = entity.Id;
+			this.ObjectType = entity.GetType().FullName;
 		}
 
-		public AggregateRoot<TAggregateId, TBaseEvent> Aggregate { get; set; }
+		public DomainObject<TObjectId, TBaseEvent> Object { get; set; }
 
-		public TAggregateId AggregateId { get; set; }
-		public string AggregateType { get; set; }
+		public TObjectId ObjectId { get; set; }
+		public string ObjectType { get; set; }
 	}
 
 	/// <summary>
 	/// Internal storage representation of the event payload.
 	/// </summary>
-	public class StoredEvent : IStoredEvent<StoredAggregate, TAggregateId>
+	public class StoredEvent : IStoredEvent<StoredObject, TObjectId>
 	{
-		public StoredEvent(StoredAggregate aggregate, TBaseEvent change)
+		public StoredEvent(StoredObject target, TBaseEvent change)
 		{
 			this.Event = change;
-			this.Aggregate = aggregate;
+			this.TargetObject = target;
 
 			this.EventId = Guid.NewGuid();
 			this.EventType = change.GetType().FullName;
@@ -116,7 +133,7 @@ partial class MemoryStore<TAggregateId, TBaseEvent> : IQueryableEventStore<TAggr
 
 		public Guid EventId { get; set; }
 		public string EventType { get; set; }
-		public StoredAggregate Aggregate { get; set; }
+		public StoredObject TargetObject { get; set; }
 		public DateTime Timestamp { get; set; }
 	}
 }

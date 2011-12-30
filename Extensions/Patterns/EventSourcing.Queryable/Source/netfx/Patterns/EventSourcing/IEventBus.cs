@@ -20,20 +20,20 @@ using System;
 /// Interface implemented by the component that coordinates 
 /// event handler invocation when a subscribed event is published.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IEventBus<TAggregateId, TBaseEvent>
+partial interface IEventBus<TObjectId, TBaseEvent>
 	where TBaseEvent : ITimestamped
 {
 	/// <summary>
-	/// Publishes the pending changes in the given aggregate root, so that all subscribers are notified. 
+	/// Publishes the pending changes in the given domain object, so that all subscribers are notified. 
 	/// </summary>
-	/// <param name="aggregate">The aggregate root which may contain pending changes.</param>
+	/// <param name="entity">The domain object which may contain pending changes.</param>
 	/// <remarks>
-	/// Default <see cref="EventBus{TAggregateId, TBaseEvent}"/> also calls 
-	/// <see cref="AggregateRoot{TAggregateId, TBaseEvent}.AcceptChanges"/> after 
-	/// saving the changes to the <see cref="IEventStore{TAggregateId, TBaseEvent}"/> store.
+	/// Default <see cref="EventBus{TObjectId, TBaseEvent}"/> also calls 
+	/// <see cref="DomainObject{TObjectId, TBaseEvent}.AcceptChanges"/> after 
+	/// saving the changes to the <see cref="IEventStore{TObjectId, TBaseEvent}"/> store.
 	/// </remarks>
-	void PublishChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate);
+	void PublishChanges(DomainObject<TObjectId, TBaseEvent> entity);
 }

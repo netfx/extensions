@@ -7,73 +7,73 @@ using System.Reflection;
 
 static partial class QueryableEventStoreExtensions
 {
-	private static readonly Dictionary<Type, PropertyInfo> aggregateIdProperties = new Dictionary<Type, PropertyInfo>();
+	private static readonly Dictionary<Type, PropertyInfo> objectIdProperties = new Dictionary<Type, PropertyInfo>();
 
 	/// <summary>
-	/// Builds the equals expression that can be used to find a matching aggregate 
-	/// in a queryable of <see cref="IStoredAggregate{TAggregateId}"/> entities using the <c>FirstOrDefault</c> 
+	/// Builds the equals expression that can be used to find a matching object
+	/// in a queryable of <see cref="IStoredObject{TObjectId}"/> entities using the <c>FirstOrDefault</c> 
 	/// Linq operator, for example.
 	/// </summary>
 	/// <remarks>
-	/// This is needed because == doesn't compile for TAggregateId and calling CompareTo 
+	/// This is needed because == doesn't compile for TObjectId and calling CompareTo 
 	/// wouldn't work on most non in-memory stores either.
 	/// </remarks>
-	public static Expression<Func<TStoredAggregate, bool>> AggregateIdEquals<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent>(
-		this IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> store, TAggregateId id)
-		where TAggregateId : IComparable
+	public static Expression<Func<TStoredObject, bool>> ObjectIdEquals<TObjectId, TBaseEvent, TStoredObject, TStoredEvent>(
+		this IQueryableEventStore<TObjectId, TBaseEvent, TStoredObject, TStoredEvent> store, TObjectId id)
+		where TObjectId : IComparable
 		where TBaseEvent : ITimestamped
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
+		where TStoredObject : class, IStoredObject<TObjectId>
+		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
 	{
-		var idProperty = aggregateIdProperties.GetOrAdd(typeof(TStoredAggregate), type => type.GetProperty("AggregateId"));
+		var idProperty = objectIdProperties.GetOrAdd(typeof(TStoredObject), type => type.GetProperty("ObjectId"));
 
-		var aggregate = Expression.Parameter(typeof(TStoredAggregate), "aggregate");
-		var lambda = Expression.Lambda<Func<TStoredAggregate, bool>>(
+		var entity = Expression.Parameter(typeof(TStoredObject), "entity");
+		var lambda = Expression.Lambda<Func<TStoredObject, bool>>(
 			Expression.Equal(
-				Expression.MakeMemberAccess(aggregate, idProperty),
-				Expression.Constant(id, typeof(TAggregateId))), aggregate);
+				Expression.MakeMemberAccess(entity, idProperty),
+				Expression.Constant(id, typeof(TObjectId))), entity);
 
 		return lambda;
 	}
 
 	/// <summary>
 	/// Converts a criteria object passed to the queryable event store 
-	/// <see cref="IEventStore{TAggregateId, TBaseEvent}.Query"/> method 
+	/// <see cref="IEventStore{TObjectId, TBaseEvent}.Query"/> method 
 	/// into a Linq expression that can be used directly as a filter (<c>Where</c>) 
 	/// over the stored queryable event stream.
 	/// </summary>
-	/// <typeparam name="TAggregateId">The type of identifier used by aggregate roots in the domain.</typeparam>
+	/// <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-	/// <typeparam name="TStoredAggregate">The type of the stored aggregate.</typeparam>
+	/// <typeparam name="TStoredObject">The type of the stored object.</typeparam>
 	/// <param name="store">The store to provide the query expression for.</param>
 	/// <param name="criteria">The criteria that will be converted to a Linq expression.</param>
 	/// <param name="typeNameConverter">The type name converter to use to transform the <see cref="Type"/> 
 	/// filters in the criteria object into type name strings that are persisted by the store.</param>
-	public static Expression<Func<TStoredEvent, bool>> ToExpression<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent>(
-		this IQueryableEventStore<TAggregateId, TBaseEvent, TStoredAggregate, TStoredEvent> store, 
-		EventQueryCriteria<TAggregateId> criteria, 
+	public static Expression<Func<TStoredEvent, bool>> ToExpression<TObjectId, TBaseEvent, TStoredObject, TStoredEvent>(
+		this IQueryableEventStore<TObjectId, TBaseEvent, TStoredObject, TStoredEvent> store, 
+		EventQueryCriteria<TObjectId> criteria, 
 		Func<Type, string> typeNameConverter)
-		where TAggregateId : IComparable
+		where TObjectId : IComparable
 		where TBaseEvent : ITimestamped
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
+		where TStoredObject : class, IStoredObject<TObjectId>
+		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
 	{
-		return new CriteriaBuilder<TAggregateId, TStoredAggregate, TStoredEvent>(criteria, typeNameConverter).Build();
+		return new CriteriaBuilder<TObjectId, TStoredObject, TStoredEvent>(criteria, typeNameConverter).Build();
 	}
 
-	private class CriteriaBuilder<TAggregateId, TStoredAggregate, TStoredEvent>
-		where TAggregateId : IComparable
-		where TStoredAggregate : class, IStoredAggregate<TAggregateId>
-		where TStoredEvent : class, IStoredEvent<TStoredAggregate, TAggregateId>
+	private class CriteriaBuilder<TObjectId, TStoredObject, TStoredEvent>
+		where TObjectId : IComparable
+		where TStoredObject : class, IStoredObject<TObjectId>
+		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
 	{
-		private static readonly Lazy<PropertyInfo> AggregateProperty = new Lazy<PropertyInfo>(() => typeof(TStoredEvent).GetProperty("Aggregate"));
-		private static readonly Lazy<PropertyInfo> AggregateIdProperty = new Lazy<PropertyInfo>(() => typeof(TStoredAggregate).GetProperty("AggregateId"));
+		private static readonly Lazy<PropertyInfo> TargetObjectProperty = new Lazy<PropertyInfo>(() => typeof(TStoredEvent).GetProperty("TargetObject"));
+		private static readonly Lazy<PropertyInfo> ObjectIdProperty = new Lazy<PropertyInfo>(() => typeof(TStoredObject).GetProperty("ObjectId"));
 
-		private EventQueryCriteria<TAggregateId> criteria;
+		private EventQueryCriteria<TObjectId> criteria;
 		private Func<Type, string> typeNameConverter;
 
-		public CriteriaBuilder(EventQueryCriteria<TAggregateId> criteria, Func<Type, string> typeNameConverter)
+		public CriteriaBuilder(EventQueryCriteria<TObjectId> criteria, Func<Type, string> typeNameConverter)
 		{
 			this.criteria = criteria;
 			this.typeNameConverter = typeNameConverter;
@@ -88,8 +88,8 @@ static partial class QueryableEventStoreExtensions
 
 			if (this.criteria != null)
 			{
-				result = AddAggregateIdFilter(result);
-				result = AddAggregateFilter(result);
+				result = AddObjectIdFilter(result);
+				result = AddObjectFilter(result);
 			}
 
 			result = AddEventFilter(result);
@@ -115,20 +115,20 @@ static partial class QueryableEventStoreExtensions
 			return result;
 		}
 
-		private Expression<Func<TStoredEvent, bool>> AddAggregateIdFilter(Expression<Func<TStoredEvent, bool>> result)
+		private Expression<Func<TStoredEvent, bool>> AddObjectIdFilter(Expression<Func<TStoredEvent, bool>> result)
 		{
 			var criteria = default(Expression<Func<TStoredEvent, bool>>);
 
-			foreach (var filter in this.criteria.AggregateInstances)
+			foreach (var filter in this.criteria.ObjectInstances)
 			{
-				var sourceType = typeNameConverter.Invoke(filter.AggregateType);
-				// Builds: Aggregate != null && Aggregate.AggregateId == id && Aggregate.AggregateType == type
+				var sourceType = typeNameConverter.Invoke(filter.ObjectType);
+				// Builds: TargetObject != null && TargetObject.ObjectId == id && TargetObject.ObjectType == type
 
 				var predicate = ((Expression<Func<TStoredEvent, bool>>)
-					(e => e.Aggregate.AggregateId != null && e.Aggregate.AggregateType == sourceType)).And
-					(EventAggregateIdEquals(filter.AggregateId));
+					(e => e.TargetObject.ObjectId != null && e.TargetObject.ObjectType == sourceType)).And
+					(EventObjectIdEquals(filter.ObjectId));
 
-				// ORs all aggregregate+id filters.
+				// ORs all object+id filters.
 				criteria = Or(criteria, predicate);
 			}
 
@@ -139,16 +139,16 @@ static partial class QueryableEventStoreExtensions
 			return And(result, criteria);
 		}
 
-		private Expression<Func<TStoredEvent, bool>> AddAggregateFilter(Expression<Func<TStoredEvent, bool>> result)
+		private Expression<Func<TStoredEvent, bool>> AddObjectFilter(Expression<Func<TStoredEvent, bool>> result)
 		{
 			var criteria = default(Expression<Func<TStoredEvent, bool>>);
 
-			foreach (var filter in this.criteria.AggregateTypes)
+			foreach (var filter in this.criteria.ObjectTypes)
 			{
 				var sourceType = typeNameConverter.Invoke(filter);
 
 				// ORs all aggregregate filters.
-				criteria = Or(criteria, e => e.Aggregate != null && e.Aggregate.AggregateType == sourceType);
+				criteria = Or(criteria, e => e.TargetObject != null && e.TargetObject.ObjectType == sourceType);
 			}
 
 			if (criteria == null)
@@ -188,10 +188,10 @@ static partial class QueryableEventStoreExtensions
 		}
 
 		/// <devdoc>
-		/// This is needed because == doesn't compile for TAggregateId and calling CompareTo 
+		/// This is needed because == doesn't compile for TObjectId and calling CompareTo 
 		/// wouldn't work on most non in-memory stores either.
 		/// </devdoc>
-		private Expression<Func<TStoredEvent, bool>> EventAggregateIdEquals(TAggregateId id)
+		private Expression<Func<TStoredEvent, bool>> EventObjectIdEquals(TObjectId id)
 		{
 			var @event = Expression.Parameter(typeof(TStoredEvent), "event");
 			var lambda = Expression.Lambda<Func<TStoredEvent, bool>>(
@@ -199,9 +199,9 @@ static partial class QueryableEventStoreExtensions
 					Expression.MakeMemberAccess(
 						Expression.MakeMemberAccess(
 							@event,
-							AggregateProperty.Value),
-						AggregateIdProperty.Value),
-					Expression.Constant(id, typeof(TAggregateId))), @event);
+							TargetObjectProperty.Value),
+						ObjectIdProperty.Value),
+					Expression.Constant(id, typeof(TObjectId))), @event);
 
 			return lambda;
 		}

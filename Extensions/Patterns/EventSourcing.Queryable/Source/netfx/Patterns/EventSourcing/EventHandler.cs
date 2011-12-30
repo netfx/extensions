@@ -19,13 +19,13 @@ using System;
 /// <summary>
 /// Base class for domain event handlers that handle a specific type of event.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing" />
-abstract partial class EventHandler<TAggregateId, TEvent> : IEventHandler<TAggregateId, TEvent>
+abstract partial class EventHandler<TObjectId, TEvent> : IEventHandler<TObjectId, TEvent>
 {
 	/// <summary>
-	/// Invocation style hint that the <see cref="IEventBus{TAggregateId, TBaseEvent}"/> implementation
+	/// Invocation style hint that the <see cref="IEventBus{TObjectId, TBaseEvent}"/> implementation
 	/// can use to invoke a handler asynchronously with regards to the event publisher.
 	/// </summary>
 	public virtual bool IsAsync { get { return false; } }
@@ -33,5 +33,5 @@ abstract partial class EventHandler<TAggregateId, TEvent> : IEventHandler<TAggre
 	/// <summary>
 	/// Handles the specified event.
 	/// </summary>
-	public abstract void Handle(TAggregateId aggregateId, TEvent @event);
+	public abstract void Handle(TObjectId objectId, TEvent @event);
 }

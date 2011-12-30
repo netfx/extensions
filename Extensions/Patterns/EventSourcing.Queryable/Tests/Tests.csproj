@@ -44,10 +44,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.8.0.1549\lib\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing.Queryable\QueryableEventStoreSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\AggregateRootSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\EventBusSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
