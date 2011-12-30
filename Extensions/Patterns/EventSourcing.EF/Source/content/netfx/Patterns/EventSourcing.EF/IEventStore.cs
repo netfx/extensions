@@ -17,9 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using System;
 
 /// <summary>
-/// An Entity Framework-based interface that persists aggregate 
-/// roots with Guid identifiers and <see cref="StoredAggregate"/> 
-/// aggregate header and <see cref="StoredEvent"/> persisted entities.
+/// An Entity Framework-based interface that persists domain 
+/// objects with Guid identifiers and <see cref="StoredObject"/> 
+/// object header and <see cref="StoredEvent"/> persisted entities.
 /// </summary>
 /// <typeparam name="TBaseEvent">The type of the base event.</typeparam>
 /// <remarks>
@@ -27,7 +27,7 @@ using System;
 /// as it removes the need to declare the myriad generic parameters required by the 
 /// base queryable event store API.
 /// </remarks>
-partial interface IEventStore<TBaseEvent> : IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>
+partial interface IEventStore<TBaseEvent> : IQueryableEventStore<Guid, TBaseEvent, StoredObject, StoredEvent>
 	where TBaseEvent : ITimestamped
 {
 }

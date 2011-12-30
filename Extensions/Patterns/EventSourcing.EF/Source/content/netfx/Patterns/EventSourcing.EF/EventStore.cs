@@ -54,7 +54,7 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	/// <summary>
 	/// Gets or sets the function that converts a <see cref="Type"/> to 
 	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="StoredAggregate.AggregateType"/> and 
+	/// values of <see cref="StoredObject.ObjectType"/> and 
 	/// <see cref="StoredEvent.EventType"/>.
 	/// </summary>
 	public Func<Type, string> TypeNameConverter { get; set; }
@@ -65,9 +65,9 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	public virtual DbSet<StoredEvent> Events { get; set; }
 
 	/// <summary>
-	/// Gets or sets the aggregate roots persisted in the store.
+	/// Gets or sets the domain objects persisted in the store.
 	/// </summary>
-	public virtual DbSet<StoredAggregate> Aggregates { get; set; }
+	public virtual DbSet<StoredObject> DomainObjects { get; set; }
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
@@ -89,42 +89,42 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	}
 
 	/// <summary>
-	/// Saves the given events raised by the given sender aggregate root.
+	/// Saves the given events raised by the given sender domain object.
 	/// </summary>
-	/// <param name="aggregate">The aggregate raising the events.</param>
-	public void SaveChanges(AggregateRoot<Guid, TBaseEvent> aggregate)
+	/// <param name="domainObject">The domain object raising the events.</param>
+	public void SaveChanges(DomainObject<Guid, TBaseEvent> domainObject)
 	{
-		foreach (var @event in aggregate.GetChanges().ToList())
+		foreach (var @event in domainObject.GetChanges().ToList())
 		{
-			SaveEvent(aggregate, @event);
+			SaveEvent(domainObject, @event);
 		}
 
-		aggregate.AcceptChanges();
+		domainObject.AcceptChanges();
 	}
 
-	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredAggregate, StoredEvent>.Events
+	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredObject, StoredEvent>.Events
 	{
 		get { return this.Events; }
 	}	
 
-	private void SaveEvent(AggregateRoot<Guid, TBaseEvent> aggregate, TBaseEvent @event)
+	private void SaveEvent(DomainObject<Guid, TBaseEvent> domainObject, TBaseEvent @event)
 	{
-		var aggregateFilter = this.AggregateIdEquals(aggregate.Id);
+		var objectFilter = this.ObjectIdEquals(domainObject.Id);
 		// First look at the in-memory entities.
-		var storedAggregate = this.Aggregates.Local.AsQueryable().FirstOrDefault(aggregateFilter);
+		var storedObject = this.DomainObjects.Local.AsQueryable().FirstOrDefault(objectFilter);
 		// Fallback to the database
-		if (storedAggregate == null)
-			storedAggregate = this.Aggregates.FirstOrDefault(aggregateFilter);
+		if (storedObject == null)
+			storedObject = this.DomainObjects.FirstOrDefault(objectFilter);
 
-		if (storedAggregate == null)
+		if (storedObject == null)
 		{
-			storedAggregate = this.Aggregates.Add(new StoredAggregate
+			storedObject = this.DomainObjects.Add(new StoredObject
 			{
-				AggregateId = aggregate.Id,
-				AggregateType = this.TypeNameConverter.Invoke(aggregate.GetType())
+				ObjectId = domainObject.Id,
+				ObjectType = this.TypeNameConverter.Invoke(domainObject.GetType())
 			});
 
-			OnSavingAggregate(aggregate, storedAggregate);
+			OnSavingObject(domainObject, storedObject);
 		}
 
 		var stored = new StoredEvent
@@ -134,7 +134,7 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 			EventType = this.TypeNameConverter.Invoke(@event.GetType()),
 			Timestamp = @event.Timestamp.UtcDateTime,
 			Payload = this.Serializer.Serialize(@event),
-			Aggregate = storedAggregate,
+			TargetObject = storedObject,
 		};
 
 		this.Events.Add(stored);
@@ -145,14 +145,14 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	}
 
 	/// <summary>
-	/// Extensibility hook called when an event for the given aggregate 
+	/// Extensibility hook called when an event for the given object 
 	/// is saved for the first time. At this point, the corresponding 
-	/// aggregate header information in <see cref="StoredAggregate"/> entity 
+	/// object header information in <see cref="StoredObject"/> entity 
 	/// is created and persisted.
 	/// </summary>
-	/// <param name="aggregate">The aggregate being persisted for the first time in this event store.</param>
+	/// <param name="domainObject">The domain object being persisted for the first time in this event store.</param>
 	/// <param name="entity">The entity that will be saved to the underlying database.</param>
-	protected virtual void OnSavingAggregate(AggregateRoot<Guid, TBaseEvent> aggregate, StoredAggregate entity) { }
+	protected virtual void OnSavingObject(DomainObject<Guid, TBaseEvent> domainObject, StoredObject entity) { }
 
 	/// <summary>
 	/// Extensibility hook called when an event is being saved to the 

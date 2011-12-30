@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.EF.Tests.xUnit</id>
-		<version>1.0.0.2</version>
+		<version>1.0.0.3</version>
 		<title>NETFx Patterns: Event Sourcing Store for Entity Framework xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.EF</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
@@ -14,6 +14,7 @@
 		<dependencies>
 			<dependency id="EntityFramework" version="4.2" />
 			<dependency id="xunit" version="1.8" />
+			<!-- This one automatically brings in the ES tests -->
 			<dependency id="netfx-Patterns.EventSourcing.Queryable.Tests.xUnit" version="1.0" />
 			<dependency id="netfx-System.ISerializer.Tests.xUnit" version="1.0" />
 		</dependencies>

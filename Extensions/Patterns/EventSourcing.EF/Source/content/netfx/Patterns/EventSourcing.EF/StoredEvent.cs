@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 /// Represents a persisted event in an event store.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.EF"/>
-partial class StoredEvent : IStoredEvent<StoredAggregate, Guid>
+partial class StoredEvent : IStoredEvent<StoredObject, Guid>
 {
 	/// <summary>
 	/// Gets or sets the activity id when this event occurred.
@@ -45,9 +45,9 @@ partial class StoredEvent : IStoredEvent<StoredAggregate, Guid>
 	public DateTime Timestamp { get; set; }
 
 	/// <summary>
-	/// Gets the aggregate root associated with this event, if any.
+	/// Gets the target stored object entity associated with this event, if any.
 	/// </summary>
-	public StoredAggregate Aggregate { get; set; }
+	public StoredObject TargetObject { get; set; }
 
 	/// <summary>
 	/// Gets or sets the payload of the event.

@@ -45,4 +45,4 @@ using System.Runtime.CompilerServices;
 // in order to be able to persist the instances.
 
 public partial class StoredEvent { }
-public partial class StoredAggregate { }
+public partial class StoredObject { }

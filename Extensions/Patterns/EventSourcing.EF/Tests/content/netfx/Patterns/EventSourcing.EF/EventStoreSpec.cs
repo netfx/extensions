@@ -70,7 +70,7 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		}
 
 		[Fact]
-		public void WhenSavingMultipleEvents_ThenCanLoadSpecificAggregate()
+		public void WhenSavingMultipleEvents_ThenCanLoadSpecificObject()
 		{
 			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
@@ -94,9 +94,8 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 
 				store.SaveChanges(product);
 
-				var saved = new Product();
 				var events = store.Query().For<Product>(id2).Execute().ToList();
-				saved.Load(events);
+				var saved = new Product(events);
 
 				Assert.Equal(3, saved.Version);
 				Assert.Equal("WoVS", saved.Title);
@@ -105,7 +104,7 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		}
 
 		[Fact]
-		public void WhenSavingEvents_ThenAcceptsChangesOnAggregate()
+		public void WhenSavingEvents_ThenAcceptsChangesOnObject()
 		{
 			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
