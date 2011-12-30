@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.ISerializer</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx ISerializer&lt;TStorage&gt;</title>
-		<description>Core interface that serializers can implement for supported storage types such as Stream or String.</description>
+		<description>Core interface that serializers can implement to serialize and deserialize an object graph to and from a Stream.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius Consulting</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

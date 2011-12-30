@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.ISerializer.Tests.xUnit</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx ISerializer xUnit Base Tests</title>
-		<description>xUnit tests for netfx-System.ISerializer</description>
+		<description>xUnit tests for netfx-System.ISerializer, to be used by implementations of ISerializer interface.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
-		<tags>netfx serializer json</tags>
+		<tags>netfx serializer</tags>
 	</metadata>
 </package>
