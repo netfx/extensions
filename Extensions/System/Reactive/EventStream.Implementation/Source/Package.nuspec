@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-System.Reactive.EventStream.Implementation</id>
+		<version>1.0.0.3</version>
+		<title>NETFx: Reactive Event Stream Implementation</title>
+		<description>Provides the implementation of a reactive extensions event stream, allowing trending and analysis queries to be performed in real-time over the events pushed through the stream.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx reactive rx event</tags>
+		<dependencies>
+			<dependency id="netfx-Guard" version="1.3" />
+			<dependency id="netfx-System.Reactive.EventStream.Interfaces" version="1.0" />
+			<dependency id="netfx-System.Collections.Generic.DictionaryFind" version="1.0" />
+			<dependency id="Rx-Main" version="1.0" />
+		</dependencies>
+	</metadata>
+</package>

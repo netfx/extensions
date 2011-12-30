@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Reactive.EventStream">
+            <summary>
+            Provides the implementation for a reactive extensions event stream, 
+            allowing trending and analysis queries to be performed in real-time 
+            over the events pushed through the stream.
+            </summary>
+            <nuget id="netfx-System.Reactive.EventStream.Implementation"/>
+            <remarks>
+            The <see cref="T:System.Reactive.IEventStream"/> interface implemented by this class is 
+            provided by the nuget <c>netfx-System.Reactive.EventStream.Interfaces</c>, 
+            which must be installed in the same project or one referenced by it. 
+            </remarks>
+        </member>
+        <member name="T:System.Reactive.IEventStream">
+            <summary>
+            Provides an observable stream of events that 
+            can be used for analysis.
+            </summary>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces" />
+        </member>
+        <member name="M:System.Reactive.IEventStream.Push``1(``0)">
+            <summary>
+            Pushes an event to the stream, causing any analytics 
+            subscriber to be invoked if appropriate.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStream.Of``1">
+            <summary>
+            Observes the events of a given type.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.EventStream.Push``1(``0)">
+            <summary>
+            Pushes an event to the stream, causing any analytics 
+            subscriber to be invoked if appropriate.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.EventStream.Of``1">
+            <summary>
+            Observes the events of a given type.
+            </summary>
+        </member>
+        <member name="T:DictionaryFind">
+            <summary>
+            Finds a value by key in the dictionary, or returns the default value for 
+            TValue. Just like Linq FirstOrDefault().
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.DictionaryFind" />
+        </member>
+        <member name="M:DictionaryFind.Find``2(System.Collections.Generic.IDictionary{``0,``1},``0)">
+            <summary>
+            Finds a value by key in the dictionary, or returns the default value for 
+            TValue. Just like Linq FirstOrDefault().
+            </summary>
+            <param name="dictionary" this="true">The object this extension method applies to.</param>
+            <param name="key">The key of the value to find.</param>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+            <nuget id="netfx-Guard" />
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+    </members>
+</doc>

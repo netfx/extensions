@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:DictionaryFind">
+            <summary>
+            Finds a value by key in the dictionary, or returns the default value for 
+            TValue. Just like Linq FirstOrDefault().
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.DictionaryFind" />
+        </member>
+        <member name="M:DictionaryFind.Find``2(System.Collections.Generic.IDictionary{``0,``1},``0)">
+            <summary>
+            Finds a value by key in the dictionary, or returns the default value for 
+            TValue. Just like Linq FirstOrDefault().
+            </summary>
+            <param name="dictionary" this="true">The object this extension method applies to.</param>
+            <param name="key">The key of the value to find.</param>
+        </member>
+    </members>
+</doc>

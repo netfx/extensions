@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Reactive.IEventStream">
+            <summary>
+            Provides an observable stream of events that 
+            can be used for analysis.
+            </summary>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces" />
+        </member>
+        <member name="M:System.Reactive.IEventStream.Push``1(``0)">
+            <summary>
+            Pushes an event to the stream, causing any analytics 
+            subscriber to be invoked if appropriate.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStream.Of``1">
+            <summary>
+            Observes the events of a given type.
+            </summary>
+        </member>
+    </members>
+</doc>
