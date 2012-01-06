@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Reactive.Event">
+            <summary>
+            Provides a factory class for <see cref="T:System.Reactive.Event`2"/>.
+            </summary>
+            <nuget id="netfx-System.Reactive.Event"/>
+        </member>
+        <member name="M:System.Reactive.Event.Create``2(``0,``1)">
+            <summary>
+            Creates the specified event.
+            </summary>
+            <typeparam name="TSender">The type of the sender of the event.</typeparam>
+            <typeparam name="TEventArgs">The type of the event args.</typeparam>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The instance containing the event data.</param>
+        </member>
+        <member name="T:System.Reactive.Event`2">
+            <summary>
+            Represents the Sender and EventArg values of a .NET event.
+            </summary>
+            <remarks>
+            This class inherits from the built-in <see cref="T:System.Reactive.EventPattern`1"/> 
+            but makes it covariant for the arguments class type.
+            </remarks>
+            <nuget id="netfx-System.Reactive.Event"/>
+        </member>
+        <member name="T:System.Reactive.IEvent`2">
+            <summary>
+            Represents the Sender and EventArg values of a .NET event.
+            </summary>
+            <typeparam name="TSender">The type of the sender of the event.</typeparam>
+            <typeparam name="TEventArgs">The type of the event args.</typeparam>
+            <remarks>
+            Provides an interface that is missing in Rx since the existing interface 
+            was changed to a concrete class <see cref="T:System.Reactive.EventPattern`1"/>.
+            <para>
+            This interface is useful to make the events in the stream more flexible 
+            for subscribers, as it makes them covariant on the event argument type.
+            See this thread for more information: http://kzu.to/ryXd9o
+            </para>
+            </remarks>
+            <nuget id="netfx-System.Reactive.Event"/>
+        </member>
+        <member name="T:System.Reactive.IEvent`1">
+            <summary>
+            Represents the Sender and EventArg values of a .NET event.
+            </summary>
+            <typeparam name="TEventArgs">The type of the event args.</typeparam>
+            <remarks>
+            Provides an interface that is missing in Rx since the existing interface 
+            was changed to a concrete class <see cref="T:System.Reactive.EventPattern`1"/>.
+            <para>
+            This interface is useful to make the events in the stream more flexible 
+            for subscribers, as it makes them covariant on the event argument type.
+            See this thread for more information: http://kzu.to/ryXd9o
+            </para>
+            </remarks>
+            <nuget id="netfx-System.Reactive.Event"/>
+        </member>
+        <member name="P:System.Reactive.IEvent`1.Sender">
+            <summary>
+            Gets the sender value of the event.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.IEvent`1.EventArgs">
+            <summary>
+            Gets the event arguments value of the event.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.IEvent`2.Sender">
+            <summary>
+            Gets the sender value of the event.
+            </summary>
+            <remarks>
+            Intentionally hides the base Sender property to provide a strong-typed version.
+            </remarks>
+        </member>
+        <member name="M:System.Reactive.Event`2.#ctor(`0,`1)">
+            <summary>
+            Represents the Sender and EventArg values of a .NET event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">A <typeparamref name="TEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:System.Reactive.Event`2.Sender">
+            <summary>
+            Gets the sender value of the event.
+            </summary>
+            <remarks>
+            Intentionally hides the base Sender property to provide a strong-typed version.
+            </remarks>
+        </member>
+    </members>
+</doc>
