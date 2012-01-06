@@ -37,7 +37,7 @@ using Xunit;
 using NetFx.Patterns.EventSourcing.Tests;
 using System.Collections;
 
-namespace NetFx.Patterns.EventSourcing.Queryable
+namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 {
 	public class EventSourcingQueryableSpec
 	{
@@ -266,12 +266,10 @@ namespace NetFx.Patterns.EventSourcing.Queryable
 			Assert.Equal("WoVS", saved.Title);
 			Assert.Equal(id2, saved.Id);
 		}
-
 	}
 
-	internal class QueryableStore : IQueryableEventStore<Guid, DomainEvent, StoredObject, StoredEvent>
+	internal class QueryableStore : IQueryableEventStore<Guid, DomainEvent, StoredEvent>
 	{
-		private List<StoredObject> objects = new List<StoredObject>();
 		private List<StoredEvent> events = new List<StoredEvent>();
 		private Func<DateTime> utcNow;
 
@@ -289,29 +287,23 @@ namespace NetFx.Patterns.EventSourcing.Queryable
 
 		public void SaveChanges(DomainObject<Guid, DomainEvent> entity)
 		{
-			foreach (var @event in entity.GetChanges())
+			foreach (var @event in entity.GetEvents())
 			{
 				Save(entity, @event);
 			}
 
-			entity.AcceptChanges();
+			entity.AcceptEvents();
 		}
 
 		private void Save(DomainObject<Guid, DomainEvent> entity, DomainEvent @event)
 		{
-			// The inneficient way in-memory tests the BuildId extension method.
-			var storedObject = this.objects.AsQueryable().FirstOrDefault(this.ObjectIdEquals(entity.Id));
-			if (storedObject == null)
-			{
-				storedObject = new StoredObject(entity);
-				this.objects.Add(storedObject);
-			}
-
-			this.events.Add(new StoredEvent(storedObject, @event, this.utcNow()));
+			this.events.Add(new StoredEvent(entity, @event, this.utcNow()));
 		}
 
 		public IEnumerable<DomainEvent> Query(EventQueryCriteria<Guid> criteria)
 		{
+			// Both forms are available.
+			var expr2 = criteria.ToExpression(this, type => type.Name);
 			var expr = this.ToExpression(criteria, type => type.Name);
 			if (expr == null)
 				return this.events.Select(x => x.Event);
@@ -320,38 +312,29 @@ namespace NetFx.Patterns.EventSourcing.Queryable
 		}
 	}
 
-	internal class StoredObject : IStoredObject<Guid>
-	{
-		public StoredObject()
-		{
-		}
-		public StoredObject(DomainObject<Guid, DomainEvent> entity)
-		{
-			this.Object = entity;
-		}
-		public DomainObject<Guid, DomainEvent> Object { get; private set; }
-		public Guid ObjectId { get { return this.Object.Id; } set { } }
-		public string ObjectType { get { return this.Object.GetType().Name; } set { } }
-	}
-
-	internal class StoredEvent : IStoredEvent<StoredObject, Guid>
+	internal class StoredEvent : IStoredEvent<Guid>
 	{
 		public StoredEvent()
 		{
 		}
-		public StoredEvent(StoredObject target, DomainEvent @event, DateTime timeStamp)
+
+		public StoredEvent(DomainObject<Guid, DomainEvent> target, DomainEvent @event, DateTimeOffset timeStamp)
 		{
-			this.TargetObject = target;
+			this.Object = target;
 			this.Event = @event;
 			this.EventId = Guid.NewGuid();
 			this.Timestamp = timeStamp;
 		}
 
-		public StoredObject TargetObject { get; set; }
+		public DomainObject<Guid, DomainEvent> Object { get; private set; }
 		public DomainEvent Event { get; set; }
+
+		public Guid ObjectId { get { return this.Object.Id; } set { } }
+		public string ObjectType { get { return this.Object.GetType().Name; } set { } }
+
 
 		public Guid EventId { get; set; }
 		public string EventType { get { return this.Event.GetType().Name; } set { } }
-		public DateTime Timestamp { get; set; }
+		public DateTimeOffset Timestamp { get; set; }
 	}
 }

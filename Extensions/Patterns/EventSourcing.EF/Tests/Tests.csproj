@@ -53,20 +53,16 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="xunit">
-      <HintPath>..\packages\xunit.1.8.0.1549\lib\xunit.dll</HintPath>
+      <HintPath>..\packages\xunit.1.9.0.1566\lib\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing.EF\EventStoreSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\QueryableEventStoreSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\EventBusSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\MemoryEventStore.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing\Sample.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
-    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\ISerializerSpec.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
@@ -88,7 +84,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />

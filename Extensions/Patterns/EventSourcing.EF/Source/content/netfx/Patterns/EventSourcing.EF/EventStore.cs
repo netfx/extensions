@@ -54,7 +54,7 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	/// <summary>
 	/// Gets or sets the function that converts a <see cref="Type"/> to 
 	/// its string representation in the store. Used to calculate the 
-	/// values of <see cref="StoredObject.ObjectType"/> and 
+	/// values of <see cref="StoredEvent.ObjectType"/> and 
 	/// <see cref="StoredEvent.EventType"/>.
 	/// </summary>
 	public Func<Type, string> TypeNameConverter { get; set; }
@@ -63,11 +63,6 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	/// Gets or sets the events persisted in the store.
 	/// </summary>
 	public virtual DbSet<StoredEvent> Events { get; set; }
-
-	/// <summary>
-	/// Gets or sets the domain objects persisted in the store.
-	/// </summary>
-	public virtual DbSet<StoredObject> DomainObjects { get; set; }
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
@@ -94,47 +89,30 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	/// <param name="domainObject">The domain object raising the events.</param>
 	public void SaveChanges(DomainObject<Guid, TBaseEvent> domainObject)
 	{
-		foreach (var @event in domainObject.GetChanges().ToList())
+		foreach (var @event in domainObject.GetEvents().ToList())
 		{
 			SaveEvent(domainObject, @event);
 		}
 
-		domainObject.AcceptChanges();
+		domainObject.AcceptEvents();
 	}
 
-	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredObject, StoredEvent>.Events
+	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredEvent>.Events
 	{
 		get { return this.Events; }
 	}	
 
 	private void SaveEvent(DomainObject<Guid, TBaseEvent> domainObject, TBaseEvent @event)
 	{
-		var objectFilter = this.ObjectIdEquals(domainObject.Id);
-		// First look at the in-memory entities.
-		var storedObject = this.DomainObjects.Local.AsQueryable().FirstOrDefault(objectFilter);
-		// Fallback to the database
-		if (storedObject == null)
-			storedObject = this.DomainObjects.FirstOrDefault(objectFilter);
-
-		if (storedObject == null)
-		{
-			storedObject = this.DomainObjects.Add(new StoredObject
-			{
-				ObjectId = domainObject.Id,
-				ObjectType = this.TypeNameConverter.Invoke(domainObject.GetType())
-			});
-
-			OnSavingObject(domainObject, storedObject);
-		}
-
 		var stored = new StoredEvent
 		{
 			ActivityId = Trace.CorrelationManager.ActivityId,
+			ObjectId = domainObject.Id,
+			ObjectType = this.TypeNameConverter.Invoke(domainObject.GetType()),
 			EventId = SequentialGuid.NewGuid(),
 			EventType = this.TypeNameConverter.Invoke(@event.GetType()),
-			Timestamp = @event.Timestamp.UtcDateTime,
+			Timestamp = @event.Timestamp,
 			Payload = this.Serializer.Serialize(@event),
-			TargetObject = storedObject,
 		};
 
 		this.Events.Add(stored);
@@ -145,20 +123,13 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	}
 
 	/// <summary>
-	/// Extensibility hook called when an event for the given object 
-	/// is saved for the first time. At this point, the corresponding 
-	/// object header information in <see cref="StoredObject"/> entity 
-	/// is created and persisted.
-	/// </summary>
-	/// <param name="domainObject">The domain object being persisted for the first time in this event store.</param>
-	/// <param name="entity">The entity that will be saved to the underlying database.</param>
-	protected virtual void OnSavingObject(DomainObject<Guid, TBaseEvent> domainObject, StoredObject entity) { }
-
-	/// <summary>
 	/// Extensibility hook called when an event is being saved to the 
 	/// store.
 	/// </summary>
 	/// <param name="event">The event that will be persisted.</param>
 	/// <param name="entity">The entity that was created to persist to the underlying database.</param>
+	/// <remarks>
+	/// Derived classes can use this hook to augment the stored event, etc.
+	/// </remarks>
 	protected virtual void OnSavingEvent(TBaseEvent @event, StoredEvent entity) { }
 }

@@ -18,7 +18,7 @@ It has only two responsibilities: validating preconditions (newAddress, current 
 It returns right after the call to Raise(...)</body>
           </comment>
           <comment Id="57bb7150-9e23-4266-b7ac-383101064651">
-            <body>The list of changes is just an in-memory list used to expose the changes that happened to the object as a consequence of the interactions performed with it, for later publishing, storage, etc.</body>
+            <body>The list of events is just an in-memory list used to expose the events that happened to the object as a consequence of the interactions performed with it, for later publishing, storage, etc.</body>
           </comment>
           <comment Id="33eb14fc-cd83-4488-9ad0-73538d653e2c">
             <body>The event handler method finally just changes local state, nothing more.</body>
@@ -58,14 +58,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="8b278737-7d27-4471-8261-106aa39e241e" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="1ee02fd3-cecf-47c0-8ba6-a8ec01bfbd15" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="8b278737-7d27-4471-8261-106aa39e241e" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
             </covered>
           </messageOccurrenceSpecification>
           <behaviorExecutionSpecification Id="773a465b-9398-4c73-aef5-87257394791a" name="BehaviorExecutionSpecification">
@@ -93,24 +93,24 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="c65ca884-0763-4a83-a9d1-73f61ab697b7" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="e7ae21cb-d8bb-4a4a-bbae-c3466fa7dd94" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </messageOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="b2813e90-4701-4aff-898b-a3074b557c43" name="MessageOccurrenceSpecification">
+          <messageOccurrenceSpecification Id="c65ca884-0763-4a83-a9d1-73f61ab697b7" name="MessageOccurrenceSpecification">
             <covered>
-              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="80117ffd-e99b-4ca4-b9c9-230bd3005afc" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="b2813e90-4701-4aff-898b-a3074b557c43" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="d6856a6d-f8b4-400a-9285-91500e879889" name="ExecutionOccurrenceSpecification">
@@ -123,14 +123,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="4ca81964-0431-415e-864f-9743de9905bd" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="2f8c528e-93a6-40c2-a3b1-57d2cb597541" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="4ca81964-0431-415e-864f-9743de9905bd" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="f46868ed-be98-466a-b022-de6a62d923a3" name="ExecutionOccurrenceSpecification">
@@ -175,14 +175,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="3b0f50b4-f8fa-4d8f-8fd6-ec4349cc7d47" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="0053057f-eed6-483e-8d42-17f7660da4dc" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="3b0f50b4-f8fa-4d8f-8fd6-ec4349cc7d47" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="900133ae-85fb-4c14-a962-564def4ddad8" name="MessageOccurrenceSpecification">
@@ -259,14 +259,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="b7caf3c9-ddde-4c87-8498-2782a86bf935" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="70b9b0df-0211-4fcd-bf72-5c1a49e0d913" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="b7caf3c9-ddde-4c87-8498-2782a86bf935" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="a8360eda-4566-4488-a062-5c6734392151" name="MessageOccurrenceSpecification">
@@ -341,14 +341,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="d63a391b-e407-44be-a17f-ec0b0744cffe" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="55dcadb7-fad4-411d-8c2e-56f6d474c690" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="d63a391b-e407-44be-a17f-ec0b0744cffe" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="c06f1da0-9f33-4af3-824c-cde9473bccae" name="MessageOccurrenceSpecification">
@@ -395,14 +395,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="18b6fb7e-db73-484b-96de-cd7f2603677c" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="22612932-81de-4fa7-867a-82ed93815924" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="18b6fb7e-db73-484b-96de-cd7f2603677c" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="f41815b3-0294-487c-a593-d8b09fce7e9d" name="ExecutionOccurrenceSpecification">
@@ -415,14 +415,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="06c1dcee-aa8f-4159-a9ab-a901ccd914b9" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="d12f6d6a-5ac2-4532-a3d8-58a046590d77" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="06c1dcee-aa8f-4159-a9ab-a901ccd914b9" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="beede190-3eb9-4a5c-8f01-fa6971026b94" name="ExecutionOccurrenceSpecification">
@@ -435,14 +435,14 @@ It returns right after the call to Raise(...)</body>
               <lifelineMoniker Id="6664145b-5655-4b07-a88a-e3d5d7ccd835" LastKnownName="BaseClass" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="17be185b-cb49-4687-ae75-487cbeeb66bb" name="MessageOccurrenceSpecification">
-            <covered>
-              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="f6f136d4-aa6d-4d22-9d05-b98205f247b1" name="MessageOccurrenceSpecification">
             <covered>
               <lifelineMoniker Id="87d371ff-5cf9-474f-886a-489b60149639" LastKnownName="Application" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="17be185b-cb49-4687-ae75-487cbeeb66bb" name="MessageOccurrenceSpecification">
+            <covered>
+              <lifelineMoniker Id="f00cae26-1f77-4d8f-8dda-3afa3746a862" LastKnownName="Customer" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="34027e6b-e004-4a35-b6aa-61129cb941cf" name="ExecutionOccurrenceSpecification">
@@ -531,7 +531,7 @@ It returns right after the call to Raise(...)</body>
               <messageOccurrenceSpecificationMoniker Id="3ef881af-3089-4bbc-8ef5-0b8dacb6f6d9" LastKnownName="MessageOccurrenceSpecification" />
             </receiveEvent>
           </message>
-          <message Id="db7ea45f-a356-476b-9597-c617e95f3b7b" name="Raise(new CustomerMoved(oldAddress, newAddress))" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false">
+          <message Id="db7ea45f-a356-476b-9597-c617e95f3b7b" name="Apply(new CustomerMoved(oldAddress, newAddress))" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false">
             <sendEvent>
               <messageOccurrenceSpecificationMoniker Id="b7caf3c9-ddde-4c87-8498-2782a86bf935" LastKnownName="MessageOccurrenceSpecification" />
             </sendEvent>
@@ -539,7 +539,7 @@ It returns right after the call to Raise(...)</body>
               <messageOccurrenceSpecificationMoniker Id="70b9b0df-0211-4fcd-bf72-5c1a49e0d913" LastKnownName="MessageOccurrenceSpecification" />
             </receiveEvent>
           </message>
-          <message Id="6d075ea6-3492-4a3a-97c8-ad6cbe2d38b2" name="Save CustomerMoved as new Change in a list" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+          <message Id="6d075ea6-3492-4a3a-97c8-ad6cbe2d38b2" name="Save CustomerMoved as new event in a list" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
             <sendEvent>
               <messageOccurrenceSpecificationMoniker Id="a8360eda-4566-4488-a062-5c6734392151" LastKnownName="MessageOccurrenceSpecification" />
             </sendEvent>

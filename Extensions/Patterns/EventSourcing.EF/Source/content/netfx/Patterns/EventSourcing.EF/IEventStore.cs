@@ -18,16 +18,21 @@ using System;
 
 /// <summary>
 /// An Entity Framework-based interface that persists domain 
-/// objects with Guid identifiers and <see cref="StoredObject"/> 
-/// object header and <see cref="StoredEvent"/> persisted entities.
+/// objects with Guid identifiers and <see cref="StoredEvent"/> persisted entities.
 /// </summary>
 /// <typeparam name="TBaseEvent">The type of the base event.</typeparam>
 /// <remarks>
 /// This interface simplifies testing against the EF-based <see cref="EventStore{TBaseEvent}"/> 
 /// as it removes the need to declare the myriad generic parameters required by the 
 /// base queryable event store API.
+/// <para>
+/// This interface and <see cref="EventStore{TBaseEvent}"/> implementations are just 
+/// one way to implement an event store with a database backend. Implementers can 
+/// of course just leverage IQueryableEventStore{TObjectId, TBaseEvent, TStoredEvent} 
+/// and persist differently altogether, or provide different id types, etc.
+/// </para>
 /// </remarks>
-partial interface IEventStore<TBaseEvent> : IQueryableEventStore<Guid, TBaseEvent, StoredObject, StoredEvent>
+partial interface IEventStore<TBaseEvent> : IQueryableEventStore<Guid, TBaseEvent, StoredEvent>
 	where TBaseEvent : ITimestamped
 {
 }

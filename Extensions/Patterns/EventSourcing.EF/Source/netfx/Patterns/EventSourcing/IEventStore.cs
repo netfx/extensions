@@ -26,7 +26,6 @@ using System.Linq.Expressions;
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
 partial interface IEventStore<TObjectId, TBaseEvent>
-	where TBaseEvent : ITimestamped
 {
 	/// <summary>
 	/// Saves the pending changes in the domain object and accepts 

@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 /// Represents a persisted event in an event store.
 /// </summary>
 /// <nuget id="netfx-Patterns.EventSourcing.EF"/>
-partial class StoredEvent : IStoredEvent<StoredObject, Guid>
+partial class StoredEvent : IStoredEvent<Guid>
 {
 	/// <summary>
 	/// Gets or sets the activity id when this event occurred.
@@ -29,8 +29,21 @@ partial class StoredEvent : IStoredEvent<StoredObject, Guid>
 	public Guid ActivityId { get; set; }
 
 	/// <summary>
+	/// Gets the domain object identifier that the event applies to.
+	/// </summary>
+	[Column(Order = 0)]
+	[Key]
+	public Guid ObjectId { get; set; }
+
+	/// <summary>
+	/// Gets the type of the the domain object that this event applies to.
+	/// </summary>
+	public string ObjectType { get; set; }
+
+	/// <summary>
 	/// Gets the event id.
 	/// </summary>
+	[Column(Order = 1)]
 	[Key]
 	public Guid EventId { get; set; }
 
@@ -42,12 +55,7 @@ partial class StoredEvent : IStoredEvent<StoredObject, Guid>
 	/// <summary>
 	/// Gets the UTC timestamp of the event.
 	/// </summary>
-	public DateTime Timestamp { get; set; }
-
-	/// <summary>
-	/// Gets the target stored object entity associated with this event, if any.
-	/// </summary>
-	public StoredObject TargetObject { get; set; }
+	public DateTimeOffset Timestamp { get; set; }
 
 	/// <summary>
 	/// Gets or sets the payload of the event.

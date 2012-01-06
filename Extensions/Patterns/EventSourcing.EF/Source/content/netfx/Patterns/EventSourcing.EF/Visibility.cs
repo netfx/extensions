@@ -41,8 +41,7 @@ using System.Runtime.CompilerServices;
 // public partial class EventStore<TBaseEvent> { }
 // public partial interface IEventStore<TBaseEvent> { }
 
-// This package makes public these two types as EF needs that 
+// This package makes public this type as EF needs that 
 // in order to be able to persist the instances.
 
 public partial class StoredEvent { }
-public partial class StoredObject { }
