@@ -2,37 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reactive;
 
 /// <summary>
 /// Showscases a handler that adds logic to the product published 
 /// event, without requiring the domain to know about mail sending.
 /// </summary>
-internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
+internal class SendMailHandler : IDisposable
 {
-	private Lazy<IDomainContext> context;
-	private Lazy<IDomainEventBus> eventBus;
+	private IDisposable subscription;
 
-	/// <summary>
-	/// The domain context is used to retrieve the related domain 
-	/// object if needed for the event processing.
-	/// </summary>
-	public SendMailHandler(Lazy<IDomainContext> context, Lazy<IDomainEventBus> eventBus)
+	public SendMailHandler(IEventStream eventStream)
 	{
-		// The handlers are typically composed from an IoC container, 
-		// and they would receive any external dependencies they need, 
-		// such as an IMailService in this case...
-		this.context = context;
-
-		// Handlers or services may in turn publish more events to the bus.
-		this.eventBus = eventBus;
+		this.subscription = eventStream.Of<IEvent<Product, ProductPublishedEvent>>().Subscribe(this.OnProductPublished);
 	}
 
-	public override void Handle(Guid objectId, ProductPublishedEvent @event)
+	private void OnProductPublished(IEvent<Product, ProductPublishedEvent> @event)
 	{
-		// If the same context as the one the entity lives in 
-		// is passed to the constructor (typical for in-proc sync 
-		// handlers), most ORMs would make a quick in-memory lookup for this.
-		var product = this.context.Value.Find<Product>(objectId);
+		// we can access the originating product directly from the event
+		var product = @event.Sender;
 
 		// Invoke an email sending service here.
 
@@ -45,8 +33,17 @@ internal class SendMailHandler : DomainEventHandler<ProductPublishedEvent>
 			To = "joe@netfx.com",
 			From = "webmaster@netfx.com",
 			Title = "New version {Version} has been published for product '{Title}'"
-				.FormatWith(new { Version = @event.Version, Title = product.Title }),
+				.FormatWith(new { Version = @event.EventArgs.Version, Title = product.Title }),
 			Body = "Download it now!",
 		}));
+	}
+
+	public void Dispose()
+	{
+		if (this.subscription != null)
+		{
+			this.subscription.Dispose();
+			this.subscription = null;
+		}
 	}
 }

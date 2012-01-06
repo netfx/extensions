@@ -6,11 +6,10 @@ using System.Text;
 /// <summary>
 /// Event raised when a new product is created.
 /// </summary>
-internal class ProductCreatedEvent : IDomainEvent
+internal class ProductCreatedEvent : DomainEvent
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; }
-	public DateTimeOffset Timestamp { get; private set; }
 
 	public override string ToString()
 	{

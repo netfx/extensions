@@ -90,7 +90,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		{
 			var when = DateTime.Today.ToUniversalTime();
 			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
-
+			
 			var criteria = getCriteria(store.Query().Since(when));
 
 			Assert.False(criteria.IsExclusiveRange);

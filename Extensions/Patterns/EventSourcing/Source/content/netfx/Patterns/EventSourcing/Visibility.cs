@@ -52,13 +52,6 @@ using System.Runtime.CompilerServices;
 
 //public partial class DomainObject<TObjectId, TBaseEvent> { }
 
-//public partial interface IEventBus<TObjectId, TBaseEvent> { }
-//public partial interface IEventHandler { }
-//public partial interface IEventHandler<TObjectId, TEvent> { }
 //public partial interface IEventStore<TObjectId, TBaseEvent> { }
-//public partial interface ITimestamped { }
 //public partial class EventQueryCriteria<TObjectId> { }
 //public partial class EventQueryExtension { }
-
-//public partial class EventHandler<TObjectId, TEvent> { }
-//public partial class EventBus<TObjectId, TBaseEvent> { }

@@ -37,26 +37,39 @@
     <NuGetProperties>$(NuGetRoot)\NuGet.properties</NuGetProperties>
     <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive">
+      <HintPath>..\packages\Rx-Main.1.0.11226\lib\Net4\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\Domain\DomainBus.cs" />
+    <Compile Include="content\Domain\IDomainEventStore.cs" />
     <Compile Include="content\Domain\DomainContext.cs" />
     <Compile Include="content\Domain\IDomainContext.cs" />
-    <Compile Include="content\Domain\IDomainEvent.cs" />
+    <Compile Include="content\Domain\DomainEvent.cs" />
     <Compile Include="content\Domain\EventHandlers\SendMailHandler.cs" />
-    <Compile Include="content\Domain\AggregateRoot.cs" />
+    <Compile Include="content\Domain\DomainObject.cs" />
     <Compile Include="content\Domain\Events\EmailSentEvent.cs" />
     <Compile Include="content\Domain\Events\ProductCreatedEvent.cs" />
     <Compile Include="content\Domain\Events\ProductPublishedEvent.cs" />
     <Compile Include="content\Domain\Product.cs" />
+    <Compile Include="netfx\System\Collections\Generic\DictionaryFind.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\Reactive\Event.cs" />
+    <Compile Include="netfx\System\Reactive\EventStream.cs" />
+    <Compile Include="netfx\System\Reactive\IEvent.cs" />
+    <Compile Include="netfx\System\Reactive\IEventStream.cs" />
+    <Compile Include="netfx\System\Reactive\Visibility.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +89,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="netfx\System\Reactive\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />

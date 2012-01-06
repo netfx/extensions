@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reactive;
 
 namespace Sample
 {
@@ -12,35 +13,37 @@ namespace Sample
 			new Program().WhenHandlerRegistered_ThenCanProcessEntity();
 		}
 
-		internal class ConsoleHandler : DomainEventHandler<IDomainEvent>
+		internal class ConsoleHandler
 		{
-			public override void Handle(Guid objectId, IDomainEvent @event)
+			private IDisposable subscription;
+
+			public ConsoleHandler(IEventStream eventStream)
 			{
-				Console.WriteLine(@event);
+				this.subscription = eventStream.Of<IEvent<EventArgs>>().Subscribe(this.OnEvent);
+			}
+
+			private void OnEvent(IEvent<EventArgs> @event)
+			{
+				Console.WriteLine("{0}: {1}", @event.Sender, @event.EventArgs);
 			}
 		}
 
 		internal class ConsoleEventStore : IDomainEventStore
 		{
-			private List<IDomainEvent> events = new List<IDomainEvent>();
+			private List<DomainEvent> events = new List<DomainEvent>();
 
-			public void SaveChanges(DomainObject<Guid, IDomainEvent> entity)
+			public void SaveChanges(DomainObject<Guid, DomainEvent> entity)
 			{
 				foreach (var @event in entity.GetEvents())
 				{
-					Save(entity, @event);
+					this.events.Add(@event);
+					Console.WriteLine("Saved event {0} to the store.", @event);
 				}
 
 				entity.AcceptEvents();
 			}
 
-			public void Save(DomainObject<Guid, IDomainEvent> sender, IDomainEvent @event)
-			{
-				this.events.Add(@event);
-				Console.WriteLine("Saved event {0} to the store.", @event);
-			}
-
-			public IEnumerable<IDomainEvent> Query(EventQueryCriteria<Guid> criteria)
+			public IEnumerable<DomainEvent> Query(EventQueryCriteria<Guid> criteria)
 			{
 				throw new NotImplementedException();
 			}
@@ -52,16 +55,17 @@ namespace Sample
 			var product = new Product(id, "DevStore");
 
 			var context = default(IDomainContext);
-			var bus = default(IDomainEventBus);
+			var eventStream = new EventStream();
 			IDomainEventStore store = new ConsoleEventStore();
 
-			bus = new DomainEventBus(store, new IEventHandler[] 
+			// Keep the handlers so they are not GC'ed.
+			var handlers = new object[]
 			{ 
-				new ConsoleHandler(), 
-				new SendMailHandler(new Lazy<IDomainContext>(() => context), new Lazy<IDomainEventBus>(() => bus)),
-			});
+				new ConsoleHandler(eventStream), 
+				new SendMailHandler(eventStream),
+			};
 
-			context = new DomainContext(bus);
+			context = new DomainContext(eventStream, store);
 			context.Save(product);
 
 			// Save changes and cause publication of pending events 

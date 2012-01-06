@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.Sample</id>
-		<version>1.0.0.3</version>
+		<version>1.0.0.8</version>
 		<title>NETFx Patterns: Event Sourcing Sample</title>
 		<description>Simple example of a domain object with logic that leverages event sourcing.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
@@ -14,6 +14,8 @@
 		<dependencies>
 			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
 			<dependency id="netfx-System.StringFormatWith" version="1.0" />
+			<dependency id="netfx-System.Reactive.EventStream" version="1.0" />
+			<dependency id="netfx-System.Reactive.Event" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

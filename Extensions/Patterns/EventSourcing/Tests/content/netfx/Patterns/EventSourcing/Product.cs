@@ -6,7 +6,7 @@ using System.Text;
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	[Serializable]
-	internal class DomainEvent : ITimestamped
+	internal class DomainEvent 
 	{
 		protected DomainEvent()
 		{

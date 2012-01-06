@@ -45,16 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainObject.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\EventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\EventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryExtension.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IEventBus.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\IEventHandler.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\IEventStore.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQueryCriteria.cs" />
-    <Compile Include="content\netfx\Patterns\EventSourcing\ITimestamped.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
-    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visibility.cs" />
@@ -65,15 +59,11 @@
     <Content Include="lib\netfx-Patterns.EventSourcing.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="content\netfx\Patterns\EventSourcing\EventPublishFlow.sequencediagram.layout">
-      <DependentUpon>EventPublishFlow.sequencediagram</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="content\netfx\Patterns\EventSourcing\StateChangeFlow.sequencediagram.layout">
       <DependentUpon>StateChangeFlow.sequencediagram</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="content\netfx\Patterns\EventSourcing\EventPublishFlow.sequencediagram" />
     <None Include="content\netfx\Patterns\EventSourcing\StateChangeFlow.sequencediagram" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

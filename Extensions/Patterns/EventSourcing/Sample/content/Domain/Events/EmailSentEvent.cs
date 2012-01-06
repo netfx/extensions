@@ -6,13 +6,12 @@ using System.Text;
 /// <summary>
 /// Event raised when an email was sent.
 /// </summary>
-internal class EmailSentEvent : IDomainEvent
+internal class EmailSentEvent : DomainEvent
 {
 	public string From { get; set; }
 	public string To { get; set; }
 	public string Title { get; set; }
 	public string Body { get; set; }
-	public DateTimeOffset Timestamp { get; private set; }
 
 	public override string ToString()
 	{

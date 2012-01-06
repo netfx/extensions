@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reactive;
 
 /// <summary>
 /// Very simple in-memory context. See netfx-Patterns.DomainContext.EF for a 
@@ -10,11 +11,13 @@ using System.Text;
 internal class DomainContext : IDomainContext
 {
 	private List<DomainObject> objects = new List<DomainObject>();
-	private IDomainEventBus eventBus;
+	private IEventStream eventStream;
+	private IDomainEventStore eventStore;
 
-	public DomainContext(IDomainEventBus eventBus, params DomainObject[] sources)
+	public DomainContext(IEventStream eventStream, IDomainEventStore eventStore, params DomainObject[] sources)
 	{
-		this.eventBus = eventBus;
+		this.eventStream = eventStream;
+		this.eventStore = eventStore;
 		this.objects.AddRange(sources);
 	}
 
@@ -34,7 +37,13 @@ internal class DomainContext : IDomainContext
 	{
 		foreach (var @object in this.objects)
 		{
-			this.eventBus.PublishChanges(@object);
+			var events = @object.GetEvents();
+			foreach (var @event in @object.GetEvents())
+			{
+				this.eventStream.Push(Event.Create(@object, @event));
+			}
+
+			this.eventStore.SaveChanges(@object);
 		}
 	}
 }

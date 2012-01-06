@@ -15,32 +15,29 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Runtime.CompilerServices;
 
-/// <summary>
-/// Base interface part of the infrastructure. Concrete 
-/// handlers should inherit <see cref="EventHandler{TObjectId, TEvent}"/> 
-/// or implement <see cref="IEventHandler{TObjectId, TEvent}"/> instead.
-/// </summary>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IEventHandler
-{
-	/// <summary>
-	/// Invocation style hint that the <see cref="IEventBus{TObjectId, TBaseEvent}"/> implementation
-	/// can use to invoke a handler asynchronously with regards to the event publisher.
-	/// </summary>
-	bool IsAsync { get; }
-}
+// These are needed only if you include this package tests 
+// or if you intend to mock any of the included types using 
+// any of the proxy-generating mocking libraries such as 
+// Moq, Rhino Mocks, etc., and only if the interface is kept 
+// non-public. 
+// Otherwise, feel free to comment this out or wrap it in 
+// an #if DEBUG directive.
 
-/// <summary>
-/// Base interface for domain event handlers that handle a specific type of event.
-/// </summary>
-/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-/// <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
-/// <nuget id="netfx-Patterns.EventSourcing" />
-partial interface IEventHandler<TObjectId, TEvent> : IEventHandler
-{
-	/// <summary>
-	/// Handles the specified event.
-	/// </summary>
-	void Handle(TObjectId objectId, TEvent @event);
-}
+/* Assembly visibility for tests, if added */
+// For signed projects:
+//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
+// For unsigned projects:
+//[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+// In order to make types introduced by this package public
+// uncomment the following:
+
+//namespace System.Reactive
+//{
+//    public partial interface IEventStream { }
+//}
