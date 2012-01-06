@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.InMemory</id>
-		<version>1.0.0.0</version>
-		<title>NETFx Patterns: Event Sourcing In Memory Store</title>
+		<version>1.0.0.1</version>
+		<title>NETFx Patterns: Event Sourcing In-Memory Store</title>
 		<description>Useful for testing domains that leverage event sourcing</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
@@ -14,6 +14,7 @@
 		<dependencies>
 			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
 			<dependency id="netfx-Patterns.EventSourcing.Queryable" version="1.0" />
+			<dependency id="netfx-System.ITimestamped" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

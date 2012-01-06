@@ -10,30 +10,25 @@ static partial class QueryableEventStoreExtensions
 	private static readonly Dictionary<Type, PropertyInfo> objectIdProperties = new Dictionary<Type, PropertyInfo>();
 
 	/// <summary>
-	/// Builds the equals expression that can be used to find a matching object
-	/// in a queryable of <see cref="IStoredObject{TObjectId}"/> entities using the <c>FirstOrDefault</c> 
-	/// Linq operator, for example.
+	/// Converts a criteria object passed to the queryable event store 
+	/// <see cref="IEventStore{TObjectId, TBaseEvent}.Query"/> method 
+	/// into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+	/// over the stored queryable event stream.
 	/// </summary>
-	/// <remarks>
-	/// This is needed because == doesn't compile for TObjectId and calling CompareTo 
-	/// wouldn't work on most non in-memory stores either.
-	/// </remarks>
-	public static Expression<Func<TStoredObject, bool>> ObjectIdEquals<TObjectId, TBaseEvent, TStoredObject, TStoredEvent>(
-		this IQueryableEventStore<TObjectId, TBaseEvent, TStoredObject, TStoredEvent> store, TObjectId id)
-		where TObjectId : IComparable
-		where TBaseEvent : ITimestamped
-		where TStoredObject : class, IStoredObject<TObjectId>
-		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
+	/// <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+	/// <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+	/// <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+	/// <param name="store">The store to provide the query expression for.</param>
+	/// <param name="typeNameConverter">The type name converter to use to transform the <see cref="Type"/> 
+	/// filters in the criteria object into type name strings that are persisted by the store.</param>
+	public static Expression<Func<TStoredEvent, bool>> ToExpression<TObjectId, TBaseEvent, TStoredEvent>(
+		this EventQueryCriteria<TObjectId> criteria,
+		IQueryableEventStore<TObjectId, TBaseEvent, TStoredEvent> store, 
+		Func<Type, string> typeNameConverter)
+		where TStoredEvent : class, IStoredEvent<TObjectId>
 	{
-		var idProperty = objectIdProperties.GetOrAdd(typeof(TStoredObject), type => type.GetProperty("ObjectId"));
-
-		var entity = Expression.Parameter(typeof(TStoredObject), "entity");
-		var lambda = Expression.Lambda<Func<TStoredObject, bool>>(
-			Expression.Equal(
-				Expression.MakeMemberAccess(entity, idProperty),
-				Expression.Constant(id, typeof(TObjectId))), entity);
-
-		return lambda;
+		return new CriteriaBuilder<TObjectId, TStoredEvent>(criteria, typeNameConverter).Build();
 	}
 
 	/// <summary>
@@ -45,30 +40,23 @@ static partial class QueryableEventStoreExtensions
 	/// <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-	/// <typeparam name="TStoredObject">The type of the stored object.</typeparam>
 	/// <param name="store">The store to provide the query expression for.</param>
 	/// <param name="criteria">The criteria that will be converted to a Linq expression.</param>
 	/// <param name="typeNameConverter">The type name converter to use to transform the <see cref="Type"/> 
 	/// filters in the criteria object into type name strings that are persisted by the store.</param>
-	public static Expression<Func<TStoredEvent, bool>> ToExpression<TObjectId, TBaseEvent, TStoredObject, TStoredEvent>(
-		this IQueryableEventStore<TObjectId, TBaseEvent, TStoredObject, TStoredEvent> store, 
+	public static Expression<Func<TStoredEvent, bool>> ToExpression<TObjectId, TBaseEvent, TStoredEvent>(
+		this IQueryableEventStore<TObjectId, TBaseEvent, TStoredEvent> store, 
 		EventQueryCriteria<TObjectId> criteria, 
 		Func<Type, string> typeNameConverter)
-		where TObjectId : IComparable
-		where TBaseEvent : ITimestamped
-		where TStoredObject : class, IStoredObject<TObjectId>
-		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
+		where TStoredEvent : class, IStoredEvent<TObjectId>
 	{
-		return new CriteriaBuilder<TObjectId, TStoredObject, TStoredEvent>(criteria, typeNameConverter).Build();
+		return new CriteriaBuilder<TObjectId, TStoredEvent>(criteria, typeNameConverter).Build();
 	}
 
-	private class CriteriaBuilder<TObjectId, TStoredObject, TStoredEvent>
-		where TObjectId : IComparable
-		where TStoredObject : class, IStoredObject<TObjectId>
-		where TStoredEvent : class, IStoredEvent<TStoredObject, TObjectId>
+	private class CriteriaBuilder<TObjectId, TStoredEvent>
+		where TStoredEvent : class, IStoredEvent<TObjectId>
 	{
-		private static readonly Lazy<PropertyInfo> TargetObjectProperty = new Lazy<PropertyInfo>(() => typeof(TStoredEvent).GetProperty("TargetObject"));
-		private static readonly Lazy<PropertyInfo> ObjectIdProperty = new Lazy<PropertyInfo>(() => typeof(TStoredObject).GetProperty("ObjectId"));
+		private static readonly Lazy<PropertyInfo> ObjectIdProperty = new Lazy<PropertyInfo>(() => typeof(TStoredEvent).GetProperty("ObjectId"));
 
 		private EventQueryCriteria<TObjectId> criteria;
 		private Func<Type, string> typeNameConverter;
@@ -125,7 +113,7 @@ static partial class QueryableEventStoreExtensions
 				// Builds: TargetObject != null && TargetObject.ObjectId == id && TargetObject.ObjectType == type
 
 				var predicate = ((Expression<Func<TStoredEvent, bool>>)
-					(e => e.TargetObject.ObjectId != null && e.TargetObject.ObjectType == sourceType)).And
+					(e => e.ObjectId != null && e.ObjectType == sourceType)).And
 					(EventObjectIdEquals(filter.ObjectId));
 
 				// ORs all object+id filters.
@@ -148,7 +136,7 @@ static partial class QueryableEventStoreExtensions
 				var sourceType = typeNameConverter.Invoke(filter);
 
 				// ORs all aggregregate filters.
-				criteria = Or(criteria, e => e.TargetObject != null && e.TargetObject.ObjectType == sourceType);
+				criteria = Or(criteria, e => e.ObjectType == sourceType);
 			}
 
 			if (criteria == null)
@@ -197,9 +185,7 @@ static partial class QueryableEventStoreExtensions
 			var lambda = Expression.Lambda<Func<TStoredEvent, bool>>(
 				Expression.Equal(
 					Expression.MakeMemberAccess(
-						Expression.MakeMemberAccess(
-							@event,
-							TargetObjectProperty.Value),
+						@event,
 						ObjectIdProperty.Value),
 					Expression.Constant(id, typeof(TObjectId))), @event);
 

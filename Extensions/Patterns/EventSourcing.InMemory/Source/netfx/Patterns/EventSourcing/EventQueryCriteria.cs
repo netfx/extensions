@@ -65,12 +65,12 @@ partial class EventQueryCriteria<TObjectId>
 	/// <summary>
 	/// Filters events that happened after the given starting date.
 	/// </summary>
-	public DateTime? Since { get; set; }
+	public DateTimeOffset? Since { get; set; }
 
 	/// <summary>
 	/// Filters events that happened before the given ending date.
 	/// </summary>
-	public DateTime? Until { get; set; }
+	public DateTimeOffset? Until { get; set; }
 
 	/// <summary>
 	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 

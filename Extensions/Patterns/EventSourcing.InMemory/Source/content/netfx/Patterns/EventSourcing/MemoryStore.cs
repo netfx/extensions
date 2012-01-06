@@ -39,17 +39,15 @@ using System.Text;
 /// </summary>
 ///	<nuget id="netfx-Patterns.EventSourcing.InMemory" />
 partial class MemoryStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectId, TBaseEvent,
-	MemoryStore<TObjectId, TBaseEvent>.StoredObject,
 	MemoryStore<TObjectId, TBaseEvent>.StoredEvent>
 	where TObjectId : IComparable
 	where TBaseEvent : ITimestamped
 {
-	private List<StoredObject> objects = new List<StoredObject>();
 	private List<StoredEvent> events = new List<StoredEvent>();
-	private Func<TBaseEvent, DateTime> utcNow;
+	private Func<TBaseEvent, DateTimeOffset> utcNow;
 
 	public MemoryStore()
-		: this(() => DateTime.UtcNow)
+		: this(() => DateTimeOffset.Now)
 	{
 	}
 
@@ -57,38 +55,26 @@ partial class MemoryStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectI
 	/// Initializes the store with a specific way to calculate the current time, useful 
 	/// in tests when there's a need to simulate events happening at specific times.
 	/// </summary>
-	/// <param name="utcNow">The current date time, in UTC form.</param>
-	public MemoryStore(Func<DateTime> utcNow)
+	/// <param name="utcNow">The current date time, in UTC form, to be used if the changes don't provide their own timestamp.</param>
+	public MemoryStore(Func<DateTimeOffset> utcNow)
 	{
 		// If the events have their own time, use that, otherwise, use the provided time.
-		this.utcNow = change => change.Timestamp != DateTimeOffset.MinValue ? change.Timestamp.UtcDateTime : utcNow();
+		this.utcNow = change => change.Timestamp != DateTimeOffset.MinValue ? change.Timestamp : utcNow();
 	}
-
-	/// <summary>
-	/// Gets the aggregates that contain events persisted by the store.
-	/// </summary>
-	public IQueryable<StoredObject> DomainObjects { get { return this.objects.AsQueryable(); } }
 
 	/// <summary>
 	/// Gets the stream of events persisted by the store.
 	/// </summary>
 	public IQueryable<StoredEvent> Events { get { return this.events.AsQueryable(); } }
 
-	public void SaveChanges(DomainObject<TObjectId, TBaseEvent> domainObject)
+	public void SaveChanges(DomainObject<TObjectId, TBaseEvent> entity)
 	{
-		var stored = this.DomainObjects.FirstOrDefault(this.ObjectIdEquals(domainObject.Id));
-		if (stored == null)
+		foreach (var change in entity.GetEvents())
 		{
-			stored = new StoredObject(domainObject);
-			this.objects.Add(stored);
+			this.events.Add(new StoredEvent(entity, change) { Timestamp = this.utcNow(change) });
 		}
 
-		foreach (var change in domainObject.GetChanges())
-		{
-			this.events.Add(new StoredEvent(stored, change) { Timestamp = this.utcNow(change) });
-		}
-
-		domainObject.AcceptChanges();
+		entity.AcceptEvents();
 	}
 
 	public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TObjectId> criteria)
@@ -97,43 +83,29 @@ partial class MemoryStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectI
 	}
 
 	/// <summary>
-	/// Internal storage representation of the aggregate header information.
-	/// </summary>
-	public class StoredObject : IStoredObject<TObjectId>
-	{
-		public StoredObject(DomainObject<TObjectId, TBaseEvent> entity)
-		{
-			this.Object = entity;
-			this.ObjectId = entity.Id;
-			this.ObjectType = entity.GetType().FullName;
-		}
-
-		public DomainObject<TObjectId, TBaseEvent> Object { get; set; }
-
-		public TObjectId ObjectId { get; set; }
-		public string ObjectType { get; set; }
-	}
-
-	/// <summary>
 	/// Internal storage representation of the event payload.
 	/// </summary>
-	public class StoredEvent : IStoredEvent<StoredObject, TObjectId>
+	public class StoredEvent : IStoredEvent<TObjectId>
 	{
-		public StoredEvent(StoredObject target, TBaseEvent change)
+		public StoredEvent(DomainObject<TObjectId, TBaseEvent> entity, TBaseEvent change)
 		{
+			this.ObjectId = entity.Id;
+			this.ObjectType = entity.GetType().FullName;
+
 			this.Event = change;
-			this.TargetObject = target;
 
 			this.EventId = Guid.NewGuid();
 			this.EventType = change.GetType().FullName;
-			this.Timestamp = change.Timestamp.UtcDateTime;
+			this.Timestamp = change.Timestamp;
 		}
+
+		public TObjectId ObjectId { get; set; }
+		public string ObjectType { get; set; }
 
 		public TBaseEvent Event { get; set; }
 
 		public Guid EventId { get; set; }
 		public string EventType { get; set; }
-		public StoredObject TargetObject { get; set; }
-		public DateTime Timestamp { get; set; }
+		public DateTimeOffset Timestamp { get; set; }
 	}
 }

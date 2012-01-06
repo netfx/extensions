@@ -27,12 +27,20 @@ using System;
 /// representation via this interface would be unnecessarily 
 /// restrictive and is not needed for the rest of the APIs.
 /// </remarks>
-/// <typeparam name="TStoredObject">The type of the stored domain object entity.</typeparam>
 /// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
-partial interface IStoredEvent<TStoredObject, TObjectId>
-	where TStoredObject : IStoredObject<TObjectId>
+partial interface IStoredEvent<TObjectId>
 {
+	/// <summary>
+	/// Gets the domain object identifier that the event applies to.
+	/// </summary>
+	TObjectId ObjectId { get; set; }
+
+	/// <summary>
+	/// Gets the type of the the domain object that this event applies to.
+	/// </summary>
+	string ObjectType { get; set; }
+
 	/// <summary>
 	/// Gets the event id.
 	/// </summary>
@@ -44,12 +52,7 @@ partial interface IStoredEvent<TStoredObject, TObjectId>
 	string EventType { get; set; }
 
 	/// <summary>
-	/// Gets the UTC timestamp of the event.
+	/// Gets the timestamp of the event.
 	/// </summary>
-	DateTime Timestamp { get; set; }
-
-	/// <summary>
-	/// Gets the domain object associated with this event, if any.
-	/// </summary>
-	TStoredObject TargetObject { get; set; }
+	DateTimeOffset Timestamp { get; set; }
 }

@@ -40,14 +40,16 @@ namespace NetFx.Patterns.EventSourcing
 	public class EventQuerySpec
 	{
 		private MemoryStore<Guid, DomainEvent> store;
-		private Func<DateTime> utcNow = () => DateTime.UtcNow;
+		DateTimeOffset nowValue = DateTimeOffset.Now;
+		private Func<DateTimeOffset> now;
 
 		private Guid id1 = Guid.NewGuid();
 		private Guid id2 = Guid.NewGuid();
 
 		public EventQuerySpec()
 		{
-			this.store = new MemoryStore<Guid, DomainEvent>(this.utcNow);
+			this.now = () => nowValue;
+			this.store = new MemoryStore<Guid, DomainEvent>(this.now);
 
 			var product = new Product(id1, "DevStore");
 			product.Publish(1);
@@ -111,21 +113,21 @@ namespace NetFx.Patterns.EventSourcing
 		{
 			var product = new Product(store.Query().For<Product>(id2).Execute());
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var when = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => when;
+			this.nowValue = when;
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
@@ -139,21 +141,21 @@ namespace NetFx.Patterns.EventSourcing
 		{
 			var product = new Product(store.Query().For<Product>(id2).Execute());
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var when = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => when;
+			this.nowValue = when;
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
@@ -167,21 +169,21 @@ namespace NetFx.Patterns.EventSourcing
 		{
 			var product = new Product(store.Query().For<Product>(id2).Execute());
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var when = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => when;
+			this.nowValue = when;
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
 			store.SaveChanges(product);
 
@@ -195,21 +197,21 @@ namespace NetFx.Patterns.EventSourcing
 		{
 			var product = new Product(store.Query().For<Product>(id2).Execute());
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var when = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(5));
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7));
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6));
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => when;
+			this.nowValue = when;
 			product.Deactivate();
 			store.SaveChanges(product);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
+			this.nowValue = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4));
 			product.Deactivate();
 			store.SaveChanges(product);
 
@@ -223,7 +225,7 @@ namespace NetFx.Patterns.EventSourcing
 		{
 			protected DomainEvent()
 			{
-				this.Timestamp = DateTimeOffset.UtcNow;
+				this.Timestamp = DateTimeOffset.MinValue;
 			}
 
 			public virtual DateTimeOffset Timestamp { get; protected set; }
@@ -316,7 +318,7 @@ namespace NetFx.Patterns.EventSourcing
 				if (string.IsNullOrEmpty(title))
 					throw new ArgumentException("title");
 
-				this.Raise(new CreatedEvent { Id = id, Title = title });
+				this.Apply(new CreatedEvent { Id = id, Title = title });
 			}
 
 			// Technically, these members wouldn't even need a public setter 
@@ -333,7 +335,7 @@ namespace NetFx.Patterns.EventSourcing
 				// When we're ready to apply state changes, we 
 				// apply them through an event that calls back 
 				// the OnCreated method as mapped in the ctor.
-				this.Raise(new PublishedEvent { Version = version });
+				this.Apply(new PublishedEvent { Version = version });
 			}
 
 			private void OnCreated(CreatedEvent @event)
@@ -349,7 +351,7 @@ namespace NetFx.Patterns.EventSourcing
 
 			public void Deactivate()
 			{
-				base.Raise(new DeactivatedEvent());
+				base.Apply(new DeactivatedEvent());
 			}
 		}
 	}
@@ -410,7 +412,7 @@ namespace NetFx.Patterns.EventSourcing
 			public User(string fullName, DateTime birthDate, string address)
 				: this()
 			{
-				this.Raise(new UserCreated
+				this.Apply(new UserCreated
 				{
 					UserId = Guid.NewGuid(),
 					FullName = fullName,
@@ -428,7 +430,7 @@ namespace NetFx.Patterns.EventSourcing
 				if (string.IsNullOrEmpty(newAddress))
 					throw new ArgumentException();
 
-				Raise(new UserMoved { OldAddress = this.Address, NewAddress = newAddress });
+				Apply(new UserMoved { OldAddress = this.Address, NewAddress = newAddress });
 			}
 
 			private void OnCreated(UserCreated args)

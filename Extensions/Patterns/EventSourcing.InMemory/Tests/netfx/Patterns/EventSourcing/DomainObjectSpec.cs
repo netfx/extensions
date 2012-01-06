@@ -25,16 +25,16 @@ namespace NetFx.Patterns.EventSourcing.Tests
 	public class DomainObjectSpec
 	{
 		[Fact]
-		public void WhenDomainActionPerformed_ThenObjectHasChanges()
+		public void WhenDomainActionPerformed_ThenObjectHasEvents()
 		{
 			var root = new TestRoot();
 			root.Publish(5);
 
-			Assert.True(root.HasChanges);
+			Assert.True(root.GetEvents().Any());
 
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.HasChanges);
+			Assert.False(root.GetEvents().Any());
 		}
 
 		[Fact]
@@ -44,12 +44,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			root.Publish(5);
 
 			Assert.Equal(5, root.LatestVersion);
-			Assert.True(root.GetChanges().Any());
-			Assert.True(root.GetChanges().OfType<TestPublished>().Any(x => x.Version == 5));
+			Assert.True(root.GetEvents().Any());
+			Assert.True(root.GetEvents().OfType<TestPublished>().Any(x => x.Version == 5));
 
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 		}
 
 		[Fact]
@@ -59,12 +59,12 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			var root = new TestRoot(events);
 
 			Assert.Equal(5, root.LatestVersion);
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 
 			// This should be no-op now.
-			root.AcceptChanges();
+			root.AcceptEvents();
 
-			Assert.False(root.GetChanges().Any());
+			Assert.False(root.GetEvents().Any());
 		}
 
 		/// <nuget id="netfx-Patterns.EventSourcing.Tests" />
@@ -86,7 +86,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.Raise(new TestPublished { Version = version });
+				base.Apply(new TestPublished { Version = version });
 			}
 
 			public int LatestVersion { get; set; }
