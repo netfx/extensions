@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.ITimestamped">
+            <summary>
+            Interface implemented by objects that have a timestamp.
+            </summary>
+            <nuget id="netfx-System.ITimestamped"/>
+        </member>
+        <member name="P:System.ITimestamped.Timestamp">
+            <summary>
+            Gets the timestamp of this instance.
+            </summary>
+        </member>
+    </members>
+</doc>
