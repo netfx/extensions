@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-internal class DictionaryGetOrAddSpec
+public class DictionaryGetOrAddSpec
 {
 	[Fact]
 	public void WhenGettingNonExisting_ThenCreatesValue()
