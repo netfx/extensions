@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="lib\netfx-System.Diagnostics.Tracer.xml" />
   </ItemGroup>
