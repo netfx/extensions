@@ -39,28 +39,19 @@ using System.Runtime.CompilerServices;
 // For unsigned projects:
 //[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
-// AggregateRoot is the only type that is public by default, as it's 
-// likely that your domain model is public and therefore its base 
-// class should too. This base class contains the implementation 
-// to raise and load events into an aggregate root.
+// The DomainObject base class contains the implementation 
+// to raise and load events into a domain object.
 // Typically, in your own project you would derive from this 
-// class your domain specific aggregate root class that provides 
+// class your domain specific root class that provides 
 // the types for both the id and base event, such as:
-// public class AggregateRoot : AggregateRoot<Guid, DomainEvent> { }
+// public class DomainObject : DomainObject<Guid, DomainEvent> { }
 
 // In order to make other types introduced by this package public, 
 // declare a partial type as public here.
 // For example, the following declarations would make everything public:
 
-//public partial class AggregateRoot<TAggregateId, TBaseEvent> { }
+//public partial class DomainObject<TObjectId, TBaseEvent> { }
 
-//public partial interface IEventBus<TAggregateId, TBaseEvent> { }
-//public partial interface IEventHandler { }
-//public partial interface IEventHandler<TAggregateId, TEvent> { }
-//public partial interface IEventStore<TAggregateId, TBaseEvent> { }
-//public partial interface ITimestamped { }
-//public partial class EventQueryCriteria<TAggregateId> { }
+//public partial interface IEventStore<TObjectId, TBaseEvent> { }
+//public partial class EventQueryCriteria<TObjectId> { }
 //public partial class EventQueryExtension { }
-
-//public partial class EventHandler<TAggregateId, TEvent> { }
-//public partial class EventBus<TAggregateId, TBaseEvent> { }

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.AutoWire.Tests.xUnit</id>
-		<version>1.0.0.2</version>
+		<version>1.0.0.3</version>
 		<title>NETFx Patterns: Event Sourcing Auto Wire xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.AutoWire</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

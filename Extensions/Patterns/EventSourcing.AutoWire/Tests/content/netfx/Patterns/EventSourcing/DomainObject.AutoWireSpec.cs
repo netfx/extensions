@@ -38,7 +38,7 @@ using System.Diagnostics;
 
 namespace NetFx.Patterns.EventSourcing
 {
-	public class AggregateRootAutoWireSpec
+	public class DomainObjectAutoWireSpec
 	{
 		[Fact]
 		public void WhenAutoWiredDomainActionPerformed_ThenRootChangesStateThroughEvent()
@@ -47,8 +47,8 @@ namespace NetFx.Patterns.EventSourcing
 			root.Publish(5);
 
 			Assert.Equal(5, root.LatestVersion);
-			Assert.True(root.GetChanges().Any());
-			Assert.True(root.GetChanges().OfType<TestPublished>().Any(x => x.Version == 5));
+			Assert.True(root.GetEvents().Any());
+			Assert.True(root.GetEvents().OfType<TestPublished>().Any(x => x.Version == 5));
 		}
 
 		[Fact]
@@ -64,9 +64,10 @@ namespace NetFx.Patterns.EventSourcing
 			Assert.False(root.IsPublished);
 		}
 
-		//[Fact]
-		public void WhenComparingManualVsAutoWired_ThenItIsRelativelyFast()
+		[Fact]
+		public void WhenComparingManualVsAutoWired_ThenItIsAsFastAsManual()
 		{
+			// warmup
 			var manual = new ManualWiredTestRoot();
 			var auto = new AutoWiredTestRoot();
 
@@ -80,7 +81,8 @@ namespace NetFx.Patterns.EventSourcing
 
 			watch.Stop();
 
-			Console.WriteLine("Average per publish: {0}", watch.ElapsedTicks / repeat);
+			var averageManual = watch.ElapsedTicks / repeat;
+			Console.WriteLine("Average per publish (Manual): {0}", watch.ElapsedTicks / repeat);
 
 			watch = Stopwatch.StartNew();
 
@@ -91,10 +93,15 @@ namespace NetFx.Patterns.EventSourcing
 
 			watch.Stop();
 
-			Console.WriteLine("Average per publish: {0}", watch.ElapsedTicks / repeat);
+			Console.WriteLine("Average per publish (Autowire): {0}", watch.ElapsedTicks / repeat);
+
+			var averageAuto = watch.ElapsedTicks / repeat;
+
+			// We're as fast as manual.
+			Assert.True(averageAuto <= averageManual);
 		}
 
-		internal class AutoWiredTestRoot : AggregateRoot<Guid, DomainEvent>
+		internal class AutoWiredTestRoot : DomainObject<Guid, DomainEvent>
 		{
 			public AutoWiredTestRoot()
 			{
@@ -106,7 +113,7 @@ namespace NetFx.Patterns.EventSourcing
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.Raise(new TestPublished { Version = version });
+				base.Apply(new TestPublished { Version = version });
 			}
 
 			public void Unpublish()
@@ -114,7 +121,7 @@ namespace NetFx.Patterns.EventSourcing
 				if (!this.IsPublished)
 					throw new ArgumentException();
 
-				base.Raise(new TestUnpublished());
+				base.Apply(new TestUnpublished());
 			}
 
 			public int LatestVersion { get; set; }
@@ -132,7 +139,7 @@ namespace NetFx.Patterns.EventSourcing
 			}
 		}
 
-		internal class ManualWiredTestRoot : AggregateRoot<Guid, DomainEvent>
+		internal class ManualWiredTestRoot : DomainObject<Guid, DomainEvent>
 		{
 			public ManualWiredTestRoot()
 			{
@@ -144,7 +151,7 @@ namespace NetFx.Patterns.EventSourcing
 				if (version < 0)
 					throw new ArgumentException();
 
-				base.Raise(new TestPublished { Version = version });
+				base.Apply(new TestPublished { Version = version });
 			}
 
 			public int LatestVersion { get; set; }
@@ -154,7 +161,7 @@ namespace NetFx.Patterns.EventSourcing
 				this.LatestVersion = published.Version;
 			}
 
-			private static void Initialize(AggregateRoot<Guid, DomainEvent> @this)
+			private static void Initialize(DomainObject<Guid, DomainEvent> @this)
 			{
 				var typed= (ManualWiredTestRoot)@this;
 				typed.Handles<TestPublished>(typed.OnPublished);

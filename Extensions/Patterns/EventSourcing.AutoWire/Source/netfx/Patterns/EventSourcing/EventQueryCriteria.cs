@@ -24,17 +24,17 @@ using System.Reflection;
 /// <summary>
 /// Represents the filter criteria for a domain event store query.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial class EventQueryCriteria<TAggregateId>
+partial class EventQueryCriteria<TObjectId>
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="EventQueryCriteria&lt;TAggregateId&gt;"/> class.
+	/// Initializes a new instance of the <see cref="EventQueryCriteria{TObjectId}"/> class.
 	/// </summary>
 	public EventQueryCriteria()
 	{
-		this.AggregateInstances = new List<AggregateFilter>();
-		this.AggregateTypes = new List<Type>();
+		this.ObjectInstances = new List<ObjectFilter>();
+		this.ObjectTypes = new List<Type>();
 		this.EventTypes = new List<Type>();
 	}
 
@@ -44,17 +44,17 @@ partial class EventQueryCriteria<TAggregateId>
 	/// events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
 	/// others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
 	/// </summary>
-	public List<AggregateFilter> AggregateInstances { get; private set; }
+	public List<ObjectFilter> ObjectInstances { get; private set; }
 
 	/// <summary>
-	/// List of aggregate root type filters. All types added are OR'ed with the 
-	/// others (i.e. <c>AggregateType == Product OR AggregateType == Order</c>).
+	/// List of object type filters. All types added are OR'ed with the 
+	/// others (i.e. <c>ObjectType == Product OR ObjectType == Order</c>).
 	/// </summary>
 	/// <remarks>
-	/// To filter by aggregate type and identifier, 
-	/// use <see cref="AggregateInstances"/> instead.
+	/// To filter by object type and identifier, 
+	/// use <see cref="ObjectInstances"/> instead.
 	/// </remarks>
-	public List<Type> AggregateTypes { get; private set; }
+	public List<Type> ObjectTypes { get; private set; }
 
 	/// <summary>
 	/// List of event type filters. All types added are OR'ed with the 
@@ -65,12 +65,12 @@ partial class EventQueryCriteria<TAggregateId>
 	/// <summary>
 	/// Filters events that happened after the given starting date.
 	/// </summary>
-	public DateTime? Since { get; set; }
+	public DateTimeOffset? Since { get; set; }
 
 	/// <summary>
 	/// Filters events that happened before the given ending date.
 	/// </summary>
-	public DateTime? Until { get; set; }
+	public DateTimeOffset? Until { get; set; }
 
 	/// <summary>
 	/// If set to <see langword="true"/>, <see cref="Since"/> and <see cref="Until"/> should 
@@ -80,29 +80,29 @@ partial class EventQueryCriteria<TAggregateId>
 	public bool IsExclusiveRange { get; set; }
 
 	/// <summary>
-	/// Filter criteria containing the aggregate type and identifier. 
+	/// Filter criteria containing the object type and identifier. 
 	/// </summary>
-	public class AggregateFilter
+	public class ObjectFilter
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AggregateFilter"/> class.
+		/// Initializes a new instance of the <see cref="ObjectFilter"/> class.
 		/// </summary>
-		/// <param name="aggregateType">Type of the event source to filter by.</param>
-		/// <param name="aggregateId">The aggregate root identifier to filter by.</param>
-		public AggregateFilter(Type aggregateType, TAggregateId aggregateId)
+		/// <param name="objectType">Type of the event source to filter by.</param>
+		/// <param name="objectId">The domain object identifier to filter by.</param>
+		public ObjectFilter(Type objectType, TObjectId objectId)
 		{
-			this.AggregateType = aggregateType;
-			this.AggregateId = aggregateId;
+			this.ObjectType = objectType;
+			this.ObjectId = objectId;
 		}
 
 		/// <summary>
-		/// Gets or sets the type of the aggregate to filter by.
+		/// Gets or sets the type of the domain object to filter by.
 		/// </summary>
-		public Type AggregateType { get; private set; }
+		public Type ObjectType { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the aggregate root identifier to filter by.
+		/// Gets or sets the domain object identifier to filter by.
 		/// </summary>
-		public TAggregateId AggregateId { get; private set; }
+		public TObjectId ObjectId { get; private set; }
 	}
 }

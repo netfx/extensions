@@ -38,16 +38,17 @@ using System.Linq.Expressions;
 using System.Reflection.Emit;
 
 /// <devdoc>
-/// Provides additional behavior to the Event Sourcing Core package AggregateRoot partial class to auto wire up event handlers by using reflection.
+/// Provides additional behavior to the Event Sourcing package DomainObject partial class 
+/// to allow auto wiring of event handlers by using 
 /// </devdoc>
 ///	<nuget id="netfx-Patterns.EventSourcing.AutoWire" />
-partial class AggregateRoot<TAggregateId, TBaseEvent>
+partial class DomainObject<TObjectId, TBaseEvent>
 {
-	private static readonly MethodInfo handlesGeneric = typeof(AggregateRoot<TAggregateId, TBaseEvent>)
+	private static readonly MethodInfo handlesGeneric = typeof(DomainObject<TObjectId, TBaseEvent>)
 		.GetMethod("Handles", BindingFlags.Instance | BindingFlags.NonPublic);
 
-	private static Dictionary<Type, Action<AggregateRoot<TAggregateId, TBaseEvent>>> initializersMap =
-		new Dictionary<Type, Action<AggregateRoot<TAggregateId, TBaseEvent>>>();
+	private static Dictionary<Type, Action<DomainObject<TObjectId, TBaseEvent>>> initializersMap =
+		new Dictionary<Type, Action<DomainObject<TObjectId, TBaseEvent>>>();
 
 	/// <summary>
 	/// As an alternative to explicitly calling <see cref="Handles{TEvent}"/> 
@@ -80,9 +81,9 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 	///	which is the only practical way of using this way 
 	///	of codegen. Install from http://kzu.to/nN0iPu
 	/// </devdoc>
-	private Action<AggregateRoot<TAggregateId, TBaseEvent>> BuildInitializer()
+	private Action<DomainObject<TObjectId, TBaseEvent>> BuildInitializer()
 	{
-		var initialize = new DynamicMethod("Initialize", typeof(void), new[] { typeof(AggregateRoot<TAggregateId, TBaseEvent>) }, true);
+		var initialize = new DynamicMethod("Initialize", typeof(void), new[] { typeof(DomainObject<TObjectId, TBaseEvent>) }, true);
 		var @this = initialize.DefineParameter(1, ParameterAttributes.None, "this");
 		var gen = initialize.GetILGenerator();
 		var typed = gen.DeclareLocal(this.GetType());
@@ -92,7 +93,7 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 					  // Select all methods with one parameter that inherits from TBaseEvent
 					  where parameters.Length == 1 && typeof(TBaseEvent).IsAssignableFrom(parameters[0].ParameterType) &&
 							// Skip this base class own virtual event handler.
-							method.DeclaringType != typeof(AggregateRoot<TAggregateId, TBaseEvent>)
+							method.DeclaringType != typeof(DomainObject<TObjectId, TBaseEvent>)
 					  select method;
 
 		foreach (var method in methods)
@@ -117,6 +118,6 @@ partial class AggregateRoot<TAggregateId, TBaseEvent>
 		gen.Emit(OpCodes.Nop);
 		gen.Emit(OpCodes.Ret);
 
-		return (Action<AggregateRoot<TAggregateId, TBaseEvent>>)initialize.CreateDelegate(typeof(Action<AggregateRoot<TAggregateId, TBaseEvent>>));
+		return (Action<DomainObject<TObjectId, TBaseEvent>>)initialize.CreateDelegate(typeof(Action<DomainObject<TObjectId, TBaseEvent>>));
 	}
 }

@@ -22,18 +22,17 @@ using System.Linq.Expressions;
 /// <summary>
 /// Interface implemented by domain event stores.
 /// </summary>
-/// <typeparam name="TAggregateId">The type of identifier used by the aggregate roots in the domain.</typeparam>
+/// <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
 /// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 /// <nuget id="netfx-Patterns.EventSourcing"/>
-partial interface IEventStore<TAggregateId, TBaseEvent>
-	where TBaseEvent : ITimestamped
+partial interface IEventStore<TObjectId, TBaseEvent>
 {
 	/// <summary>
-	/// Saves the pending changes in the aggregate and accepts 
+	/// Saves the pending changes in the domain object and accepts 
 	/// the changes.
 	/// </summary>
-	/// <param name="aggregate">The aggregate root raising the event.</param>
-	void SaveChanges(AggregateRoot<TAggregateId, TBaseEvent> aggregate);
+	/// <param name="entity">The domain object raising the event.</param>
+	void SaveChanges(DomainObject<TObjectId, TBaseEvent> entity);
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.
@@ -43,9 +42,9 @@ partial interface IEventStore<TAggregateId, TBaseEvent>
 	/// specified criteria, but aren't required to.
 	/// <para>
 	/// An alternative fluent API to build the criteria object is available 
-	/// by executing the  <see cref="EventQueryExtension.Query{TAggregateId, TBaseEvent}"/> 
+	/// by executing the  <see cref="EventQueryExtension.Query{TObjectId, TBaseEvent}"/> 
 	/// extension method on an event store instance.
 	/// </para>
 	/// </remarks>
-	IEnumerable<TBaseEvent> Query(EventQueryCriteria<TAggregateId> criteria);
+	IEnumerable<TBaseEvent> Query(EventQueryCriteria<TObjectId> criteria);
 }
