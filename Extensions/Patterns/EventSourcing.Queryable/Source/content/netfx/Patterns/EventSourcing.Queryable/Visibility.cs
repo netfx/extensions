@@ -43,5 +43,4 @@ using System.Runtime.CompilerServices;
 // This package makes public these two types as EF needs that 
 // in order to be able to persist the instances.
 
-public partial interface IStoredEvent<TStoredObject, TObjectId> { }
-public partial interface IStoredObject<TObjectId> { }
+public partial interface IStoredEvent<TObjectId> { }

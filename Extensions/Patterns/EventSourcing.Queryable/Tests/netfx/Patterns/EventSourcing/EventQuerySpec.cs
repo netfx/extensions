@@ -5,188 +5,142 @@ using System.Text;
 using Xunit;
 using System.Collections;
 using Moq;
+using System.Reflection;
 
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	public class EventQuerySpec
 	{
-		private MemoryEventStore<Guid, DomainEvent> store;
-		private Func<DateTime> utcNow = () => DateTime.UtcNow;
-
 		private Guid id1 = Guid.NewGuid();
 		private Guid id2 = Guid.NewGuid();
+		private Func<EventQueryExtension.IEventQuery<Guid, DomainEvent>, EventQueryCriteria<Guid>> getCriteria =
+			query => (EventQueryCriteria<Guid>)query.GetType().GetField("criteria", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(query);
 
-		public EventQuerySpec()
+		[Fact]
+		public void WhenQuerying_ThenReturnsQueryObject()
 		{
-			this.store = new MemoryEventStore<Guid, DomainEvent>(() => this.utcNow());
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			var product = new Product(id1, "DevStore");
-			product.Publish(1);
-			product.Publish(2);
-			product.Publish(3);
-			store.SaveChanges(product);
+			var query = store.Query();
 
-			product = new Product(id2, "WoVS");
-			product.Publish(1);
-			product.Publish(2);
-
-			store.SaveChanges(product);
+			Assert.NotNull(query);
 		}
 
 		[Fact]
-		public void WhenLoadingFromEventsForSourceTypeAndId_ThenStateIsUpdated()
+		public void WhenQueryingForObjectType_ThenAddsToCriteria()
 		{
-			var product = new Product(store.Query().For<Product>(id2).Execute());
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			Assert.Equal(id2, product.Id);
-			Assert.Equal("WoVS", product.Title);
-			Assert.Equal(2, product.Version);
+			var criteria = getCriteria(store.Query().For<Product>());
+
+			Assert.Equal(1, criteria.ObjectTypes.Count);
+			Assert.Equal(typeof(Product), criteria.ObjectTypes[0]);
 		}
 
 		[Fact]
-		public void WhenFilteringBySourceTypeAndIdAndEventType_ThenSucceeds()
+		public void WhenQueryingForObjectTypeAndId_ThenAddsToCriteria()
 		{
-			var events = store.Query().For<Product>(id1).OfType<Product.PublishedEvent>().Execute();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			Assert.Equal(3, events.Count());
-			Assert.True(events.All(x => x is Product.PublishedEvent));
+			var criteria = getCriteria(store.Query().For<Product>(id1));
+
+			Assert.Equal(1, criteria.ObjectInstances.Count);
+			Assert.Equal(typeof(Product), criteria.ObjectInstances[0].ObjectType);
+			Assert.Equal(id1, criteria.ObjectInstances[0].ObjectId);
 		}
 
 		[Fact]
-		public void WhenFilteringBySourceTypeAndEventType_ThenSucceeds()
+		public void WhenQueryingForEventType_ThenAddsToCriteria()
 		{
-			var events = store.Query().For<Product>().OfType<Product.PublishedEvent>().Execute();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			Assert.Equal(5, events.Count());
-			Assert.True(events.All(x => x is Product.PublishedEvent));
+			var criteria = getCriteria(store.Query().OfType<Product.PublishedEvent>());
+
+			Assert.Equal(1, criteria.EventTypes.Count);
+			Assert.Equal(typeof(Product.PublishedEvent), criteria.EventTypes[0]);
 		}
 
 		[Fact]
-		public void WhenFilteringBySourceType_ThenSucceeds()
+		public void WhenQueryingForObjectTypeIdAndEventType_ThenAggregatesCriteria()
 		{
-			var events = store.Query().For<Product>().Execute();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			Assert.Equal(7, events.Count());
+			var criteria = getCriteria(store.Query().For<Product>(id1).OfType<Product.PublishedEvent>());
+
+			Assert.Equal(1, criteria.ObjectInstances.Count);
+			Assert.Equal(typeof(Product), criteria.ObjectInstances[0].ObjectType);
+			Assert.Equal(id1, criteria.ObjectInstances[0].ObjectId);
+			Assert.Equal(1, criteria.EventTypes.Count);
+			Assert.Equal(typeof(Product.PublishedEvent), criteria.EventTypes[0]);
 		}
 
 		[Fact]
-		public void WhenFilteringByEventType_ThenSucceeds()
+		public void WhenQueryingByDateSince_ThenAddsCriteria()
 		{
-			var events = store.Query().OfType<Product.CreatedEvent>().Execute();
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			Assert.Equal(2, events.Count());
+			var criteria = getCriteria(store.Query().Since(when));
+
+			Assert.Equal(when, criteria.Since);
 		}
 
 		[Fact]
-		public void WhenFilteringByDateSince_ThenSucceeds()
+		public void WhenQueryingByDateSince_ThenDefaultsToNonExclusiveRange()
 		{
-			var product = new Product(store.Query().For<Product>(id2).Execute());
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
+			
+			var criteria = getCriteria(store.Query().Since(when));
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => when;
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).Execute();
-
-			Assert.Equal(2, events.Count());
+			Assert.False(criteria.IsExclusiveRange);
 		}
 
 		[Fact]
-		public void WhenFilteringByDateSinceExclusive_ThenSucceeds()
+		public void WhenQueryingByDateUntil_ThenAddsCriteria()
 		{
-			var product = new Product(store.Query().For<Product>(id2).Execute());
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var criteria = getCriteria(store.Query().Until(when));
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => when;
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
-
-			Assert.Equal(1, events.Count());
+			Assert.Equal(when, criteria.Until);
 		}
 
 		[Fact]
-		public void WhenFilteringByDateUntil_ThenSucceeds()
+		public void WhenQueryingByDateUntil_ThenDefaultsToNonExclusiveRange()
 		{
-			var product = new Product(store.Query().For<Product>(id2).Execute());
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var criteria = getCriteria(store.Query().Until(when));
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => when;
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
-
-			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).Execute();
-
-			Assert.Equal(3, events.Count());
+			Assert.False(criteria.IsExclusiveRange);
 		}
 
 		[Fact]
-		public void WhenFilteringByDateUntilExclusive_ThenSucceeds()
+		public void WhenSettingExclusiveRange_ThenUpdatesCriteria()
 		{
-			var product = new Product(store.Query().For<Product>(id2).Execute());
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			var when = DateTime.Today.Subtract(TimeSpan.FromDays(5)).ToUniversalTime();
+			var criteria = getCriteria(store.Query().ExclusiveRange());
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
+			Assert.True(criteria.IsExclusiveRange);
+		}
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
+		[Fact]
+		public void WhenExecutingQuery_ThenPassesCriteriaToStore()
+		{
+			var when = DateTime.Today.ToUniversalTime();
+			var store = Mock.Of<IEventStore<Guid, DomainEvent>>();
 
-			this.utcNow = () => when;
-			product.Deactivate();
-			store.SaveChanges(product);
+			var query = store.Query();
+			var criteria = getCriteria(query);
 
-			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
-			product.Deactivate();
-			store.SaveChanges(product);
+			query.Execute();
 
-			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
-
-			Assert.Equal(2, events.Count());
+			Mock.Get(store).Verify(x => x.Query(criteria));
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Text;
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	[Serializable]
-	internal class DomainEvent : ITimestamped
+	internal class DomainEvent 
 	{
 		protected DomainEvent()
 		{
@@ -103,7 +103,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			if (string.IsNullOrEmpty(title))
 				throw new ArgumentException("title");
 
-			this.Raise(new CreatedEvent { Id = id, Title = title });
+			this.Apply(new CreatedEvent { Id = id, Title = title });
 		}
 
 		// Technically, these members wouldn't even need a public setter 
@@ -120,7 +120,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			// When we're ready to apply state changes, we 
 			// apply them through an event that calls back 
 			// the OnCreated method as mapped in the ctor.
-			this.Raise(new PublishedEvent { Version = version });
+			this.Apply(new PublishedEvent { Version = version });
 		}
 
 		private void OnCreated(CreatedEvent @event)
@@ -136,7 +136,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 		public void Deactivate()
 		{
-			base.Raise(new DeactivatedEvent());
+			base.Apply(new DeactivatedEvent());
 		}
 	}
 }

@@ -39,7 +39,6 @@ static partial class EventQueryExtension
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <param name="store">The domain event store.</param>
 	public static IEventQuery<TObjectId, TBaseEvent> Query<TObjectId, TBaseEvent>(this IEventStore<TObjectId, TBaseEvent> store)
-		where TBaseEvent : ITimestamped
 	{
 		return new EventQuery<TObjectId, TBaseEvent>(store);
 	}
@@ -55,7 +54,6 @@ static partial class EventQueryExtension
 	/// <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
 	/// <nuget id="netfx-Patterns.EventSourcing"/>
 	public partial interface IEventQuery<TObjectId, TBaseEvent>
-		where TBaseEvent : ITimestamped
 	{
 		/// <summary>
 		/// Executes the query built using the fluent API 
@@ -93,7 +91,7 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TObjectId, TBaseEvent> Since(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Since(DateTimeOffset when);
 
 		/// <summary>
 		/// Filters events that happened before the given ending date.
@@ -103,7 +101,7 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TObjectId, TBaseEvent> Until(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Until(DateTimeOffset when);
 
 		/// <summary>
 		/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
@@ -113,8 +111,7 @@ static partial class EventQueryExtension
 	}
 
 	private class EventQuery<TObjectId, TBaseEvent> : IEventQuery<TObjectId, TBaseEvent>
-		where TBaseEvent : ITimestamped
-	{	
+	{
 		private IEventStore<TObjectId, TBaseEvent> store;
 		private EventQueryCriteria<TObjectId> criteria = new EventQueryCriteria<TObjectId>();
 
@@ -130,42 +127,30 @@ static partial class EventQueryExtension
 
 		public IEventQuery<TObjectId, TBaseEvent> For<TObject>()
 		{
-			foreach (var type in GetInheritance<TObject>())
-			{
-				this.criteria.ObjectTypes.Add(type);
-			}
-
+			this.criteria.ObjectTypes.Add(typeof(TObject));
 			return this;
 		}
 
 		public IEventQuery<TObjectId, TBaseEvent> For<TObject>(TObjectId objectId)
 		{
-			foreach (var type in GetInheritance<TObject>())
-			{
-				this.criteria.ObjectInstances.Add(new EventQueryCriteria<TObjectId>.ObjectFilter(type, objectId));
-			}
-
+			this.criteria.ObjectInstances.Add(new EventQueryCriteria<TObjectId>.ObjectFilter(typeof(TObject), objectId));
 			return this;
 		}
 
 		public IEventQuery<TObjectId, TBaseEvent> OfType<TEvent>()
 			where TEvent : TBaseEvent
 		{
-			foreach (var type in GetInheritance<TEvent>())
-			{
-				this.criteria.EventTypes.Add(type);
-			}
-
+			this.criteria.EventTypes.Add(typeof(TEvent));
 			return this;
 		}
 
-		public IEventQuery<TObjectId, TBaseEvent> Since(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Since(DateTimeOffset when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IEventQuery<TObjectId, TBaseEvent> Until(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Until(DateTimeOffset when)
 		{
 			this.criteria.Until = when;
 			return this;
@@ -175,21 +160,6 @@ static partial class EventQueryExtension
 		{
 			this.criteria.IsExclusiveRange = true;
 			return this;
-		}
-
-		/// <devdoc>
-		/// Returns a list of the T and all its base types until an 
-		/// abstract base class is found (can't be persisted therefore) 
-		/// or System.Object is found (events can't be System.Object either).
-		/// </devdoc>
-		private IEnumerable<Type> GetInheritance<T>()
-		{
-			var current = typeof(T);
-			while (current != typeof(object) && !current.IsAbstract)
-			{
-				yield return current;
-				current = current.BaseType;
-			}
 		}
 	}
 }

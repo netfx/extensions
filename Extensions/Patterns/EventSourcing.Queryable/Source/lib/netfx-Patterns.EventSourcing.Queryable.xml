@@ -4,14 +4,13 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:IQueryableEventStore`4">
+        <member name="T:IQueryableEventStore`3">
             <summary>
             Provides a common API for event stores that leverage Linq.
             </summary>
             <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
             <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <typeparam name="TStoredObject">The type of the stored object.</typeparam>
         </member>
         <member name="T:IEventStore`2">
             <summary>
@@ -42,30 +41,12 @@
             </para>
             </remarks>
         </member>
-        <member name="P:IQueryableEventStore`4.Events">
+        <member name="P:IQueryableEventStore`3.Events">
             <summary>
             Gets the stream of events persisted by the store.
             </summary>
         </member>
-        <member name="T:IStoredObject`1">
-            <summary>
-            Represents the domain object information associated 
-            with a persisted event in an event store.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
-        </member>
-        <member name="P:IStoredObject`1.ObjectId">
-            <summary>
-            Gets the domain object identifier that the event applies to.
-            </summary>
-        </member>
-        <member name="P:IStoredObject`1.ObjectType">
-            <summary>
-            Gets the type of the the domain object that this event applies to.
-            </summary>
-        </member>
-        <member name="T:IStoredEvent`2">
+        <member name="T:IStoredEvent`1">
             <summary>
             Represents a persisted event in an event store.
             </summary>
@@ -77,42 +58,35 @@
             representation via this interface would be unnecessarily 
             restrictive and is not needed for the rest of the APIs.
             </remarks>
-            <typeparam name="TStoredObject">The type of the stored domain object entity.</typeparam>
             <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing.Queryable"/>
         </member>
-        <member name="P:IStoredEvent`2.EventId">
+        <member name="P:IStoredEvent`1.ObjectId">
+            <summary>
+            Gets the domain object identifier that the event applies to.
+            </summary>
+        </member>
+        <member name="P:IStoredEvent`1.ObjectType">
+            <summary>
+            Gets the type of the the domain object that this event applies to.
+            </summary>
+        </member>
+        <member name="P:IStoredEvent`1.EventId">
             <summary>
             Gets the event id.
             </summary>
         </member>
-        <member name="P:IStoredEvent`2.EventType">
+        <member name="P:IStoredEvent`1.EventType">
             <summary>
             Gets the type of the event.
             </summary>
         </member>
-        <member name="P:IStoredEvent`2.Timestamp">
+        <member name="P:IStoredEvent`1.Timestamp">
             <summary>
-            Gets the UTC timestamp of the event.
+            Gets the timestamp of the event.
             </summary>
         </member>
-        <member name="P:IStoredEvent`2.TargetObject">
-            <summary>
-            Gets the domain object associated with this event, if any.
-            </summary>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.ObjectIdEquals``4(IQueryableEventStore{``0,``1,``2,``3},``0)">
-            <summary>
-            Builds the equals expression that can be used to find a matching object
-            in a queryable of <see cref="T:IStoredObject`1"/> entities using the <c>FirstOrDefault</c> 
-            Linq operator, for example.
-            </summary>
-            <remarks>
-            This is needed because == doesn't compile for TObjectId and calling CompareTo 
-            wouldn't work on most non in-memory stores either.
-            </remarks>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.ToExpression``4(IQueryableEventStore{``0,``1,``2,``3},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(EventQueryCriteria{``0},IQueryableEventStore{``0,``1,``2},System.Func{System.Type,System.String})">
             <summary>
             Converts a criteria object passed to the queryable event store 
             <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
@@ -122,18 +96,32 @@
             <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
             <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <typeparam name="TStoredObject">The type of the stored object.</typeparam>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(IQueryableEventStore{``0,``1,``2},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
             <param name="store">The store to provide the query expression for.</param>
             <param name="criteria">The criteria that will be converted to a Linq expression.</param>
             <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
             filters in the criteria object into type name strings that are persisted by the store.</param>
         </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`3.Build">
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.Build">
             <summary>
             Builds the expression for the criteria.
             </summary>
         </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`3.EventObjectIdEquals(`0)">
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.EventObjectIdEquals(`0)">
             <devdoc>
             This is needed because == doesn't compile for TObjectId and calling CompareTo 
             wouldn't work on most non in-memory stores either.
@@ -157,15 +145,15 @@
             if instantiation always has to happen from a stream of events.
             </remarks>
         </member>
-        <member name="M:DomainObject`2.AcceptChanges">
+        <member name="M:DomainObject`2.AcceptEvents">
             <summary>
-            Clears the internal events retrieved from <see cref="M:DomainObject`2.GetChanges"/>, 
+            Clears the internal events retrieved from <see cref="M:DomainObject`2.GetEvents"/>, 
             signaling that all pending events have been commited.
             </summary>
         </member>
-        <member name="M:DomainObject`2.GetChanges">
+        <member name="M:DomainObject`2.GetEvents">
             <summary>
-            Gets the pending changes.
+            Gets the new events that were applied by the domain object.
             </summary>
         </member>
         <member name="M:DomainObject`2.Handles``1(System.Action{``0})">
@@ -178,168 +166,17 @@
             Loads the the domain object from an even stream.
             </summary>
         </member>
-        <member name="M:DomainObject`2.Raise``1(``0)">
+        <member name="M:DomainObject`2.Apply``1(``0)">
             <summary>
-            Applies a change to the entity state via an event. 
+            Applies an event to the entity. 
             The derived class should invoke <see cref="M:DomainObject`2.Handles``1(System.Action{``0})"/> 
             to configure the handlers for specific types of events. The 
             handlers perform the actual state changes to the entity.
             </summary>
         </member>
-        <member name="M:DomainObject`2.OnEventHandled(`1)">
-            <summary>
-            Called whenever an event is handled by the domain 
-            object. Useful to mark the object as dirty if needed 
-            for persistence, beyond the <see cref="P:DomainObject`2.HasChanges"/> 
-            property which reports if there are new events 
-            in the object, but not if it actually handled an 
-            event itself at all (changing its internal state).
-            </summary>
-        </member>
         <member name="P:DomainObject`2.Id">
             <summary>
-            Gets or sets the identifier of the domain object sourcing the event.
-            </summary>
-        </member>
-        <member name="P:DomainObject`2.HasChanges">
-            <summary>
-            Gets a value indicating whether this object has pending changes.
-            </summary>
-        </member>
-        <member name="T:EventBus`2">
-            <summary>
-            Default implementation of an <see cref="T:IEventBus`2"/> that 
-            invokes handlers as events are published, and where handlers are 
-            run in-process (if any handlers are provided).
-            </summary>
-            <remarks>
-            A persistent <see cref="T:IEventStore`2"/> can also be specified 
-            to persist events to a store for later playback or auditing.
-            <para>
-            Handlers with <see cref="P:IEventHandler.IsAsync"/> set to 
-            <see langword="true"/> are invoked through the optional 
-            async runner delegate passed to the constructor.
-            </para>
-            </remarks>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="T:IEventBus`2">
-            <summary>
-            Interface implemented by the component that coordinates 
-            event handler invocation when a subscribed event is published.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="M:IEventBus`2.PublishChanges(DomainObject{`0,`1})">
-            <summary>
-            Publishes the pending changes in the given domain object, so that all subscribers are notified. 
-            </summary>
-            <param name="entity">The domain object which may contain pending changes.</param>
-            <remarks>
-            Default <see cref="T:EventBus`2"/> also calls 
-            <see cref="M:DomainObject`2.AcceptChanges"/> after 
-            saving the changes to the <see cref="T:IEventStore`2"/> store.
-            </remarks>
-        </member>
-        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler})">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
-            a persistent store for events and the default async runner that enqueues work in the <see cref="T:System.Threading.ThreadPool"/>.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-        </member>
-        <member name="M:EventBus`2.#ctor(IEventStore{`0,`1},System.Collections.Generic.IEnumerable{IEventHandler},System.Action{System.Action})">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventBus`2"/> class with 
-            a persistent store for events, a set of event handlers and a specific async runner.
-            </summary>
-            <param name="eventStore">The event store to persist events to.</param>
-            <param name="eventHandlers">The event handlers.</param>
-            <param name="asyncActionRunner">The async action runner to use to invoke event handlers 
-            that have <see cref="P:IEventHandler.IsAsync"/> set to <see langword="true"/>.</param>
-        </member>
-        <member name="M:EventBus`2.PublishChanges(DomainObject{`0,`1})">
-            <summary>
-            Publishes the pending changes in the given domain object, so that all subscribers are notified. 
-            </summary>
-            <param name="entity">The domain object which may contain pending changes.</param>
-            <remarks>
-            Also persists the object changes to the event store.
-            </remarks>
-        </member>
-        <member name="M:EventBus`2.OnPublished(`0,`1)">
-            <summary>
-            Called when an event was published to the bus.
-            </summary>
-            <param name="objectId">The identifier of the domain object that published the event.</param>
-            <param name="event">The published event.</param>
-        </member>
-        <member name="P:EventBus`2.HandlerDescriptor.EventType">
-            <summary>
-            Gets or sets the type of event payload the handler can process, 
-            retrieved from the handler TEvent generic parameter.
-            </summary>
-        </member>
-        <member name="P:EventBus`2.HandlerDescriptor.HandleMethod">
-            <summary>
-            Gets or sets the handle method that implements 
-            the <see cref="T:IEventHandler`2"/>.
-            </summary>
-        </member>
-        <member name="P:EventBus`2.HandlerDescriptor.Handler">
-            <summary>
-            Gets or sets the handler.
-            </summary>
-        </member>
-        <member name="T:EventHandler`2">
-            <summary>
-            Base class for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
-        <member name="T:IEventHandler`2">
-            <summary>
-            Base interface for domain event handlers that handle a specific type of event.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TEvent">Type of event argument this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
-        </member>
-        <member name="T:IEventHandler">
-            <summary>
-            Base interface part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:EventHandler`2"/> 
-            or implement <see cref="T:IEventHandler`2"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="P:IEventHandler.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
-            </summary>
-        </member>
-        <member name="M:IEventHandler`2.Handle(`0,`1)">
-            <summary>
-            Handles the specified event.
-            </summary>
-        </member>
-        <member name="M:EventHandler`2.Handle(`0,`1)">
-            <summary>
-            Handles the specified event.
-            </summary>
-        </member>
-        <member name="P:EventHandler`2.IsAsync">
-            <summary>
-            Invocation style hint that the <see cref="T:IEventBus`2"/> implementation
-            can use to invoke a handler asynchronously with regards to the event publisher.
+            Gets or sets the identifier of the domain object.
             </summary>
         </member>
         <member name="T:EventQueryCriteria`1">
@@ -475,7 +312,7 @@
             </summary>
             <typeparam name="TEvent">The type of the events to filter.</typeparam>
         </member>
-        <member name="M:EventQueryExtension.IEventQuery`2.Since(System.DateTime)">
+        <member name="M:EventQueryExtension.IEventQuery`2.Since(System.DateTimeOffset)">
             <summary>
             Filters events that happened after the given starting date.
             </summary>
@@ -485,7 +322,7 @@
             <see cref="M:EventQueryExtension.IEventQuery`2.ExclusiveRange"/> is called to make the range exclusive.
             </remarks>
         </member>
-        <member name="M:EventQueryExtension.IEventQuery`2.Until(System.DateTime)">
+        <member name="M:EventQueryExtension.IEventQuery`2.Until(System.DateTimeOffset)">
             <summary>
             Filters events that happened before the given ending date.
             </summary>
@@ -497,43 +334,9 @@
         </member>
         <member name="M:EventQueryExtension.IEventQuery`2.ExclusiveRange">
             <summary>
-            Makes the configured <see cref="M:EventQueryExtension.IEventQuery`2.Since(System.DateTime)"/> and/or <see cref="M:EventQueryExtension.IEventQuery`2.Until(System.DateTime)"/> dates 
+            Makes the configured <see cref="M:EventQueryExtension.IEventQuery`2.Since(System.DateTimeOffset)"/> and/or <see cref="M:EventQueryExtension.IEventQuery`2.Until(System.DateTimeOffset)"/> dates 
             exclusive, changing the default behavior which is to be inclusive.
             </summary>
-        </member>
-        <member name="M:EventQueryExtension.EventQuery`2.GetInheritance``1">
-            <devdoc>
-            Returns a list of the T and all its base types until an 
-            abstract base class is found (can't be persisted therefore) 
-            or System.Object is found (events can't be System.Object either).
-            </devdoc>
-        </member>
-        <member name="T:ITimestamped">
-            <summary>
-            Minimum requirement interface for events that are persisted 
-            by the event store, as events need to be timestamped.
-            </summary>
-        </member>
-        <member name="P:ITimestamped.Timestamp">
-            <summary>
-            Gets the timestamp of the event.
-            </summary>
-        </member>
-        <member name="T:DictionaryGetOrAdd">
-            <summary>
-            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
-            </summary>
-        </member>
-        <member name="M:DictionaryGetOrAdd.GetOrAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.Func{``0,``1})">
-            <summary>
-            Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist. 
-            No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
-            concurrency assurances, use a concurrent dictionary instead.
-            </summary>
-            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd"/>
-            <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
-            <param name="key">The key to be added to the dictionary</param>
-            <param name="valueFactory">The value factory</param>
         </member>
         <member name="T:Guard">
             <summary>

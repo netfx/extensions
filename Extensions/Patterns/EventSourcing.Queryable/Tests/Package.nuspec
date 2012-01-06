@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.Queryable.Tests.xUnit</id>
-		<version>1.0.0.4</version>
+		<version>1.0.0.10</version>
 		<title>NETFx Patterns: Event Sourcing Store Queryable Extensions xUnit Tests</title>
 		<description>xUnit tests for netfx-Patterns.EventSourcing.Queryable</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
@@ -14,6 +14,7 @@
 		<dependencies>
 			<dependency id="xunit" version="1.8" />
 			<dependency id="netfx-Patterns.EventSourcing.Tests.xUnit" version="1.0" />
+			<dependency id="netfx-System.Linq.Expressions.ExpressionCombiner.Tests.xUnit" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>
