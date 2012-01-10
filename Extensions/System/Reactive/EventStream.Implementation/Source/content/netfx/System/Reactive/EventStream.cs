@@ -31,6 +31,10 @@ DAMAGE.
 #endregion
 using System.Collections.Concurrent;
 using System.Reactive.Subjects;
+using System.Linq;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace System.Reactive
 {
@@ -45,6 +49,13 @@ namespace System.Reactive
 	///	provided by the nuget <c>netfx-System.Reactive.EventStream.Interfaces</c>, 
 	///	which must be installed in the same project or one referenced by it. 
 	/// </remarks>
+	/// <devdoc>
+	/// The surprisingly simple implementation from the blog post http://kzu.to/srVn3P 
+	/// was surprisingly limiting too :). No support for covariant subscriptions, 
+	/// subscriptions to interfaces implemented by the concrete events, etc. 
+	/// (i.e. the EventPattern&lt;TEventArgs&gt; from Rx wouldn't work).
+	/// </devdoc>
+	/// <nuget id="netfx-System.Reactive.EventStream"/>
 	partial class EventStream : IEventStream
 	{
 		private ConcurrentDictionary<Type, object> subjects = new ConcurrentDictionary<Type, object>();
@@ -57,26 +68,17 @@ namespace System.Reactive
 		{
 			Guard.NotNull(() => @event, @event);
 
-			// If TEvent matches exactly the actual event type, don't do dynamic 
-			// dispatch. This is an optimization for cases where the caller 
-			// calls passing the actual type of event, as opposed to generic 
-			// code that passes events of a generic type for publishing.
-			if (typeof(TEvent) == @event.GetType())
+			var eventType = @event.GetType();
+
+			// We will call all subjects that are compatible in 
+			// the event type, not just concrete event type subscribers.
+			var compatible = subjects.Keys
+				.Where(subjectEventType => subjectEventType.IsAssignableFrom(eventType))
+				.Select(subjectEventType => subjects[subjectEventType]);
+
+			foreach (dynamic subject in compatible)
 			{
-				// This code path is WAY faster than dynamic dispatching.
-				var subject = this.subjects.Find(typeof(TEvent)) as Subject<TEvent>;
-				if (subject != null)
-					subject.OnNext(@event);
-			}
-			else
-			{
-				// Dynamic dispatching allows generic code to still 
-				// push events and route appropriately to the derived 
-				// type subjects.
-				var subject = this.subjects.Find(@event.GetType()) as dynamic;
-				if (subject != null)
-					// Cast event to dynamic to do a double dynamic dispatch.
-					subject.OnNext((dynamic)@event);
+				subject.OnNext((dynamic)@event);
 			}
 		}
 

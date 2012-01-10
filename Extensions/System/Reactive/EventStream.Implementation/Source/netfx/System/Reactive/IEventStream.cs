@@ -29,6 +29,10 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace System.Reactive
 {

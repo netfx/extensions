@@ -16,6 +16,13 @@
             provided by the nuget <c>netfx-System.Reactive.EventStream.Interfaces</c>, 
             which must be installed in the same project or one referenced by it. 
             </remarks>
+            <devdoc>
+            The surprisingly simple implementation from the blog post http://kzu.to/srVn3P 
+            was surprisingly limiting too :). No support for covariant subscriptions, 
+            subscriptions to interfaces implemented by the concrete events, etc. 
+            (i.e. the EventPattern&lt;TEventArgs&gt; from Rx wouldn't work).
+            </devdoc>
+            <nuget id="netfx-System.Reactive.EventStream"/>
         </member>
         <member name="T:System.Reactive.IEventStream">
             <summary>

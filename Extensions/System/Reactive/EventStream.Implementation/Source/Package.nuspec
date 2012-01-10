@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Reactive.EventStream.Implementation</id>
-		<version>1.0.0.3</version>
+		<version>1.0.0.7</version>
 		<title>NETFx: Reactive Event Stream Implementation</title>
 		<description>Provides the implementation of a reactive extensions event stream, allowing trending and analysis queries to be performed in real-time over the events pushed through the stream.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

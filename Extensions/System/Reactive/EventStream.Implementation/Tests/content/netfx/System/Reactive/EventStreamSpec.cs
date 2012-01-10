@@ -34,6 +34,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using Microsoft.Reactive.Testing;
 using Xunit;
+using System.Diagnostics;
 
 namespace System.Reactive
 {
@@ -83,7 +84,7 @@ namespace System.Reactive
 
 			using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
 			{
-				BaseEvent @event= new PatientEnteredHospital();
+				BaseEvent @event = new PatientEnteredHospital();
 				stream.Push(@event);
 			}
 
@@ -146,10 +147,10 @@ namespace System.Reactive
 				new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
 				new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
 				new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
-				new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })), 
+				new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
 
 				// User 2 attems one more time within the 1' window
-				new Recorded<Notification<LoginFailure>>(45 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })), 
+				new Recorded<Notification<LoginFailure>>(45 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
 
 				// User 1 pulls out the paper where he wrote his pwd ;), so he takes longer
 				new Recorded<Notification<LoginFailure>>(75 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 }))
@@ -187,7 +188,101 @@ namespace System.Reactive
 			Assert.True(blocked.Contains(2));
 		}
 
-		public class BaseEvent
+		[Fact]
+		public void WhenSubscribingAsEventInterface_ThenCallsSubscriber()
+		{
+			var stream = new EventStream();
+			var called = false;
+
+			using (var subscription = stream.Of<IBaseEvent>().Subscribe(c => called = true))
+			{
+				stream.Push(new PatientEnteredHospital());
+			}
+
+			Assert.True(called);
+		}
+
+		[Fact]
+		public void WhenSubscribingAsGenericInterface_ThenCallsSubscriber()
+		{
+			var stream = new EventStream();
+			var called = false;
+
+			using (var subscription = stream.Of<IEventPattern<BaseEvent>>().Subscribe(c => called = true))
+			{
+				stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
+			}
+
+			Assert.True(called);
+		}
+
+		[Fact]
+		public void WhenSubscribingAsGenericInterfaceConcreteArgs_ThenCallsSubscriber()
+		{
+			var stream = new EventStream();
+			var called = false;
+
+			using (var subscription = stream.Of<IEventPattern<PatientEnteredHospital>>().Subscribe(c => called = true))
+			{
+				stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
+			}
+
+			Assert.True(called);
+		}
+
+		[Fact]
+		public void WhenSubscribingToGenericEvent_ThenCanSubscribeCovariantly()
+		{
+			var stream = new EventStream();
+			var called = false;
+
+			using (var susbcription = stream.Of<IEventPattern<IBaseEvent>>().Subscribe(c => called = true))
+			{
+				stream.Push(new EventPattern<PatientLeftHospital>(this, new PatientLeftHospital()));
+			}
+
+			Assert.True(called);
+		}
+
+		public interface IFoo { }
+		public interface IBar : IFoo { }
+
+		public interface IEventPattern<out TEventArgs>
+		// where TEventArgs : EventArgs
+		{
+			object Sender { get; }
+			TEventArgs EventArgs { get; }
+		}
+
+		public class EventPattern<TEventArgs> : IEventPattern<TEventArgs>
+		// where TEventArgs : EventArgs
+		{
+			public EventPattern(object sender, TEventArgs args)
+			{
+				this.Sender = sender;
+				this.EventArgs = args;
+			}
+
+			public object Sender { get; private set; }
+			public TEventArgs EventArgs { get; private set; }
+		}
+
+		public static class EventPattern
+		{
+			public static IEventPattern<EventArgs> Create<TEventArgs>(object sender, TEventArgs args)
+				where TEventArgs : EventArgs
+			{
+				if (typeof(TEventArgs) == args.GetType())
+					return new EventPattern<TEventArgs>(sender, args);
+				else
+					return (IEventPattern<EventArgs>)Activator.CreateInstance(
+						typeof(EventPattern<>).MakeGenericType(args.GetType()), sender, args);
+			}
+		}
+
+		public interface IBaseEvent { }
+
+		public class BaseEvent : EventArgs, IBaseEvent
 		{
 		}
 
