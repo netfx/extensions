@@ -4,6 +4,24 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
         <member name="T:JsonSerializer">
             <summary>
             Implements the core NETFx ISerializer interface using Json.NET serializer.
@@ -52,23 +70,30 @@
             <param name="stream">The stream to serialize into.</param>
             <param name="graph">The object graph to serialize.</param>
         </member>
-        <member name="T:Guard">
+        <member name="T:SerializationExtensions">
             <summary>
-            Common guard class for argument validation.
+            Provides simpler serialization and deserialization extension methods 
+            for <see cref="T:ISerializer"/> over a byte array.
             </summary>
         </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+        <member name="M:SerializationExtensions.Deserialize``1(ISerializer,System.Byte[])">
             <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            Deserializes an object graph of type <typeparamref name="T"/> from 
+            the given byte array.
             </summary>
+            <typeparam name="T">The type of object graph to deserialize.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="serialized">The serialized byte array.</param>
         </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+        <member name="M:SerializationExtensions.Serialize``1(ISerializer,``0)">
             <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
+            Serializes the given object graph as a byte array.
             </summary>
+            <typeparam name="T">The type of object graph to serialize, inferred by the
+            compiler from the passed-in <paramref name="graph"/>.</typeparam>
+            <param name="serializer">The serializer to use.</param>
+            <param name="graph">The object graph to serialize.</param>
+            <returns>The byte array containing the serialized object graph.</returns>
         </member>
     </members>
 </doc>

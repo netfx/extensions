@@ -36,22 +36,50 @@ using System.Text;
 using System.IO;
 
 /// <summary>
-/// Implementations of this interface are able to serialize and 
-/// deserialize an object graph from a stream.
+/// Provides simpler serialization and deserialization extension methods 
+/// for <see cref="ISerializer"/> over a byte array.
 /// </summary>
-///	<nuget id="netfx-System.ISerializer" />
-partial interface ISerializer
+static partial class SerializationExtensions
 {
 	/// <summary>
-	/// Deserializes an object graph from the given stream.
+	/// Deserializes an object graph of type <typeparamref name="T"/> from 
+	/// the given byte array.
 	/// </summary>
-	/// <returns>The deserialized object.</returns>
-	T Deserialize<T>(Stream stream);
+	/// <typeparam name="T">The type of object graph to deserialize.</typeparam>
+	/// <param name="serializer">The serializer to use.</param>
+	/// <param name="serialized">The serialized byte array.</param>
+	public static T Deserialize<T>(this ISerializer serializer, byte[] serialized)
+	{
+		Guard.NotNull(() => serializer, serializer);
+		Guard.NotNull(() => serialized, serialized);
+
+		if (serialized.Length == 0)
+			return default(T);
+
+		using (var stream = new MemoryStream(serialized))
+		{
+			return serializer.Deserialize<T>(stream);
+		}
+	}
 
 	/// <summary>
-	/// Serializes the provided object graph and writes it to the storage.
+	/// Serializes the given object graph as a byte array.
 	/// </summary>
-	/// <param name="stream">The stream to serialize the graph into.</param>
-	/// <param name="graph">The object graph to be serialized.</param>
-	void Serialize<T>(Stream stream, T graph);
+	/// <typeparam name="T">The type of object graph to serialize, inferred by the
+	/// compiler from the passed-in <paramref name="graph"/>.</typeparam>
+	/// <param name="serializer">The serializer to use.</param>
+	/// <param name="graph">The object graph to serialize.</param>
+	/// <returns>The byte array containing the serialized object graph.</returns>
+	public static byte[] Serialize<T>(this ISerializer serializer, T graph)
+	{
+		Guard.NotNull(() => serializer, serializer);
+		Guard.NotNull(() => graph, graph);
+
+		using (var stream = new MemoryStream())
+		{
+			serializer.Serialize<T>(stream, graph);
+
+			return stream.ToArray();
+		}
+	}
 }
