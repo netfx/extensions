@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.JsonSerializer</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx JsonSerializer : ISerializer</title>
-		<description>Implements the core NETFx ISerializer interface using Json.NET serializer.</description>
+		<description>Implements the core NETFx ISerializer interface using a Json.NET serializer.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>

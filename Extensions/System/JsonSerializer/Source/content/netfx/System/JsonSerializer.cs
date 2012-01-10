@@ -80,7 +80,11 @@ partial class JsonSerializer : ISerializer
 		Guard.NotNull(() => graph, graph);
 
 		var writer = new StreamWriter(stream);
-		this.serializer.Serialize(new JsonTextWriter(writer), graph);
+		var jsonWriter = new JsonTextWriter(writer);
+#if DEBUG
+		jsonWriter.Formatting = Formatting.Indented;
+#endif
+		this.serializer.Serialize(jsonWriter, graph);
 		writer.Flush();
 	}
 }
