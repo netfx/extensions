@@ -83,7 +83,7 @@ namespace System.Diagnostics.Extensibility
 		}
 
 		/// <summary>
-		/// Gets the list of trace source names that are used to inherit trace source logging for the given type <typeparamref name="T"/>.
+		/// Gets the list of trace source names that are used to inherit trace source logging for the given <typeparamref name="T"/>.
 		/// </summary>
 		public static IEnumerable<string> CompositeFor<T>()
 		{
@@ -91,7 +91,7 @@ namespace System.Diagnostics.Extensibility
 		}
 
 		/// <summary>
-		/// Gets the list of trace source names that are used to inherit trace source logging for the given type <paramref name="type"/>.
+		/// Gets the list of trace source names that are used to inherit trace source logging for the given <paramref name="type"/>.
 		/// </summary>
 		public static IEnumerable<string> CompositeFor(Type type)
 		{
