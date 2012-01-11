@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>netfx-Patterns.EventSourcing.SampleFileSystem</id>
+		<version>1.0.0.0</version>
+		<title>NETFx Patterns: Sample Event Sourcing Store for File System</title>
+		<description>Implements a very simple unoptimized store for the file system.</description>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+		<language>en-US</language>
+		<projectUrl>http://netfx.codeplex.com</projectUrl>
+		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+		<tags>netfx patterns eventsourcing store</tags>
+		<dependencies>
+			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
+			<dependency id="netfx-Patterns.EventSourcing.Queryable" version="1.0" />
+			<dependency id="netfx-System.JsonSerializer" version="1.0" />
+			<dependency id="taglib" version="1.0" />
+		</dependencies>
+	</metadata>
+</package>
