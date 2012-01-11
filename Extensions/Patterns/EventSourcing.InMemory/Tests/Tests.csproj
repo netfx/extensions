@@ -60,6 +60,7 @@
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>
