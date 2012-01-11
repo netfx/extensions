@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:ThreadData">
+            <summary>
+            Provides strong-typed access to <see cref="T:System.Threading.Thread"/> local storage data.
+            </summary>
+        </member>
+        <member name="M:ThreadData.SetData``1(``0)">
+            <summary>
+            Sets the given data in the <see cref="P:System.Threading.Thread.CurrentThread"/> storage. The returned 
+            <see cref="T:System.IDisposable"/> can be used to remove the state 
+            when disposed.
+            </summary>
+        </member>
+        <member name="M:ThreadData.GetData``1">
+            <summary>
+            Gets the data from the <see cref="P:System.Threading.Thread.CurrentThread"/> storage.
+            </summary>
+        </member>
+        <member name="M:ThreadData.SetData``1(System.Threading.Thread,``0)">
+            <summary>
+            Sets the given data in the <see cref="T:System.Threading.Thread"/> storage. The returned 
+            <see cref="T:System.IDisposable"/> can be used to remove the state 
+            when disposed.
+            </summary>
+            <nuget id="netfx-System.Threading.ThreadData"/>
+            <param name="thread" this="true">The thread to set data</param>
+            <param name="data">The data to be set</param>
+        </member>
+        <member name="M:ThreadData.GetData``1(System.Threading.Thread)">
+            <summary>
+            Gets the data from the <see cref="T:System.Threading.Thread"/> storage.
+            </summary>
+            <nuget id="netfx-System.Threading.ThreadData"/>
+            <param name="thread" this="true">The thread to get data from</param>
+        </member>
+    </members>
+</doc>
