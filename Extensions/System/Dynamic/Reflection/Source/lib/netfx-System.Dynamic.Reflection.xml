@@ -39,58 +39,6 @@
             Gets or sets the value.
             </summary>
         </member>
-        <member name="T:System.Dynamic.TypeParameter">
-            <summary>
-            Represents a runtime type parameter to use to 
-            make a generic method invocation.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.TypeParameter.Type">
-            <summary>
-            Gets the type.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.RefValue">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
-            <summary>
-            Creates a value getter/setter delegating reference
-            to be used by reference when invoking the 
-            dynamic object.
-            </summary>
-            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
-            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
-        </member>
-        <member name="P:System.Dynamic.RefValue.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
-        <member name="T:System.Dynamic.RefValue`1">
-            <summary>
-            Allows by-ref values to be passed to reflection dynamic.
-            This support does not exist in C# 4.0 dynamic out of the box.
-            </summary>
-        </member>
-        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
-            </summary>
-        </member>
-        <member name="P:System.Dynamic.RefValue`1.Value">
-            <summary>
-            Gets or sets the value.
-            </summary>
-        </member>
         <member name="T:System.Dynamic.DynamicReflection">
             <summary>
             Provides reflection-based dynamic syntax for objects and types. 
@@ -131,6 +79,58 @@
             <param name="genericArgs">The generic args if any.</param>
             <param name="candidates">The candidate methods to use for the match..</param>
             <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+        </member>
+        <member name="T:System.Dynamic.RefValue">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
+            <summary>
+            Creates a value getter/setter delegating reference
+            to be used by reference when invoking the 
+            dynamic object.
+            </summary>
+            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
+            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.RefValue.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue`1">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.RefValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.TypeParameter">
+            <summary>
+            Represents a runtime type parameter to use to 
+            make a generic method invocation.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.TypeParameter.Type">
+            <summary>
+            Gets the type.
+            </summary>
         </member>
     </members>
 </doc>
