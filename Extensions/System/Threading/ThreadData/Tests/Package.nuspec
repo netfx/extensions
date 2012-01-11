@@ -2,14 +2,17 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Threading.ThreadData.Tests</id>
-		<version>1.1.0.0</version>
+		<version>1.1.0.1</version>
 		<title>NETFx Thread Data&lt;T&gt; Tests</title>
 		<description>Tests for netfx-System.Threading.ThreadData</description>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx Thread threading</tags>
+		<dependencies>
+			<dependency id="xunit" version="1.8" />
+		</dependencies>
 	</metadata>
 </package>

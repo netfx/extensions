@@ -2,13 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Threading.ThreadData</id>
-		<version>1.1.0.0</version>
+		<version>1.1.0.1</version>
 		<title>NETFx Thread Data&lt;T&gt;</title>
-		<description>Provides strong-typed persistence of data in Thread local storage, which can also be transient and automatically removed on dispose.
+		<summary>Provides strong-typed persistence of data in Thread local storage (TLS), which can also be transient and automatically removed on dispose, and is safe for usage on tasks that run off the thread or task pool.</summary>
+		<description xml:space="preserve">The need for this class comes from the fact that [ThreadStatic] as well as ThreadLocal&lt;T&gt; reuse the slot for all threads in a thread pool, meaning that multiple separate tasks that are run from the pool will see and use the same variable value. Typically you want the thread data to be per task, and cleared automatically when the thread is returned to the pool. That is what this class does, by leveraging Thread Local Storage instead.
 
 Usage: Thread.CurrentThread.SetData&lt;Foo&gt;(foo);
 var saved = Thread.CurrentThread.GetData&lt;Foo&gt;();</description>
-		<authors>Clarius, Daniel Cazzulino, kzu</authors>
+		<authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
