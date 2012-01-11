@@ -52,6 +52,7 @@
     <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="tools\install.ps1" />
   </ItemGroup>
