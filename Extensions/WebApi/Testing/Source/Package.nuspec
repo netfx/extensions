@@ -12,7 +12,8 @@
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx wcf webapi testing tdd</tags>
 		<dependencies>
-			<dependency id="WebApi.Enhancements" version="0.3.0" />
+			<dependency id="WebApi" version="0.6" />
+			<dependency id="WebApi.Enhancements" version="0.6" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40"/>
