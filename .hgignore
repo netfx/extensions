@@ -8,3 +8,4 @@ glob:apikey.txt
 syntax: glob
 *.nupkg
 glob:todo/
+glob:packages/
