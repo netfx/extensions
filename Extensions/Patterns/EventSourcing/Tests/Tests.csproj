@@ -68,9 +68,12 @@
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
+    <Compile Include="content\netfx\Patterns\EventSourcing\EventStoreBaseSpec.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="content\netfx\Patterns\EventSourcing\Visibility.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\IClock.cs" />
+    <Compile Include="netfx\System\SystemClock.cs" />
     <Compile Include="Visibility.cs" />
   </ItemGroup>
   <ItemGroup>
