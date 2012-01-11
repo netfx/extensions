@@ -24,6 +24,12 @@ while ($isRoot -eq $null)
 }
 
 . ./Common.ps1
+
+# Push first drops, always. This keeps the offline 
+# cache Drop always current whenever we push.
+Drop-Packages $current
+
+# Now push for real
 Push-Packages $current
 
 # Pop folders just in case this is invoked from a powershell prompt
