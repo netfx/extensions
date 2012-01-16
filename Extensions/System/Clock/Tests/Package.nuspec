@@ -13,6 +13,7 @@
 		<tags>netfx system clock testing</tags>
 		<dependencies>
 			<dependency id="xunit" version="1.8" />
+			<dependency id="netfx-System.AmbientSingleton.Tests.xUnit" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

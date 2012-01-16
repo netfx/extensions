@@ -30,57 +30,42 @@ DAMAGE.
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 /// <summary>
-/// Default implementation of <see cref="IClock"/> that exposes 
-/// the <see cref="DateTime"/> default members.
+/// Common guard class for argument validation.
 /// </summary>
-/// <devdoc>
-/// To make this class public, create a partial class
-/// definition in another code file and declare it as public.
-/// This allows a seamless updates experience.
-/// </devdoc>
-///	<nuget id="netfx-System.Clock" />
-partial class SystemClock : IClock
+[DebuggerStepThrough]
+internal static class Guard
 {
-	private static AmbientSingleton<IClock> singleton = new AmbientSingleton<IClock>(new SystemClock());
-
-	private SystemClock()
+	/// <summary>
+	/// Ensures the given <paramref name="value"/> is not null.
+	/// Throws <see cref="ArgumentNullException"/> otherwise.
+	/// </summary>
+	public static void NotNull<T>(Expression<Func<T>> reference, T value)
 	{
-		// Hide default constructor.
+		if (value == null)
+			throw new ArgumentNullException(GetParameterName(reference), "Parameter cannot be null.");
 	}
 
 	/// <summary>
-	/// Gets or sets the singleton instance of the system clock.
+	/// Ensures the given string <paramref name="value"/> is not null or empty.
+	/// Throws <see cref="ArgumentNullException"/> in the first case, or 
+	/// <see cref="ArgumentException"/> in the latter.
 	/// </summary>
-	/// <remarks>
-	/// Tests can safely (for multi-threaded runners too) set this 
-	/// value to override the singleton value for specific call 
-	/// contexts. This singleton leverages the AmbientSingleton 
-	/// netfx.
-	/// </remarks>
-	public static IClock Instance
+	public static void NotNullOrEmpty(Expression<Func<string>> reference, string value)
 	{
-		get { return singleton.Value; }
-		set { singleton.Value = value; }
+		NotNull<string>(reference, value);
+		if (value.Length == 0)
+			throw new ArgumentException(GetParameterName(reference), "Parameter cannot be empty.");
 	}
 
-	/// <summary>
-	/// Current date and time.
-	/// </summary>
-	public DateTimeOffset Now
+	private static string GetParameterName(Expression reference)
 	{
-		get { return DateTimeOffset.Now; }
-	}
+		var lambda = reference as LambdaExpression;
+		var member = lambda.Body as MemberExpression;
 
-	/// <summary>
-	/// Current date and time in UTC format.
-	/// </summary>
-	public DateTimeOffset UtcNow
-	{
-		get { return DateTimeOffset.UtcNow; }
+		return member.Member.Name;
 	}
 }
