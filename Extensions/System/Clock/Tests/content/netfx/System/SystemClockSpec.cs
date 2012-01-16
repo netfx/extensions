@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using System.Globalization;
 
 namespace NetFx.System
 {
@@ -44,7 +45,8 @@ namespace NetFx.System
 		{
 			var now = SystemClock.Instance.Now;
 
-			Assert.Equal(DateTimeKind.Local, now.Kind);
+			// Will fail if run on a maching with GMT-00 timezone.
+			Assert.NotEqual(TimeSpan.Zero, now.Offset);
 		}
 
 		[Fact]
@@ -52,7 +54,7 @@ namespace NetFx.System
 		{
 			var now = SystemClock.Instance.UtcNow;
 
-			Assert.Equal(DateTimeKind.Utc, now.Kind);
+			Assert.Equal(TimeSpan.Zero, now.Offset);
 		}
 	}
 }

@@ -48,10 +48,10 @@ partial interface IClock
 	/// <summary>
 	/// Current date and time.
 	/// </summary>
-	DateTime Now { get; }
+	DateTimeOffset Now { get; }
 
 	/// <summary>
 	/// Current date and time in UTC format.
 	/// </summary>
-	DateTime UtcNow { get; }
+	DateTimeOffset UtcNow { get; }
 }

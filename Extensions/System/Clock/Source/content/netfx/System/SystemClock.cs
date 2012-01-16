@@ -64,16 +64,16 @@ partial class SystemClock : IClock
 	/// <summary>
 	/// Current date and time.
 	/// </summary>
-	public DateTime Now
+	public DateTimeOffset Now
 	{
-		get { return DateTime.Now; }
+		get { return DateTimeOffset.Now; }
 	}
 
 	/// <summary>
 	/// Current date and time in UTC format.
 	/// </summary>
-	public DateTime UtcNow
+	public DateTimeOffset UtcNow
 	{
-		get { return DateTime.UtcNow; }
+		get { return DateTimeOffset.UtcNow; }
 	}
 }
