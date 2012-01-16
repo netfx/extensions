@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\System\SystemClockSpec.cs" />
+    <Compile Include="netfx\System\AmbientSingletonSpec.cs" />
+    <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NuSpec>
