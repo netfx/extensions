@@ -18,6 +18,8 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			this.Clock = SystemClock.Instance;
 		}
 
+		// If the IClock interface is not defined in the referenced projects,
+		// you must install the netfx-System.Clock nuget to get this to compile.
 		public IClock Clock { get; set; }
 
 		protected override void Apply<TEvent>(TEvent @event)
