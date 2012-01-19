@@ -6,19 +6,28 @@ using System.Text;
 namespace NetFx.Patterns.EventSourcing.Tests
 {
 	[Serializable]
-	internal class DomainEvent 
+	internal class DomainEvent : ITimestamped
 	{
-		protected DomainEvent()
-		{
-			this.Timestamp = DateTimeOffset.UtcNow;
-		}
-
-		public virtual DateTimeOffset Timestamp { get; protected set; }
+		public DateTimeOffset Timestamp { get; set; }
 	}
 
 	internal abstract class DomainObject : DomainObject<Guid, DomainEvent> 
 	{
-		protected DomainObject() { }
+		protected DomainObject() 
+		{
+			this.Clock = SystemClock.Instance;
+		}
+
+		public IClock Clock { get; set; }
+
+		protected override void Apply<TEvent>(TEvent @event)
+		{
+			// Update the time on the event automatically, according u
+			// to the current clock.
+			@event.Timestamp = this.Clock.Now;
+
+			base.Apply<TEvent>(@event);
+		}
 	}
 
 	/// <summary>
@@ -71,7 +80,7 @@ namespace NetFx.Patterns.EventSourcing.Tests
 		/// <summary>
 		/// Initializes the internal event handler map.
 		/// </summary>
-		public Product()
+		private Product()
 		{
 			// First thing an the domain object sourcing the event must do is 
 			// setup which methods handle which events.
@@ -81,6 +90,11 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			this.Handles<PublishedEvent>(this.OnPublished);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Product"/> class 
+		/// from a list of historic events.
+		/// </summary>
+		/// <param name="events">The events.</param>
 		public Product(IEnumerable<DomainEvent> events)
 			: this()
 		{
