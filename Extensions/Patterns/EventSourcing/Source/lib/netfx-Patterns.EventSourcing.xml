@@ -30,12 +30,17 @@
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
             <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
-        <member name="M:IEventStore`2.SaveChanges(DomainObject{`0,`1})">
+        <member name="M:IEventStore`2.Commit">
             <summary>
-            Saves the pending changes in the domain object and accepts 
+            Commits the changes persisted so far, in a unit of work style.
+            </summary>
+        </member>
+        <member name="M:IEventStore`2.Persist(DomainObject{`0,`1})">
+            <summary>
+            Persists the pending events in the domain object and accepts 
             the changes.
             </summary>
-            <param name="entity">The domain object raising the event.</param>
+            <param name="entity">The domain object raising the events.</param>
         </member>
         <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
             <summary>

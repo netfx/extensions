@@ -43,7 +43,7 @@ internal class DomainContext : IDomainContext
 				this.eventStream.Push(Event.Create(@object, @event));
 			}
 
-			this.eventStore.SaveChanges(@object);
+			this.eventStore.Persist(@object);
 		}
 	}
 }

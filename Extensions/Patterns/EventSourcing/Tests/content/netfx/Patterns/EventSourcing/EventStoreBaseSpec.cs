@@ -44,13 +44,13 @@ namespace NetFx.Patterns.EventSourcing.Tests
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 		}
 
 		/// <summary>
@@ -113,19 +113,19 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).Execute();
 
@@ -141,19 +141,19 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<Product.DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
 
@@ -169,19 +169,19 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).Execute();
 
@@ -197,19 +197,19 @@ namespace NetFx.Patterns.EventSourcing.Tests
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(7));
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(6));
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.clock.Now = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(4));
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<Product.DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
 

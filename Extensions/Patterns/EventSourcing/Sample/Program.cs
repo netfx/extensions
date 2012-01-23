@@ -32,7 +32,11 @@ namespace Sample
 		{
 			private List<DomainEvent> events = new List<DomainEvent>();
 
-			public void SaveChanges(DomainObject<Guid, DomainEvent> entity)
+			public void Commit()
+			{
+			}
+
+			public void Persist(DomainObject<Guid, DomainEvent> entity)
 			{
 				foreach (var @event in entity.GetEvents())
 				{
