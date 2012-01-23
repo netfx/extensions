@@ -84,10 +84,10 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 	}
 
 	/// <summary>
-	/// Saves the given events raised by the given sender domain object.
+	/// Persists the pending events raised by the given domain object.
 	/// </summary>
 	/// <param name="domainObject">The domain object raising the events.</param>
-	public void SaveChanges(DomainObject<Guid, TBaseEvent> domainObject)
+	public void Persist(DomainObject<Guid, TBaseEvent> domainObject)
 	{
 		foreach (var @event in domainObject.GetEvents().ToList())
 		{
@@ -95,6 +95,14 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 		}
 
 		domainObject.AcceptEvents();
+	}
+
+	/// <summary>
+	/// Commits the events persisted so far.
+	/// </summary>
+	public void Commit()
+	{
+		this.SaveChanges();
 	}
 
 	IQueryable<StoredEvent> IQueryableEventStore<Guid, TBaseEvent, StoredEvent>.Events
@@ -113,13 +121,12 @@ partial class EventStore<TBaseEvent> : DbContext, IEventStore<TBaseEvent>
 			EventType = this.TypeNameConverter.Invoke(@event.GetType()),
 			Timestamp = @event.Timestamp,
 			Payload = this.Serializer.Serialize(@event),
+			RowVersion = DateTimeOffset.UtcNow.UtcTicks,
 		};
 
 		this.Events.Add(stored);
 
 		OnSavingEvent(@event, stored);
-
-		this.SaveChanges();
 	}
 
 	/// <summary>

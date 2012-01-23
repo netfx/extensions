@@ -55,13 +55,13 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 			product.Publish(2);
 			product.Publish(3);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 		}
 
 		[Fact]
@@ -117,19 +117,19 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<DeactivatedEvent>().Since(when).Execute();
 
@@ -145,19 +145,19 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<DeactivatedEvent>().Since(when).ExclusiveRange().Execute();
 
@@ -173,19 +173,19 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<DeactivatedEvent>().Until(when).Execute();
 
@@ -201,19 +201,19 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(6)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => when;
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			this.utcNow = () => DateTime.Today.Subtract(TimeSpan.FromDays(4)).ToUniversalTime();
 			product.Deactivate();
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().OfType<DeactivatedEvent>().Until(when).ExclusiveRange().Execute();
 
@@ -235,7 +235,7 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 			var product = new Product(id1, "DevStore");
 			product.Publish(1);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var events = store.Query().Execute().ToList();
 
@@ -251,14 +251,14 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 			var product = new Product(id1, "DevStore");
 			product.Publish(1);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			product = new Product(id2, "WoVS");
 			product.Publish(1);
 			product.Publish(2);
 			product.Publish(3);
 
-			store.SaveChanges(product);
+			store.Persist(product);
 
 			var saved = new Product(store.Query().For<Product>(id2).Execute());
 
@@ -285,7 +285,9 @@ namespace NetFx.Patterns.EventSourcing.Queryable.Tests
 
 		public IQueryable<StoredEvent> Events { get { return this.events.AsQueryable(); } }
 
-		public void SaveChanges(DomainObject<Guid, DomainEvent> entity)
+		public void Commit() { }
+
+		public void Persist(DomainObject<Guid, DomainEvent> entity)
 		{
 			foreach (var @event in entity.GetEvents())
 			{

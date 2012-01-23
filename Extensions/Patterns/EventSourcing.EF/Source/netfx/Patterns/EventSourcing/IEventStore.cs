@@ -28,11 +28,16 @@ using System.Linq.Expressions;
 partial interface IEventStore<TObjectId, TBaseEvent>
 {
 	/// <summary>
-	/// Saves the pending changes in the domain object and accepts 
+	/// Commits the changes persisted so far, in a unit of work style.
+	/// </summary>
+	void Commit();
+
+	/// <summary>
+	/// Persists the pending events in the domain object and accepts 
 	/// the changes.
 	/// </summary>
-	/// <param name="entity">The domain object raising the event.</param>
-	void SaveChanges(DomainObject<TObjectId, TBaseEvent> entity);
+	/// <param name="entity">The domain object raising the events.</param>
+	void Persist(DomainObject<TObjectId, TBaseEvent> entity);
 
 	/// <summary>
 	/// Queries the event store for events that match the given criteria.

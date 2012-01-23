@@ -29,18 +29,58 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace System
+/// <summary>
+/// Default implementation of <see cref="IClock"/> that exposes 
+/// the <see cref="DateTime"/> default members.
+/// </summary>
+/// <devdoc>
+/// To make this class public, create a partial class
+/// definition in another code file and declare it as public.
+/// This allows a seamless updates experience.
+/// </devdoc>
+///	<nuget id="netfx-System.Clock" />
+partial class SystemClock : IClock
 {
-	/// <summary>
-	/// Interface implemented by objects that have a timestamp.
-	/// </summary>
-	/// <nuget id="netfx-System.ITimestamped"/>
-	public interface ITimestamped
+	private static AmbientSingleton<IClock> singleton = new AmbientSingleton<IClock>(new SystemClock());
+
+	private SystemClock()
 	{
-		/// <summary>
-		/// Gets or sets the timestamp of this instance.
-		/// </summary>
-		DateTimeOffset Timestamp { get; set; }
+		// Hide default constructor.
+	}
+
+	/// <summary>
+	/// Gets or sets the singleton instance of the system clock.
+	/// </summary>
+	/// <remarks>
+	/// Tests can safely (for multi-threaded runners too) set this 
+	/// value to override the singleton value for specific call 
+	/// contexts. This singleton leverages the AmbientSingleton 
+	/// netfx.
+	/// </remarks>
+	public static IClock Instance
+	{
+		get { return singleton.Value; }
+		set { singleton.Value = value; }
+	}
+
+	/// <summary>
+	/// Current date and time.
+	/// </summary>
+	public DateTimeOffset Now
+	{
+		get { return DateTimeOffset.Now; }
+	}
+
+	/// <summary>
+	/// Current date and time in UTC format.
+	/// </summary>
+	public DateTimeOffset UtcNow
+	{
+		get { return DateTimeOffset.UtcNow; }
 	}
 }

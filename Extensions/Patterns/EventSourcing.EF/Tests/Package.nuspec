@@ -14,7 +14,7 @@
 		<dependencies>
 			<dependency id="EntityFramework" version="4.2" />
 			<dependency id="xunit" version="1.8" />
-			<!-- This one automatically brings in the ES tests -->
+			<dependency id="netfx-Patterns.EventSourcing.Tests.xUnit" version="1.0" />
 			<dependency id="netfx-Patterns.EventSourcing.Queryable.Tests.xUnit" version="1.0" />
 			<dependency id="netfx-System.ISerializer.Tests.xUnit" version="1.0" />
 		</dependencies>

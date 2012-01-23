@@ -29,18 +29,29 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace System
+/// <summary>
+/// Represents a clock.
+/// </summary>
+/// <devdoc>
+/// To make this interface public, create a partial interface 
+/// definition in another code file and declare it as public.
+/// This allows a seamless updates experience.
+/// </devdoc>
+///	<nuget id="netfx-System.Clock" />
+partial interface IClock
 {
 	/// <summary>
-	/// Interface implemented by objects that have a timestamp.
+	/// Current date and time.
 	/// </summary>
-	/// <nuget id="netfx-System.ITimestamped"/>
-	public interface ITimestamped
-	{
-		/// <summary>
-		/// Gets or sets the timestamp of this instance.
-		/// </summary>
-		DateTimeOffset Timestamp { get; set; }
-	}
+	DateTimeOffset Now { get; }
+
+	/// <summary>
+	/// Current date and time in UTC format.
+	/// </summary>
+	DateTimeOffset UtcNow { get; }
 }

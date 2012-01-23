@@ -42,12 +42,24 @@ using System.Threading;
 
 namespace NetFx.Patterns.EventSourcing.EF.Tests
 {
-	public class EventStoreSpec
+	public class EventStoreSpec : EventStoreBaseSpec
 	{
+		static EventStoreSpec()
+		{
+			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
+		}
+
+		protected internal override object CreateStore()
+		{
+			var store = new EventStore("EventSourcing.EF", new BinarySerializer());
+			store.Database.Initialize(true);
+
+			return store;
+		}
+
 		[Fact]
 		public void WhenSavingEvent_ThenCanRetrieveIt()
 		{
-			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
 			{
 				store.Database.Initialize(true);
@@ -59,7 +71,8 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id, "DevStore");
 				product.Publish(1);
 
-				store.SaveChanges(product);
+				store.Persist(product);
+				store.Commit();
 
 				var events = store.Query().Execute().ToList();
 
@@ -72,7 +85,6 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		[Fact]
 		public void WhenSavingMultipleEvents_ThenCanLoadSpecificObject()
 		{
-			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
 			{
 				store.Database.Initialize(true);
@@ -85,14 +97,16 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id1, "DevStore");
 				product.Publish(1);
 
-				store.SaveChanges(product);
+				store.Persist(product);
+				store.Commit();
 
 				product = new Product(id2, "WoVS");
 				product.Publish(1);
 				product.Publish(2);
 				product.Publish(3);
 
-				store.SaveChanges(product);
+				store.Persist(product);
+				store.Commit();
 
 				var events = store.Query().For<Product>(id2).Execute().ToList();
 				var saved = new Product(events);
@@ -106,7 +120,6 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		[Fact]
 		public void WhenSavingEvents_ThenAcceptsChangesOnObject()
 		{
-			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
 			{
 				store.Database.Initialize(true);
@@ -118,7 +131,8 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id, "DevStore");
 				product.Publish(1);
 
-				store.SaveChanges(product);
+				store.Persist(product);
+				store.Commit();
 
 				var events = store.Query().Execute().ToList();
 
@@ -131,7 +145,6 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 		[Fact]
 		public void WhenSavingEvent_ThenAccessItFromQueryableInterface()
 		{
-			Database.SetInitializer(new DropCreateDatabaseAlways<EventStore>());
 			using (var store = new EventStore("EventSourcing.EF", new BinarySerializer()))
 			{
 				store.Database.Initialize(true);
@@ -143,7 +156,8 @@ namespace NetFx.Patterns.EventSourcing.EF.Tests
 				var product = new Product(id, "DevStore");
 				product.Publish(1);
 
-				store.SaveChanges(product);
+				store.Persist(product);
+				store.Commit();
 
 				var events = ((IQueryableEventStore<Guid, DomainEvent, StoredEvent>)store).Events.ToList();
 

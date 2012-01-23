@@ -4,118 +4,17 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:EventStore`1">
+        <member name="T:SequentialGuid">
             <summary>
-            Implements an event store on top of EntityFramework 4.1
+            A safe managed sequential GUID generator (or Comb) that improves 
+            performance of GUID-style identifiers used in persistence.
             </summary>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing.EF"/>
+            <devdoc>Source from NHibernate Guid Comb generator: http://nhibernate.svn.sourceforge.net/viewvc/nhibernate/trunk/nhibernate/src/NHibernate/Id/GuidCombGenerator.cs </devdoc>
+            <nuget id="netfx-System.SequentialGuid" />
         </member>
-        <member name="T:IEventStore`1">
+        <member name="M:SequentialGuid.NewGuid">
             <summary>
-            An Entity Framework-based interface that persists domain 
-            objects with Guid identifiers and <see cref="T:StoredEvent"/> persisted entities.
-            </summary>
-            <typeparam name="TBaseEvent">The type of the base event.</typeparam>
-            <remarks>
-            This interface simplifies testing against the EF-based <see cref="T:EventStore`1"/> 
-            as it removes the need to declare the myriad generic parameters required by the 
-            base queryable event store API.
-            <para>
-            This interface and <see cref="T:EventStore`1"/> implementations are just 
-            one way to implement an event store with a database backend. Implementers can 
-            of course just leverage IQueryableEventStore{TObjectId, TBaseEvent, TStoredEvent} 
-            and persist differently altogether, or provide different id types, etc.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:IQueryableEventStore`3">
-            <summary>
-            Provides a common API for event stores that leverage Linq.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-        </member>
-        <member name="T:IEventStore`2">
-            <summary>
-            Interface implemented by domain event stores.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="M:IEventStore`2.SaveChanges(DomainObject{`0,`1})">
-            <summary>
-            Saves the pending changes in the domain object and accepts 
-            the changes.
-            </summary>
-            <param name="entity">The domain object raising the event.</param>
-        </member>
-        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-            <remarks>
-            Store implementations are advised to provide full support for the 
-            specified criteria, but aren't required to.
-            <para>
-            An alternative fluent API to build the criteria object is available 
-            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
-            extension method on an event store instance.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:IQueryableEventStore`3.Events">
-            <summary>
-            Gets the stream of events persisted by the store.
-            </summary>
-        </member>
-        <member name="M:EventStore`1.#ctor(System.String,ISerializer)">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventStore`1"/> class.
-            </summary>
-            <param name="nameOrConnectionString">The name or connection string.</param>
-            <param name="serializer">The serializer to use to persist the events.</param>
-        </member>
-        <member name="M:EventStore`1.Query(EventQueryCriteria{System.Guid})">
-            <summary>
-            Queries the event store for events that match the given criteria.
-            </summary>
-        </member>
-        <member name="M:EventStore`1.SaveChanges(DomainObject{System.Guid,`0})">
-            <summary>
-            Saves the given events raised by the given sender domain object.
-            </summary>
-            <param name="domainObject">The domain object raising the events.</param>
-        </member>
-        <member name="M:EventStore`1.OnSavingEvent(`0,StoredEvent)">
-            <summary>
-            Extensibility hook called when an event is being saved to the 
-            store.
-            </summary>
-            <param name="event">The event that will be persisted.</param>
-            <param name="entity">The entity that was created to persist to the underlying database.</param>
-            <remarks>
-            Derived classes can use this hook to augment the stored event, etc.
-            </remarks>
-        </member>
-        <member name="P:EventStore`1.Serializer">
-            <summary>
-            Gets the serializer that converts the event payloads to/from a byte array.
-            </summary>
-        </member>
-        <member name="P:EventStore`1.TypeNameConverter">
-            <summary>
-            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
-            its string representation in the store. Used to calculate the 
-            values of <see cref="P:StoredEvent.ObjectType"/> and 
-            <see cref="P:StoredEvent.EventType"/>.
-            </summary>
-        </member>
-        <member name="P:EventStore`1.Events">
-            <summary>
-            Gets or sets the events persisted in the store.
+            Creates a new sequential guid.
             </summary>
         </member>
         <member name="T:StoredEvent">
@@ -204,46 +103,158 @@
             Gets or sets the row version, used for ordering events.
             </summary>
         </member>
-        <member name="M:QueryableEventStoreExtensions.ToExpression``3(EventQueryCriteria{``0},IQueryableEventStore{``0,``1,``2},System.Func{System.Type,System.String})">
+        <member name="T:Guard">
             <summary>
-            Converts a criteria object passed to the queryable event store 
-            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
-            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
-            over the stored queryable event stream.
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:IEventStore`2">
+            <summary>
+            Interface implemented by domain event stores.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
+        </member>
+        <member name="M:IEventStore`2.Commit">
+            <summary>
+            Commits the changes persisted so far, in a unit of work style.
+            </summary>
+        </member>
+        <member name="M:IEventStore`2.Persist(DomainObject{`0,`1})">
+            <summary>
+            Persists the pending events in the domain object and accepts 
+            the changes.
+            </summary>
+            <param name="entity">The domain object raising the events.</param>
+        </member>
+        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
+            <summary>
+            Queries the event store for events that match the given criteria.
+            </summary>
+            <remarks>
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            An alternative fluent API to build the criteria object is available 
+            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
+            extension method on an event store instance.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:EventStore`1">
+            <summary>
+            Implements an event store on top of EntityFramework 4.1
+            </summary>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing.EF"/>
+        </member>
+        <member name="T:IEventStore`1">
+            <summary>
+            An Entity Framework-based interface that persists domain 
+            objects with Guid identifiers and <see cref="T:StoredEvent"/> persisted entities.
+            </summary>
+            <typeparam name="TBaseEvent">The type of the base event.</typeparam>
+            <remarks>
+            This interface simplifies testing against the EF-based <see cref="T:EventStore`1"/> 
+            as it removes the need to declare the myriad generic parameters required by the 
+            base queryable event store API.
+            <para>
+            This interface and <see cref="T:EventStore`1"/> implementations are just 
+            one way to implement an event store with a database backend. Implementers can 
+            of course just leverage IQueryableEventStore{TObjectId, TBaseEvent, TStoredEvent} 
+            and persist differently altogether, or provide different id types, etc.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:IQueryableEventStore`3">
+            <summary>
+            Provides a common API for event stores that leverage Linq.
             </summary>
             <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
             <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
             <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
-            <param name="store">The store to provide the query expression for.</param>
-            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
-            filters in the criteria object into type name strings that are persisted by the store.</param>
         </member>
-        <member name="M:QueryableEventStoreExtensions.ToExpression``3(IQueryableEventStore{``0,``1,``2},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+        <member name="P:IQueryableEventStore`3.Events">
             <summary>
-            Converts a criteria object passed to the queryable event store 
-            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
-            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
-            over the stored queryable event stream.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <param name="store">The store to provide the query expression for.</param>
-            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
-            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
-            filters in the criteria object into type name strings that are persisted by the store.</param>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.Build">
-            <summary>
-            Builds the expression for the criteria.
+            Gets the stream of events persisted by the store.
             </summary>
         </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.EventObjectIdEquals(`0)">
-            <devdoc>
-            This is needed because == doesn't compile for TObjectId and calling CompareTo 
-            wouldn't work on most non in-memory stores either.
-            </devdoc>
+        <member name="M:EventStore`1.#ctor(System.String,ISerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventStore`1"/> class.
+            </summary>
+            <param name="nameOrConnectionString">The name or connection string.</param>
+            <param name="serializer">The serializer to use to persist the events.</param>
+        </member>
+        <member name="M:EventStore`1.Query(EventQueryCriteria{System.Guid})">
+            <summary>
+            Queries the event store for events that match the given criteria.
+            </summary>
+        </member>
+        <member name="M:EventStore`1.Persist(DomainObject{System.Guid,`0})">
+            <summary>
+            Persists the pending events raised by the given domain object.
+            </summary>
+            <param name="domainObject">The domain object raising the events.</param>
+        </member>
+        <member name="M:EventStore`1.Commit">
+            <summary>
+            Commits the events persisted so far.
+            </summary>
+        </member>
+        <member name="M:EventStore`1.OnSavingEvent(`0,StoredEvent)">
+            <summary>
+            Extensibility hook called when an event is being saved to the 
+            store.
+            </summary>
+            <param name="event">The event that will be persisted.</param>
+            <param name="entity">The entity that was created to persist to the underlying database.</param>
+            <remarks>
+            Derived classes can use this hook to augment the stored event, etc.
+            </remarks>
+        </member>
+        <member name="P:EventStore`1.Serializer">
+            <summary>
+            Gets the serializer that converts the event payloads to/from a byte array.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.TypeNameConverter">
+            <summary>
+            Gets or sets the function that converts a <see cref="T:System.Type"/> to 
+            its string representation in the store. Used to calculate the 
+            values of <see cref="P:StoredEvent.ObjectType"/> and 
+            <see cref="P:StoredEvent.EventType"/>.
+            </summary>
+        </member>
+        <member name="P:EventStore`1.Events">
+            <summary>
+            Gets or sets the events persisted in the store.
+            </summary>
+        </member>
+        <member name="T:System.ITimestamped">
+            <summary>
+            Interface implemented by objects that have a timestamp.
+            </summary>
+            <nuget id="netfx-System.ITimestamped"/>
+        </member>
+        <member name="P:System.ITimestamped.Timestamp">
+            <summary>
+            Gets or sets the timestamp of this instance.
+            </summary>
         </member>
         <member name="T:DomainObject`2">
             <summary>
@@ -295,81 +306,6 @@
         <member name="P:DomainObject`2.Id">
             <summary>
             Gets or sets the identifier of the domain object.
-            </summary>
-        </member>
-        <member name="T:EventQueryCriteria`1">
-            <summary>
-            Represents the filter criteria for a domain event store query.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="M:EventQueryCriteria`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventQueryCriteria`1"/> class.
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.ObjectInstances">
-            <summary>
-            List of source object type + instance identifier filters. The two filters 
-            should be considered by event stores as AND'ed (i.e. 
-            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
-            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.ObjectTypes">
-            <summary>
-            List of object type filters. All types added are OR'ed with the 
-            others (i.e. <c>ObjectType == Product OR ObjectType == Order</c>).
-            </summary>
-            <remarks>
-            To filter by object type and identifier, 
-            use <see cref="P:EventQueryCriteria`1.ObjectInstances"/> instead.
-            </remarks>
-        </member>
-        <member name="P:EventQueryCriteria`1.EventTypes">
-            <summary>
-            List of event type filters. All types added are OR'ed with the 
-            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.Since">
-            <summary>
-            Filters events that happened after the given starting date.
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.Until">
-            <summary>
-            Filters events that happened before the given ending date.
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.IsExclusiveRange">
-            <summary>
-            If set to <see langword="true"/>, <see cref="P:EventQueryCriteria`1.Since"/> and <see cref="P:EventQueryCriteria`1.Until"/> should 
-            be considered as exclusive ranges (excludes values with a matching date). 
-            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
-            </summary>
-        </member>
-        <member name="T:EventQueryCriteria`1.ObjectFilter">
-            <summary>
-            Filter criteria containing the object type and identifier. 
-            </summary>
-        </member>
-        <member name="M:EventQueryCriteria`1.ObjectFilter.#ctor(System.Type,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:EventQueryCriteria`1.ObjectFilter"/> class.
-            </summary>
-            <param name="objectType">Type of the event source to filter by.</param>
-            <param name="objectId">The domain object identifier to filter by.</param>
-        </member>
-        <member name="P:EventQueryCriteria`1.ObjectFilter.ObjectType">
-            <summary>
-            Gets or sets the type of the domain object to filter by.
-            </summary>
-        </member>
-        <member name="P:EventQueryCriteria`1.ObjectFilter.ObjectId">
-            <summary>
-            Gets or sets the domain object identifier to filter by.
             </summary>
         </member>
         <member name="T:EventQueryExtension">
@@ -456,24 +392,6 @@
             exclusive, changing the default behavior which is to be inclusive.
             </summary>
         </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
         <member name="T:ISerializer">
             <summary>
             Implementations of this interface are able to serialize and 
@@ -494,17 +412,6 @@
             <param name="stream">The stream to serialize the graph into.</param>
             <param name="graph">The object graph to be serialized.</param>
         </member>
-        <member name="T:System.ITimestamped">
-            <summary>
-            Interface implemented by objects that have a timestamp.
-            </summary>
-            <nuget id="netfx-System.ITimestamped"/>
-        </member>
-        <member name="P:System.ITimestamped.Timestamp">
-            <summary>
-            Gets the timestamp of this instance.
-            </summary>
-        </member>
         <member name="T:ExpressionCombiner">
             <summary>
             Combines linq expressions using logic operators And and Or.
@@ -515,17 +422,79 @@
             </remarks>
             <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
         </member>
-        <member name="T:SequentialGuid">
+        <member name="T:EventQueryCriteria`1">
             <summary>
-            A safe managed sequential GUID generator (or Comb) that improves 
-            performance of GUID-style identifiers used in persistence.
+            Represents the filter criteria for a domain event store query.
             </summary>
-            <devdoc>Source from NHibernate Guid Comb generator: http://nhibernate.svn.sourceforge.net/viewvc/nhibernate/trunk/nhibernate/src/NHibernate/Id/GuidCombGenerator.cs </devdoc>
-            <nuget id="netfx-System.SequentialGuid" />
+            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
-        <member name="M:SequentialGuid.NewGuid">
+        <member name="M:EventQueryCriteria`1.#ctor">
             <summary>
-            Creates a new sequential guid.
+            Initializes a new instance of the <see cref="T:EventQueryCriteria`1"/> class.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.ObjectInstances">
+            <summary>
+            List of source object type + instance identifier filters. The two filters 
+            should be considered by event stores as AND'ed (i.e. 
+            events for <c>Product AND Id = 5</c>) and each entry is OR'ed with the 
+            others (i.e. <c>(Product AND Id = 5) OR (Order AND Id = 1)</c>.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.ObjectTypes">
+            <summary>
+            List of object type filters. All types added are OR'ed with the 
+            others (i.e. <c>ObjectType == Product OR ObjectType == Order</c>).
+            </summary>
+            <remarks>
+            To filter by object type and identifier, 
+            use <see cref="P:EventQueryCriteria`1.ObjectInstances"/> instead.
+            </remarks>
+        </member>
+        <member name="P:EventQueryCriteria`1.EventTypes">
+            <summary>
+            List of event type filters. All types added are OR'ed with the 
+            others (i.e. <c>EventType == ProductCreated OR EventType == ProductPublished</c>).
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.Since">
+            <summary>
+            Filters events that happened after the given starting date.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.Until">
+            <summary>
+            Filters events that happened before the given ending date.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.IsExclusiveRange">
+            <summary>
+            If set to <see langword="true"/>, <see cref="P:EventQueryCriteria`1.Since"/> and <see cref="P:EventQueryCriteria`1.Until"/> should 
+            be considered as exclusive ranges (excludes values with a matching date). 
+            Defaults to <see langword="false"/>, meaning that ranges are inclusive by default.
+            </summary>
+        </member>
+        <member name="T:EventQueryCriteria`1.ObjectFilter">
+            <summary>
+            Filter criteria containing the object type and identifier. 
+            </summary>
+        </member>
+        <member name="M:EventQueryCriteria`1.ObjectFilter.#ctor(System.Type,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EventQueryCriteria`1.ObjectFilter"/> class.
+            </summary>
+            <param name="objectType">Type of the event source to filter by.</param>
+            <param name="objectId">The domain object identifier to filter by.</param>
+        </member>
+        <member name="P:EventQueryCriteria`1.ObjectFilter.ObjectType">
+            <summary>
+            Gets or sets the type of the domain object to filter by.
+            </summary>
+        </member>
+        <member name="P:EventQueryCriteria`1.ObjectFilter.ObjectId">
+            <summary>
+            Gets or sets the domain object identifier to filter by.
             </summary>
         </member>
         <member name="T:SerializationExtensions">
@@ -552,6 +521,47 @@
             <param name="serializer">The serializer to use.</param>
             <param name="graph">The object graph to serialize.</param>
             <returns>The byte array containing the serialized object graph.</returns>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(EventQueryCriteria{``0},IQueryableEventStore{``0,``1,``2},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(IQueryableEventStore{``0,``1,``2},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.Build">
+            <summary>
+            Builds the expression for the criteria.
+            </summary>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.EventObjectIdEquals(`0)">
+            <devdoc>
+            This is needed because == doesn't compile for TObjectId and calling CompareTo 
+            wouldn't work on most non in-memory stores either.
+            </devdoc>
         </member>
     </members>
 </doc>

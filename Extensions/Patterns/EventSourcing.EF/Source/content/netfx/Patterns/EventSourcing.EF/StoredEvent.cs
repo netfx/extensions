@@ -65,6 +65,5 @@ partial class StoredEvent : IStoredEvent<Guid>
 	/// <summary>
 	/// Gets or sets the row version, used for ordering events.
 	/// </summary>
-	[Timestamp]
-	public byte[] RowVersion { get; set; }
+	public long RowVersion { get; set; }
 }
