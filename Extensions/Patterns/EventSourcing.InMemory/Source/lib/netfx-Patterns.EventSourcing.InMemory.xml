@@ -294,6 +294,47 @@
             </remarks>
             <nuget id="netfx-System.Linq.Expressions.ExpressionCombiner" />
         </member>
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(EventQueryCriteria{``0},IQueryableEventStore{``0,``1,``2},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.ToExpression``3(IQueryableEventStore{``0,``1,``2},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
+            <summary>
+            Converts a criteria object passed to the queryable event store 
+            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
+            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
+            over the stored queryable event stream.
+            </summary>
+            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
+            <param name="store">The store to provide the query expression for.</param>
+            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
+            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
+            filters in the criteria object into type name strings that are persisted by the store.</param>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.Build">
+            <summary>
+            Builds the expression for the criteria.
+            </summary>
+        </member>
+        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.EventObjectIdEquals(`0)">
+            <devdoc>
+            This is needed because == doesn't compile for TObjectId and calling CompareTo 
+            wouldn't work on most non in-memory stores either.
+            </devdoc>
+        </member>
         <member name="T:System.ITimestamped">
             <summary>
             Interface implemented by objects that have a timestamp.
@@ -356,47 +397,6 @@
             <summary>
             Gets or sets the identifier of the domain object.
             </summary>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.ToExpression``3(EventQueryCriteria{``0},IQueryableEventStore{``0,``1,``2},System.Func{System.Type,System.String})">
-            <summary>
-            Converts a criteria object passed to the queryable event store 
-            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
-            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
-            over the stored queryable event stream.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
-            <param name="store">The store to provide the query expression for.</param>
-            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
-            filters in the criteria object into type name strings that are persisted by the store.</param>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.ToExpression``3(IQueryableEventStore{``0,``1,``2},EventQueryCriteria{``0},System.Func{System.Type,System.String})">
-            <summary>
-            Converts a criteria object passed to the queryable event store 
-            <see cref="M:IEventStore`2.Query(EventQueryCriteria{`0})"/> method 
-            into a Linq expression that can be used directly as a filter (<c>Where</c>) 
-            over the stored queryable event stream.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <typeparam name="TStoredEvent">The type of the stored event.</typeparam>
-            <param name="store">The store to provide the query expression for.</param>
-            <param name="criteria">The criteria that will be converted to a Linq expression.</param>
-            <param name="typeNameConverter">The type name converter to use to transform the <see cref="T:System.Type"/> 
-            filters in the criteria object into type name strings that are persisted by the store.</param>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.Build">
-            <summary>
-            Builds the expression for the criteria.
-            </summary>
-        </member>
-        <member name="M:QueryableEventStoreExtensions.CriteriaBuilder`2.EventObjectIdEquals(`0)">
-            <devdoc>
-            This is needed because == doesn't compile for TObjectId and calling CompareTo 
-            wouldn't work on most non in-memory stores either.
-            </devdoc>
         </member>
     </members>
 </doc>
