@@ -54,10 +54,15 @@
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\QueryableEventStoreSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\EventStoreBaseSpec.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
+    <Compile Include="netfx\System\AmbientSingleton.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\IClock.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombinerSpec.cs" />
+    <Compile Include="netfx\System\SystemClock.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

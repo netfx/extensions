@@ -44,34 +44,24 @@ partial class MemoryStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectI
 	where TBaseEvent : ITimestamped
 {
 	private List<StoredEvent> events = new List<StoredEvent>();
-	private Func<TBaseEvent, DateTimeOffset> utcNow;
-
-	public MemoryStore()
-		: this(() => DateTimeOffset.Now)
-	{
-	}
-
-	/// <summary>
-	/// Initializes the store with a specific way to calculate the current time, useful 
-	/// in tests when there's a need to simulate events happening at specific times.
-	/// </summary>
-	/// <param name="utcNow">The current date time, in UTC form, to be used if the changes don't provide their own timestamp.</param>
-	public MemoryStore(Func<DateTimeOffset> utcNow)
-	{
-		// If the events have their own time, use that, otherwise, use the provided time.
-		this.utcNow = change => change.Timestamp != DateTimeOffset.MinValue ? change.Timestamp : utcNow();
-	}
+	private List<StoredEvent> pendingEvents = new List<StoredEvent>();
 
 	/// <summary>
 	/// Gets the stream of events persisted by the store.
 	/// </summary>
 	public IQueryable<StoredEvent> Events { get { return this.events.AsQueryable(); } }
 
-	public void SaveChanges(DomainObject<TObjectId, TBaseEvent> entity)
+	public void Commit()
+	{
+		this.events.AddRange(pendingEvents);
+		pendingEvents.Clear();
+	}
+
+	public void Persist(DomainObject<TObjectId, TBaseEvent> entity)
 	{
 		foreach (var change in entity.GetEvents())
 		{
-			this.events.Add(new StoredEvent(entity, change) { Timestamp = this.utcNow(change) });
+			this.pendingEvents.Add(new StoredEvent(entity, change) { Timestamp = change.Timestamp });
 		}
 
 		entity.AcceptEvents();
