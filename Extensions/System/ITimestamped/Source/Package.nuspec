@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.ITimestamped</id>
-		<version>1.0.0.0</version>
+		<version>1.0.0.1</version>
 		<title>NETFx System.ITimestamped interface</title>
 		<description>Provides an interface that can be implemented by objects that have a timestamp associated.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

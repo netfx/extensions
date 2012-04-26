@@ -39,8 +39,8 @@ namespace System
 	public interface ITimestamped
 	{
 		/// <summary>
-		/// Gets the timestamp of this instance.
+		/// Gets or sets the timestamp of this instance.
 		/// </summary>
-		DateTimeOffset Timestamp { get; }
+		DateTimeOffset Timestamp { get; set; }
 	}
 }

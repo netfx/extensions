@@ -12,7 +12,7 @@
         </member>
         <member name="P:System.ITimestamped.Timestamp">
             <summary>
-            Gets the timestamp of this instance.
+            Gets or sets the timestamp of this instance.
             </summary>
         </member>
     </members>
