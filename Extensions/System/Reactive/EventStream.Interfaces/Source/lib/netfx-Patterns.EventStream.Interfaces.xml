@@ -4,6 +4,17 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:System.Reactive.EventPattern">
+            <summary>
+            Factory class for <see cref="T:System.Reactive.IEventPattern`1"/>.
+            </summary>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces"/>
+        </member>
+        <member name="M:System.Reactive.EventPattern.Create``1(System.Object,``0)">
+            <summary>
+            Creates an event pattern instance for the given sender and event argument value.
+            </summary>
+        </member>
         <member name="T:System.Reactive.IEventPattern`1">
             <summary>
             Represents the Sender and EventArg values of a .NET event.
@@ -16,6 +27,7 @@
             It also removes the restriction that the argument value has to 
             derive from <see cref="P:System.Reactive.IEventPattern`1.EventArgs"/>.
             </remarks>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces"/>
         </member>
         <member name="P:System.Reactive.IEventPattern`1.EventArgs">
             <summary>
@@ -43,16 +55,6 @@
         <member name="M:System.Reactive.IEventStream.Of``1">
             <summary>
             Observes the events of a given type.
-            </summary>
-        </member>
-        <member name="T:System.Reactive.EventPattern">
-            <summary>
-            Factory class for <see cref="T:System.Reactive.IEventPattern`1"/>.
-            </summary>
-        </member>
-        <member name="M:System.Reactive.EventPattern.Create``1(System.Object,``0)">
-            <summary>
-            Creates an event pattern instance for the given sender and event argument value.
             </summary>
         </member>
         <member name="T:Guard">

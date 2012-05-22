@@ -29,279 +29,245 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using Microsoft.Reactive.Testing;
-using Xunit;
-using System.Diagnostics;
-
 namespace System.Reactive
 {
-	public class EventStreamSpec
-	{
-		[Fact]
-		public void WhenPushingNullEvent_ThenThrows()
-		{
-			var stream = new EventStream();
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reactive.Linq;
+    using Microsoft.Reactive.Testing;
+    using Xunit;
 
-			Assert.Throws<ArgumentNullException>(() => stream.Push<object>(null));
-		}
+    public class EventStreamSpec
+    {
+        [Fact]
+        public void WhenPushingNullEvent_ThenThrows()
+        {
+            var stream = new EventStream();
 
-		[Fact]
-		public void WhenPushingNonSubscribedEvent_ThenDoesNotCallSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+            Assert.Throws<ArgumentNullException>(() => stream.Push<object>(null));
+        }
 
-			using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
-			{
-				stream.Push(new PatientLeftHospital());
-			}
+        [Fact]
+        public void WhenPushingNonSubscribedEvent_ThenDoesNotCallSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			Assert.False(called);
-		}
+            using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
+            {
+                stream.Push(new PatientLeftHospital());
+            }
 
-		[Fact]
-		public void WhenPushingSubscribedEvent_ThenDoesCallsSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+            Assert.False(called);
+        }
 
-			using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
-			{
-				stream.Push(new PatientEnteredHospital());
-			}
+        [Fact]
+        public void WhenPushingSubscribedEvent_ThenDoesCallsSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			Assert.True(called);
-		}
+            using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
+            {
+                stream.Push(new PatientEnteredHospital());
+            }
 
-		[Fact]
-		public void WhenPushingSubscribedEventUsingBaseType_ThenDoesCallsSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+            Assert.True(called);
+        }
 
-			using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
-			{
-				BaseEvent @event = new PatientEnteredHospital();
-				stream.Push(@event);
-			}
+        [Fact]
+        public void WhenPushingSubscribedEventUsingBaseType_ThenDoesCallsSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			Assert.True(called);
-		}
+            using (var subscription = stream.Of<PatientEnteredHospital>().Subscribe(c => called = true))
+            {
+                BaseEvent @event = new PatientEnteredHospital();
+                stream.Push(@event);
+            }
 
-		[Fact]
-		public void WhenPatientReadmitted_ThenRaiseAlert()
-		{
-			var events = new EventStream();
-			var query =
-				from discharged in events.Of<PatientLeftHospital>()
-				from admitted in events.Of<PatientEnteredHospital>()
-				where
-					admitted.PatientId == discharged.PatientId &&
-					(admitted.When - discharged.When).Days < 5
-				select admitted;
+            Assert.True(called);
+        }
+
+        [Fact]
+        public void WhenPatientReadmitted_ThenRaiseAlert()
+        {
+            var events = new EventStream();
+            var query =
+                from discharged in events.Of<PatientLeftHospital>()
+                from admitted in events.Of<PatientEnteredHospital>()
+                where
+                    admitted.PatientId == discharged.PatientId &&
+                    (admitted.When - discharged.When).Days < 5
+                select admitted;
 
 
-			var readmitted = new List<int>();
+            var readmitted = new List<int>();
 
-			using (var subscription = query.Subscribe(e => readmitted.Add(e.PatientId)))
-			{
-				// Two patients come in.
-				events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 1) });
-				events.Push(new PatientEnteredHospital { PatientId = 2, When = new DateTime(2011, 1, 1) });
+            using (var subscription = query.Subscribe(e => readmitted.Add(e.PatientId)))
+            {
+                // Two patients come in.
+                events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 1) });
+                events.Push(new PatientEnteredHospital { PatientId = 2, When = new DateTime(2011, 1, 1) });
 
-				// Both leave same day.
-				events.Push(new PatientLeftHospital { PatientId = 1, When = new DateTime(2011, 1, 15) });
-				events.Push(new PatientLeftHospital { PatientId = 2, When = new DateTime(2011, 1, 15) });
+                // Both leave same day.
+                events.Push(new PatientLeftHospital { PatientId = 1, When = new DateTime(2011, 1, 15) });
+                events.Push(new PatientLeftHospital { PatientId = 2, When = new DateTime(2011, 1, 15) });
 
-				// One comes back before 5 days passed.
-				events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 18) });
+                // One comes back before 5 days passed.
+                events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 18) });
 
-				// The other comes back after 10 days passed.
-				events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 25) });
-			}
+                // The other comes back after 10 days passed.
+                events.Push(new PatientEnteredHospital { PatientId = 1, When = new DateTime(2011, 1, 25) });
+            }
 
-			// We should have an alert for patient 1 who came back before 5 days passed.
-			Assert.Equal(1, readmitted.Count);
-			Assert.Equal(1, readmitted[0]);
-		}
+            // We should have an alert for patient 1 who came back before 5 days passed.
+            Assert.Equal(1, readmitted.Count);
+            Assert.Equal(1, readmitted[0]);
+        }
 
-		[Fact]
-		public void WhenUserLoginFailsTooFast_ThenLockUserAccount()
-		{
-			var seconds = TimeSpan.FromSeconds(1).Ticks;
-			var events = new EventStream();
+        [Fact]
+        public void WhenUserLoginFailsTooFast_ThenLockUserAccount()
+        {
+            var seconds = TimeSpan.FromSeconds(1).Ticks;
+            var events = new EventStream();
 
-			// Here we use the test scheduler to simulate time passing by
-			// because we have a dependency on time because of the Buffer
-			// method.
-			var scheduler = new TestScheduler();
-			var observable = scheduler.CreateColdObservable(
-				// Two users attempt to log in, 4 times in a row
-				new Recorded<Notification<LoginFailure>>(10 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
-				new Recorded<Notification<LoginFailure>>(10 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
-				new Recorded<Notification<LoginFailure>>(20 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
-				new Recorded<Notification<LoginFailure>>(20 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
-				new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
-				new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
-				new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
-				new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
+            // Here we use the test scheduler to simulate time passing by
+            // because we have a dependency on time because of the Buffer
+            // method.
+            var scheduler = new TestScheduler();
+            var observable = scheduler.CreateColdObservable(
+                // Two users attempt to log in, 4 times in a row
+                new Recorded<Notification<LoginFailure>>(10 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
+                new Recorded<Notification<LoginFailure>>(10 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
+                new Recorded<Notification<LoginFailure>>(20 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
+                new Recorded<Notification<LoginFailure>>(20 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
+                new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
+                new Recorded<Notification<LoginFailure>>(30 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
+                new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 })),
+                new Recorded<Notification<LoginFailure>>(40 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
 
-				// User 2 attems one more time within the 1' window
-				new Recorded<Notification<LoginFailure>>(45 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
+                // User 2 attems one more time within the 1' window
+                new Recorded<Notification<LoginFailure>>(45 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 2 })),
 
-				// User 1 pulls out the paper where he wrote his pwd ;), so he takes longer
-				new Recorded<Notification<LoginFailure>>(75 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 }))
-			);
+                // User 1 pulls out the paper where he wrote his pwd ;), so he takes longer
+                new Recorded<Notification<LoginFailure>>(75 * seconds, Notification.CreateOnNext(new LoginFailure { UserId = 1 }))
+            );
 
-			// This subscription bridges the scheduler-driven 
-			// observable with our event stream, causing us 
-			// to publish events as they are "raised" by the 
-			// test scheduler.
-			observable.Subscribe(failure => events.Push(failure));
+            // This subscription bridges the scheduler-driven 
+            // observable with our event stream, causing us 
+            // to publish events as they are "raised" by the 
+            // test scheduler.
+            observable.Subscribe(failure => events.Push(failure));
 
-			var query = events.Of<LoginFailure>()
-				// Sliding windows 1' long, every 10''
-				.Buffer(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(10), scheduler)
-				// From all failure values
-				.SelectMany(failures => failures
-					// Group the failures by user
-					.GroupBy(failure => failure.UserId)
-					// Only grab those failures with more than 5 in the 1' window
-					.Where(group => group.Count() >= 5)
-					// Return the user id that failed to log in
-					.Select(group => group.Key));
+            var query = events.Of<LoginFailure>()
+                // Sliding windows 1' long, every 10''
+                .Buffer(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(10), scheduler)
+                // From all failure values
+                .SelectMany(failures => failures
+                    // Group the failures by user
+                    .GroupBy(failure => failure.UserId)
+                    // Only grab those failures with more than 5 in the 1' window
+                    .Where(group => group.Count() >= 5)
+                    // Return the user id that failed to log in
+                    .Select(group => group.Key));
 
-			var blocked = new List<int>();
+            var blocked = new List<int>();
 
-			using (var subscription = query.Subscribe(userId => blocked.Add(userId)))
-			{
-				// Here we could advance the scheduler half way and test intermediate 
-				// state if needed. We go all the way past the end of our login failures.
-				scheduler.AdvanceTo(100 * seconds);
-			}
+            using (var subscription = query.Subscribe(userId => blocked.Add(userId)))
+            {
+                // Here we could advance the scheduler half way and test intermediate 
+                // state if needed. We go all the way past the end of our login failures.
+                scheduler.AdvanceTo(100 * seconds);
+            }
 
-			// We should have only user # 2 in the list.
-			Assert.False(blocked.Contains(1));
-			Assert.True(blocked.Contains(2));
-		}
+            // We should have only user # 2 in the list.
+            Assert.False(blocked.Contains(1));
+            Assert.True(blocked.Contains(2));
+        }
 
-		[Fact]
-		public void WhenSubscribingAsEventInterface_ThenCallsSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+        [Fact]
+        public void WhenSubscribingAsEventInterface_ThenCallsSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			using (var subscription = stream.Of<IBaseEvent>().Subscribe(c => called = true))
-			{
-				stream.Push(new PatientEnteredHospital());
-			}
+            using (var subscription = stream.Of<IBaseEvent>().Subscribe(c => called = true))
+            {
+                stream.Push(new PatientEnteredHospital());
+            }
 
-			Assert.True(called);
-		}
+            Assert.True(called);
+        }
 
-		[Fact]
-		public void WhenSubscribingAsGenericInterface_ThenCallsSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+        [Fact]
+        public void WhenSubscribingAsGenericInterface_ThenCallsSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			using (var subscription = stream.Of<IEventPattern<BaseEvent>>().Subscribe(c => called = true))
-			{
-				stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
-			}
+            using (var subscription = stream.Of<IEventPattern<BaseEvent>>().Subscribe(c => called = true))
+            {
+                stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
+            }
 
-			Assert.True(called);
-		}
+            Assert.True(called);
+        }
 
-		[Fact]
-		public void WhenSubscribingAsGenericInterfaceConcreteArgs_ThenCallsSubscriber()
-		{
-			var stream = new EventStream();
-			var called = false;
+        [Fact]
+        public void WhenSubscribingAsGenericInterfaceConcreteArgs_ThenCallsSubscriber()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			using (var subscription = stream.Of<IEventPattern<PatientEnteredHospital>>().Subscribe(c => called = true))
-			{
-				stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
-			}
+            using (var subscription = stream.Of<IEventPattern<PatientEnteredHospital>>().Subscribe(c => called = true))
+            {
+                stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
+            }
 
-			Assert.True(called);
-		}
+            Assert.True(called);
+        }
 
-		[Fact]
-		public void WhenSubscribingToGenericEvent_ThenCanSubscribeCovariantly()
-		{
-			var stream = new EventStream();
-			var called = false;
+        [Fact]
+        public void WhenPushingEventPattern_ThenCanSubscriberToEventArgsOnlyToo()
+        {
+            var stream = new EventStream();
+            var called = false;
 
-			using (var susbcription = stream.Of<IEventPattern<IBaseEvent>>().Subscribe(c => called = true))
-			{
-				stream.Push(new EventPattern<PatientLeftHospital>(this, new PatientLeftHospital()));
-			}
+            using (var subscription = stream.Of<BaseEvent>().Subscribe(c => called = true))
+            {
+                stream.Push(EventPattern.Create(this, new PatientEnteredHospital()));
+            }
 
-			Assert.True(called);
-		}
+            Assert.True(called);
+        }
 
-		public interface IFoo { }
-		public interface IBar : IFoo { }
+        public interface IFoo { }
+        public interface IBar : IFoo { }
 
-		public interface IEventPattern<out TEventArgs>
-		// where TEventArgs : EventArgs
-		{
-			object Sender { get; }
-			TEventArgs EventArgs { get; }
-		}
+        public interface IBaseEvent { }
 
-		public class EventPattern<TEventArgs> : IEventPattern<TEventArgs>
-		// where TEventArgs : EventArgs
-		{
-			public EventPattern(object sender, TEventArgs args)
-			{
-				this.Sender = sender;
-				this.EventArgs = args;
-			}
+        public class BaseEvent : EventArgs, IBaseEvent
+        {
+        }
 
-			public object Sender { get; private set; }
-			public TEventArgs EventArgs { get; private set; }
-		}
+        public class PatientEnteredHospital : BaseEvent
+        {
+            public int PatientId { get; set; }
+            public DateTimeOffset When { get; set; }
+        }
 
-		public static class EventPattern
-		{
-			public static IEventPattern<EventArgs> Create<TEventArgs>(object sender, TEventArgs args)
-				where TEventArgs : EventArgs
-			{
-				if (typeof(TEventArgs) == args.GetType())
-					return new EventPattern<TEventArgs>(sender, args);
-				else
-					return (IEventPattern<EventArgs>)Activator.CreateInstance(
-						typeof(EventPattern<>).MakeGenericType(args.GetType()), sender, args);
-			}
-		}
+        public class PatientLeftHospital : BaseEvent
+        {
+            public int PatientId { get; set; }
+            public DateTimeOffset When { get; set; }
+        }
 
-		public interface IBaseEvent { }
-
-		public class BaseEvent : EventArgs, IBaseEvent
-		{
-		}
-
-		public class PatientEnteredHospital : BaseEvent
-		{
-			public int PatientId { get; set; }
-			public DateTimeOffset When { get; set; }
-		}
-
-		public class PatientLeftHospital : BaseEvent
-		{
-			public int PatientId { get; set; }
-			public DateTimeOffset When { get; set; }
-		}
-
-		public class LoginFailure : BaseEvent
-		{
-			public int UserId { get; set; }
-			public DateTimeOffset When { get; set; }
-		}
-	}
+        public class LoginFailure : BaseEvent
+        {
+            public int UserId { get; set; }
+            public DateTimeOffset When { get; set; }
+        }
+    }
 }

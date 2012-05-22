@@ -29,65 +29,75 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System.Collections.Concurrent;
-using System.Reactive.Subjects;
-using System.Linq;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-
 namespace System.Reactive
 {
-	/// <summary>
-	/// Provides the implementation for a reactive extensions event stream, 
-	/// allowing trending and analysis queries to be performed in real-time 
-	/// over the events pushed through the stream.
-	/// </summary>
-	///	<nuget id="netfx-System.Reactive.EventStream.Implementation" />
-	///	<remarks>
-	///	The <see cref="IEventStream"/> interface implemented by this class is 
-	///	provided by the nuget <c>netfx-System.Reactive.EventStream.Interfaces</c>, 
-	///	which must be installed in the same project or one referenced by it. 
-	/// </remarks>
-	/// <devdoc>
-	/// The surprisingly simple implementation from the blog post http://kzu.to/srVn3P 
-	/// was surprisingly limiting too :). No support for covariant subscriptions, 
-	/// subscriptions to interfaces implemented by the concrete events, etc. 
-	/// (i.e. the EventPattern&lt;TEventArgs&gt; from Rx wouldn't work).
-	/// </devdoc>
-	/// <nuget id="netfx-System.Reactive.EventStream"/>
-	partial class EventStream : IEventStream
-	{
-		private ConcurrentDictionary<Type, object> subjects = new ConcurrentDictionary<Type, object>();
+    using System.Collections.Concurrent;
+    using System.Linq;
+    using System.Reactive.Subjects;
 
-		/// <summary>
-		/// Pushes an event to the stream, causing any analytics 
-		/// subscriber to be invoked if appropriate.
-		/// </summary>
-		public void Push<TEvent>(TEvent @event)
-		{
-			Guard.NotNull(() => @event, @event);
+    /// <summary>
+    /// Provides the implementation for a reactive extensions event stream, 
+    /// allowing trending and analysis queries to be performed in real-time 
+    /// over the events pushed through the stream.
+    /// </summary>
+    ///	<nuget id="netfx-System.Reactive.EventStream.Implementation" />
+    ///	<remarks>
+    ///	The <see cref="IEventStream"/> interface implemented by this class is 
+    ///	provided by the nuget <c>netfx-System.Reactive.EventStream.Interfaces</c>, 
+    ///	which must be installed in the same project or one referenced by it. 
+    /// </remarks>
+    /// <devdoc>
+    /// The surprisingly simple implementation from the blog post http://kzu.to/srVn3P 
+    /// was surprisingly limiting too :). No support for covariant subscriptions, 
+    /// subscriptions to interfaces implemented by the concrete events, etc. 
+    /// (i.e. the EventPattern&lt;TEventArgs&gt; from Rx wouldn't work).
+    /// </devdoc>
+    /// <nuget id="netfx-System.Reactive.EventStream"/>
+    partial class EventStream : IEventStream
+    {
+        private ConcurrentDictionary<Type, object> subjects = new ConcurrentDictionary<Type, object>();
 
-			var eventType = @event.GetType();
+        /// <summary>
+        /// Pushes an event to the stream, causing any analytics 
+        /// subscriber to be invoked if appropriate.
+        /// </summary>
+        public void Push<TEvent>(TEvent @event)
+        {
+            Guard.NotNull(() => @event, @event);
 
-			// We will call all subjects that are compatible in 
-			// the event type, not just concrete event type subscribers.
-			var compatible = subjects.Keys
-				.Where(subjectEventType => subjectEventType.IsAssignableFrom(eventType))
-				.Select(subjectEventType => subjects[subjectEventType]);
+            var eventType = @event.GetType();
 
-			foreach (dynamic subject in compatible)
-			{
-				subject.OnNext((dynamic)@event);
-			}
-		}
+            InvokeCompatible(@eventType, @event);
 
-		/// <summary>
-		/// Observes the events of a given type.
-		/// </summary>
-		public IObservable<TEvent> Of<TEvent>()
-		{
-			return (IObservable<TEvent>)subjects.GetOrAdd(typeof(TEvent), type => new Subject<TEvent>());
-		}
-	}
+            // Special case for IEventPattern<TEventArgs>
+            var eventPatternInterface = eventType.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventPattern<>));
+
+            // Invoke subjects that are compatible with the TEventArgs too
+            if (eventPatternInterface != null)
+                InvokeCompatible(eventPatternInterface.GetGenericArguments()[0], eventPatternInterface.GetProperty("EventArgs").GetValue(@event, null));
+        }
+
+        private void InvokeCompatible(Type eventType, object @event)
+        {
+            // We will call all subjects that are compatible in 
+            // the event type, not just concrete event type subscribers.
+            var compatible = subjects.Keys
+                .Where(subjectEventType => subjectEventType.IsAssignableFrom(eventType))
+                .Select(subjectEventType => subjects[subjectEventType]);
+
+            foreach (dynamic subject in compatible)
+            {
+                subject.OnNext((dynamic)@event);
+            }
+        }
+
+        /// <summary>
+        /// Observes the events of a given type.
+        /// </summary>
+        public IObservable<TEvent> Of<TEvent>()
+        {
+            return (IObservable<TEvent>)subjects.GetOrAdd(typeof(TEvent), type => new Subject<TEvent>());
+        }
+    }
 }

@@ -87,5 +87,40 @@
             <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
+        <member name="T:System.Reactive.EventPattern">
+            <summary>
+            Factory class for <see cref="T:System.Reactive.IEventPattern`1"/>.
+            </summary>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces"/>
+        </member>
+        <member name="M:System.Reactive.EventPattern.Create``1(System.Object,``0)">
+            <summary>
+            Creates an event pattern instance for the given sender and event argument value.
+            </summary>
+        </member>
+        <member name="T:System.Reactive.IEventPattern`1">
+            <summary>
+            Represents the Sender and EventArg values of a .NET event.
+            </summary>
+            <remarks>
+            Exposes a very similar API to Rx <c>EventPattern&lt;TEventArgs&gt;</c> 
+            but in a covariant-capable interface, so that subscribers can still 
+            subscribe to the pattern but with a more generic base type or 
+            interface implemented by the <typeparamref name="TEvent"/>. 
+            It also removes the restriction that the argument value has to 
+            derive from <see cref="P:System.Reactive.IEventPattern`1.EventArgs"/>.
+            </remarks>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces"/>
+        </member>
+        <member name="P:System.Reactive.IEventPattern`1.EventArgs">
+            <summary>
+            Gets the event arguments value of the event.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.IEventPattern`1.Sender">
+            <summary>
+            Gets the sender value of the event.
+            </summary>
+        </member>
     </members>
 </doc>

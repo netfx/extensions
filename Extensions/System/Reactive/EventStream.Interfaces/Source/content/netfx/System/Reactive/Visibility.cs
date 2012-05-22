@@ -35,6 +35,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //namespace System.Reactive
 //{
 //    public partial interface IEventStream { }
-//    public partial interface IEventPattern<TEventArgs> { }
+//    public partial interface IEventPattern<out TEvent> { }
 //    public partial class EventPattern { }
 //}

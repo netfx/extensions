@@ -29,29 +29,27 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace System.Reactive
 {
-	/// <summary>
-	/// Provides an observable stream of events that 
-	/// can be used for analysis.
-	/// </summary>
-	///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
-	partial interface IEventStream
-	{
-		/// <summary>
-		/// Pushes an event to the stream, causing any analytics 
-		/// subscriber to be invoked if appropriate.
-		/// </summary>
-		void Push<TEvent>(TEvent @event);
+    using System;
 
-		/// <summary>
-		/// Observes the events of a given type.
-		/// </summary>
-		IObservable<TEvent> Of<TEvent>();
-	}
+    /// <summary>
+    /// Provides an observable stream of events that 
+    /// can be used for analysis.
+    /// </summary>
+    ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
+    partial interface IEventStream
+    {
+        /// <summary>
+        /// Pushes an event to the stream, causing any analytics 
+        /// subscriber to be invoked if appropriate.
+        /// </summary>
+        void Push<TEvent>(TEvent @event);
+
+        /// <summary>
+        /// Observes the events of a given type.
+        /// </summary>
+        IObservable<TEvent> Of<TEvent>();
+    }
 }
