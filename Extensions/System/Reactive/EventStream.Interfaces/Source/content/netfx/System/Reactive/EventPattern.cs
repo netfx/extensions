@@ -32,24 +32,36 @@ DAMAGE.
 
 namespace System.Reactive
 {
-    using System;
-
     /// <summary>
-    /// Provides an observable stream of events that 
-    /// can be used for analysis.
+    /// Factory class for <see cref="IEventPattern{TEvent}"/>.
     /// </summary>
-    ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
-    partial interface IEventStream
+    static partial class EventPattern
     {
         /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
-        /// subscriber to be invoked if appropriate.
+        /// Creates an event pattern instance for the given sender and event argument value.
         /// </summary>
-        void Push<TEvent>(TEvent @event);
+        public static IEventPattern<TEvent> Create<TEvent>(object sender, TEvent @event)
+        {
+            Guard.NotNull(() => sender, sender);
+            Guard.NotNull(() => @event, @event);
 
-        /// <summary>
-        /// Observes the events of a given type.
-        /// </summary>
-        IObservable<TEvent> Of<TEvent>();
+            if (typeof(TEvent) == @event.GetType())
+                return new EventPatternImpl<TEvent>(sender, @event);
+            else
+                return (IEventPattern<TEvent>)Activator.CreateInstance(
+                    typeof(EventPatternImpl<>).MakeGenericType(@event.GetType()), sender, @event);
+        }
+
+        private class EventPatternImpl<TEvent> : IEventPattern<TEvent>
+        {
+            public EventPatternImpl(object sender, TEvent args)
+            {
+                this.Sender = sender;
+                this.EventArgs = args;
+            }
+
+            public object Sender { get; private set; }
+            public TEvent EventArgs { get; private set; }
+        }
     }
 }

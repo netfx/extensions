@@ -29,27 +29,43 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
+using System;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
-namespace System.Reactive
+/// <summary>
+/// Common guard class for argument validation.
+/// </summary>
+[DebuggerStepThrough]
+internal static class Guard
 {
-    using System;
+	/// <summary>
+	/// Ensures the given <paramref name="value"/> is not null.
+	/// Throws <see cref="ArgumentNullException"/> otherwise.
+	/// </summary>
+	public static void NotNull<T>(Expression<Func<T>> reference, T value)
+	{
+		if (value == null)
+			throw new ArgumentNullException(GetParameterName(reference), "Parameter cannot be null.");
+	}
 
-    /// <summary>
-    /// Provides an observable stream of events that 
-    /// can be used for analysis.
-    /// </summary>
-    ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
-    partial interface IEventStream
-    {
-        /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
-        /// subscriber to be invoked if appropriate.
-        /// </summary>
-        void Push<TEvent>(TEvent @event);
+	/// <summary>
+	/// Ensures the given string <paramref name="value"/> is not null or empty.
+	/// Throws <see cref="ArgumentNullException"/> in the first case, or 
+	/// <see cref="ArgumentException"/> in the latter.
+	/// </summary>
+	public static void NotNullOrEmpty(Expression<Func<string>> reference, string value)
+	{
+		NotNull<string>(reference, value);
+		if (value.Length == 0)
+			throw new ArgumentException(GetParameterName(reference), "Parameter cannot be empty.");
+	}
 
-        /// <summary>
-        /// Observes the events of a given type.
-        /// </summary>
-        IObservable<TEvent> Of<TEvent>();
-    }
+	private static string GetParameterName(Expression reference)
+	{
+		var lambda = reference as LambdaExpression;
+		var member = lambda.Body as MemberExpression;
+
+		return member.Member.Name;
+	}
 }

@@ -3,6 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source", "Source\Source.csproj", "{1651A8B2-1DD8-45E2-840A-A19988A4533C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0DC8E4C2-3AF7-4532-AAE7-734CEC6582C4}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{6A1BD1DC-2219-4F65-A9E0-AE5815BD58F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +21,10 @@ Global
 		{1651A8B2-1DD8-45E2-840A-A19988A4533C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1651A8B2-1DD8-45E2-840A-A19988A4533C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1651A8B2-1DD8-45E2-840A-A19988A4533C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A1BD1DC-2219-4F65-A9E0-AE5815BD58F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A1BD1DC-2219-4F65-A9E0-AE5815BD58F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A1BD1DC-2219-4F65-A9E0-AE5815BD58F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A1BD1DC-2219-4F65-A9E0-AE5815BD58F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

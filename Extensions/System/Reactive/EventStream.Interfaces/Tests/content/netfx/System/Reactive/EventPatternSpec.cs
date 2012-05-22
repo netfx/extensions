@@ -32,24 +32,20 @@ DAMAGE.
 
 namespace System.Reactive
 {
-    using System;
+    using Xunit;
 
-    /// <summary>
-    /// Provides an observable stream of events that 
-    /// can be used for analysis.
-    /// </summary>
-    ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
-    partial interface IEventStream
+    public class EventPatternSpec
     {
-        /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
-        /// subscriber to be invoked if appropriate.
-        /// </summary>
-        void Push<TEvent>(TEvent @event);
+        [Fact]
+        public void WhenCreatingPatternForNullSender_ThenThrows()
+        {
+            Assert.Throws<ArgumentNullException>(() => EventPattern.Create(null, EventArgs.Empty));
+        }
 
-        /// <summary>
-        /// Observes the events of a given type.
-        /// </summary>
-        IObservable<TEvent> Of<TEvent>();
+        [Fact]
+        public void WhenCreatingPatternForNullEventArgs_ThenThrows()
+        {
+            Assert.Throws<ArgumentNullException>(() => EventPattern.Create<EventArgs>(this, null));
+        }
     }
 }

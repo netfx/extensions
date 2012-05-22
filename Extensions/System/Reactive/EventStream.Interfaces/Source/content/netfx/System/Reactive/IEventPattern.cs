@@ -32,24 +32,27 @@ DAMAGE.
 
 namespace System.Reactive
 {
-    using System;
-
     /// <summary>
-    /// Provides an observable stream of events that 
-    /// can be used for analysis.
+    /// Represents the Sender and EventArg values of a .NET event.
     /// </summary>
-    ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
-    partial interface IEventStream
+    /// <remarks>
+    /// Exposes a very similar API to Rx <c>EventPattern&lt;TEventArgs&gt;</c> 
+    /// but in a covariant-capable interface, so that subscribers can still 
+    /// subscribe to the pattern but with a more generic base type or 
+    /// interface implemented by the <typeparamref name="TEvent"/>. 
+    /// It also removes the restriction that the argument value has to 
+    /// derive from <see cref="EventArgs"/>.
+    /// </remarks>
+    partial interface IEventPattern<out TEvent>
     {
         /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
-        /// subscriber to be invoked if appropriate.
+        /// Gets the event arguments value of the event.
         /// </summary>
-        void Push<TEvent>(TEvent @event);
+        TEvent EventArgs { get; }
 
         /// <summary>
-        /// Observes the events of a given type.
+        /// Gets the sender value of the event.
         /// </summary>
-        IObservable<TEvent> Of<TEvent>();
+        object Sender { get; }
     }
 }
