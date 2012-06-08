@@ -39,9 +39,18 @@ namespace NetFx
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Utilities for rendering .NET types as C# type names, with support for generics, nested types, type name simplification via "using" scopes, etc.
+    /// Utilities for rendering .NET types as C# type names, with support for generics, 
+    /// nested types, type name simplification via "using" scopes, etc.
     /// </summary>
     ///	<nuget id="StringlyTyped" />
+    ///	<devdoc>
+    /// Note: to make this class public in your assembly, 
+    /// declare in another file a partial class that makes 
+    /// it public, like so:
+    /// public static partial class StringlyTyped { }
+    /// Don't modify this file directly, as that would 
+    /// prevent further updates via NuGet.
+    /// </devdoc>
     static partial class StringlyTyped
     {
         /// <summary>
