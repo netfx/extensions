@@ -32,39 +32,22 @@ DAMAGE.
 
 namespace System.Reactive
 {
-    using Xunit;
-
-    public class EventPatternSpec
+    /// <summary>
+    /// Provides usability overloads to <see cref="IEventStream"/>.
+    /// </summary>
+    static partial class IEventStreamExtensions
     {
-        [Fact]
-        public void WhenCreatingPatternForNullSender_ThenThrows()
+        /// <summary>
+        /// Pushes the given event with the sender information in the 
+        /// form of an <see cref="IEventPattern{TEvent}"/>.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of the event, typically inferred from the passed-in argument.</typeparam>
+        /// <param name="stream">The event stream to push to.</param>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="event">The event data.</param>
+        public static void Push<TEvent>(this IEventStream stream, object sender, TEvent @event)
         {
-            Assert.Throws<ArgumentNullException>(() => EventPattern.Create(null, EventArgs.Empty));
+            stream.Push(EventPattern.Create(sender, @event));
         }
-
-        [Fact]
-        public void WhenCreatingPatternForNullEventArgs_ThenThrows()
-        {
-            Assert.Throws<ArgumentNullException>(() => EventPattern.Create<EventArgs>(this, null));
-        }
-
-        [Fact]
-        public void WhenCreatingPatternForSameArgsType_ThenSucceeds()
-        {
-            var pattern = EventPattern.Create<EventArgs>(this, EventArgs.Empty);
-
-            Assert.NotNull(pattern);
-        }
-
-        [Fact]
-        public void WhenCreatingPatternForBaseArgsType_ThenSucceeds()
-        {
-            var pattern = EventPattern.Create<EventArgs>(this, new FooArgs());
-
-            Assert.NotNull(pattern);
-            Assert.True(pattern.EventArgs is FooArgs);
-        }
-
-        public class FooArgs : EventArgs { }
     }
 }

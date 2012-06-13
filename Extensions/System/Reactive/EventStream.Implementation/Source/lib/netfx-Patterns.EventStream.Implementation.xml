@@ -27,14 +27,21 @@
         <member name="T:System.Reactive.IEventStream">
             <summary>
             Provides an observable stream of events that 
-            can be used for analysis.
+            can be used for analysis or real-time handling.
             </summary>
             <nuget id="netfx-System.Reactive.EventStream.Interfaces" />
         </member>
         <member name="M:System.Reactive.IEventStream.Push``1(``0)">
             <summary>
-            Pushes an event to the stream, causing any analytics 
+            Pushes an event to the stream, causing any 
             subscriber to be invoked if appropriate.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStream.Push``1(System.Reactive.IEventPattern{``0})">
+            <summary>
+            Pushes an event to the stream with its 
+            sender information, causing any subscriber 
+            to be invoked if appropriate.
             </summary>
         </member>
         <member name="M:System.Reactive.IEventStream.Of``1">
@@ -44,8 +51,23 @@
         </member>
         <member name="M:System.Reactive.EventStream.Push``1(``0)">
             <summary>
-            Pushes an event to the stream, causing any analytics 
+            Pushes an event to the stream, causing any  
             subscriber to be invoked if appropriate.
+            </summary>
+            <remarks>
+            This overload will not invoke subscribers for the 
+            same <typeparamref name="TEvent"/> but as an 
+            <see cref="T:System.Reactive.IEventPattern`1"/>, because no 
+            sender information is provided and therefore 
+            is not available.
+            </remarks>
+        </member>
+        <member name="M:System.Reactive.EventStream.Push``1(System.Reactive.IEventPattern{``0})">
+            <summary>
+            Pushes an event to the stream, causing any  
+            subscriber to be invoked if appropriate, including 
+            subscribers for just <typeparamref name="TEvent"/> 
+            and not only <see cref="T:System.Reactive.IEventPattern`1"/>.
             </summary>
         </member>
         <member name="M:System.Reactive.EventStream.Of``1">
@@ -121,6 +143,21 @@
             <summary>
             Gets the sender value of the event.
             </summary>
+        </member>
+        <member name="T:System.Reactive.IEventStreamExtensions">
+            <summary>
+            Provides usability overloads to <see cref="T:System.Reactive.IEventStream"/>.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStreamExtensions.Push``1(System.Reactive.IEventStream,System.Object,``0)">
+            <summary>
+            Pushes the given event with the sender information in the 
+            form of an <see cref="T:System.Reactive.IEventPattern`1"/>.
+            </summary>
+            <typeparam name="TEvent">The type of the event, typically inferred from the passed-in argument.</typeparam>
+            <param name="stream">The event stream to push to.</param>
+            <param name="sender">The sender of the event.</param>
+            <param name="event">The event data.</param>
         </member>
     </members>
 </doc>

@@ -42,20 +42,62 @@
         <member name="T:System.Reactive.IEventStream">
             <summary>
             Provides an observable stream of events that 
-            can be used for analysis.
+            can be used for analysis or real-time handling.
             </summary>
-            <nuget id="netfx-System.Reactive.EventStream.Interfaces" />
+            <remarks>
+            Leveraging the Reactive Extensions (Rx), it's 
+            possible to build fairly complicated event reaction 
+            chains by simply issuing Linq-style queries over 
+            the event stream. This is incredibly powerfull, 
+            as explained in http://kzu.to/srVn3P. 
+            <para>
+            The stream supports two types of events: arbitrary 
+            event payloads (not even restricted to inherit from 
+            <see cref="T:System.EventArgs"/> as is usual in .NET) or 
+            <see cref="T:System.Reactive.IEventPattern`1"/>, which is an interface
+            similar to the concrete implementation found on Rx. 
+            The advantage of pushing the event pattern version is 
+            that subscribers can perform additional filtering 
+            if needed depending on the event sender. 
+            </para>
+            <para>
+            See also <seealso cref="M:System.Reactive.IEventStreamExtensions.Push``1(System.Reactive.IEventStream,System.Object,``0)"/>.
+            </para>
+            </remarks>
+            <nuget id="netfx-System.Reactive.EventStream.Interfaces"/>
         </member>
         <member name="M:System.Reactive.IEventStream.Push``1(``0)">
             <summary>
-            Pushes an event to the stream, causing any analytics 
+            Pushes an event to the stream, causing any 
             subscriber to be invoked if appropriate.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStream.Push``1(System.Reactive.IEventPattern{``0})">
+            <summary>
+            Pushes an event to the stream with its 
+            sender information, causing any subscriber 
+            to be invoked if appropriate.
             </summary>
         </member>
         <member name="M:System.Reactive.IEventStream.Of``1">
             <summary>
             Observes the events of a given type.
             </summary>
+        </member>
+        <member name="T:System.Reactive.IEventStreamExtensions">
+            <summary>
+            Provides usability overloads to <see cref="T:System.Reactive.IEventStream"/>.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.IEventStreamExtensions.Push``1(System.Reactive.IEventStream,System.Object,``0)">
+            <summary>
+            Pushes the given event with the sender information in the 
+            form of an <see cref="T:System.Reactive.IEventPattern`1"/>.
+            </summary>
+            <typeparam name="TEvent">The type of the event, typically inferred from the passed-in argument.</typeparam>
+            <param name="stream">The event stream to push to.</param>
+            <param name="sender">The sender of the event.</param>
+            <param name="event">The event data.</param>
         </member>
         <member name="T:Guard">
             <summary>

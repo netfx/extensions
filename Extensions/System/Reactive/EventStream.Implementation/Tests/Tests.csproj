@@ -60,6 +60,7 @@
     <Compile Include="netfx\System\Collections\Generic\DictionaryFindSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <Compile Include="netfx\System\Reactive\EventPatternSpec.cs" />
+    <Compile Include="netfx\System\Reactive\IEventStreamExtensionsSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

@@ -49,6 +49,7 @@
     <Compile Include="content\netfx\System\Reactive\EventPattern.cs" />
     <Compile Include="content\netfx\System\Reactive\IEventPattern.cs" />
     <Compile Include="content\netfx\System\Reactive\IEventStream.cs" />
+    <Compile Include="content\netfx\System\Reactive\IEventStreamExtensions.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="content\netfx\System\Reactive\Visibility.cs" />

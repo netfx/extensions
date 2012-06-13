@@ -55,10 +55,12 @@
     <Compile Include="netfx\System\Reactive\EventPattern.cs" />
     <Compile Include="netfx\System\Reactive\IEventPattern.cs" />
     <Compile Include="netfx\System\Reactive\IEventStream.cs" />
+    <Compile Include="netfx\System\Reactive\IEventStreamExtensions.cs" />
     <Compile Include="netfx\System\Reactive\Visibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
     <Content Include="lib\netfx-Patterns.EventStream.Implementation.xml" />
   </ItemGroup>

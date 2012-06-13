@@ -29,6 +29,7 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
+
 namespace System.Reactive
 {
     using System.Collections.Concurrent;
@@ -58,24 +59,41 @@ namespace System.Reactive
         private ConcurrentDictionary<Type, object> subjects = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
+        /// Pushes an event to the stream, causing any  
         /// subscriber to be invoked if appropriate.
         /// </summary>
+        /// <remarks>
+        /// This overload will not invoke subscribers for the 
+        /// same <typeparamref name="TEvent"/> but as an 
+        /// <see cref="IEventPattern{TEvent}"/>, because no 
+        /// sender information is provided and therefore 
+        /// is not available.
+        /// </remarks>
         public void Push<TEvent>(TEvent @event)
         {
             Guard.NotNull(() => @event, @event);
 
             var eventType = @event.GetType();
 
+            // Note we don't invoke the event pattern subscribers in this case. 
             InvokeCompatible(@eventType, @event);
+        }
 
-            // Special case for IEventPattern<TEventArgs>
-            var eventPatternInterface = eventType.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventPattern<>));
+        /// <summary>
+        /// Pushes an event to the stream, causing any  
+        /// subscriber to be invoked if appropriate, including 
+        /// subscribers for just <typeparamref name="TEvent"/> 
+        /// and not only <see cref="IEventPattern{TEvent}"/>.
+        /// </summary>
+        public void Push<TEvent>(IEventPattern<TEvent> @event)
+        {
+            Guard.NotNull(() => @event, @event);
 
-            // Invoke subjects that are compatible with the TEventArgs too
-            if (eventPatternInterface != null)
-                InvokeCompatible(eventPatternInterface.GetGenericArguments()[0], eventPatternInterface.GetProperty("EventArgs").GetValue(@event, null));
+            var eventType = @event.GetType();
+
+            InvokeCompatible(@eventType, @event);
+            // Invoke also for the event args itself.
+            InvokeCompatible(@event.EventArgs.GetType(), @event.EventArgs);
         }
 
         private void InvokeCompatible(Type eventType, object @event)

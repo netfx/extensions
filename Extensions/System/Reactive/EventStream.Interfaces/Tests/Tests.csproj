@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\System\Reactive\EventPatternSpec.cs" />
+    <Compile Include="content\netfx\System\Reactive\IEventStreamExtensionsSpec.cs" />
     <Compile Include="netfx\System\GuardSpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -66,6 +66,5 @@ namespace System.Reactive
         }
 
         public class FooArgs : EventArgs { }
-
     }
 }

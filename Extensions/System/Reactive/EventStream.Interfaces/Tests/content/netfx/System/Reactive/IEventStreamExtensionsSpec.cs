@@ -34,37 +34,36 @@ namespace System.Reactive
 {
     using Xunit;
 
-    public class EventPatternSpec
+    public class IEventStreamExtensionsSpec
     {
         [Fact]
-        public void WhenCreatingPatternForNullSender_ThenThrows()
+        public void WhenPushingSenderAndArgs_ThenPushesEventPattern()
         {
-            Assert.Throws<ArgumentNullException>(() => EventPattern.Create(null, EventArgs.Empty));
+            var stream = new FakeStream();
+
+            stream.Push(this, EventArgs.Empty);
+
+            Assert.IsAssignableFrom<IEventPattern<EventArgs>>(stream.PushedEvent);
         }
 
-        [Fact]
-        public void WhenCreatingPatternForNullEventArgs_ThenThrows()
+        class FakeStream : IEventStream
         {
-            Assert.Throws<ArgumentNullException>(() => EventPattern.Create<EventArgs>(this, null));
+            public object PushedEvent { get; private set; }
+
+            public void Push<TEvent>(TEvent @event)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Push<TEvent>(IEventPattern<TEvent> @event)
+            {
+                this.PushedEvent = @event;
+            }
+
+            public IObservable<TEvent> Of<TEvent>()
+            {
+                throw new NotImplementedException();
+            }
         }
-
-        [Fact]
-        public void WhenCreatingPatternForSameArgsType_ThenSucceeds()
-        {
-            var pattern = EventPattern.Create<EventArgs>(this, EventArgs.Empty);
-
-            Assert.NotNull(pattern);
-        }
-
-        [Fact]
-        public void WhenCreatingPatternForBaseArgsType_ThenSucceeds()
-        {
-            var pattern = EventPattern.Create<EventArgs>(this, new FooArgs());
-
-            Assert.NotNull(pattern);
-            Assert.True(pattern.EventArgs is FooArgs);
-        }
-
-        public class FooArgs : EventArgs { }
     }
 }

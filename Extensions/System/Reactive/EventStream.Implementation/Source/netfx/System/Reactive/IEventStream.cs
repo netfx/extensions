@@ -36,16 +36,23 @@ namespace System.Reactive
 
     /// <summary>
     /// Provides an observable stream of events that 
-    /// can be used for analysis.
+    /// can be used for analysis or real-time handling.
     /// </summary>
     ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
     partial interface IEventStream
     {
         /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
+        /// Pushes an event to the stream, causing any 
         /// subscriber to be invoked if appropriate.
         /// </summary>
         void Push<TEvent>(TEvent @event);
+
+        /// <summary>
+        /// Pushes an event to the stream with its 
+        /// sender information, causing any subscriber 
+        /// to be invoked if appropriate.
+        /// </summary>
+        void Push<TEvent>(IEventPattern<TEvent> @event);
 
         /// <summary>
         /// Observes the events of a given type.

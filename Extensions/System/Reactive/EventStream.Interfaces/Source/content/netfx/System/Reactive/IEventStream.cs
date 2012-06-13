@@ -36,16 +36,43 @@ namespace System.Reactive
 
     /// <summary>
     /// Provides an observable stream of events that 
-    /// can be used for analysis.
+    /// can be used for analysis or real-time handling.
     /// </summary>
+    /// <remarks>
+    /// Leveraging the Reactive Extensions (Rx), it's 
+    /// possible to build fairly complicated event reaction 
+    /// chains by simply issuing Linq-style queries over 
+    /// the event stream. This is incredibly powerfull, 
+    /// as explained in http://kzu.to/srVn3P. 
+    /// <para>
+    /// The stream supports two types of events: arbitrary 
+    /// event payloads (not even restricted to inherit from 
+    /// <see cref="EventArgs"/> as is usual in .NET) or 
+    /// <see cref="IEventPattern{TEvent}"/>, which is an interface
+    /// similar to the concrete implementation found on Rx. 
+    /// The advantage of pushing the event pattern version is 
+    /// that subscribers can perform additional filtering 
+    /// if needed depending on the event sender. 
+    /// </para>
+    /// <para>
+    /// See also <seealso cref="IEventStreamExtensions.Push"/>.
+    /// </para>
+    /// </remarks>
     ///	<nuget id="netfx-System.Reactive.EventStream.Interfaces" />
     partial interface IEventStream
     {
         /// <summary>
-        /// Pushes an event to the stream, causing any analytics 
+        /// Pushes an event to the stream, causing any 
         /// subscriber to be invoked if appropriate.
         /// </summary>
         void Push<TEvent>(TEvent @event);
+
+        /// <summary>
+        /// Pushes an event to the stream with its 
+        /// sender information, causing any subscriber 
+        /// to be invoked if appropriate.
+        /// </summary>
+        void Push<TEvent>(IEventPattern<TEvent> @event);
 
         /// <summary>
         /// Observes the events of a given type.

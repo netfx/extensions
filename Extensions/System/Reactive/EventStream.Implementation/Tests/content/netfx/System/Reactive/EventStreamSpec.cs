@@ -230,7 +230,7 @@ namespace System.Reactive
         }
 
         [Fact]
-        public void WhenPushingEventPattern_ThenCanSubscriberToEventArgsOnlyToo()
+        public void WhenPushingEventPattern_ThenCanSubscribeToEventArgsOnlyToo()
         {
             var stream = new EventStream();
             var called = false;
@@ -241,6 +241,20 @@ namespace System.Reactive
             }
 
             Assert.True(called);
+        }
+
+        [Fact]
+        public void WhenPushingEventOnly_ThenCannotSubscribeToEventPattern()
+        {
+            var stream = new EventStream();
+            var called = false;
+
+            using (var subscription = stream.Of<IEventPattern<PatientEnteredHospital>>().Subscribe(c => called = true))
+            {
+                stream.Push(new PatientEnteredHospital());
+            }
+
+            Assert.False(called);
         }
 
         public interface IFoo { }

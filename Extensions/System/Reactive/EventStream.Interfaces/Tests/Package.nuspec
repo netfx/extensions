@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Reactive.EventStream.Interfaces.Tests.xUnit</id>
-		<version>1.0.1.1</version>
+		<version>1.0.1.4</version>
 		<title>NETFx: Reactive Event Stream Interfaces xUnit Tests</title>
 		<description>xUnit tests for netfx-System.Reactive.EventStream.Interfaces, which tests the extension methods and usability overloads on top of the basic interfaces.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
