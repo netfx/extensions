@@ -46,9 +46,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="content\netfx\StringlyTypedSpec.cs" />
+    <Compile Include="content\netfx\StringlyTyped\StringlySpec.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </NuSpec>
   </ItemGroup>
   <ItemGroup>

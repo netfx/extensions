@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>StringlyTyped.Tests.xUnit</id>
-		<version>1.0.0.0</version>
+		<version>1.1.1.2</version>
 		<title>StringlyTyped: manipulate .NET types as C# type strings xUnit Tests</title>
 		<description>xUnit tests for StringlyTyped</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

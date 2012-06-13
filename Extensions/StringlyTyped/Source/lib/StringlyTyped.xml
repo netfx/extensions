@@ -4,70 +4,6 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:NetFx.StringlyTyped">
-            <summary>
-            Utilities for rendering .NET types as C# type names, with support for generics, nested types, type name simplification via "using" scopes, etc.
-            </summary>
-            <nuget id="StringlyTyped" />
-        </member>
-        <member name="M:NetFx.StringlyTyped.ToCodeName(System.Type)">
-            <summary>
-            Gets the C# name for the type, including proper rendering of generics, 
-            using the simple name of types.
-            </summary>
-            <remarks>
-            For example, for a generic enumerable of boolean, which has a full name of 
-            <c>System.Collections.Generic.IEnumerable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</c>, 
-            this method returns IEnumerable&lt;Boolean&gt;.
-            </remarks>
-            <param name="type" this="true">The type to convert to a simple C# type name.</param>
-        </member>
-        <member name="M:NetFx.StringlyTyped.ToCodeFullName(System.Type)">
-            <summary>
-            Gets the C# name for the type, including proper rendering of generics, 
-            using full names of types.
-            </summary>
-            <remarks>
-            For example, for a generic enumerable of boolean, which has a full name of 
-            <c>System.Collections.Generic.IEnumerable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</c>, 
-            this method returns System.Collections.Generic.IEnumerable&lt;System.Boolean&gt;.
-            </remarks>
-            <param name="type" this="true">The type to convert to a C# full type name.</param>
-        </member>
-        <member name="M:NetFx.StringlyTyped.GetCodeName(NetFx.StringlyTyped.IStringlyContext,System.Type)">
-            <summary>
-            Gets the safe shortened name of a type that can be used in a given context,
-            considering the already determined <see cref="P:NetFx.StringlyTyped.IStringlyContext.SafeImports"/>, 
-            such as in code generation.
-            </summary>
-        </member>
-        <member name="M:NetFx.StringlyTyped.AddType(NetFx.StringlyTyped.IStringlyScope,System.Type)">
-            <summary>
-            Adds the given type to the scope of used types.
-            </summary>
-        </member>
-        <member name="M:NetFx.StringlyTyped.AddTypes(NetFx.StringlyTyped.IStringlyScope,System.Collections.Generic.IEnumerable{System.Type})">
-            <summary>
-            Adds the given types to the scope of used types.
-            </summary>
-        </member>
-        <member name="M:NetFx.StringlyTyped.AddTypes(NetFx.StringlyTyped.IStringlyScope,System.Reflection.Assembly)">
-            <summary>
-            Adds all the exported (public) types in the given assembly to the scope of used types.
-            </summary>
-        </member>
-        <member name="M:NetFx.StringlyTyped.BeginScope">
-            <summary>
-            Creates a new stringly scope, which can be used to register types 
-            that will be used as strings, so that safe code imports can be 
-            determined and type names can be shortened to the safest form.
-            </summary>
-            <remarks>
-            The scope takes into account all type names in use, and determines 
-            what namespaces can be safely removed from certain type names 
-            without introducing ambiguities.
-            </remarks>
-        </member>
         <member name="T:NetFx.StringlyTyped.IStringlyScope">
             <summary>
             Provides a stringly scope, which can be used to register types 
@@ -85,118 +21,193 @@
             Adds the given type to the scope if it wasn't added already.
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.IStringlyScope.Build">
-            <summary>
-            Builds a context from the registrations in the scope.
-            </summary>
-        </member>
-        <member name="T:NetFx.StringlyTyped.IStringlyContext">
-            <summary>
-            A context where types can be used safely as strings 
-            that are shortened safely by extracting <see cref="P:NetFx.StringlyTyped.IStringlyContext.SafeImports"/>.
-            </summary>
-        </member>
-        <member name="M:NetFx.StringlyTyped.IStringlyContext.GetCodeName(System.String)">
+        <member name="M:NetFx.StringlyTyped.IStringlyScope.GetTypeName(System.String)">
             <summary>
             Gets the name of the type that can be used in code generation, considering 
-            the already determined <see cref="P:NetFx.StringlyTyped.IStringlyContext.SafeImports"/>.
+            the already determined <see cref="P:NetFx.StringlyTyped.IStringlyScope.SafeImports"/>.
             </summary>
         </member>
-        <member name="P:NetFx.StringlyTyped.IStringlyContext.SafeImports">
+        <member name="P:NetFx.StringlyTyped.IStringlyScope.SafeImports">
             <summary>
-            Gets the list of safe imports for type map in use.
+            Gets the list of safe imports that have been determined so 
+            far given the added types.
             </summary>
         </member>
-        <member name="T:NetFx.StringlyTyped.StringlyContext">
+        <member name="T:NetFx.StringlyTyped.Stringly">
             <summary>
-            Manages type registrations.
+            Utilities for rendering .NET types as C# type names, with support for generics, 
+            nested types, type name simplification via "using" scopes, etc.
             </summary>
+            <nuget id="StringlyTyped" />
+            <devdoc>
+            Note: to make this class public in your assembly, 
+            declare in another file a partial class that makes 
+            it public, like so:
+            public static partial class StringlyTyped { }
+            Don't modify this file directly, as that would 
+            prevent further updates via NuGet.
+            </devdoc>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.IsCSharpGenericType">
+        <member name="M:NetFx.StringlyTyped.Stringly.ToTypeName(System.Type)">
+            <summary>
+            Gets the C# name for the type, including proper rendering of generics, 
+            using the simple name of types.
+            </summary>
+            <remarks>
+            For example, for a generic enumerable of boolean, which has a full name of 
+            <c>System.Collections.Generic.IEnumerable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</c>, 
+            this method returns IEnumerable&lt;Boolean&gt;.
+            </remarks>
+            <param name="type" this="true">The type to convert to a simple C# type name.</param>
+        </member>
+        <member name="M:NetFx.StringlyTyped.Stringly.ToTypeFullName(System.Type)">
+            <summary>
+            Gets the C# name for the type, including proper rendering of generics, 
+            using full names of types.
+            </summary>
+            <remarks>
+            For example, for a generic enumerable of boolean, which has a full name of 
+            <c>System.Collections.Generic.IEnumerable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</c>, 
+            this method returns System.Collections.Generic.IEnumerable&lt;System.Boolean&gt;.
+            </remarks>
+            <param name="type" this="true">The type to convert to a C# full type name.</param>
+        </member>
+        <member name="M:NetFx.StringlyTyped.Stringly.BeginScope">
+            <summary>
+            Creates a new stringly scope, which can be used to register types 
+            that will be used as strings, so that safe code imports can be 
+            determined and type names can be shortened to the safest form.
+            </summary>
+            <remarks>
+            The scope takes into account all type names in use, and determines 
+            what namespaces can be safely removed from certain type names 
+            without introducing ambiguities.
+            </remarks>
+        </member>
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsCSharpGenericType">
             <summary>
             Checks whether the type contains the &lt; and &gt; characters that denotes a C# generic type.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.IsFullGenericType">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsFullGenericType">
             <summary>
             Checks whether the type contains the ` but also the generic type arguments with [[ and ]].
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.IsOpenGenericType">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsOpenGenericType">
             <summary>
             Checks whether the type contains the `1 (`arity) which denotes an open generic type.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.IsNestedType">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsNestedType">
             <summary>
             Checks whether the type is a nested type by finding the '+' symbol.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.typeNameMap">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.typeNameMap">
             <summary>
             Gets the type map built so far, where the keys are the full type names, 
             and the value is the type name to use in code generation.
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.StringlyContext.GetCodeName(System.String)">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.safeImports">
             <summary>
-            Gets the name of the type that can be used in code generation, considering
-            the already determined <see cref="P:NetFx.StringlyTyped.StringlyContext.SafeImports"/>.
+            Determined imports that can be removed from full type names 
+            safely.
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.StringlyContext.BuildSafeTypeNames">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.registeredTypes">
+            <summary>
+            All registered types so far with the scope.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.GetTypeName(System.String)">
+            <summary>
+            Gets the name of the type that can be used in code generation, considering
+            the already determined <see cref="P:NetFx.StringlyTyped.Stringly.StringlyScope.SafeImports"/>.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.BuildSafeTypeNames">
             <summary>
             Searches the type map for potential simplifications to type names. 
             All type names that are unique across all used namespaces are 
             turned into their simple type name (without the namespace).
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.StringlyContext.BuildSafeImports">
+        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.BuildSafeImports">
             <summary>
             From the type map, finds those namespaces that can be safely imported ("using" in C#) 
             without causing type collisions among the type names in the map.
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.StringlyContext.SanitizeGenerics(System.String)">
+        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.SanitizeGenerics(System.String)">
             <summary>
             Sanitizes the generics.
             </summary>
             <param name="typeName">Name of the type.</param>
         </member>
-        <member name="P:NetFx.StringlyTyped.StringlyContext.SafeImports">
+        <member name="P:NetFx.StringlyTyped.Stringly.StringlyScope.SafeImports">
             <summary>
             Gets the list of safe imports for type map in use.
             </summary>
         </member>
-        <member name="T:NetFx.StringlyTyped.StringlyContext.TypeName">
+        <member name="T:NetFx.StringlyTyped.Stringly.StringlyScope.TypeName">
             <summary>
             Helper class used to build the hierarchy of type names in a generic type name.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.Expressions.GenericParameters">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericParameters">
             <summary>
             Matches the generic type and its parameter type names with C# syntax: 
             for System.IEnumerable{System.Boolean}, matches System.IEnumerable and System.Boolean
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.Expressions.ComaWithoutSpace">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.ComaWithoutSpace">
             <summary>
             Matches two identifiers that are separated by a coma but without a whitespace after the coma, such as Boolean,String.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.Expressions.FullAssemblyName">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.FullAssemblyName">
             <summary>
             Matches the assembly part of an assembly qualified type name (i.e. , mscorlib, Version=..., Culture=..., PublicKeyToken=...).
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.Expressions.GenericsArity">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericsArity">
             <summary>
             Matches the arity part of a generics type, like IEnumerable`1 (would match `1).
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.StringlyContext.Expressions.GenericsArityAndBracket">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericsArityAndBracket">
             <summary>
             Matches the arity part of a generics type, like IEnumerable`1[[System.Boolean]] (would match `1[).
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.StringlyScopeExtensions.AddType(NetFx.StringlyTyped.IStringlyScope,System.Type)">
+            <summary>
+            Adds the given type to the scope of used types.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.StringlyScopeExtensions.AddTypes(NetFx.StringlyTyped.IStringlyScope,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Adds the given types to the scope of used types.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.StringlyScopeExtensions.AddTypes(NetFx.StringlyTyped.IStringlyScope,System.Reflection.Assembly)">
+            <summary>
+            Adds all the exported (public) types in the given assembly to the scope of used types.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.StringlyScopeExtensions.GetTypeName(NetFx.StringlyTyped.IStringlyScope,System.Type)">
+            <summary>
+            Gets the safe shortened name of a type that can be used in a given context,
+            considering the already determined <see cref="P:NetFx.StringlyTyped.IStringlyScope.SafeImports"/>, 
+            such as in code generation.
+            </summary>
+        </member>
+        <member name="M:NetFx.StringlyTyped.StringlyScopeExtensions.SafeGenericTypeName(System.Type)">
+            <summary>
+            If the type is a generic type, renders all the T's with the generic 
+            type definition name. Otherwise, returns just the type full name.
             </summary>
         </member>
     </members>

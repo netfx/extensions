@@ -30,12 +30,11 @@ DAMAGE.
 */
 #endregion
 
-namespace NetFx
+namespace NetFx.StringlyTyped
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -51,7 +50,7 @@ namespace NetFx
     /// Don't modify this file directly, as that would 
     /// prevent further updates via NuGet.
     /// </devdoc>
-    static partial class StringlyTyped
+    static partial class Stringly
     {
         /// <summary>
         /// Gets the C# name for the type, including proper rendering of generics, 
@@ -63,7 +62,7 @@ namespace NetFx
         /// this method returns IEnumerable&lt;Boolean&gt;.
         /// </remarks>
         /// <param name="type" this="true">The type to convert to a simple C# type name.</param>
-        public static string ToCodeName(this Type type)
+        public static string ToTypeName(this Type type)
         {
             var name = type.DeclaringType == null || type.IsGenericParameter ?
                 type.Name : type.DeclaringType.Name + "." + type.Name;
@@ -73,7 +72,7 @@ namespace NetFx
 
             return name.Substring(0, name.IndexOf('`')) +
                 "<" +
-                String.Join(", ", type.GetGenericArguments().Select(t => ToCodeName(t))) +
+                String.Join(", ", type.GetGenericArguments().Select(t => ToTypeName(t))) +
                 ">";
         }
 
@@ -87,7 +86,7 @@ namespace NetFx
         /// this method returns System.Collections.Generic.IEnumerable&lt;System.Boolean&gt;.
         /// </remarks>
         /// <param name="type" this="true">The type to convert to a C# full type name.</param>
-        public static string ToCodeFullName(this Type type)
+        public static string ToTypeFullName(this Type type)
         {
             var name = type.IsGenericParameter ? type.Name : type.FullName.Replace('+', '.');
 
@@ -96,48 +95,8 @@ namespace NetFx
 
             return name.Substring(0, name.IndexOf('`')) +
                 "<" +
-                String.Join(", ", type.GetGenericArguments().Select(t => ToCodeFullName(t))) +
+                String.Join(", ", type.GetGenericArguments().Select(t => ToTypeFullName(t))) +
                 ">";
-        }
-
-        /// <summary>
-        /// Gets the safe shortened name of a type that can be used in a given context,
-        /// considering the already determined <see cref="IStringlyContext.SafeImports"/>, 
-        /// such as in code generation.
-        /// </summary>
-        public static string GetCodeName(this IStringlyContext context, Type type)
-        {
-            return context.GetCodeName(type.FullName);
-        }
-
-        /// <summary>
-        /// Adds the given type to the scope of used types.
-        /// </summary>
-        public static void AddType(this IStringlyScope scope, Type type)
-        {
-            scope.AddType(type.FullName);
-        }
-
-        /// <summary>
-        /// Adds the given types to the scope of used types.
-        /// </summary>
-        public static void AddTypes(this IStringlyScope scope, IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-            {
-                scope.AddType(type);
-            }
-        }
-
-        /// <summary>
-        /// Adds all the exported (public) types in the given assembly to the scope of used types.
-        /// </summary>
-        public static void AddTypes(this IStringlyScope scope, Assembly assembly)
-        {
-            foreach (var type in assembly.GetExportedTypes())
-            {
-                scope.AddType(type);
-            }
         }
 
         /// <summary>
@@ -155,66 +114,7 @@ namespace NetFx
             return new StringlyScope();
         }
 
-        /// <summary>
-        /// Provides a stringly scope, which can be used to register types 
-        /// that will be used as strings, so that safe code imports can be 
-        /// determined and type names can be shortened to the safest form.
-        /// </summary>
-        /// <remarks>
-        /// The scope takes into account all type names in use, and determines 
-        /// what namespaces can be safely removed from certain type names 
-        /// without introducing ambiguities.
-        /// </remarks>
-        public interface IStringlyScope
-        {
-            /// <summary>
-            /// Adds the given type to the scope if it wasn't added already.
-            /// </summary>
-            void AddType(string fullName);
-
-            /// <summary>
-            /// Builds a context from the registrations in the scope.
-            /// </summary>
-            IStringlyContext Build();
-        }
-
-        /// <summary>
-        /// A context where types can be used safely as strings 
-        /// that are shortened safely by extracting <see cref="SafeImports"/>.
-        /// </summary>
-        public interface IStringlyContext
-        {
-            /// <summary>
-            /// Gets the list of safe imports for type map in use.
-            /// </summary>
-            IEnumerable<string> SafeImports { get; }
-
-            /// <summary>
-            /// Gets the name of the type that can be used in code generation, considering 
-            /// the already determined <see cref="SafeImports"/>.
-            /// </summary>
-            string GetCodeName(string fullName);
-        }
-
         private class StringlyScope : IStringlyScope
-        {
-            private IDictionary<string, string> typeNameMap = new Dictionary<string, string>();
-
-            public void AddType(string typeFullName)
-            {
-                this.typeNameMap[typeFullName] = typeFullName;
-            }
-
-            public IStringlyContext Build()
-            {
-                return new StringlyContext(typeNameMap);
-            }
-        }
-
-        /// <summary>
-        /// Manages type registrations.
-        /// </summary>
-        private class StringlyContext : IStringlyContext
         {
             /// <summary>
             /// Checks whether the type contains the &lt; and &gt; characters that denotes a C# generic type.
@@ -240,28 +140,50 @@ namespace NetFx
             /// Gets the type map built so far, where the keys are the full type names, 
             /// and the value is the type name to use in code generation.
             /// </summary>
-            private IDictionary<string, string> typeNameMap;
+            private Dictionary<string, string> typeNameMap;
 
-            private List<string> safeImports = new List<string>();
+            /// <summary>
+            /// Determined imports that can be removed from full type names 
+            /// safely.
+            /// </summary>
+            private List<string> safeImports;
 
-            public StringlyContext(IDictionary<string, string> types)
+            /// <summary>
+            /// All registered types so far with the scope.
+            /// </summary>
+            private List<string> registeredTypes = new List<string>();
+
+            public void AddType(string typeFullName)
             {
-                this.typeNameMap = types;
-                this.BuildSafeTypeNames();
-                this.BuildSafeImports();
+                if (string.IsNullOrEmpty(typeFullName))
+                    throw new ArgumentException("Type to add cannot be null or empty.");
+
+                this.registeredTypes.Add(typeFullName);
+                // Clear the calculated state.
+                typeNameMap = null;
+                safeImports = null;
             }
 
             /// <summary>
             /// Gets the list of safe imports for type map in use.
             /// </summary>
-            public IEnumerable<string> SafeImports { get { return safeImports; } }
+            public IEnumerable<string> SafeImports
+            {
+                get
+                {
+                    EnsureBuilt();
+                    return safeImports;
+                }
+            }
 
             /// <summary>
             /// Gets the name of the type that can be used in code generation, considering
             /// the already determined <see cref="SafeImports"/>.
             /// </summary>
-            public string GetCodeName(string fullName)
+            public string GetTypeName(string fullName)
             {
+                EnsureBuilt();
+
                 var typeName = fullName;
                 if (!this.typeNameMap.TryGetValue(typeName, out typeName))
                 {
@@ -273,6 +195,22 @@ namespace NetFx
                 }
 
                 return typeName;
+            }
+
+            private void EnsureBuilt()
+            {
+                if (safeImports == null || typeNameMap == null)
+                {
+                    typeNameMap = new Dictionary<string, string>();
+                    foreach (var type in registeredTypes)
+                    {
+                        typeNameMap[type] = type;
+                    }
+                    this.safeImports = new List<string>();
+
+                    this.BuildSafeTypeNames();
+                    this.BuildSafeImports();
+                }
             }
 
             /// <summary>

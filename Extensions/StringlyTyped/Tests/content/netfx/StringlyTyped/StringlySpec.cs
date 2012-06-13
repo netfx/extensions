@@ -30,7 +30,7 @@ DAMAGE.
 */
 #endregion
 
-namespace NetFx.StringlyTypedSpec
+namespace NetFx.StringlyTyped
 {
     using System;
     using System.Collections;
@@ -38,12 +38,12 @@ namespace NetFx.StringlyTypedSpec
     using System.Linq;
     using Xunit;
 
-    public class GivenStringlyTypes
+    public class StringlySpec
     {
         [Fact]
         public void WhenClassContainsGenerics_ThenCovertsToSimpleCodeName()
         {
-            var name = typeof(Dictionary<string, List<KeyValuePair<string, IEnumerable<bool>>>>).ToCodeName();
+            var name = typeof(Dictionary<string, List<KeyValuePair<string, IEnumerable<bool>>>>).ToTypeName();
 
             Assert.Equal("Dictionary<String, List<KeyValuePair<String, IEnumerable<Boolean>>>>", name);
         }
@@ -51,7 +51,7 @@ namespace NetFx.StringlyTypedSpec
         [Fact]
         public void WhenClassContainsGenerics_ThenCovertsToFullCodeName()
         {
-            var name = typeof(Dictionary<string, List<KeyValuePair<string, IEnumerable<bool>>>>).ToCodeFullName();
+            var name = typeof(Dictionary<string, List<KeyValuePair<string, IEnumerable<bool>>>>).ToTypeFullName();
 
             Assert.Equal("System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<System.String, System.Collections.Generic.IEnumerable<System.Boolean>>>>", name);
         }
@@ -59,56 +59,56 @@ namespace NetFx.StringlyTypedSpec
         [Fact]
         public void WhenNestedTypeToCodeName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedType).ToCodeName();
+            var name = typeof(NestedType).ToTypeName();
 
-            Assert.Equal("GivenStringlyTypes.NestedType", name);
+            Assert.Equal("StringlySpec.NestedType", name);
         }
 
         [Fact]
         public void WhenNestedTypeToCodeFullName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedType).ToCodeFullName();
+            var name = typeof(NestedType).ToTypeFullName();
 
-            Assert.Equal("NetFx.StringlyTypedSpec.GivenStringlyTypes.NestedType", name);
+            Assert.Equal("NetFx.StringlyTyped.StringlySpec.NestedType", name);
         }
 
         [Fact]
         public void WhenOpenGenericNestedTypeToCodeName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedGeneric<>).ToCodeName();
+            var name = typeof(NestedGeneric<>).ToTypeName();
 
-            Assert.Equal("GivenStringlyTypes.NestedGeneric<T>", name);
+            Assert.Equal("StringlySpec.NestedGeneric<T>", name);
         }
 
         [Fact]
         public void WhenGenericNestedTypeToCodeName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedGeneric<NestedType>).ToCodeName();
+            var name = typeof(NestedGeneric<NestedType>).ToTypeName();
 
-            Assert.Equal("GivenStringlyTypes.NestedGeneric<GivenStringlyTypes.NestedType>", name);
+            Assert.Equal("StringlySpec.NestedGeneric<StringlySpec.NestedType>", name);
         }
 
         [Fact]
         public void WhenNestedOpenGenericTypeToCodeFullName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedGeneric<>).ToCodeFullName();
+            var name = typeof(NestedGeneric<>).ToTypeFullName();
 
-            Assert.Equal("NetFx.StringlyTypedSpec.GivenStringlyTypes.NestedGeneric<T>", name);
+            Assert.Equal("NetFx.StringlyTyped.StringlySpec.NestedGeneric<T>", name);
         }
 
         [Fact]
         public void WhenGenericNestedTypeToCodeFullName_ThenReplacesPlusWithDot()
         {
-            var name = typeof(NestedGeneric<NestedType>).ToCodeFullName();
+            var name = typeof(NestedGeneric<NestedType>).ToTypeFullName();
 
-            Assert.Equal("NetFx.StringlyTypedSpec.GivenStringlyTypes.NestedGeneric<NetFx.StringlyTypedSpec.GivenStringlyTypes.NestedType>", name);
+            Assert.Equal("NetFx.StringlyTyped.StringlySpec.NestedGeneric<NetFx.StringlyTyped.StringlySpec.NestedType>", name);
         }
 
         [Fact]
         public void WhenIsGenericDefinition_ThenGetsTs()
         {
             var type = typeof(Dictionary<,>);
-            var name = type.ToCodeName();
+            var name = type.ToTypeName();
 
             Assert.Equal("Dictionary<TKey, TValue>", name);
         }
@@ -116,207 +116,237 @@ namespace NetFx.StringlyTypedSpec
         [Fact]
         public void WhenAddingTypesToScopeWithNoNamespace_ThenSucceeds()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType("Foo");
             scope.AddType("Bar");
 
-            var context = scope.Build();
-
-            Assert.Equal("Foo", context.GetCodeName("Foo"));
-            Assert.Equal("Bar", context.GetCodeName("Bar"));
+            Assert.Equal("Foo", scope.GetTypeName("Foo"));
+            Assert.Equal("Bar", scope.GetTypeName("Bar"));
         }
 
         [Fact]
         public void WhenSimplifyingGenericType_ThenAddsUsingsAndSimplifiesGenericParameterType()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(IEnumerable<NonNestedType>));
-            var context = scope.Build();
 
-            Assert.Equal("IEnumerable<NonNestedType>", context.GetCodeName(typeof(IEnumerable<NonNestedType>)));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
-            Assert.True(context.SafeImports.Contains(typeof(NonNestedType).Namespace));
+            Assert.Equal("IEnumerable<NonNestedType>", scope.GetTypeName(typeof(IEnumerable<NonNestedType>)));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.True(scope.SafeImports.Contains(typeof(NonNestedType).Namespace));
         }
 
         [Fact]
         public void WhenSimplifyingOpenGenericType_ThenRendersValidCSharp()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(IEnumerable<>));
-            var context = scope.Build();
 
-            Assert.Equal("IEnumerable<>", context.GetCodeName(typeof(IEnumerable<>)));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.Equal("IEnumerable<>", scope.GetTypeName(typeof(IEnumerable<>)));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
         }
 
         [Fact]
         public void WhenSimplifyingGenericTypeWithNestedTypeParameter_ThenRemovesPlusFromNestedTypeName()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(IEnumerable<NestedType>));
-            var context = scope.Build();
 
-            Assert.Equal("IEnumerable<GivenStringlyTypes.NestedType>", context.GetCodeName(typeof(IEnumerable<NestedType>)));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
-            Assert.True(context.SafeImports.Contains(typeof(NestedType).Namespace));
-            Assert.False(context.SafeImports.Contains(typeof(GivenStringlyTypes).FullName), "The nested type parent should not be mistaken for a namespace.");
+            Assert.Equal("IEnumerable<StringlySpec.NestedType>", scope.GetTypeName(typeof(IEnumerable<NestedType>)));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.True(scope.SafeImports.Contains(typeof(NestedType).Namespace));
+            Assert.False(scope.SafeImports.Contains(typeof(StringlySpec).FullName), "The nested type parent should not be mistaken for a namespace.");
         }
 
         [Fact]
         public void WhenSimplifyingGenericTypeWithCollidingParameter_ThenKeepsParameterFullName()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(IEnumerable<StringConverter>));
             scope.AddType(typeof(System.ComponentModel.StringConverter));
-            var context = scope.Build();
 
-            Assert.Equal("IEnumerable<NetFx.StringlyTypedSpec.StringConverter>", context.GetCodeName(typeof(IEnumerable<StringConverter>)));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
-            Assert.False(context.SafeImports.Contains(typeof(StringConverter).Namespace));
+            Assert.Equal("IEnumerable<NetFx.StringlyTyped.StringConverter>", scope.GetTypeName(typeof(IEnumerable<StringConverter>)));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.False(scope.SafeImports.Contains(typeof(StringConverter).Namespace));
         }
 
         [Fact]
         public void WhenSimplifyingAllCoreLib_ThenAddsUsingForGenericsAndNonGenericComparable()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddTypes(typeof(string).Assembly);
             scope.AddTypes(new[] { typeof(IComparable), typeof(IComparable<string>) });
-            var context = scope.Build();
 
-            Assert.Equal("IComparable<String>", context.GetCodeName(typeof(IComparable<string>)));
-            Assert.Equal("IComparable", context.GetCodeName(typeof(IComparable)));
-            Assert.True(context.SafeImports.Contains(typeof(IComparable<>).Namespace));
+            Assert.Equal("IComparable<String>", scope.GetTypeName(typeof(IComparable<string>)));
+            Assert.Equal("IComparable", scope.GetTypeName(typeof(IComparable)));
+            Assert.True(scope.SafeImports.Contains(typeof(IComparable<>).Namespace));
         }
 
         [Fact]
         public void WhenGettingTypeNameOfTypeNotAdded_ThenReturnsValidCodeName()
         {
-            var scope = StringlyTyped.BeginScope();
-            var context = scope.Build();
+            var scope = Stringly.BeginScope();
 
-            Assert.Equal("System.Lazy<System.String>", context.GetCodeName(typeof(Lazy<string>)));
+            Assert.Equal("System.Lazy<System.String>", scope.GetTypeName(typeof(Lazy<string>)));
         }
 
         [Fact]
         public void WhenGettingTypeNameOfTypeNotAddedWithAddedGeneric_ThenReturnsSimplifiedGenericParameter()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(string));
             scope.AddType(typeof(bool));
-            var context = scope.Build();
 
-            Assert.Equal("System.Lazy<String>", context.GetCodeName(typeof(Lazy<string>)));
-            Assert.Equal("System.Lazy<System.Collections.Generic.KeyValuePair<String, Boolean>>", context.GetCodeName(typeof(Lazy<KeyValuePair<string, bool>>)));
+            Assert.Equal("System.Lazy<String>", scope.GetTypeName(typeof(Lazy<string>)));
+            Assert.Equal("System.Lazy<System.Collections.Generic.KeyValuePair<String, Boolean>>", scope.GetTypeName(typeof(Lazy<KeyValuePair<string, bool>>)));
         }
 
         [Fact]
         public void WhenAddingOpenGeneric_ThenSimplifiesConcreteGeneric()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(Lazy<>));
-            var context = scope.Build();
 
-            Assert.Equal("Lazy<System.String>", context.GetCodeName(typeof(Lazy<string>)));
+            Assert.Equal("Lazy<System.String>", scope.GetTypeName(typeof(Lazy<string>)));
         }
 
         [Fact]
         public void WhenAddingAssembly_ThenSafeUsingsDoNotContainGenerics()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType(typeof(IEnumerable<string>));
             scope.AddType(typeof(IEnumerable));
-            var context = scope.Build();
 
-            Assert.False(context.SafeImports.Any(s => s.IndexOf('[') != -1));
+            Assert.False(scope.SafeImports.Any(s => s.IndexOf('[') != -1));
         }
 
         [Fact]
         public void WhenSimplifyingTwoGenerics_ThenSimplifiesAllParameters()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             var type = typeof(IList<KeyValuePair<string, StringConverter>>);
 
             scope.AddType(type);
             scope.AddType(typeof(System.ComponentModel.StringConverter));
 
-            var context = scope.Build();
-
-            Assert.Equal("IList<KeyValuePair<String, NetFx.StringlyTypedSpec.StringConverter>>", context.GetCodeName(type));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.Equal("IList<KeyValuePair<String, NetFx.StringlyTyped.StringConverter>>", scope.GetTypeName(type));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
         }
 
         [Fact]
         public void WhenSimplifyingMultipleGenerics_ThenSimplifiesAllParameters()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             var type = typeof(IDictionary<IList<KeyValuePair<string, StringConverter>>, NestedType>);
 
             scope.AddType(type);
             scope.AddType(typeof(System.ComponentModel.StringConverter));
 
-            var context = scope.Build();
-
-            Assert.Equal("IDictionary<IList<KeyValuePair<String, NetFx.StringlyTypedSpec.StringConverter>>, GivenStringlyTypes.NestedType>", context.GetCodeName(type));
-            Assert.True(context.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
-            Assert.True(context.SafeImports.Contains(typeof(GivenStringlyTypes).Namespace));
+            Assert.Equal("IDictionary<IList<KeyValuePair<String, NetFx.StringlyTyped.StringConverter>>, StringlySpec.NestedType>", scope.GetTypeName(type));
+            Assert.True(scope.SafeImports.Contains(typeof(IEnumerable<>).Namespace));
+            Assert.True(scope.SafeImports.Contains(typeof(StringlySpec).Namespace));
         }
 
         [Fact]
         public void WhenSimplifyingTypeMap_ThenOnlySimplifiesNonCollidingTypeNames()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
 
             scope.AddType("Foo.A");
             scope.AddType("Foo.B");
             scope.AddType("Bar.A");
 
-            var context = scope.Build();
-
-            Assert.Equal("Foo.A", context.GetCodeName("Foo.A"));
-            Assert.Equal("B", context.GetCodeName("Foo.B"));
-            Assert.Equal("Bar.A", context.GetCodeName("Bar.A"));
+            Assert.Equal("Foo.A", scope.GetTypeName("Foo.A"));
+            Assert.Equal("B", scope.GetTypeName("Foo.B"));
+            Assert.Equal("Bar.A", scope.GetTypeName("Bar.A"));
         }
 
         [Fact]
         public void WhenSimplifyingTypeMap_ThenUniqueTypeNamesAreSimplified()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
 
             scope.AddType("Foo.A");
             scope.AddType("Bar.B");
 
-            var context = scope.Build();
-
-            Assert.Equal("A", context.GetCodeName("Foo.A"));
-            Assert.Equal("B", context.GetCodeName("Bar.B"));
+            Assert.Equal("A", scope.GetTypeName("Foo.A"));
+            Assert.Equal("B", scope.GetTypeName("Bar.B"));
         }
 
         [Fact]
         public void WhenGettingSafeUsings_ThenOnlyGetsNamespacesFromSimplifiedTypeNames()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
 
             scope.AddType("Foo.A");
             scope.AddType("Foo.B");
             scope.AddType("Bar.A");
             scope.AddType("Baz.C");
 
-            var context = scope.Build();
-
-            Assert.True(context.SafeImports.Contains("Foo"));
-            Assert.True(context.SafeImports.Contains("Baz"));
-            Assert.False(context.SafeImports.Contains("Bar"));
+            Assert.True(scope.SafeImports.Contains("Foo"));
+            Assert.True(scope.SafeImports.Contains("Baz"));
+            Assert.False(scope.SafeImports.Contains("Bar"));
         }
 
         [Fact]
         public void WhenSimplifyingAssemblyQualifiedName_ThenAddsUsingAndSimplifiesTypeName()
         {
-            var scope = StringlyTyped.BeginScope();
+            var scope = Stringly.BeginScope();
             scope.AddType("Foo.Bar, Foo");
-            var context = scope.Build();
 
-            Assert.Equal("Bar", context.GetCodeName("Foo.Bar, Foo"));
-            Assert.True(context.SafeImports.Contains("Foo"));
+            Assert.Equal("Bar", scope.GetTypeName("Foo.Bar, Foo"));
+            Assert.True(scope.SafeImports.Contains("Foo"));
+        }
+
+        [Fact]
+        public void When_Adding_Null_TypeName_Then_Throws()
+        {
+            var scope = Stringly.BeginScope();
+
+            Assert.Throws<ArgumentException>(() => scope.AddType(null));
+        }
+
+        [Fact]
+        public void When_Adding_Empty_TypeName_Then_Throws()
+        {
+            var scope = Stringly.BeginScope();
+
+            Assert.Throws<ArgumentException>(() => scope.AddType(""));
+        }
+
+        [Fact]
+        public void When_Adding_Generic_Parameter_Then_Adds_Name()
+        {
+            var scope = Stringly.BeginScope();
+
+            var genericParam = typeof(IEnumerable<>).GetGenericTypeDefinition().GetGenericArguments()[0];
+
+            scope.AddType(genericParam);
+
+            Assert.Equal("T", scope.GetTypeName(genericParam));
+        }
+
+        [Fact]
+        public void When_Adding_Generic_Type_Then_Resolves_Generic_Parameter_Name()
+        {
+            var scope = Stringly.BeginScope();
+
+            var genericType = typeof(Func<>);
+
+            scope.AddType(genericType);
+
+            Assert.Equal("Func<TResult>", scope.GetTypeName(genericType));
+        }
+
+        [Fact]
+        public void When_Adding_Multi_Generic_Then_Resolves_Generic_Parameter_Name()
+        {
+            var scope = Stringly.BeginScope();
+
+            var genericType = typeof(IDictionary<,>);
+
+            scope.AddType(genericType);
+
+            Assert.Equal("IDictionary<TKey, TValue>", scope.GetTypeName(genericType));
         }
 
         public class NestedType { }
