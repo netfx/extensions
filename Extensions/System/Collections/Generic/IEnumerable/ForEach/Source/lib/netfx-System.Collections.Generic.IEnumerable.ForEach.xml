@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Collections.Generic.ForEachExtension">
+            <summary>
+            Exposes a ForEach&lt;T&gt; extension method on IEnumerable&lt;T&gt;, just like List&lt;T&gt; does.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.ForEach" />
+        </member>
+        <member name="M:System.Collections.Generic.ForEachExtension.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Iterates all source elements and executes the given action for each.
+            </summary>
+            <param name="source" this="true">The source of items to iterate.</param>
+            <param name="action">The action to execute for each item in the source.</param>
+        </member>
+    </members>
+</doc>
