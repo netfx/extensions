@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.TypeInheritance</id>
-		<version>1.1.0.0</version>
+		<version>1.1.1.0</version>
 		<title>NETFx Type Inheritance Tree</title>
 		<description>Allows inspecting the exact type inheritance tree as declared in source, rather than the flattened view that reflection provides (for implemented interfaces, for example).
 
