@@ -14,82 +14,81 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-
-/// <summary>
-/// Defines extension methods related to <see cref="IServiceProvider"/>.
-/// </summary>
-internal static class ServiceProviderExtensions
+namespace System
 {
-	/// <summary>
-	/// Gets type-based services from the  service provider.
-	/// </summary>
-	/// <nuget id="netfx-System.ServiceProvider" />
-	/// <typeparam name="T">The type of the service to get.</typeparam>
-	/// <param name="provider" this="true">The service provider.</param>
-	/// <returns>The requested service, or a <see langword="null"/> reference if the service could not be located.</returns>
-	public static T TryGetService<T>(this IServiceProvider provider)
-	{
-		return (T)provider.GetService(typeof(T));
-	}
+    using System.Globalization;
 
-	/// <summary>
-	/// Gets type-based services from the  service provider.
-	/// </summary>
-	/// <nuget id="netfx-System.ServiceProvider" />
-	/// <typeparam name="T">The type of the service to get.</typeparam>
-	/// <param name="provider" this="true">The service provider.</param>
-	/// <returns>The requested service, or throws an <see cref="InvalidOperationException"/> 
-	/// if the service was not found.</returns>
-	public static T GetService<T>(this IServiceProvider provider)
-	{
-		var service = (T)provider.GetService(typeof(T));
+    /// <summary>
+    /// Defines extension methods related to <see cref="IServiceProvider"/>.
+    /// </summary>
+    static class ServiceProviderExtensions
+    {
+        /// <summary>
+        /// Gets type-based services from the  service provider.
+        /// </summary>
+        /// <nuget id="netfx-System.ServiceProvider" />
+        /// <typeparam name="T">The type of the service to get.</typeparam>
+        /// <param name="provider" this="true">The service provider.</param>
+        /// <returns>The requested service, or a <see langword="null"/> reference if the service could not be located.</returns>
+        public static T TryGetService<T>(this IServiceProvider provider)
+        {
+            return (T)provider.GetService(typeof(T));
+        }
 
-		if (service == null)
-			throw new InvalidOperationException(string.Format(
-				CultureInfo.CurrentCulture,
-				"Required service '{0}' not found.",
-				typeof(T)));
+        /// <summary>
+        /// Gets type-based services from the  service provider.
+        /// </summary>
+        /// <nuget id="netfx-System.ServiceProvider" />
+        /// <typeparam name="T">The type of the service to get.</typeparam>
+        /// <param name="provider" this="true">The service provider.</param>
+        /// <returns>The requested service, or throws an <see cref="InvalidOperationException"/> 
+        /// if the service was not found.</returns>
+        public static T GetService<T>(this IServiceProvider provider)
+        {
+            var service = (T)provider.GetService(typeof(T));
 
-		return service;
-	}
+            if (service == null)
+                throw new InvalidOperationException(string.Format(
+                    CultureInfo.CurrentCulture,
+                    "Required service '{0}' not found.",
+                    typeof(T)));
 
-	/// <summary>
-	/// Gets type-based services from the service provider.
-	/// </summary>
-	/// <nuget id="netfx-System.ServiceProvider" />
-	/// <typeparam name="TRegistration">The type of the registration of the service.</typeparam>
-	/// <typeparam name="TService">The type of the service to get.</typeparam>
-	/// <param name="provider" this="true">The service provider.</param>
-	/// <returns>The requested service, or a <see langword="null"/> reference if the service could not be located.</returns>
-	public static TService TryGetService<TRegistration, TService>(this IServiceProvider provider)
-	{
-		return (TService)provider.GetService(typeof(TRegistration));
-	}
+            return service;
+        }
 
-	/// <summary>
-	/// Gets type-based services from the service provider.
-	/// </summary>
-	/// <nuget id="netfx-System.ServiceProvider" />
-	/// <typeparam name="TRegistration">The type of the registration of the service.</typeparam>
-	/// <typeparam name="TService">The type of the service to get.</typeparam>
-	/// <param name="provider" this="true">The service provider.</param>
-	/// <returns>The requested service, or throws an <see cref="InvalidOperationException"/> 
-	/// if the service was not found.</returns>
-	public static TService GetService<TRegistration, TService>(this IServiceProvider provider)
-	{
-		var service = (TService)provider.GetService(typeof(TRegistration));
+        /// <summary>
+        /// Gets type-based services from the service provider.
+        /// </summary>
+        /// <nuget id="netfx-System.ServiceProvider" />
+        /// <typeparam name="TRegistration">The type of the registration of the service.</typeparam>
+        /// <typeparam name="TService">The type of the service to get.</typeparam>
+        /// <param name="provider" this="true">The service provider.</param>
+        /// <returns>The requested service, or a <see langword="null"/> reference if the service could not be located.</returns>
+        public static TService TryGetService<TRegistration, TService>(this IServiceProvider provider)
+        {
+            return (TService)provider.GetService(typeof(TRegistration));
+        }
 
-		if (service == null)
-			throw new InvalidOperationException(string.Format(
-				CultureInfo.CurrentCulture,
-				"Required service '{0}' not found.",
-				typeof(TRegistration)));
+        /// <summary>
+        /// Gets type-based services from the service provider.
+        /// </summary>
+        /// <nuget id="netfx-System.ServiceProvider" />
+        /// <typeparam name="TRegistration">The type of the registration of the service.</typeparam>
+        /// <typeparam name="TService">The type of the service to get.</typeparam>
+        /// <param name="provider" this="true">The service provider.</param>
+        /// <returns>The requested service, or throws an <see cref="InvalidOperationException"/> 
+        /// if the service was not found.</returns>
+        public static TService GetService<TRegistration, TService>(this IServiceProvider provider)
+        {
+            var service = (TService)provider.GetService(typeof(TRegistration));
 
-		return service;
-	}
+            if (service == null)
+                throw new InvalidOperationException(string.Format(
+                    CultureInfo.CurrentCulture,
+                    "Required service '{0}' not found.",
+                    typeof(TRegistration)));
+
+            return service;
+        }
+    }
 }
