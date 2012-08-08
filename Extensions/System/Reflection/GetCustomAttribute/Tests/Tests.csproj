@@ -41,6 +41,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\System\Reflection\GetCustomAttributeSpec.cs" />
@@ -48,7 +51,6 @@
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NuSpec>
-    <Content Include="tools\install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
@@ -64,4 +66,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetTargets)" Condition="Exists('$(NuGetTargets)')" />
+  <Import Project="$(NuGetRoot)\.nuget\nuget.targets" />
 </Project>
