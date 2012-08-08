@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:NetFx.Patterns.Adapter.AdapterService">
+            <summary>
+            Service implementation that provides pluggable adaptation of types and their adapter 
+            registrations.
+            </summary>
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.IAdapterService">
+            <summary>
+            Service that provides pluggable adaptation of types.
+            </summary>
+            <nuget id="netfx-Patterns.Adapter.Interfaces" />
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.IAdapterService.To``1(System.Object)">
+            <summary>
+            Tries to adapt the given <paramref name="instance"/> to the requested type <typeparamref name="T"/>.
+            </summary>
+            <returns>The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.IAdapterRegistry">
+            <summary>
+            Registry of available adapters.
+            </summary>
+            <nuget id="netfx-Patterns.Adapter.Interfaces" />
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.IAdapterRegistry.Register(NetFx.Patterns.Adapter.IAdapter)">
+            <summary>
+            Registers an adapter to be used by the <see cref="T:NetFx.Patterns.Adapter.IAdapterService"/>.
+            </summary>
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.AdapterService.Register(NetFx.Patterns.Adapter.IAdapter)">
+            <summary>
+            Registers an adapter to be used by the <see cref="T:NetFx.Patterns.Adapter.IAdapterService"/>.
+            </summary>
+            <param name="adapter">Adapter to register.</param>
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.AdapterService.To``1(System.Object)">
+            <summary>
+            Tries to adapt the given <paramref name="instance"/> to the requested type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type to convert the instance to.</typeparam>
+            <param name="instance">The instance to convert.</param>
+            <returns>
+            The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.
+            </returns>
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.Adapt">
+            <summary>
+            Static facade for the <see cref="T:NetFx.Patterns.Adapter.IAdapterService"/>.
+            </summary>
+            <nuget id="netfx-Patterns.Adapter.Interfaces"/>
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.Adapt.To``1(System.Object)">
+            <summary>
+            Tries to adapt the given <paramref name="instance"/> to the requested type <typeparamref name="T"/>.
+            </summary>
+            <returns>The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.AdaptInitializer">
+            <summary>
+            Provides initialization for the <see cref="T:NetFx.Patterns.Adapter.Adapt"/> class.
+            </summary>
+            <devdoc>
+            Separating the initialization from the usage of the <see cref="T:NetFx.Patterns.Adapter.Adapt"/>
+            class allows consumers of the adapters to remain ignorant of how it's 
+            initialized (can even be hidden at the API level by leaving this 
+            class internal while making the <see cref="T:NetFx.Patterns.Adapter.Adapt"/> type public.
+            </devdoc>
+            <nuget id="netfx-Patterns.Adapter.Interfaces"/>
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.AdaptInitializer.Initialize(NetFx.Patterns.Adapter.IAdapterService)">
+            <summary>
+            Initializes the <see cref="T:NetFx.Patterns.Adapter.Adapt"/> static facade with 
+            the specified service.
+            </summary>
+            <param name="service">The adapter service to use on the <see cref="T:NetFx.Patterns.Adapter.Adapt"/> class.</param>
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.IAdapter">
+            <summary>
+            Base marker interface implemented by all adapters.
+            </summary>
+            <nuget id="netfx-Patterns.Adapter.Interfaces" />
+        </member>
+        <member name="T:NetFx.Patterns.Adapter.IAdapter`2">
+            <summary>
+            Interface implemented by adapters that know how to expose a 
+            type as a different interface.
+            </summary>
+            <typeparam name="TFrom">The type that this adapter supports adapting from.</typeparam>
+            <typeparam name="TTo">The type that this adapter adapts to.</typeparam>
+            <nuget id="netfx-Patterns.Adapter.Interfaces" />
+        </member>
+        <member name="M:NetFx.Patterns.Adapter.IAdapter`2.Adapt(`0)">
+            <summary>
+            Adapts the specified object to the <typeparamref name="TTo"/> type.
+            </summary>
+        </member>
+        <member name="T:AmbientSingleton">
+            <summary>
+            Provides convenience factory methods for <see cref="T:AmbientSingleton`1"/> 
+            so that type inference can be leveraged for the given default value. There 
+            is no need to specify the T parameter for the Create method overloads.
+            </summary>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(``0)">
+            <summary>
+            Creates an ambient singleton with the specified default value.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValue">The default value for the singleton.</param>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(System.Func{``0})">
+            <summary>
+            Creates an ambient singleton with the specified default value factory.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+        </member>
+        <member name="T:AmbientSingleton`1">
+            <summary>
+            Provides an easy way to implement the singleton (anti?) pattern so that it is ambient-safe,
+            propagates with a call context and can be overriden per ambient (i.e. in tests).
+            </summary>
+            <typeparam name="T">The type of value exposed as an ambient singleton.</typeparam>
+            <remarks>
+            This class is used to implement singletons that can be replaced in tests and are thread-safe 
+            for that scenario. A default value can be provided as a fallback if no ambient-specific value 
+            has been set prior to usage (i.e. a default singleton implementation).
+            <example>
+            The following example shows how to use the ambient singleton to define a singleton 
+            clock:
+            <code>
+            public class SystemClock : IClock
+            {
+            	private static AmbientSingleton&lt;IClock&gt; singleton;
+            		
+            	static SystemClock()
+            	{
+            		singleton = new AmbientSingleton&lt;IClock&gt;(new SystemClock());
+            	}
+            
+            	private SystemClock()
+            	{
+            		// Can only be instantiated once and only by us.
+            	}
+            
+            	public static IClock Instance 
+            	{ 
+            		get { return singleton.Value; } 
+            		// Made internal so that only our tests can replace this value
+            		internal set { singleton.Value = value; }
+            	}
+            	
+            	public DateTimeOffset Now { get { return DateTimeOffset.Now; } }
+            }
+            </code>
+            A consumer domain class might use like as follows:
+            <code>
+            var now = SystemClock.Instance.Now;
+            </code>
+            A test could replace the value of Now by simply replacing the singleton:
+            <code>
+            SystemClock.Instance = mockClock;
+            
+            // Would now use the mocked clock automatically from the replaced 
+            // ambient singleton
+            obj.PerformOperation();
+            </code>
+            </example>
+            </remarks>
+            <nuget id="netfx-System.AmbientSingleton"/>
+        </member>
+        <member name="M:AmbientSingleton`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            without a local default, meaning that if no value is assigned 
+            to the <see cref="P:AmbientSingleton`1.Value"/> property, it will return the default 
+            value for the type.
+            </summary>
+        </member>
+        <member name="M:AmbientSingleton`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value. This value will be returned by the <see cref="P:AmbientSingleton`1.Value"/> 
+            property if no other value has been set in the current call context.
+            </summary>
+        </member>
+        <member name="M:AmbientSingleton`1.#ctor(System.Func{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value factory. This factory will be called once the first 
+            time the global default value is accessed, such as if no other value has been 
+            set in the current call context for the <see cref="P:AmbientSingleton`1.Value"/> property.
+            </summary>
+        </member>
+        <member name="P:AmbientSingleton`1.Value">
+            <summary>
+            Gets or sets the value of the ambient singleton.
+            </summary>
+            <remarks>
+            Setting the value will only change the specified 
+            default value in the constructor for the current 
+            call context.
+            </remarks>
+        </member>
+        <member name="T:TraverseKind">
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
+        </member>
+        <member name="T:Traverser">
+            <summary>
+            Traverses a tree (without checking for circular references) using 
+            a stack or queue based approach (no recursion), allowing infinitely 
+            deep trees.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
+        </member>
+        <member name="M:Traverser.Traverse``1(System.Collections.Generic.IEnumerable{``0},TraverseKind,System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Traverses a tree using the given traversal <paramref name="kind"/>.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse"/>
+            <typeparam name="T">Type of the items to traverse, which can be inferred by the compiler so it's not necessary to specify it.</typeparam>
+            <param name="source" this="true">The root items for the traversal, which are always included in the result of the traversal.</param>
+            <param name="kind">Traversal style to use. See <see cref="T:TraverseKind"/>.</param>
+            <param name="traverser">The traversing function that is applied to the current item of the type <typeparamref name="T"/>.</param>
+            <returns>A flattened enumeration of the traversal, lazily evaluated.</returns>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:TypeInheritance">
+            <summary>
+            Provides type inheritance information for a type.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.#ctor(System.Type,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TypeInheritance"/> class for the given 
+            type and distance from the type root.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(TypeInheritance)">
+            <summary>
+            Compares the current instance with the value provided.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(System.Object)">
+            <summary>
+            Compares the current instance with the value provided.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(TypeInheritance,TypeInheritance)">
+            <summary>
+            Compares two instances for equality.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Distance">
+            <summary>
+            Gets the distance from the current type inheritance to the root that was used 
+            to build the hierarchy.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Type">
+            <summary>
+            Gets the type that owns the <see cref="P:TypeInheritance.Inheritance"/>.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Inheritance">
+            <summary>
+            Gets the inherited types from <see cref="P:TypeInheritance.Type"/>.
+            </summary>
+        </member>
+        <member name="T:TypeInheritanceExtension">
+            <summary>
+            Provides the <see cref="M:TypeInheritanceExtension.GetInheritanceTree(System.Type)"/> extension method to retrieve 
+            inheritance tree information for a type.
+            </summary>
+        </member>
+        <member name="M:TypeInheritanceExtension.GetInheritanceTree(System.Type)">
+            <summary>
+            Gets the exact inheritance tree information for the given type. The first element 
+            in the inheritance is the received type itself.
+            </summary>
+        </member>
+    </members>
+</doc>
