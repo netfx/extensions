@@ -36,6 +36,7 @@ namespace NetFx.StringlyTyped
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
 
     static partial class StringlyScopeExtensions
     {
@@ -87,7 +88,15 @@ namespace NetFx.StringlyTyped
         {
             var fullName = type.FullName ?? type.ToString();
 
-            // If FullName isn't available, use ToString (i.e. generic parameters, open generic types, etc.)
+            if (type.IsGenericTypeDefinition)
+                // Grab the part before the ` arity separator
+                return fullName.Substring(0, fullName.IndexOf('`')) +
+                    "<" +
+                    // `2 means two generic parameters, which would become <,>. 
+                    // `1 would be <> (no coma)
+                    new string(',', int.Parse(ClrGenericsArity.Match(fullName).Value) - 1) +
+                    ">";
+
             if (!type.IsGenericType)
                 return fullName;
 
@@ -97,5 +106,7 @@ namespace NetFx.StringlyTyped
                 String.Join(",", type.GetGenericArguments().Select(t => "[" + SafeGenericTypeName(t) + "]")) +
                 "]";
         }
+
+        private static readonly Regex ClrGenericsArity = new Regex(@"(?<=`)\d{1,}", RegexOptions.Compiled);
     }
 }

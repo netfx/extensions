@@ -146,6 +146,16 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
+        public void WhenSimplifyingOpenGenericTypeWithTwoParameters_ThenRendersValidCSharp()
+        {
+            var scope = Stringly.BeginScope();
+            scope.AddType(typeof(IDictionary<,>));
+
+            Assert.Equal("IDictionary<,>", scope.GetTypeName(typeof(IDictionary<,>)));
+            Assert.True(scope.SafeImports.Contains(typeof(IDictionary<,>).Namespace));
+        }
+
+        [Fact]
         public void WhenSimplifyingGenericTypeWithNestedTypeParameter_ThenRemovesPlusFromNestedTypeName()
         {
             var scope = Stringly.BeginScope();
@@ -314,7 +324,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void When_Adding_Generic_Parameter_Then_Adds_Name()
+        public void When_Resolving_Open_Generic_Parameter_Then_Adds_Name()
         {
             var scope = Stringly.BeginScope();
 
@@ -326,7 +336,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void When_Adding_Generic_Type_Then_Resolves_Generic_Parameter_Name()
+        public void When_Adding_Open_Generic_Type_Then_Resolves_Without_Param_Name()
         {
             var scope = Stringly.BeginScope();
 
@@ -334,19 +344,22 @@ namespace NetFx.StringlyTyped
 
             scope.AddType(genericType);
 
-            Assert.Equal("Func<TResult>", scope.GetTypeName(genericType));
+            Assert.Equal("Func<>", scope.GetTypeName(genericType));
         }
 
         [Fact]
-        public void When_Adding_Multi_Generic_Then_Resolves_Generic_Parameter_Name()
+        public void When_Adding_CSharp_Generic_Then_Simplifies_Generic_Parameters()
         {
             var scope = Stringly.BeginScope();
 
-            var genericType = typeof(IDictionary<,>);
+            scope.AddType("System.Device.Location.GeoCoordinate");
+            scope.AddType("System.Device.Location.GeoPositionChangedEventArgs<System.Device.Location.GeoCoordinate>");
+            scope.AddType("System.EventHandler<System.Device.Location.GeoPositionChangedEventArgs<System.Device.Location.GeoCoordinate>>");
+            scope.AddType("System.Device.Location.GeoCoordinate");
+            scope.AddType("System.Device.Location.GeoPositionChangedEventArgs<System.Device.Location.GeoCoordinate>");
 
-            scope.AddType(genericType);
-
-            Assert.Equal("IDictionary<TKey, TValue>", scope.GetTypeName(genericType));
+            Assert.Equal("GeoPositionChangedEventArgs<GeoCoordinate>",
+                scope.GetTypeName("System.Device.Location.GeoPositionChangedEventArgs<System.Device.Location.GeoCoordinate>"));
         }
 
         public class NestedType { }

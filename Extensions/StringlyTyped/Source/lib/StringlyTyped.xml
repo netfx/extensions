@@ -89,12 +89,13 @@
             Checks whether the type contains the &lt; and &gt; characters that denotes a C# generic type.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsFullGenericType">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsClrFullGenericType">
             <summary>
-            Checks whether the type contains the ` but also the generic type arguments with [[ and ]].
+            Checks whether the type contains the ` but also the generic type arguments with [[ and ]]. 
+            This is the CLR/Reflection representation of generic tpyes.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsOpenGenericType">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.IsClrOpenGenericType">
             <summary>
             Checks whether the type contains the `1 (`arity) which denotes an open generic type.
             </summary>
@@ -140,7 +141,7 @@
             without causing type collisions among the type names in the map.
             </summary>
         </member>
-        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.SanitizeGenerics(System.String)">
+        <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.ClrToCSharpGeneric(System.String)">
             <summary>
             Sanitizes the generics.
             </summary>
@@ -156,7 +157,7 @@
             Helper class used to build the hierarchy of type names in a generic type name.
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericParameters">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.CSharpGenericParameters">
             <summary>
             Matches the generic type and its parameter type names with C# syntax: 
             for System.IEnumerable{System.Boolean}, matches System.IEnumerable and System.Boolean
@@ -172,12 +173,12 @@
             Matches the assembly part of an assembly qualified type name (i.e. , mscorlib, Version=..., Culture=..., PublicKeyToken=...).
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericsArity">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.ClrGenericsArity">
             <summary>
             Matches the arity part of a generics type, like IEnumerable`1 (would match `1).
             </summary>
         </member>
-        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.GenericsArityAndBracket">
+        <member name="F:NetFx.StringlyTyped.Stringly.StringlyScope.Expressions.ClrGenericsArityAndBracket">
             <summary>
             Matches the arity part of a generics type, like IEnumerable`1[[System.Boolean]] (would match `1[).
             </summary>

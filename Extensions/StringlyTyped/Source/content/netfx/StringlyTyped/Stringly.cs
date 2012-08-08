@@ -122,14 +122,15 @@ namespace NetFx.StringlyTyped
             private static readonly Func<string, bool> IsCSharpGenericType = type => type.IndexOf('<') != -1 || type.IndexOf('>') != -1;
 
             /// <summary>
-            /// Checks whether the type contains the ` but also the generic type arguments with [[ and ]].
+            /// Checks whether the type contains the ` but also the generic type arguments with [[ and ]]. 
+            /// This is the CLR/Reflection representation of generic tpyes.
             /// </summary>
-            private static readonly Func<string, bool> IsFullGenericType = type => Expressions.GenericsArityAndBracket.IsMatch(type);
+            private static readonly Func<string, bool> IsClrFullGenericType = type => Expressions.ClrGenericsArityAndBracket.IsMatch(type);
 
             /// <summary>
             /// Checks whether the type contains the `1 (`arity) which denotes an open generic type.
             /// </summary>
-            private static readonly Func<string, bool> IsOpenGenericType = type => Expressions.GenericsArity.IsMatch(type) && type.IndexOf('[') == -1;
+            private static readonly Func<string, bool> IsClrOpenGenericType = type => Expressions.ClrGenericsArity.IsMatch(type) && type.IndexOf('[') == -1;
 
             /// <summary>
             /// Checks whether the type is a nested type by finding the '+' symbol.
@@ -188,8 +189,8 @@ namespace NetFx.StringlyTyped
                 if (!this.typeNameMap.TryGetValue(typeName, out typeName))
                 {
                     typeName = Expressions.ComaWithoutSpace.Replace(
-                        Expressions.GenericsArity.Replace(
-                            Expressions.GenericParameters.Replace(SanitizeGenerics(fullName), match =>
+                        Expressions.ClrGenericsArity.Replace(
+                            Expressions.CSharpGenericParameters.Replace(ClrToCSharpGeneric(fullName), match =>
                                 this.typeNameMap.ContainsKey(match.Value) ? this.typeNameMap[match.Value] : match.Value)
                         , ""), ", ");
                 }
@@ -222,9 +223,13 @@ namespace NetFx.StringlyTyped
             {
                 // Generics have special notation.
                 foreach (var genericParameter in this.typeNameMap.Keys
-                    .Where(IsFullGenericType)
-                    .Select(fullName => SanitizeGenerics(fullName))
-                    .SelectMany(sanitized => Expressions.GenericParameters.Matches(sanitized).Cast<Match>())
+                    // Add CLR-style generics (with `n[[...]] notation)
+                    .Where(IsClrFullGenericType)
+                    // Transform to C#-style generics
+                    .Select(fullName => ClrToCSharpGeneric(fullName))
+                    // Add the ones that are already C# generics
+                    .Concat(this.typeNameMap.Keys.Where(t => t.IndexOf('<') != -1))
+                    .SelectMany(fullName => Expressions.CSharpGenericParameters.Matches(fullName).Cast<Match>())
                     .Select(parameterMatch => parameterMatch.Value)
                     .ToList())
                 {
@@ -240,7 +245,7 @@ namespace NetFx.StringlyTyped
                 // This makes the behavior for open generics 
                 // compatible with the behavior for concrete ones.
                 foreach (var genericParameter in this.typeNameMap.Keys
-                    .Where(IsOpenGenericType)
+                    .Where(IsClrOpenGenericType)
                     .Select(fullName => fullName.Substring(0, fullName.IndexOf('`')))
                     .ToList())
                 {
@@ -251,11 +256,11 @@ namespace NetFx.StringlyTyped
                 // Add only non-generic first, as the actual generic parameters have 
                 // already been added above
                 var allSimpleTypeNames = this.typeNameMap.Keys
-                    .Where(type => !IsFullGenericType(type))
+                    .Where(type => !IsClrFullGenericType(type) && type.IndexOf('<') == -1)
                     .Select(type => ToSimpleName(type))
                     .ToList();
 
-                foreach (var type in this.typeNameMap.Keys.Where(name => !IsFullGenericType(name)).ToList())
+                foreach (var type in this.typeNameMap.Keys.Where(name => !IsClrFullGenericType(name)).ToArray())
                 {
                     var simpleTypeName = ToSimpleName(type);
 
@@ -265,11 +270,18 @@ namespace NetFx.StringlyTyped
                         this.typeNameMap[type] = simpleTypeName;
                 }
 
-                // Now do the replacement on the generic parameters
-                foreach (var type in this.typeNameMap.Keys.Where(IsFullGenericType).ToList())
+                // Now do the replacement on the generic parameters for CLR-style types
+                foreach (var type in this.typeNameMap.Keys.Where(IsClrFullGenericType).ToArray())
                 {
-                    var sanitized = SanitizeGenerics(this.typeNameMap[type]);
-                    this.typeNameMap[type] = Expressions.GenericParameters.Replace(sanitized, match => this.typeNameMap[match.Value]);
+                    var sanitized = ClrToCSharpGeneric(this.typeNameMap[type]);
+                    this.typeNameMap[type] = Expressions.CSharpGenericParameters.Replace(sanitized, match => this.typeNameMap[match.Value]);
+                }
+
+                // And C# style tpyes
+                foreach (var type in this.typeNameMap.Keys.Where(t => t.IndexOf('<') != -1).ToArray())
+                {
+                    var sanitized = ClrToCSharpGeneric(this.typeNameMap[type]);
+                    this.typeNameMap[type] = Expressions.CSharpGenericParameters.Replace(sanitized, match => this.typeNameMap[match.Value]);
                 }
 
                 // Remove the assembly on full type names that were not simplified and are not generics
@@ -279,22 +291,22 @@ namespace NetFx.StringlyTyped
                 }
 
                 // Remove the '+' from nested type names.
-                foreach (var type in this.typeNameMap.Keys.Where(IsNestedType).ToList())
+                foreach (var type in this.typeNameMap.Keys.Where(IsNestedType).ToArray())
                 {
                     this.typeNameMap[type] = this.typeNameMap[type].Replace('+', '.');
                 }
 
                 // Replace `arity of open generics with brackets and comas, i.e. IEnumerable`1 with IEnumerable<>
-                foreach (var type in this.typeNameMap.Keys.Where(IsOpenGenericType).ToList())
+                foreach (var type in this.typeNameMap.Keys.Where(IsClrOpenGenericType).ToList())
                 {
-                    this.typeNameMap[type] = Expressions.GenericsArity.Replace(this.typeNameMap[type], match =>
+                    this.typeNameMap[type] = Expressions.ClrGenericsArity.Replace(this.typeNameMap[type], match =>
                             "<" + new string(Enumerable.Range(0, int.Parse(match.Value.Substring(1)) - 1).Select(_ => ',').ToArray()) + ">");
                 }
 
                 // Finally add whitespaces between generic parameters and remove the arity for a C# valid identifier
-                foreach (var type in this.typeNameMap.Keys.Where(IsFullGenericType).ToList())
+                foreach (var type in this.typeNameMap.Keys.Where(IsClrFullGenericType).ToList())
                 {
-                    this.typeNameMap[type] = Expressions.GenericsArity.Replace(
+                    this.typeNameMap[type] = Expressions.ClrGenericsArity.Replace(
                         Expressions.ComaWithoutSpace.Replace(this.typeNameMap[type], ", "), "");
                 }
             }
@@ -316,14 +328,14 @@ namespace NetFx.StringlyTyped
                 };
 
                 var fullNames = this.typeNameMap.Keys
-                    .Where(type => !IsFullGenericType(type))
+                    .Where(type => !IsClrFullGenericType(type))
                     .Where(hasNamespace)
                     .Select(namespaceSelector)
                     .GroupBy(ns => ns)
                     .ToDictionary(group => group.Key, group => group.Count());
 
                 var finalNames = this.typeNameMap.Values
-                    .Where(type => !IsFullGenericType(type))
+                    .Where(type => !IsClrFullGenericType(type))
                     .Where(hasNamespace)
                     .Select(namespaceSelector)
                     .GroupBy(ns => ns)
@@ -341,7 +353,7 @@ namespace NetFx.StringlyTyped
             /// Sanitizes the generics.
             /// </summary>
             /// <param name="typeName">Name of the type.</param>
-            private string SanitizeGenerics(string typeName)
+            private string ClrToCSharpGeneric(string typeName)
             {
                 // Remove full assembly names
                 typeName = Expressions.FullAssemblyName.Replace(typeName, string.Empty);
@@ -405,7 +417,7 @@ namespace NetFx.StringlyTyped
                     .Select(c => c == '[' ? '<' : c == ']' ? '>' : c)
                     .ToArray());
 
-                return Expressions.GenericsArity.Replace(sanitizedName, "");
+                return Expressions.ClrGenericsArity.Replace(sanitizedName, "");
             }
 
             private static string ToSimpleName(string type)
@@ -448,7 +460,7 @@ namespace NetFx.StringlyTyped
                 /// Matches the generic type and its parameter type names with C# syntax: 
                 /// for System.IEnumerable{System.Boolean}, matches System.IEnumerable and System.Boolean
                 /// </summary>
-                public static readonly Regex GenericParameters = new Regex(@"[^<,>]+?(?=(<|,|>|$))", RegexOptions.Compiled);
+                public static readonly Regex CSharpGenericParameters = new Regex(@"[^<,>]+?(?=(<|,|>|$))", RegexOptions.Compiled);
 
                 /// <summary>
                 /// Matches two identifiers that are separated by a coma but without a whitespace after the coma, such as Boolean,String.
@@ -463,12 +475,12 @@ namespace NetFx.StringlyTyped
                 /// <summary>
                 /// Matches the arity part of a generics type, like IEnumerable`1 (would match `1).
                 /// </summary>
-                public static readonly Regex GenericsArity = new Regex(@"`\d{1,}", RegexOptions.Compiled);
+                public static readonly Regex ClrGenericsArity = new Regex(@"`\d{1,}", RegexOptions.Compiled);
 
                 /// <summary>
                 /// Matches the arity part of a generics type, like IEnumerable`1[[System.Boolean]] (would match `1[).
                 /// </summary>
-                public static readonly Regex GenericsArityAndBracket = new Regex(@"`\d{1,}\[", RegexOptions.Compiled);
+                public static readonly Regex ClrGenericsArityAndBracket = new Regex(@"`\d{1,}\[", RegexOptions.Compiled);
             }
         }
     }
