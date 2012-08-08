@@ -37,6 +37,7 @@
     <NuGetTargets>$(NuGetRoot)\NuGet.targets</NuGetTargets>
   </PropertyGroup>
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
+  <Import Project="$(NuGetRoot)\.nuget\nuget.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
