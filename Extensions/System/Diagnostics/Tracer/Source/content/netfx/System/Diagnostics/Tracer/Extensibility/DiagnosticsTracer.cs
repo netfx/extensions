@@ -29,175 +29,173 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Events;
 using System.Linq;
 using System.Reflection;
-using System.Diagnostics.Events;
 
 namespace System.Diagnostics.Extensibility
 {
-	/// <summary>
-	/// Implements the <see cref="ITracer"/> interface on top of 
-	/// <see cref="TraceSource"/>.
-	/// </summary>
-	internal class DiagnosticsTracer : ITracer
-	{
-		public ITraceSourceEntry GetSourceEntryFor(string name)
-		{
-			return new DiagnosticsTraceSourceEntry(this.GetOrAdd(name, s => new TraceSource(s)));
-		}
+    /// <summary>
+    /// Implements the <see cref="ITracer"/> interface on top of 
+    /// <see cref="TraceSource"/>.
+    /// </summary>
+    internal class DiagnosticsTracer : ITracer
+    {
+        public ITraceSourceEntry GetSourceEntryFor(string name)
+        {
+            return new DiagnosticsTraceSourceEntry(this.GetOrAdd(name, s => new TraceSource(s)));
+        }
 
-		public void AddListener(string sourceName, TraceListener listener)
-		{
-			this.GetOrAdd(sourceName, name => new TraceSource(name)).Listeners.Add(listener);
-		}
+        public void AddListener(string sourceName, TraceListener listener)
+        {
+            this.GetOrAdd(sourceName, name => new TraceSource(name)).Listeners.Add(listener);
+        }
 
-		public void RemoveListener(string sourceName, TraceListener listener)
-		{
-			this.GetOrAdd(sourceName, name => new TraceSource(name)).Listeners.Remove(listener);
-		}
+        public void RemoveListener(string sourceName, TraceListener listener)
+        {
+            this.GetOrAdd(sourceName, name => new TraceSource(name)).Listeners.Remove(listener);
+        }
 
-		/// <summary>
-		/// Gets an AppDomain-cached trace source of the given name, or creates it.
-		/// </summary>
-		private TraceSource GetOrAdd(string sourceName, Func<string, TraceSource> factory)
-		{
-			var cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
-			if (cachedSources == null)
-			{
-				// This lock guarantees that throughout the current 
-				// app domain, only a single root trace source is 
-				// created ever.
-				lock (AppDomain.CurrentDomain)
-				{
-					cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
-					if (cachedSources == null)
-					{
-						cachedSources = new Dictionary<string, TraceSource>();
-						AppDomain.CurrentDomain.SetData(cachedSources);
-					}
-				}
-			}
+        /// <summary>
+        /// Gets an AppDomain-cached trace source of the given name, or creates it.
+        /// </summary>
+        private TraceSource GetOrAdd(string sourceName, Func<string, TraceSource> factory)
+        {
+            var cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
+            if (cachedSources == null)
+            {
+                // This lock guarantees that throughout the current 
+                // app domain, only a single root trace source is 
+                // created ever.
+                lock (AppDomain.CurrentDomain)
+                {
+                    cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
+                    if (cachedSources == null)
+                    {
+                        cachedSources = new Dictionary<string, TraceSource>();
+                        AppDomain.CurrentDomain.SetData(cachedSources);
+                    }
+                }
+            }
 
-			return cachedSources.GetOrAdd(sourceName, factory);
-		}
+            return cachedSources.GetOrAdd(sourceName, factory);
+        }
 
-		/// <summary>
-		/// Provides access to the trace source as well as its 
-		/// underlying switch and listeners.
-		/// </summary>
-		private class DiagnosticsTraceSourceEntry : ITraceSourceEntry
-		{
-			private DiagnosticsTraceSourceAdapter adapter;
+        /// <summary>
+        /// Provides access to the trace source as well as its 
+        /// underlying switch and listeners.
+        /// </summary>
+        private class DiagnosticsTraceSourceEntry : ITraceSourceEntry
+        {
+            private DiagnosticsTraceSourceAdapter adapter;
 
-			public DiagnosticsTraceSourceEntry(TraceSource source)
-			{
-				this.adapter = new DiagnosticsTraceSourceAdapter(source);
-			}
+            public DiagnosticsTraceSourceEntry(TraceSource source)
+            {
+                this.adapter = new DiagnosticsTraceSourceAdapter(source);
+            }
 
-			public ITraceSourceConfiguration Configuration { get { return this.adapter; } }
+            public ITraceSourceConfiguration Configuration { get { return this.adapter; } }
 
-			public ITraceSource TraceSource { get { return this.adapter; } }
-		}
+            public ITraceSource TraceSource { get { return this.adapter; } }
+        }
 
-		private class DiagnosticsTraceSourceAdapter : ITraceSource, ITraceSourceConfiguration, IDiagnosticsTraceSource
-		{
-			// Private reflection needed here in order to make the inherited source names still 
-			// log as if the original source name was the one logging, so as not to lose the 
-			// originating class name.
-			private static readonly FieldInfo sourceNameField = typeof(TraceSource).GetField("sourceName", BindingFlags.Instance | BindingFlags.NonPublic);
-			private TraceSource traceSource;
+        private class DiagnosticsTraceSourceAdapter : ITraceSource, ITraceSourceConfiguration, IDiagnosticsTraceSource
+        {
+            // Private reflection needed here in order to make the inherited source names still 
+            // log as if the original source name was the one logging, so as not to lose the 
+            // originating class name.
+            private static readonly FieldInfo sourceNameField = typeof(TraceSource).GetField("sourceName", BindingFlags.Instance | BindingFlags.NonPublic);
+            private TraceSource traceSource;
 
-			public DiagnosticsTraceSourceAdapter(TraceSource source)
-			{
-				this.traceSource = source;
-				var sourceFieldReference = __makeref(this.traceSource);
-			}
+            public DiagnosticsTraceSourceAdapter(TraceSource source)
+            {
+                this.traceSource = source;
+            }
 
-			public string Name
-			{
-				get { return this.traceSource.Name; }
-			}
+            public string Name
+            {
+                get { return this.traceSource.Name; }
+            }
 
-			public void Flush()
-			{
-				this.traceSource.Flush();
-			}
+            public void Flush()
+            {
+                this.traceSource.Flush();
+            }
 
-			public SourceSwitch Switch
-			{
-				get { return this.traceSource.Switch; }
-				set { this.traceSource.Switch = value; }
-			}
+            public SourceSwitch Switch
+            {
+                get { return this.traceSource.Switch; }
+                set { this.traceSource.Switch = value; }
+            }
 
-			public ICollection<TraceListener> Listeners
-			{
-				get { return new ListenersCollection(this.traceSource); }
-			}
+            public ICollection<TraceListener> Listeners
+            {
+                get { return new ListenersCollection(this.traceSource); }
+            }
 
-			public void Trace(TraceEvent traceEvent)
-			{
-				var transferEvent = traceEvent as TransferTraceEvent;
-				var dataEvent = traceEvent as DataTraceEvent;
-				var messageEvent = traceEvent as MessageTraceEvent;
+            public void Trace(TraceEvent traceEvent)
+            {
+                var transferEvent = traceEvent as TransferTraceEvent;
+                var dataEvent = traceEvent as DataTraceEvent;
+                var messageEvent = traceEvent as MessageTraceEvent;
 
-				if (transferEvent != null)
-					this.traceSource.TraceTransfer(transferEvent.Id, transferEvent.MessageOrFormat, transferEvent.RelatedActivityId);
-				else if (dataEvent != null)
-					this.traceSource.TraceData(dataEvent.Type, dataEvent.Id, dataEvent.Data);
-				else if (messageEvent != null)
-					this.traceSource.TraceEvent(messageEvent.Type, messageEvent.Id, messageEvent.MessageOrFormat, messageEvent.MessageFormatArgs);
-			}
+                if (transferEvent != null)
+                    this.traceSource.TraceTransfer(transferEvent.Id, transferEvent.MessageOrFormat, transferEvent.RelatedActivityId);
+                else if (dataEvent != null)
+                    this.traceSource.TraceData(dataEvent.Type, dataEvent.Id, dataEvent.Data);
+                else if (messageEvent != null)
+                    this.traceSource.TraceEvent(messageEvent.Type, messageEvent.Id, messageEvent.MessageOrFormat, messageEvent.MessageFormatArgs);
+            }
 
-			public void Trace(string originalSourceName, TraceEvent traceEvent)
-			{
-				var currentName = this.traceSource.Name;
-				// Transient change of the source name while the trace call 
-				// is issued.
-				sourceNameField.SetValue(this.traceSource, originalSourceName);
-				try
-				{
-					Trace(traceEvent);
-				}
-				finally
-				{
-					sourceNameField.SetValue(this.traceSource, currentName);
-				}
-			}
+            public void Trace(string originalSourceName, TraceEvent traceEvent)
+            {
+                var currentName = this.traceSource.Name;
+                // Transient change of the source name while the trace call 
+                // is issued.
+                sourceNameField.SetValue(this.traceSource, originalSourceName);
+                try
+                {
+                    Trace(traceEvent);
+                }
+                finally
+                {
+                    sourceNameField.SetValue(this.traceSource, currentName);
+                }
+            }
 
-			private class ListenersCollection : Collection<TraceListener>
-			{
-				private TraceSource traceSource;
+            private class ListenersCollection : Collection<TraceListener>
+            {
+                private TraceSource traceSource;
 
-				public ListenersCollection(TraceSource traceSource)
-					: base(traceSource.Listeners.OfType<TraceListener>().ToList())
-				{
-					this.traceSource = traceSource;
-				}
+                public ListenersCollection(TraceSource traceSource)
+                    : base(traceSource.Listeners.OfType<TraceListener>().ToList())
+                {
+                    this.traceSource = traceSource;
+                }
 
-				protected override void InsertItem(int index, TraceListener item)
-				{
-					base.InsertItem(index, item);
+                protected override void InsertItem(int index, TraceListener item)
+                {
+                    base.InsertItem(index, item);
 
-					this.traceSource.Listeners.Add(item);
-				}
+                    this.traceSource.Listeners.Add(item);
+                }
 
-				protected override void RemoveItem(int index)
-				{
-					base.RemoveItem(index);
+                protected override void RemoveItem(int index)
+                {
+                    base.RemoveItem(index);
 
-					this.traceSource.Listeners.RemoveAt(index);
-				}
+                    this.traceSource.Listeners.RemoveAt(index);
+                }
 
-				protected override void ClearItems()
-				{
-					base.ClearItems();
+                protected override void ClearItems()
+                {
+                    base.ClearItems();
 
-					this.traceSource.Listeners.Clear();
-				}
-			}
-		}
-	}
+                    this.traceSource.Listeners.Clear();
+                }
+            }
+        }
+    }
 }
