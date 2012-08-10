@@ -29,47 +29,49 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 
-/// <summary>
-/// Allows retrieving custom attributes from assemblies, types, methods, properties, etc. using a generic method.
-/// </summary>
-///	<nuget id="netfx-System.Reflection.GetCustomAttribute" />
-internal static partial class GetCustomAttributeExtension
+namespace System.Reflection
 {
-	/// <summary>
-	/// Retrieves the first defined attribute of the given type from the provider if any.
-	/// </summary>
-	/// <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="Attribute"/>.</typeparam>
-	/// <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
-	/// property, method, etc.</param>
-	/// <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
-	/// <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
-	public static TAttribute GetCustomAttribute<TAttribute>(this ICustomAttributeProvider provider, bool inherit = true)
-		where TAttribute : Attribute
-	{
-		return GetCustomAttributes<TAttribute>(provider, inherit).FirstOrDefault();
-	}
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-	/// <summary>
-	/// Retrieves the first defined attribute of the given type from the provider if any.
-	/// </summary>
-	/// <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="Attribute"/>.</typeparam>
-	/// <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
-	/// property, method, etc.</param>
-	/// <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
-	/// <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
-	public static IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(this ICustomAttributeProvider provider, bool inherit = true)
-		where TAttribute : Attribute
-	{
-		Guard.NotNull(() => provider, provider);
+    /// <summary>
+    /// Allows retrieving custom attributes from assemblies, types, methods, properties, etc. using a generic method.
+    /// </summary>
+    ///	<nuget id="netfx-System.Reflection.GetCustomAttribute" />
+    static partial class GetCustomAttributeExtension
+    {
+        /// <summary>
+        /// Retrieves the first defined attribute of the given type from the provider if any.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="Attribute"/>.</typeparam>
+        /// <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+        /// property, method, etc.</param>
+        /// <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+        /// <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        public static TAttribute GetCustomAttribute<TAttribute>(this ICustomAttributeProvider provider, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            return GetCustomAttributes<TAttribute>(provider, inherit).FirstOrDefault();
+        }
 
-		return provider
-			.GetCustomAttributes(typeof(TAttribute), inherit)
-			.Cast<TAttribute>();
-	}
+        /// <summary>
+        /// Retrieves the first defined attribute of the given type from the provider if any.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="Attribute"/>.</typeparam>
+        /// <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+        /// property, method, etc.</param>
+        /// <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+        /// <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        public static IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(this ICustomAttributeProvider provider, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            Guard.NotNull(() => provider, provider);
+
+            return provider
+                .GetCustomAttributes(typeof(TAttribute), inherit)
+                .Cast<TAttribute>();
+        }
+    }
 }

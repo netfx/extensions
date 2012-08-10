@@ -30,66 +30,68 @@ DAMAGE.
 */
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
 using System.ComponentModel;
+using System.Reflection;
+using System.Linq;
+using Xunit;
 
-public class GetCustomAttributeSpec
+namespace NetFx.System.Reflection
 {
-	[Fact]
-	public void WhenRetrievingInheritedAttributes_ThenAccessesBoth()
-	{
-		var value = string.Join(" ", typeof(Bar).GetCustomAttributes<InheritedDescriptionAttribute>()
-			.Select(x => x.Description));
+    public class GetCustomAttributeSpec
+    {
+        [Fact]
+        public void WhenRetrievingInheritedAttributes_ThenAccessesBoth()
+        {
+            var value = string.Join(" ", typeof(Bar).GetCustomAttributes<InheritedDescriptionAttribute>()
+                .Select(x => x.Description));
 
-		Assert.Equal("World Hello", value);
-	}
+            Assert.Equal("World Hello", value);
+        }
 
-	[Fact]
-	public void WhenRetrievingNonInheritedAttribute_ThenAccessesCurrentTypeOnly()
-	{
-		var value = typeof(Bar).GetCustomAttribute<InheritedDescriptionAttribute>().Description;
+        [Fact]
+        public void WhenRetrievingNonInheritedAttribute_ThenAccessesCurrentTypeOnly()
+        {
+            var value = typeof(Bar).GetCustomAttribute<InheritedDescriptionAttribute>().Description;
 
-		Assert.Equal("World", value);
-	}
+            Assert.Equal("World", value);
+        }
 
-	[Fact]
-	public void WhenRetrievingDerivedAttribute_ThenAccessesCurrentTypeOnly()
-	{
-		var value = typeof(Bar).GetCustomAttribute<CategoryAttribute>().Category;
+        [Fact]
+        public void WhenRetrievingDerivedAttribute_ThenAccessesCurrentTypeOnly()
+        {
+            var value = typeof(Bar).GetCustomAttribute<CategoryAttribute>().Category;
 
-		Assert.Equal("Code", value);
-	}
+            Assert.Equal("Code", value);
+        }
 
-	[Fact]
-	public void WhenRetrievingInheritedAttribute_ThenAccessesBaseType()
-	{
-		var value = typeof(Bar).GetCustomAttribute<DisplayNameAttribute>().DisplayName;
+        [Fact]
+        public void WhenRetrievingInheritedAttribute_ThenAccessesBaseType()
+        {
+            var value = typeof(Bar).GetCustomAttribute<DisplayNameAttribute>().DisplayName;
 
-		Assert.Equal("Foo", value);
-	}
+            Assert.Equal("Foo", value);
+        }
 
-	[DisplayName("Foo")]
-	[InheritedDescription("Hello")]
-	public class Foo
-	{
-	}
+        [DisplayName("Foo")]
+        [InheritedDescription("Hello")]
+        public class Foo
+        {
+        }
 
-	[InheritedDescription("World")]
-	[Category("Code")]
-	public class Bar : Foo
-	{
-	}
+        [InheritedDescription("World")]
+        [Category("Code")]
+        public class Bar : Foo
+        {
+        }
 
-	[AttributeUsage(AttributeTargets.All, Inherited = true, AllowMultiple = true)]
-	public class InheritedDescriptionAttribute : Attribute
-	{
-		public InheritedDescriptionAttribute(string description)
-		{
-			this.Description = description;
-		}
-		public string Description { get; set; }
-	}
+        [AttributeUsage(AttributeTargets.All, Inherited = true, AllowMultiple = true)]
+        public class InheritedDescriptionAttribute : Attribute
+        {
+            public InheritedDescriptionAttribute(string description)
+            {
+                this.Description = description;
+            }
+            public string Description { get; set; }
+        }
+    }
 }

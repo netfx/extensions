@@ -4,6 +4,32 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:System.Reflection.GetCustomAttributeExtension">
+            <summary>
+            Allows retrieving custom attributes from assemblies, types, methods, properties, etc. using a generic method.
+            </summary>
+            <nuget id="netfx-System.Reflection.GetCustomAttribute" />
+        </member>
+        <member name="M:System.Reflection.GetCustomAttributeExtension.GetCustomAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Retrieves the first defined attribute of the given type from the provider if any.
+            </summary>
+            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
+            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+            property, method, etc.</param>
+            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="M:System.Reflection.GetCustomAttributeExtension.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Retrieves the first defined attribute of the given type from the provider if any.
+            </summary>
+            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
+            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+            property, method, etc.</param>
+            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        </member>
         <member name="T:Guard">
             <summary>
             Common guard class for argument validation.
@@ -21,32 +47,6 @@
             Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
             <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
-        </member>
-        <member name="T:GetCustomAttributeExtension">
-            <summary>
-            Allows retrieving custom attributes from assemblies, types, methods, properties, etc. using a generic method.
-            </summary>
-            <nuget id="netfx-System.Reflection.GetCustomAttribute" />
-        </member>
-        <member name="M:GetCustomAttributeExtension.GetCustomAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
-            <summary>
-            Retrieves the first defined attribute of the given type from the provider if any.
-            </summary>
-            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
-            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
-            property, method, etc.</param>
-            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
-            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
-        </member>
-        <member name="M:GetCustomAttributeExtension.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
-            <summary>
-            Retrieves the first defined attribute of the given type from the provider if any.
-            </summary>
-            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
-            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
-            property, method, etc.</param>
-            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
-            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
         </member>
     </members>
 </doc>
