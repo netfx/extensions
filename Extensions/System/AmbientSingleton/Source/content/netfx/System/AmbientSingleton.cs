@@ -42,7 +42,17 @@ using System.Runtime.Remoting.Messaging;
 /// </summary>
 static partial class AmbientSingleton
 {
-	/// <summary>
+    /// <summary>
+    /// Creates an ambient singleton with no default value and a specific identifier.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton.</typeparam>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(Guid identifier)
+    {
+        return new AmbientSingleton<T>(identifier);
+    }
+
+    /// <summary>
 	/// Creates an ambient singleton with the specified default value.
 	/// </summary>
 	/// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
@@ -61,6 +71,28 @@ static partial class AmbientSingleton
 	{
 		return new AmbientSingleton<T>(defaultValueFactory);
 	}
+
+    /// <summary>
+    /// Creates an ambient singleton with the specified default value and identifier.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+    /// <param name="defaultValue">The default value for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(T defaultValue, Guid identifier)
+    {
+        return new AmbientSingleton<T>(defaultValue, identifier);
+    }
+
+    /// <summary>
+    /// Creates an ambient singleton with the specified default value factory.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+    /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(Func<T> defaultValueFactory, Guid identifier)
+    {
+        return new AmbientSingleton<T>(defaultValueFactory, identifier);
+    }
 }
 
 /// <summary>
@@ -117,8 +149,18 @@ static partial class AmbientSingleton
 /// <nuget id="netfx-System.AmbientSingleton"/>
 partial class AmbientSingleton<T>
 {
-	private string slotName = Guid.NewGuid().ToString();
+	private string slotName;
 	private Lazy<T> defaultValue;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
+    /// without a local default and a specific identifier.
+    /// </summary>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public AmbientSingleton(Guid identifier)
+        : this(() => default(T), identifier)
+    {
+    }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
@@ -127,7 +169,7 @@ partial class AmbientSingleton<T>
 	/// value for the type.
 	/// </summary>
 	public AmbientSingleton()
-		: this(() => default(T))
+        : this(() => default(T), Guid.NewGuid())
 	{
 	}
 
@@ -136,23 +178,52 @@ partial class AmbientSingleton<T>
 	/// with a global default value. This value will be returned by the <see cref="Value"/> 
 	/// property if no other value has been set in the current call context.
 	/// </summary>
-	public AmbientSingleton(T defaultValue)
-		: this(() => defaultValue)
+    /// <param name="defaultValue">The default value for the singleton.</param>
+    public AmbientSingleton(T defaultValue)
+        : this(() => defaultValue, Guid.NewGuid())
 	{
 	}
 
-	/// <summary>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
+    /// with a global default value. This value will be returned by the <see cref="Value"/> 
+    /// property if no other value has been set in the current call context.
+    /// </summary>
+    /// <param name="defaultValue">The default value for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public AmbientSingleton(T defaultValue, Guid identifier)
+        : this(() => defaultValue, identifier)
+    {
+    }
+
+    /// <summary>
 	/// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
 	/// with a global default value factory. This factory will be called once the first 
 	/// time the global default value is accessed, such as if no other value has been 
 	/// set in the current call context for the <see cref="Value"/> property.
 	/// </summary>
-	public AmbientSingleton(Func<T> defaultValueFactory)
+    /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
+    public AmbientSingleton(Func<T> defaultValueFactory)
+        : this(defaultValueFactory, Guid.NewGuid())
 	{
-		Guard.NotNull(() => defaultValueFactory, defaultValueFactory);
-
-		this.defaultValue = new Lazy<T>(defaultValueFactory);
 	}
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
+    /// with a global default value factory. This factory will be called once the first 
+    /// time the global default value is accessed, such as if no other value has been 
+    /// set in the current call context for the <see cref="Value"/> property.
+    /// </summary>
+    /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public AmbientSingleton(Func<T> defaultValueFactory, Guid identifier)
+    {
+        Guard.NotNull(() => defaultValueFactory, defaultValueFactory);
+        Guard.NotNull(() => identifier, identifier);
+
+        this.defaultValue = new Lazy<T>(defaultValueFactory);
+        this.slotName = identifier.ToString();
+    }
 
 	/// <summary>
 	/// Gets or sets the value of the ambient singleton.
@@ -167,8 +238,13 @@ partial class AmbientSingleton<T>
 		get 
 		{
 			var contextValue = CallContext.LogicalGetData(this.slotName);
-			if (contextValue != null)
-				return (T)contextValue;
+            if (contextValue != null)
+                return (T)contextValue;
+            else
+                // Set the value on first use. This allows the default 
+                // to be seen by other ambient singletons reusing the 
+                // same identifier.
+                this.Value = this.defaultValue.Value;
 
 			return this.defaultValue.Value;
 		}
@@ -177,5 +253,4 @@ partial class AmbientSingleton<T>
 			CallContext.LogicalSetData(this.slotName, value);
 		}
 	}
-
 }

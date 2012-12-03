@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.AmbientSingleton.Tests.xUnit</id>
-		<version>1.0.0.0</version>
+		<version>1.1.0.0</version>
 		<title>NETFx AmbientSingleton&lt;T&gt; xUnit Tests</title>
 		<description>xUnit tests for netfx-System.AmbientSingleton</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

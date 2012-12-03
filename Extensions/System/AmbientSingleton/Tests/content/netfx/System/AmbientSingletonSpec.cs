@@ -43,6 +43,18 @@ namespace NetFx.System
 {
 	public class AmbientSingletonSpec
 	{
+        [Fact]
+        public void WhenReusingIdentifier_ThenCanAccessSameValue()
+        {
+            var identifier = Guid.NewGuid();
+            var singleton1 = new AmbientSingleton<string>("foo", identifier);
+            var singleton2 = new AmbientSingleton<string>(identifier);
+
+            Assert.Equal("foo", singleton1.Value);
+            Assert.Equal("foo", singleton2.Value);
+            Assert.Same(singleton1.Value, singleton2.Value);
+        }
+
 		[Fact]
 		public void WhenSpecifyingGlobalDefault_ThenReturnsItFromSingleton()
 		{

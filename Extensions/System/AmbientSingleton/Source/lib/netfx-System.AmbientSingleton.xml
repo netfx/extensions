@@ -11,6 +11,13 @@
             is no need to specify the T parameter for the Create method overloads.
             </summary>
         </member>
+        <member name="M:AmbientSingleton.Create``1(System.Guid)">
+            <summary>
+            Creates an ambient singleton with no default value and a specific identifier.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton.</typeparam>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
         <member name="M:AmbientSingleton.Create``1(``0)">
             <summary>
             Creates an ambient singleton with the specified default value.
@@ -24,6 +31,22 @@
             </summary>
             <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
             <param name="defaultValueFactory">The default value factory for the singleton.</param>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(``0,System.Guid)">
+            <summary>
+            Creates an ambient singleton with the specified default value and identifier.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValue">The default value for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(System.Func{``0},System.Guid)">
+            <summary>
+            Creates an ambient singleton with the specified default value factory.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
         <member name="T:AmbientSingleton`1">
             <summary>
@@ -79,6 +102,13 @@
             </remarks>
             <nuget id="netfx-System.AmbientSingleton"/>
         </member>
+        <member name="M:AmbientSingleton`1.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            without a local default and a specific identifier.
+            </summary>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
         <member name="M:AmbientSingleton`1.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
@@ -93,6 +123,16 @@
             with a global default value. This value will be returned by the <see cref="P:AmbientSingleton`1.Value"/> 
             property if no other value has been set in the current call context.
             </summary>
+            <param name="defaultValue">The default value for the singleton.</param>
+        </member>
+        <member name="M:AmbientSingleton`1.#ctor(`0,System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value. This value will be returned by the <see cref="P:AmbientSingleton`1.Value"/> 
+            property if no other value has been set in the current call context.
+            </summary>
+            <param name="defaultValue">The default value for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
         <member name="M:AmbientSingleton`1.#ctor(System.Func{`0})">
             <summary>
@@ -101,6 +141,17 @@
             time the global default value is accessed, such as if no other value has been 
             set in the current call context for the <see cref="P:AmbientSingleton`1.Value"/> property.
             </summary>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+        </member>
+        <member name="M:AmbientSingleton`1.#ctor(System.Func{`0},System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value factory. This factory will be called once the first 
+            time the global default value is accessed, such as if no other value has been 
+            set in the current call context for the <see cref="P:AmbientSingleton`1.Value"/> property.
+            </summary>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
         <member name="P:AmbientSingleton`1.Value">
             <summary>
