@@ -11,13 +11,17 @@ public class GuardSpec
 	{
 		string value = null;
 
-		Assert.Throws<ArgumentNullException>(() => Guard.NotNull(() => value, value));
-	}
+		var ex = Assert.Throws<ArgumentNullException>(() => Guard.NotNull(() => value, value));
+
+        Assert.Equal("value", ex.ParamName);
+    }
 
 	[Fact]
 	public void WhenNullParameterPassed_ThenThrowsArgumentNullExceptionWithParameterName()
 	{
-		Assert.Throws<ArgumentNullException>(() => Do(null));
+		var ex = Assert.Throws<ArgumentNullException>(() => Do(null));
+
+        Assert.Equal("value", ex.ParamName);
 	}
 
 	[Fact]
@@ -25,7 +29,9 @@ public class GuardSpec
 	{
 		string value = null;
 
-		Assert.Throws<ArgumentNullException>(() => Guard.NotNullOrEmpty(() => value, value));
+		var ex  = Assert.Throws<ArgumentNullException>(() => Guard.NotNullOrEmpty(() => value, value));
+
+        Assert.Equal("value", ex.ParamName);
 	}
 
 	[Fact]
@@ -49,8 +55,39 @@ public class GuardSpec
 	{
 		string value = String.Empty;
 
-		Assert.Throws<ArgumentException>(() => Guard.NotNullOrEmpty(() => value, value));
+		var ex = Assert.Throws<ArgumentException>(() => Guard.NotNullOrEmpty(() => value, value));
+
+        Assert.Equal("value", ex.ParamName);
 	}
+
+    [Fact]
+    public void WhenValueIsValid_ThenNoOp()
+    {
+        var value = "foo";
+
+        Guard.IsValid(() => value, value, s => true, "Invalid");
+    }
+
+    [Fact]
+    public void WhenValueIsInvalid_ThenThrows()
+    {
+        var value = "foo";
+
+        var ex = Assert.Throws<ArgumentException>(() => Guard.IsValid(() => value, value, s => false, "Invalid"));
+
+        Assert.Equal("value", ex.ParamName);
+    }
+
+    [Fact]
+    public void WhenValueIsInvalid_ThenThrowsWithFormat()
+    {
+        var value = "foo";
+
+        var ex = Assert.Throws<ArgumentException>(() => Guard.IsValid(() => value, value, s => false, "Invalid {0}", "bar"));
+
+        Assert.Equal("value", ex.ParamName);
+        Assert.True(ex.Message.StartsWith("Invalid bar"));
+    }
 
 	private void Do(string value)
 	{
