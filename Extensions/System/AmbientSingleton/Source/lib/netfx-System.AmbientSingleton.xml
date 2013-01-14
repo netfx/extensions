@@ -4,12 +4,37 @@
         <name>Source</name>
     </assembly>
     <members>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
         <member name="T:AmbientSingleton">
             <summary>
             Provides convenience factory methods for <see cref="T:AmbientSingleton`1"/> 
             so that type inference can be leveraged for the given default value. There 
             is no need to specify the T parameter for the Create method overloads.
             </summary>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(System.String)">
+            <summary>
+            Creates an ambient singleton with no default value and a specific identifier.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton.</typeparam>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
         <member name="M:AmbientSingleton.Create``1(System.Guid)">
             <summary>
@@ -40,7 +65,23 @@
             <param name="defaultValue">The default value for the singleton.</param>
             <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
+        <member name="M:AmbientSingleton.Create``1(``0,System.String)">
+            <summary>
+            Creates an ambient singleton with the specified default value and identifier.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValue">The default value for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
         <member name="M:AmbientSingleton.Create``1(System.Func{``0},System.Guid)">
+            <summary>
+            Creates an ambient singleton with the specified default value factory.
+            </summary>
+            <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
+        <member name="M:AmbientSingleton.Create``1(System.Func{``0},System.String)">
             <summary>
             Creates an ambient singleton with the specified default value factory.
             </summary>
@@ -134,6 +175,15 @@
             <param name="defaultValue">The default value for the singleton.</param>
             <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
+        <member name="M:AmbientSingleton`1.#ctor(`0,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value. This value will be returned by the <see cref="P:AmbientSingleton`1.Value"/> 
+            property if no other value has been set in the current call context.
+            </summary>
+            <param name="defaultValue">The default value for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
         <member name="M:AmbientSingleton`1.#ctor(System.Func{`0})">
             <summary>
             Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
@@ -153,6 +203,16 @@
             <param name="defaultValueFactory">The default value factory for the singleton.</param>
             <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
         </member>
+        <member name="M:AmbientSingleton`1.#ctor(System.Func{`0},System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AmbientSingleton`1"/> class 
+            with a global default value factory. This factory will be called once the first 
+            time the global default value is accessed, such as if no other value has been 
+            set in the current call context for the <see cref="P:AmbientSingleton`1.Value"/> property.
+            </summary>
+            <param name="defaultValueFactory">The default value factory for the singleton.</param>
+            <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+        </member>
         <member name="P:AmbientSingleton`1.Value">
             <summary>
             Gets or sets the value of the ambient singleton.
@@ -162,24 +222,6 @@
             default value in the constructor for the current 
             call context.
             </remarks>
-        </member>
-        <member name="T:Guard">
-            <summary>
-            Common guard class for argument validation.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
-            <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
         </member>
     </members>
 </doc>
