@@ -2,10 +2,16 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.AmbientSingleton</id>
-		<version>1.2.0.0</version>
+		<version>1.2.1.0</version>
 		<title>NETFx AmbientSingleton&lt;T&gt;</title>
 		<description>Provides an easy way to implement the singleton (anti?) pattern so that it is ambient-safe, propagates with a call context and can be overriden per ambient (i.e. in tests).</description>
-		<authors>Daniel Cazzulino, kzu, Clarius</authors>
+        <releaseNotes>
+            v1.2.1
+            * Changed to use CallContext.SetData/GetData instead of forcing LogicalSetData/GetData. 
+            this allows the default behavior of only remoting across AppDomain/process boundaries 
+            the actual values that implement ILogicalThreadAffinative.
+        </releaseNotes>
+        <authors>Daniel Cazzulino, kzu, Clarius</authors>
 		<language>en-US</language>
 		<projectUrl>http://netfx.codeplex.com</projectUrl>
 		<licenseUrl>http://netfx.codeplex.com/license</licenseUrl>

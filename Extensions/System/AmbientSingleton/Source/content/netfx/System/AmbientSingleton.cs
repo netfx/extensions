@@ -294,7 +294,7 @@ partial class AmbientSingleton<T>
 	{
 		get 
 		{
-			var contextValue = CallContext.LogicalGetData(this.slotName);
+			var contextValue = CallContext.GetData(this.slotName);
             if (contextValue != null)
                 return (T)contextValue;
             else
@@ -307,7 +307,7 @@ partial class AmbientSingleton<T>
 		}
 		set
 		{
-			CallContext.LogicalSetData(this.slotName, value);
+			CallContext.SetData(this.slotName, value);
 		}
 	}
 }
