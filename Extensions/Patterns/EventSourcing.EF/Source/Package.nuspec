@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-Patterns.EventSourcing.EF</id>
-		<version>1.0.0.9</version>
+		<version>1.0.0.10</version>
 		<title>NETFx Patterns: Event Sourcing Store for Entity Framerwork</title>
 		<description>Implements an event store using Entity Framework, with event payloads persisted using the configured serializer.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>

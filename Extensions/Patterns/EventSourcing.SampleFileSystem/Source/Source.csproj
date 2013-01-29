@@ -39,9 +39,6 @@
   </PropertyGroup>
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,7 +48,6 @@
     <Compile Include="content\netfx\Patterns\EventSourcing\FileSystemStore.cs" />
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\IQueryableEventStore.cs" />
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\IStoredEvent.cs" />
-    <Compile Include="netfx\Patterns\EventSourcing.Queryable\IStoredObject.cs" />
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\QueryableEventStoreExtensions.cs" />
     <Compile Include="netfx\Patterns\EventSourcing.Queryable\Visibility.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\DomainObject.cs" />
@@ -59,9 +55,9 @@
     <Compile Include="netfx\Patterns\EventSourcing\EventQueryExtension.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\IEventStore.cs" />
     <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
-    <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\ISerializer.cs" />
+    <Compile Include="netfx\System\ITimestamped.cs" />
     <Compile Include="netfx\System\Linq\Expressions\ExpressionCombiner.cs" />
     <Compile Include="netfx\System\SerializerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

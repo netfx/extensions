@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 
-partial class FileStoredEvent<TObjectId, TBaseEvent> : IStoredEvent<
-	IStoredObject<TObjectId>, TObjectId>, 
-	IStoredObject<TObjectId>
+partial class FileStoredEvent<TObjectId, TBaseEvent> : IStoredEvent<TObjectId>
+	where TBaseEvent : ITimestamped
 {
+	public FileStoredEvent()
+	{
+	}
+
 	public FileStoredEvent(DomainObject<TObjectId, TBaseEvent> domainObject, TBaseEvent @event)
 	{
 		// Header
@@ -18,7 +20,7 @@ partial class FileStoredEvent<TObjectId, TBaseEvent> : IStoredEvent<
 		this.Event = @event;
 		this.EventId = Guid.NewGuid();
 		this.EventType = @event.GetType().FullName;
-		this.Timestamp = DateTimeOffset.Now;
+		this.Timestamp = @event.Timestamp;
 	}
 
 	public string ObjectType { get; set; }
@@ -29,6 +31,12 @@ partial class FileStoredEvent<TObjectId, TBaseEvent> : IStoredEvent<
 	public string EventType { get; set; }
 	public DateTimeOffset Timestamp { get; set; }
 
-	[JsonIgnore]
-	public IStoredObject<TObjectId> TargetObject { get { return this; } set { } }
+	public override string ToString()
+	{
+		return string.Format("{0}.{1} at {2:dd/MM/yyyy HH:mm:ss} (id={3})",
+			this.ObjectType.Substring(this.ObjectType.LastIndexOf('.') + 1),
+			this.EventType.Substring(this.EventType.LastIndexOf('.') + 1),
+			this.Timestamp,
+			this.ObjectId);
+	}
 }

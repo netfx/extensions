@@ -14,8 +14,8 @@
 		<dependencies>
 			<dependency id="netfx-Patterns.EventSourcing" version="1.0" />
 			<dependency id="netfx-Patterns.EventSourcing.Queryable" version="1.0" />
-			<dependency id="netfx-System.JsonSerializer" version="1.0" />
-			<dependency id="taglib" version="1.0" />
+			<dependency id="netfx-System.ISerializer" version="1.0" />
+			<dependency id="netfx-System.ITimestamped" version="1.0" />
 		</dependencies>
 	</metadata>
 </package>

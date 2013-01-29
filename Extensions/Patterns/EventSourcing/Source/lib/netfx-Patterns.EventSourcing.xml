@@ -4,57 +4,57 @@
         <name>Source</name>
     </assembly>
     <members>
-        <member name="T:Guard">
+        <member name="T:DomainObject`2">
             <summary>
-            Common guard class for argument validation.
+            Base class for domain classes that raise and optionally consume 
+            event objects in an event sourcing pattern style implementation.
             </summary>
+            <typeparam name="TObjectId">The type of identifier used by the domain object.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing" />
         </member>
-        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+        <member name="M:DomainObject`2.#ctor">
             <summary>
-            Ensures the given <paramref name="value"/> is not null.
-            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
-            </summary>
-        </member>
-        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
-            <summary>
-            Ensures the given string <paramref name="value"/> is not null or empty.
-            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
-            <see cref="T:System.ArgumentException"/> in the latter.
-            </summary>
-        </member>
-        <member name="T:IEventStore`2">
-            <summary>
-            Interface implemented by domain event stores.
-            </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing"/>
-        </member>
-        <member name="M:IEventStore`2.Commit">
-            <summary>
-            Commits the changes persisted so far, in a unit of work style.
-            </summary>
-        </member>
-        <member name="M:IEventStore`2.Persist(DomainObject{`0,`1})">
-            <summary>
-            Persists the pending events in the domain object and accepts 
-            the changes.
-            </summary>
-            <param name="entity">The domain object raising the events.</param>
-        </member>
-        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
-            <summary>
-            Queries the event store for events that match the given criteria.
+            Initializes a new instance of the <see cref="T:DomainObject`2"/> class.
             </summary>
             <remarks>
-            Store implementations are advised to provide full support for the 
-            specified criteria, but aren't required to.
-            <para>
-            An alternative fluent API to build the criteria object is available 
-            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
-            extension method on an event store instance.
-            </para>
+            Derived classes decide if they allow direct instantiation or 
+            if instantiation always has to happen from a stream of events.
             </remarks>
+        </member>
+        <member name="M:DomainObject`2.AcceptEvents">
+            <summary>
+            Clears the internal events retrieved from <see cref="M:DomainObject`2.GetEvents"/>, 
+            signaling that all pending events have been commited.
+            </summary>
+        </member>
+        <member name="M:DomainObject`2.GetEvents">
+            <summary>
+            Gets the new events that were applied by the domain object.
+            </summary>
+        </member>
+        <member name="M:DomainObject`2.Handles``1(System.Action{``0})">
+            <summary>
+            Configures a handler for an event. 
+            </summary>
+        </member>
+        <member name="M:DomainObject`2.Load(System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Loads the the domain object from an even stream.
+            </summary>
+        </member>
+        <member name="M:DomainObject`2.Apply``1(``0)">
+            <summary>
+            Applies an event to the entity. 
+            The derived class should invoke <see cref="M:DomainObject`2.Handles``1(System.Action{``0})"/> 
+            to configure the handlers for specific types of events. The 
+            handlers perform the actual state changes to the entity.
+            </summary>
+        </member>
+        <member name="P:DomainObject`2.Id">
+            <summary>
+            Gets or sets the identifier of the domain object.
+            </summary>
         </member>
         <member name="T:EventQueryExtension">
             <summary>
@@ -140,57 +140,39 @@
             exclusive, changing the default behavior which is to be inclusive.
             </summary>
         </member>
-        <member name="T:DomainObject`2">
+        <member name="T:IEventStore`2">
             <summary>
-            Base class for domain classes that raise and optionally consume 
-            event objects in an event sourcing pattern style implementation.
+            Interface implemented by domain event stores.
             </summary>
-            <typeparam name="TObjectId">The type of identifier used by the domain object.</typeparam>
-            <typeparam name="TBaseEvent">The base type or interface implemented by events.</typeparam>
-            <nuget id="netfx-Patterns.EventSourcing" />
+            <typeparam name="TObjectId">The type of identifier used by the domain objects in the domain.</typeparam>
+            <typeparam name="TBaseEvent">The base type or interface implemented by events in the domain.</typeparam>
+            <nuget id="netfx-Patterns.EventSourcing"/>
         </member>
-        <member name="M:DomainObject`2.#ctor">
+        <member name="M:IEventStore`2.Commit">
             <summary>
-            Initializes a new instance of the <see cref="T:DomainObject`2"/> class.
+            Commits the changes persisted so far, in a unit of work style.
+            </summary>
+        </member>
+        <member name="M:IEventStore`2.Persist(DomainObject{`0,`1})">
+            <summary>
+            Persists the pending events in the domain object and accepts 
+            the changes.
+            </summary>
+            <param name="entity">The domain object raising the events.</param>
+        </member>
+        <member name="M:IEventStore`2.Query(EventQueryCriteria{`0})">
+            <summary>
+            Queries the event store for events that match the given criteria.
             </summary>
             <remarks>
-            Derived classes decide if they allow direct instantiation or 
-            if instantiation always has to happen from a stream of events.
+            Store implementations are advised to provide full support for the 
+            specified criteria, but aren't required to.
+            <para>
+            An alternative fluent API to build the criteria object is available 
+            by executing the  <see cref="M:EventQueryExtension.Query``2(IEventStore{``0,``1})"/> 
+            extension method on an event store instance.
+            </para>
             </remarks>
-        </member>
-        <member name="M:DomainObject`2.AcceptEvents">
-            <summary>
-            Clears the internal events retrieved from <see cref="M:DomainObject`2.GetEvents"/>, 
-            signaling that all pending events have been commited.
-            </summary>
-        </member>
-        <member name="M:DomainObject`2.GetEvents">
-            <summary>
-            Gets the new events that were applied by the domain object.
-            </summary>
-        </member>
-        <member name="M:DomainObject`2.Handles``1(System.Action{``0})">
-            <summary>
-            Configures a handler for an event. 
-            </summary>
-        </member>
-        <member name="M:DomainObject`2.Load(System.Collections.Generic.IEnumerable{`1})">
-            <summary>
-            Loads the the domain object from an even stream.
-            </summary>
-        </member>
-        <member name="M:DomainObject`2.Apply``1(``0)">
-            <summary>
-            Applies an event to the entity. 
-            The derived class should invoke <see cref="M:DomainObject`2.Handles``1(System.Action{``0})"/> 
-            to configure the handlers for specific types of events. The 
-            handlers perform the actual state changes to the entity.
-            </summary>
-        </member>
-        <member name="P:DomainObject`2.Id">
-            <summary>
-            Gets or sets the identifier of the domain object.
-            </summary>
         </member>
         <member name="T:EventQueryCriteria`1">
             <summary>
@@ -265,6 +247,24 @@
         <member name="P:EventQueryCriteria`1.ObjectFilter.ObjectId">
             <summary>
             Gets or sets the domain object identifier to filter by.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
             </summary>
         </member>
     </members>

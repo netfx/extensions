@@ -70,6 +70,12 @@
             <nuget id="netfx-System.Dynamic.Reflection"/>
             <param name="type" this="true">The type to convert</param>
         </member>
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.UnboxDynamic(System.Object)">
+            <summary>
+            Converts dynamic objects to object, which may cause unboxing 
+            of the wrapped dynamic such as in our own DynamicReflectionObject type.
+            </summary>
+        </member>
         <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
             <summary>
             Finds the best match among the candidates.

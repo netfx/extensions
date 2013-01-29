@@ -38,6 +38,9 @@
   <Import Project="$(NuGetProperties)" Condition="Exists('$(NuGetProperties)')" />
   <Import Project="$(NuGetRoot)\NuGet.Tests.properties" Condition="Exists('$(NuGetRoot)\NuGet.Tests.properties')" />
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -51,7 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="content\netfx\Patterns\EventSourcing\FileSystemStoreSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\DomainObjectSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\EventQuerySpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\EventStoreBaseSpec.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Product.cs" />
+    <Compile Include="netfx\Patterns\EventSourcing\Visibility.cs" />
+    <Compile Include="netfx\System\AmbientSingleton.cs" />
+    <Compile Include="netfx\System\GuardSpec.cs" />
+    <Compile Include="netfx\System\IClock.cs" />
     <Compile Include="netfx\System\JsonSerializer.cs" />
+    <Compile Include="netfx\System\SystemClock.cs" />
     <NuSpec Include="Package.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NuSpec>

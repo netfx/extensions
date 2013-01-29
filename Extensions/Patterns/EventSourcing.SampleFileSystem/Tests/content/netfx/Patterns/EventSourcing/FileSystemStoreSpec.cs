@@ -34,75 +34,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using System.IO;
 
-namespace NetFx.Patterns.EventSourcing
+namespace NetFx.Patterns.EventSourcing.Tests
 {
-	public class FileSystemStoreSpec
+	public class FileSystemStoreSpec : EventStoreBaseSpec
 	{
 		private ISerializer serializer = new JsonSerializer(new Newtonsoft.Json.JsonSerializer
 		{
-			TypeNameAssemblyFormat= System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple, 
+			TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple,
 			TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
 		});
 
-		[Fact]
-		public void WhenSavingObject_ThenPersistsEvents()
+		protected internal override object CreateStore()
 		{
-			var path = "Store";
-			var store = new FileSystemStore<int, DomainEvent>(path, this.serializer);
+			if (Directory.Exists("Store"))
+				Directory.Delete("Store", true);
 
-			var product = new Product(5, "Hello");
-			product.Publish(1);
-
-			store.SaveChanges(product);
-		}
-
-
-		internal class DomainEvent { }
-
-		internal class Product : DomainObject<int, DomainEvent>
-		{
-			private Product()
-			{
-				this.Handles<ProductCreated>(this.OnCreated);
-				this.Handles<ProductPublished>(this.OnPublished);
-			}
-
-			public Product(int id, string title)
-				: this()
-			{
-				this.Apply(new ProductCreated { Id = id, Title = title });
-			}
-
-			public string Title { get; private set; }
-			public int Version { get; set; }
-
-			public void Publish(int version)
-			{
-				this.Apply(new ProductPublished { Version = version });
-			}
-
-			private void OnCreated(ProductCreated args)
-			{
-				this.Id = args.Id;
-				this.Title = args.Title;
-			}
-
-			private void OnPublished(ProductPublished args)
-			{
-				this.Version = args.Version;
-			}
-		}
-
-		internal class ProductPublished : DomainEvent
-		{
-			public int Version { get; set; }
-		}
-
-		internal class ProductCreated : DomainEvent
-		{
-			public int Id { get; set; }
-			public string Title { get; set; }
+			return new FileSystemStore<Guid, DomainEvent>("Store", this.serializer);
 		}
 	}
 }

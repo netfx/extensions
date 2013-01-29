@@ -91,7 +91,7 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TObjectId, TBaseEvent> Since(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Since(DateTimeOffset when);
 
 		/// <summary>
 		/// Filters events that happened before the given ending date.
@@ -101,7 +101,7 @@ static partial class EventQueryExtension
 		/// By default, includes events with the given date, unless the 
 		/// <see cref="ExclusiveRange"/> is called to make the range exclusive.
 		/// </remarks>
-		IEventQuery<TObjectId, TBaseEvent> Until(DateTime when);
+		IEventQuery<TObjectId, TBaseEvent> Until(DateTimeOffset when);
 
 		/// <summary>
 		/// Makes the configured <see cref="Since"/> and/or <see cref="Until"/> dates 
@@ -144,13 +144,13 @@ static partial class EventQueryExtension
 			return this;
 		}
 
-		public IEventQuery<TObjectId, TBaseEvent> Since(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Since(DateTimeOffset when)
 		{
 			this.criteria.Since = when;
 			return this;
 		}
 
-		public IEventQuery<TObjectId, TBaseEvent> Until(DateTime when)
+		public IEventQuery<TObjectId, TBaseEvent> Until(DateTimeOffset when)
 		{
 			this.criteria.Until = when;
 			return this;

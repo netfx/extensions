@@ -34,15 +34,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Newtonsoft.Json;
 
 /// <summary>
 /// Implements a very simple unoptimized store for the file system.
 /// </summary>
 ///	<nuget id="netfx-Patterns.EventSourcing.SampleFileSystem" />
-partial class FileSystemStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectId, TBaseEvent,
-	IStoredObject<TObjectId>,
-	FileStoredEvent<TObjectId, TBaseEvent>>
+partial class FileSystemStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObjectId, TBaseEvent, FileStoredEvent<TObjectId, TBaseEvent>>
+	where TBaseEvent : ITimestamped
 {
 	private string directory;
 	private ISerializer serializer;
@@ -54,12 +52,19 @@ partial class FileSystemStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObj
 
 		this.directory = directory;
 		this.serializer = serializer;
+		this.Events = Directory.EnumerateFiles(this.directory)
+			.OrderBy(file => file)
+			.Select(file => this.serializer.Deserialize<FileStoredEvent<TObjectId, TBaseEvent>>(File.ReadAllBytes(file)))
+			.AsQueryable();
 	}
 
-	public void SaveChanges(DomainObject<TObjectId, TBaseEvent> entity)
+	public void Commit()
+	{
+	}
+
+	public void Persist(DomainObject<TObjectId, TBaseEvent> entity)
 	{
 		var commitId = DateTimeOffset.Now.Ticks;
-		var timestamp = DateTimeOffset.Now;
 		var events = entity.GetEvents().ToList();
 
 		for (var eventId = 0; eventId < events.Count; eventId++)
@@ -72,6 +77,8 @@ partial class FileSystemStore<TObjectId, TBaseEvent> : IQueryableEventStore<TObj
 
 			File.WriteAllBytes(filePath, this.serializer.Serialize(new FileStoredEvent<TObjectId, TBaseEvent>(entity, @event)));
 		}
+
+		entity.AcceptEvents();
 	}
 
 	public IEnumerable<TBaseEvent> Query(EventQueryCriteria<TObjectId> criteria)
