@@ -57,7 +57,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenNestedTypeToCodeName_ThenReplacesPlusWithDot()
+        public void WhenNestedTypeToTypeName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedType).ToTypeName();
 
@@ -65,7 +65,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenNestedTypeToCodeFullName_ThenReplacesPlusWithDot()
+        public void WhenNestedTypeToTypeFullName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedType).ToTypeFullName();
 
@@ -73,7 +73,31 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenOpenGenericNestedTypeToCodeName_ThenReplacesPlusWithDot()
+        public void WhenTwoDeclaringOpenGenericWithNestedGenericTypeToTypeFullName_ThenReplacesGenericArgumentsWithNames()
+        {
+            var name = typeof(TwoGeneric<,>.NestedTwoGeneric<,>).ToTypeFullName();
+
+            Assert.Equal("NetFx.StringlyTyped.TwoGeneric<T, I>.NestedTwoGeneric<R, S>", name);
+        }
+
+        [Fact]
+        public void WhenTwoDeclaringGenericWithNestedGenericTypeToTypeFullName_ThenReplacesArgumentsWithFullNames()
+        {
+            var name = typeof(TwoGeneric<string, int>.NestedTwoGeneric<bool, int>).ToTypeFullName();
+
+            Assert.Equal("NetFx.StringlyTyped.TwoGeneric<System.String, System.Int32>.NestedTwoGeneric<System.Boolean, System.Int32>", name);
+        }
+
+        [Fact]
+        public void WhenTwoDeclaringGenericWithNestedGenericTypeToTypeName_ThenReplacesArgumentsWithNames()
+        {
+            var name = typeof(TwoGeneric<string, int>.NestedTwoGeneric<bool, int>).ToTypeName();
+
+            Assert.Equal("TwoGeneric<String, Int32>.NestedTwoGeneric<Boolean, Int32>", name);
+        }
+
+        [Fact]
+        public void WhenOpenGenericNestedTypeToTypeName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedGeneric<>).ToTypeName();
 
@@ -81,7 +105,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenGenericNestedTypeToCodeName_ThenReplacesPlusWithDot()
+        public void WhenGenericNestedTypeToTypeName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedGeneric<NestedType>).ToTypeName();
 
@@ -89,7 +113,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenNestedOpenGenericTypeToCodeFullName_ThenReplacesPlusWithDot()
+        public void WhenNestedOpenGenericTypeToTypeFullName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedGeneric<>).ToTypeFullName();
 
@@ -97,7 +121,7 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
-        public void WhenGenericNestedTypeToCodeFullName_ThenReplacesPlusWithDot()
+        public void WhenGenericNestedTypeToTypeFullName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedGeneric<NestedType>).ToTypeFullName();
 
@@ -368,4 +392,11 @@ namespace NetFx.StringlyTyped
 
     public class NonNestedType { }
     public class StringConverter { }
+
+    public class TwoGeneric<T, I>
+    {
+        public class NestedTwoGeneric<R, S>
+        {
+        }
+    }
 }

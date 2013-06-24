@@ -70,10 +70,32 @@ namespace NetFx.StringlyTyped
             if (!type.IsGenericType)
                 return name;
 
-            return name.Substring(0, name.IndexOf('`')) +
+            if (type.DeclaringType == null || !type.DeclaringType.IsGenericType)
+            {
+                return name.Substring(0, name.IndexOf('`')) +
+                    "<" +
+                    String.Join(", ", type.GetGenericArguments().Select(t => ToTypeName(t))) +
+                    ">";
+            }
+
+            // We need to render the generic parameter of the declaring type
+            // and then append just the name of the nested type and its 
+            // generic parameters in turn.
+            var declaringTypeName = type.DeclaringType.Name;
+            // The declaring type arity determines how many of the actual generic type 
+            // parameters "belong" to the declaring type. The remaining ones are 
+            // actual parameters for the nested type.
+            var declaringTypeArity = int.Parse(new string(
+                declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
+
+            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
                 "<" +
-                String.Join(", ", type.GetGenericArguments().Select(t => ToTypeName(t))) +
-                ">";
+                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeName(t))) +
+                ">." +
+                type.Name.Substring(0, type.Name.IndexOf('`')) +
+                    "<" +
+                    String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeName(t))) +
+                    ">";
         }
 
         /// <summary>
@@ -93,10 +115,32 @@ namespace NetFx.StringlyTyped
             if (!type.IsGenericType)
                 return name;
 
-            return name.Substring(0, name.IndexOf('`')) +
+            if (type.DeclaringType == null || !type.DeclaringType.IsGenericType)
+            {
+                return name.Substring(0, name.IndexOf('`')) +
+                    "<" +
+                    String.Join(", ", type.GetGenericArguments().Select(t => ToTypeFullName(t))) +
+                    ">";
+            }
+
+            // We need to render the generic parameter of the declaring type
+            // and then append just the name of the nested type and its 
+            // generic parameters in turn.
+            var declaringTypeName = type.DeclaringType.FullName;
+            // The declaring type arity determines how many of the actual generic type 
+            // parameters "belong" to the declaring type. The remaining ones are 
+            // actual parameters for the nested type.
+            var declaringTypeArity = int.Parse(new string(
+                declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
+
+            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
                 "<" +
-                String.Join(", ", type.GetGenericArguments().Select(t => ToTypeFullName(t))) +
-                ">";
+                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeFullName(t))) +
+                ">." +
+                type.Name.Substring(0, type.Name.IndexOf('`')) +
+                    "<" +
+                    String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeFullName(t))) +
+                    ">";
         }
 
         /// <summary>
