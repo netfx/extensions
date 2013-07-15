@@ -88,14 +88,17 @@ namespace NetFx.StringlyTyped
             var declaringTypeArity = int.Parse(new string(
                 declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
 
-            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
-                "<" +
-                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeName(t))) +
-                ">." +
+            var typeName = type.Name.IndexOf('`') == -1 ?
+                type.Name :
                 type.Name.Substring(0, type.Name.IndexOf('`')) +
                     "<" +
                     String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeName(t))) +
                     ">";
+
+            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
+                "<" +
+                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeName(t))) +
+                ">." + typeName;
         }
 
         /// <summary>
@@ -133,14 +136,17 @@ namespace NetFx.StringlyTyped
             var declaringTypeArity = int.Parse(new string(
                 declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
 
-            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
-                "<" +
-                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeFullName(t))) +
-                ">." +
+            var typeName = type.Name.IndexOf('`') == -1 ?
+                type.Name :
                 type.Name.Substring(0, type.Name.IndexOf('`')) +
                     "<" +
                     String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeFullName(t))) +
                     ">";
+
+            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
+                "<" +
+                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeFullName(t))) +
+                ">." + typeName;
         }
 
         /// <summary>
