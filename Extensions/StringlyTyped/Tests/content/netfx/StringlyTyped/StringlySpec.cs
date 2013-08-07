@@ -97,6 +97,22 @@ namespace NetFx.StringlyTyped
         }
 
         [Fact]
+        public void WhenTwoDeclaringGenericWithNonNestedGenericAndNestedGenericTypeToTypeName_ThenReplacesArgumentsWithNames()
+        {
+            var name = typeof(TwoGeneric<string, int>.NestedNonGeneric.NestedGeneric<bool>).ToTypeName();
+
+            Assert.Equal("TwoGeneric<String, Int32>.NestedNonGeneric.NestedGeneric<Boolean>", name);
+        }
+
+        [Fact]
+        public void WhenTwoDeclaringGenericWithNonNestedGenericAndNestedGenericTypeToTypeFullName_ThenReplacesArgumentsWithNames()
+        {
+            var name = typeof(TwoGeneric<string, int>.NestedNonGeneric.NestedGeneric<bool>).ToTypeFullName();
+
+            Assert.Equal("NetFx.StringlyTyped.TwoGeneric<System.String, System.Int32>.NestedNonGeneric.NestedGeneric<System.Boolean>", name);
+        }
+
+        [Fact]
         public void WhenOpenGenericNestedTypeToTypeName_ThenReplacesPlusWithDot()
         {
             var name = typeof(NestedGeneric<>).ToTypeName();
@@ -397,6 +413,13 @@ namespace NetFx.StringlyTyped
     {
         public class NestedTwoGeneric<R, S>
         {
+        }
+
+        public class NestedNonGeneric
+        {
+            public class NestedGeneric<U>
+            { 
+            }
         }
     }
 }

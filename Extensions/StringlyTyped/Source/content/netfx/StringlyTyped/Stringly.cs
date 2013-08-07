@@ -64,41 +64,59 @@ namespace NetFx.StringlyTyped
         /// <param name="type" this="true">The type to convert to a simple C# type name.</param>
         public static string ToTypeName(this Type type)
         {
-            var name = type.DeclaringType == null || type.IsGenericParameter ?
-                type.Name : type.DeclaringType.Name + "." + type.Name;
+            var genericArguments = new Queue<Type>();
 
-            if (!type.IsGenericType)
-                return name;
-
-            if (type.DeclaringType == null || !type.DeclaringType.IsGenericType)
+            if (type.IsGenericType)
             {
-                return name.Substring(0, name.IndexOf('`')) +
-                    "<" +
-                    String.Join(", ", type.GetGenericArguments().Select(t => ToTypeName(t))) +
-                    ">";
+                foreach (var genericArgument in type.GetGenericArguments())
+                {
+                    genericArguments.Enqueue(genericArgument);
+                }
             }
 
-            // We need to render the generic parameter of the declaring type
-            // and then append just the name of the nested type and its 
-            // generic parameters in turn.
-            var declaringTypeName = type.DeclaringType.Name;
-            // The declaring type arity determines how many of the actual generic type 
-            // parameters "belong" to the declaring type. The remaining ones are 
-            // actual parameters for the nested type.
-            var declaringTypeArity = int.Parse(new string(
-                declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
+            return type.ToTypeName(genericArguments);
+        }
 
-            var typeName = type.Name.IndexOf('`') == -1 ?
-                type.Name :
-                type.Name.Substring(0, type.Name.IndexOf('`')) +
-                    "<" +
-                    String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeName(t))) +
-                    ">";
+        private static string ToTypeName(this Type type, Queue<Type> genericArguments)
+        {
+            var typeName = string.Empty;
 
-            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
-                "<" +
-                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeName(t))) +
-                ">." + typeName;
+            if (type.DeclaringType != null && !type.IsGenericParameter)
+            {
+                typeName = type.DeclaringType.ToTypeName(genericArguments) + ".";
+            }
+
+            if (type.IsGenericType)
+            {
+                var index = type.Name.IndexOf('`');
+                if (index != -1)
+                {
+                    var genericArgumentsCount = int.Parse(type.Name.Substring(index + 1, type.Name.Length - index - 1));
+                    var values = new List<Type>();
+
+                    while (genericArgumentsCount > 0)
+                    {
+                        values.Add(genericArguments.Dequeue());
+                        genericArgumentsCount--;
+                    }
+
+                    typeName = typeName + type.Name.Substring(0, index) +
+                        "<" +
+                        String.Join(", ", values.Select(t => t.ToTypeName())) +
+                        ">";
+                }
+                else
+                {
+                    typeName = typeName + type.Name;
+                }
+            }
+            else
+            {
+                typeName = typeName + type.Name;
+
+            }
+
+            return typeName;
         }
 
         /// <summary>
@@ -113,40 +131,75 @@ namespace NetFx.StringlyTyped
         /// <param name="type" this="true">The type to convert to a C# full type name.</param>
         public static string ToTypeFullName(this Type type)
         {
-            var name = type.IsGenericParameter ? type.Name : type.FullName.Replace('+', '.');
+            var genericArguments = new Queue<Type>();
 
-            if (!type.IsGenericType)
-                return name;
-
-            if (type.DeclaringType == null || !type.DeclaringType.IsGenericType)
+            if (type.IsGenericType)
             {
-                return name.Substring(0, name.IndexOf('`')) +
-                    "<" +
-                    String.Join(", ", type.GetGenericArguments().Select(t => ToTypeFullName(t))) +
-                    ">";
+                foreach (var genericArgument in type.GetGenericArguments())
+                {
+                    genericArguments.Enqueue(genericArgument);
+                }
             }
 
-            // We need to render the generic parameter of the declaring type
-            // and then append just the name of the nested type and its 
-            // generic parameters in turn.
-            var declaringTypeName = type.DeclaringType.FullName;
-            // The declaring type arity determines how many of the actual generic type 
-            // parameters "belong" to the declaring type. The remaining ones are 
-            // actual parameters for the nested type.
-            var declaringTypeArity = int.Parse(new string(
-                declaringTypeName.Substring(declaringTypeName.IndexOf('`') + 1).TakeWhile(c => c != '.').ToArray()));
+            return type.ToTypeFullName(genericArguments);
+        }
 
-            var typeName = type.Name.IndexOf('`') == -1 ?
-                type.Name :
-                type.Name.Substring(0, type.Name.IndexOf('`')) +
-                    "<" +
-                    String.Join(", ", type.GetGenericArguments().Skip(declaringTypeArity).Select(t => ToTypeFullName(t))) +
-                    ">";
+        private static string ToTypeFullName(this Type type, Queue<Type> genericArguments)
+        {
+            var typeFullName = string.Empty;
+            var typeName = type.Namespace + "." + type.Name;
 
-            return declaringTypeName.Substring(0, declaringTypeName.IndexOf('`')) +
-                "<" +
-                String.Join(", ", type.GetGenericArguments().Take(declaringTypeArity).Select(t => ToTypeFullName(t))) +
-                ">." + typeName;
+            if (type.DeclaringType != null && !type.IsGenericParameter)
+            {
+                typeFullName = type.DeclaringType.ToTypeFullName(genericArguments) + ".";
+            }
+
+            if (type.DeclaringType != null || type.IsGenericParameter)
+            {
+                typeName = type.Name;
+            }
+
+            if (type.IsGenericType)
+            {
+                var index = typeName.IndexOf('`');
+                if (index != -1)
+                {
+                    var genericArgumentsCount = int.Parse(typeName.Substring(index + 1, typeName.Length - index - 1));
+                    var values = new List<Type>();
+
+                    while (genericArgumentsCount > 0)
+                    {
+                        values.Add(genericArguments.Dequeue());
+                        genericArgumentsCount--;
+                    }
+
+                    typeFullName = typeFullName + typeName.Substring(0, index) +
+                        "<" +
+                        String.Join(", ", values.Select(t => t.ToTypeFullName())) +
+                        ">";
+                }
+                else
+                {
+                    typeFullName = typeFullName + typeName;
+                }
+            }
+            else
+            {
+                typeFullName = typeFullName + typeName;
+            }
+
+            return typeFullName;
+        }
+
+        private static string GetTypeFullName(Type type)
+        {
+            if (type.IsGenericParameter)
+                return type.Name;
+
+            if (string.IsNullOrEmpty(type.FullName))
+                return type.Namespace + "." + type.Name;
+
+            return type.FullName;
         }
 
         /// <summary>
