@@ -54,6 +54,9 @@
     <Folder Include="tools\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="build\netfx-System.StringResources.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="content\Properties\Resources.tt.pp" />
   </ItemGroup>
   <ItemGroup>
