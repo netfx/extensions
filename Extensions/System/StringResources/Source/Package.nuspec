@@ -2,8 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.StringResources</id>
-		<version>2.0.0</version>
+		<version>3.0.0</version>
 		<title>NETFx Smart String Resources</title>
+    <summary>Strong typed and hierarchically organized access to resources.</summary>
 		<description>Suplements the built-in Resources .resx C# generator by generating a strong-typed class named Strings from the 
 same .resx file, but exposing format parameters as method parameters and organizing strings in classes according to the resource name 
 if it uses underscores. i.e. User_InvalidCredentials can be accessed with Strings.User.InvalidCredentials, and as a method if it had 
@@ -15,7 +16,16 @@ parameter replacements, which can even be named, like "Invalid email '{email}'".
 		<iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
 		<tags>netfx resources format string resx C#</tags>
 		<dependencies>
-			<dependency id="netfx-System.StringFormatWith" version="1.0" />
+			<dependency id="netfx-System.StringFormatWith" version="1.1.0" />
 		</dependencies>
-	</metadata>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="netfx-System.StringResources.targets" target="build" />
+    <file src="netfx-System.StringResources.dll" target="build" />
+    <file src="netfx-System.StringResources.pdb" target="build" />
+    <file src="netfx-System.StringResources.xml" target="build" />
+  </files>
 </package>

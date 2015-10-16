@@ -1,0 +1,94 @@
+﻿using System.IO;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+
+namespace NetFx
+{
+	/// <summary>
+	/// Generates a typed class for the given input .resx files.
+	/// </summary>
+	public class StringResources : Task
+	{
+		/// <summary>
+		/// Default class name to use if no TargetClassName metadata is provided
+		/// for the input resx files.
+		/// </summary>
+		public const string DefaultClassName = "Strings";
+
+		/// <summary>
+		/// Language of the containing project.
+		/// </summary>
+		[Required]
+		public string Language { get; set; }
+
+		/// <summary>
+		/// The generated file extension.
+		/// </summary>
+		[Required]
+		public string FileExtension { get; set; }
+
+		/// <summary>
+		/// Directory to place the generated typed files.
+		/// </summary>
+		[Required]
+		public string OutputPath { get; set; }
+
+		/// <summary>
+		/// The resource files to process.
+		/// </summary>
+		[Required]
+		public Microsoft.Build.Framework.ITaskItem[] ResxFiles { get; set; }
+
+		/// <summary>
+		/// Root namespace for the containing project.
+		/// </summary>
+		[Required]
+		public string RootNamespace { get; set; }
+
+		/// <summary>
+		/// Generated stronly typed code files.
+		/// </summary>
+		[Output]
+		public Microsoft.Build.Framework.ITaskItem[] GeneratedFiles { get; set; }
+
+		/// <summary>
+		/// Generates the strong typed resources for the given resx input files.
+		/// </summary>
+		/// <remarks>a remark</remarks>
+		public override bool Execute ()
+		{
+			foreach (var resx in ResxFiles) {
+				var resxFile = resx.GetMetadata ("FullPath");
+				// Same logic as ResXFileCodeGenerator.
+				var resourcesTypeName = Path.GetFileNameWithoutExtension (resxFile);
+				var targetNamespace = resx.GetMetadata ("TargetNamespace");
+				if (string.IsNullOrEmpty (targetNamespace)) {
+					// Note that the custom tool namespace is saved outside MSBuild, and therefore we can't
+					// access it from the task. If the user really needs custom namespace, they should set
+					// the TargetNamespace metadata on the item itself.
+					targetNamespace = RootNamespace + "." + resx
+						.GetMetadata ("RelativeDir")
+						.TrimEnd (Path.DirectorySeparatorChar)
+						.Replace (Path.DirectorySeparatorChar, '.');
+				}
+
+				var targetClassName = resx.GetMetadata("TargetClassName");
+				if (string.IsNullOrEmpty (targetClassName))
+					targetClassName = DefaultClassName;
+
+				var rootArea = ResourceFile.Build (resxFile, targetClassName);
+				var generator = Generator.Create (Language, targetNamespace, resourcesTypeName, targetClassName, bool.Parse (resx.GetMetadata ("Public")), rootArea);
+
+				var output = generator.TransformText ();
+				var targetFile = Path.Combine (OutputPath, resx.GetMetadata ("RelativeDir"), resx.GetMetadata("Filename") + "." + targetClassName + FileExtension);
+
+				if (!Directory.Exists (Path.GetDirectoryName (targetFile)))
+					Directory.CreateDirectory (Path.GetDirectoryName (targetFile));
+
+				File.WriteAllText (targetFile, output);
+			}
+
+			return true;
+		}
+	}
+}
