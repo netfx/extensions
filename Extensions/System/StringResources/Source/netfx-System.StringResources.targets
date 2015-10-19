@@ -50,19 +50,34 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <ResxCode Include="@(EmbeddedResource -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
+    <_LinkedResx Include="@(EmbeddedResource -> HasMetadata('Link'))" />
+    <_Resx Include="@(EmbeddedResource" Exclude="@(_LinkedResx)" />
+
+    <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
       <Public>False</Public>
+      <CanonicalRelativeDir>$([System.String]::new('%(RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
     </ResxCode>
-    <ResxCode Include="@(EmbeddedResource -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
+    <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
       <Public>True</Public>
+      <CanonicalRelativeDir>$([System.String]::new('%(RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
     </ResxCode>
-    <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(RelativeDir)%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
+
+    <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
+      <Public>False</Public>
+      <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(Link)'))</CanonicalRelativeDir>
+    </ResxCode>
+    <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
+      <Public>True</Public>
+      <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(Link)'))</CanonicalRelativeDir>
+    </ResxCode>
+
+    <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
   </ItemGroup>
 
   <Target Name="GenerateStringResources"
           BeforeTargets="BuildOnlySettings"
           Inputs="@(ResxCode)"
-          Outputs="$(IntermediateOutputPath)%(RelativeDir)%(Filename).Strings$(DefaultLanguageSourceExtension)"
+          Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)%(Filename).Strings$(DefaultLanguageSourceExtension)"
           Returns="@(TypedResx)">
     <StringResources RootNamespace="$(RootNamespace)"
                OutputPath="$(IntermediateOutputPath)"

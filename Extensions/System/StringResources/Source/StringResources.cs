@@ -62,12 +62,13 @@ namespace NetFx
 				// Same logic as ResXFileCodeGenerator.
 				var resourcesTypeName = Path.GetFileNameWithoutExtension (resxFile);
 				var targetNamespace = resx.GetMetadata ("TargetNamespace");
+				var relativeDir = resx.GetMetadata ("CanonicalRelativeDir");
+
 				if (string.IsNullOrEmpty (targetNamespace)) {
 					// Note that the custom tool namespace is saved outside MSBuild, and therefore we can't
 					// access it from the task. If the user really needs custom namespace, they should set
 					// the TargetNamespace metadata on the item itself.
-					targetNamespace = RootNamespace + "." + resx
-						.GetMetadata ("RelativeDir")
+					targetNamespace = RootNamespace + "." + relativeDir
 						.TrimEnd (Path.DirectorySeparatorChar)
 						.Replace (Path.DirectorySeparatorChar, '.');
 				}
@@ -80,7 +81,7 @@ namespace NetFx
 				var generator = Generator.Create (Language, targetNamespace, resourcesTypeName, targetClassName, bool.Parse (resx.GetMetadata ("Public")), rootArea);
 
 				var output = generator.TransformText ();
-				var targetFile = Path.Combine (OutputPath, resx.GetMetadata ("RelativeDir"), resx.GetMetadata("Filename") + "." + targetClassName + FileExtension);
+				var targetFile = Path.Combine (OutputPath, relativeDir, resx.GetMetadata("Filename") + "." + targetClassName + FileExtension);
 
 				if (!Directory.Exists (Path.GetDirectoryName (targetFile)))
 					Directory.CreateDirectory (Path.GetDirectoryName (targetFile));
