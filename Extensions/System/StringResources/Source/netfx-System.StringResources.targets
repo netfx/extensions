@@ -51,7 +51,7 @@
 
   <ItemGroup>
     <_LinkedResx Include="@(EmbeddedResource -> HasMetadata('Link'))" />
-    <_Resx Include="@(EmbeddedResource" Exclude="@(_LinkedResx)" />
+    <_Resx Include="@(EmbeddedResource)" Exclude="@(_LinkedResx)" />
 
     <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
       <Public>False</Public>
