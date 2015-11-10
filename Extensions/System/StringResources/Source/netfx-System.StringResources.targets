@@ -37,12 +37,6 @@
       <!-- Whether the generated strong-typed class should be public or not.
            Defaults to whatever the corresponding .resx file specifies. -->
       <Public></Public>
-      <!-- Override default target namespace, which equals the RootNamespace + 
-           the relative directory of the .resx file (matches default behavior 
-           of the resx file code generator. Note that we cannot retrieve automatically 
-           the Custom Tool Namespace property, so this must be used for those 
-           cases. -->
-      <TargetNamespace></TargetNamespace>
       <!-- Customize the generated class name to be something other than 'Strings' -->
       <TargetClassName></TargetClassName>
       <Generator>MSBuild:Compile</Generator>

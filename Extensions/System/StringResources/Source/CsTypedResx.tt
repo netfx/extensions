@@ -30,6 +30,7 @@ RenderArea(RootArea, MakePublic ? "public" : "internal");
 <#+
 private void RenderMessageHint(string value)
 {
+	value = new System.Xml.Linq.XText(value).ToString();
 	foreach (var line in value.Split(new [] { '\n' }, StringSplitOptions.None))
     {
 	    PushIndent("\t");

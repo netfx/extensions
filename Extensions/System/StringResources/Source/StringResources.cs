@@ -61,13 +61,13 @@ namespace NetFx
 				var resxFile = resx.GetMetadata ("FullPath");
 				// Same logic as ResXFileCodeGenerator.
 				var resourcesTypeName = Path.GetFileNameWithoutExtension (resxFile);
-				var targetNamespace = resx.GetMetadata ("TargetNamespace");
+				var targetNamespace = resx.GetMetadata ("CustomToolNamespace");
 				var relativeDir = resx.GetMetadata ("CanonicalRelativeDir");
 
 				if (string.IsNullOrEmpty (targetNamespace)) {
-					// Note that the custom tool namespace is saved outside MSBuild, and therefore we can't
-					// access it from the task. If the user really needs custom namespace, they should set
-					// the TargetNamespace metadata on the item itself.
+					// Note that the custom tool namespace in newer versions of VS is saved
+					// as item metadata. On older versions, it would have to be manually
+					// set.
 					targetNamespace = RootNamespace + "." + relativeDir
 						.TrimEnd (Path.DirectorySeparatorChar)
 						.Replace (Path.DirectorySeparatorChar, '.');
