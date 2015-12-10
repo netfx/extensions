@@ -1,4 +1,4 @@
-﻿namespace Tests.content.netfx.Patterns.LinqSpecs
+﻿namespace netfx.Patterns.QuerySpecs
 {
 	using System.Linq;
 	using global::netfx.Patterns.QuerySpecs;

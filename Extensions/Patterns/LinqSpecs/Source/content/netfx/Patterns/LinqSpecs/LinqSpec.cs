@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Linq = System.Linq.Expressions;
+using System.Linq.Expressions;
 
 /// <summary>
 /// Allows creating and combining query specifications using logical And and Or 
@@ -11,7 +11,7 @@ static partial class LinqSpec
 	/// <summary>
 	/// Creates a custom ad-hoc <see cref="LinqSpec{T}"/> for the given <typeparamref name="T"/>.
 	/// </summary>
-	public static LinqSpec<T> For<T>(Linq.Expression<Func<T, bool>> specification)
+	public static LinqSpec<T> For<T>(Expression<Func<T, bool>> specification)
 	{
 		return specification;
 	}
@@ -21,7 +21,7 @@ static partial class LinqSpec
 	/// not needed as the expression can be converted implicitly to a linq 
 	/// specification by just assigning it or passing it as such to another method.
 	/// </summary>
-	public static LinqSpec<T> Spec<T>(this Linq.Expression<Func<T, bool>> specification)
+	public static LinqSpec<T> Spec<T>(this Expression<Func<T, bool>> specification)
 	{
 		return specification;
 	}
@@ -34,11 +34,11 @@ static partial class LinqSpec
 	/// <typeparam name="TNestedEntity">The type of the property on the T which is being accessed</typeparam>
 	/// <param name="propertyExpression">The property expression to access property on T. Usually a lambda like t => t.MyProp</param>
 	/// <param name="spec">A LinqSpec for type TNestedEntity</param>
-	public static LinqSpec<T> OnProperty<T, TNestedEntity>(Linq.Expression<Func<T, TNestedEntity>> propertyExpression, LinqSpec<TNestedEntity> spec)
+	public static LinqSpec<T> OnProperty<T, TNestedEntity>(Expression<Func<T, TNestedEntity>> propertyExpression, LinqSpec<TNestedEntity> spec)
 	{
 		var replacer = new ParameterReplaceVisitor(spec.Expression.Parameters.First(), propertyExpression.Body);
 		var newExpression = replacer.Visit(spec.Expression.Body);
-		var exp = Linq.Expression.Lambda<Func<T, bool>>(newExpression, propertyExpression.Parameters);
+		var exp = Expression.Lambda<Func<T, bool>>(newExpression, propertyExpression.Parameters);
 		return For(exp);
 	}
 }
@@ -55,7 +55,7 @@ abstract partial class LinqSpec<T>
 	/// implicitly to an expression by just assigning it or passing it as 
 	/// such to another method.
 	/// </summary>
-	public abstract Linq.Expression<Func<T, bool>> Expression { get; }
+	public abstract Expression<Func<T, bool>> Expression { get; }
 
 	/// <summary>
 	/// The classic specification pattern evaluator.
@@ -108,7 +108,7 @@ abstract partial class LinqSpec<T>
 	/// <summary>
 	/// Performs an implicit conversion from <see cref="LinqSpec{T}"/> to a linq expression.
 	/// </summary>
-	public static implicit operator Linq.Expression<Func<T, bool>>(LinqSpec<T> spec)
+	public static implicit operator Expression<Func<T, bool>>(LinqSpec<T> spec)
 	{
 		return spec.Expression;
 	}
@@ -116,7 +116,7 @@ abstract partial class LinqSpec<T>
 	/// <summary>
 	/// Performs an implicit conversion from a linq expression to <see cref="LinqSpec&lt;T&gt;"/>.
 	/// </summary>
-	public static implicit operator LinqSpec<T>(Linq.Expression<Func<T, bool>> expression)
+	public static implicit operator LinqSpec<T>(Expression<Func<T, bool>> expression)
 	{
 		return new AdHocSpec(expression);
 	}
@@ -138,7 +138,7 @@ abstract partial class LinqSpec<T>
 			Expression = spec1.Expression.And(spec2.Expression);
 		}
 
-		public override Linq.Expression<Func<T, bool>> Expression { get; }
+		public override Expression<Func<T, bool>> Expression { get; }
 
 		public override bool Equals(object obj)
 		{
@@ -176,7 +176,7 @@ abstract partial class LinqSpec<T>
 			Expression = spec1.Expression.Or(spec2.Expression);
 		}
 
-		public override Linq.Expression<Func<T, bool>> Expression { get; }
+		public override Expression<Func<T, bool>> Expression { get; }
 
 		public override bool Equals(object obj)
 		{
@@ -209,11 +209,11 @@ abstract partial class LinqSpec<T>
 		public NegateSpec(LinqSpec<TArg> spec)
 		{
 			this.spec = spec;
-			Expression = Linq.Expression.Lambda<Func<TArg, bool>>(
-				Linq.Expression.Not(spec.Expression.Body), spec.Expression.Parameters);
+			this.Expression = System.Linq.Expressions.Expression.Lambda<Func<TArg, bool>>(
+				System.Linq.Expressions.Expression.Not(spec.Expression.Body), spec.Expression.Parameters);
 		}
 
-		public override Linq.Expression<Func<TArg, bool>> Expression { get; }
+		public override Expression<Func<TArg, bool>> Expression { get; }
 
 		public override bool Equals(object obj)
 		{
@@ -237,14 +237,14 @@ abstract partial class LinqSpec<T>
 
 	private class AdHocSpec : LinqSpec<T>, IEquatable<AdHocSpec>
 	{
-		private readonly Linq.Expression<Func<T, bool>> specification;
+		private readonly Expression<Func<T, bool>> specification;
 
-		public AdHocSpec(Linq.Expression<Func<T, bool>> specification)
+		public AdHocSpec(Expression<Func<T, bool>> specification)
 		{
 			this.specification = specification;
 		}
 
-		public override Linq.Expression<Func<T, bool>> Expression
+		public override Expression<Func<T, bool>> Expression
 		{
 			get { return specification; }
 		}

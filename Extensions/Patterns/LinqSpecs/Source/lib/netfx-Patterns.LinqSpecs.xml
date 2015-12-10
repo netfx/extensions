@@ -9,7 +9,6 @@
             Allows creating and combining query specifications using logical And and Or 
             operators.
             </summary>
-            <nuget id="netfx-Patterns.LinqSpecs" />
         </member>
         <member name="M:LinqSpec.For``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
@@ -23,11 +22,40 @@
             specification by just assigning it or passing it as such to another method.
             </summary>
         </member>
+        <member name="M:LinqSpec.OnProperty``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},LinqSpec{``1})">
+            <summary>
+            Allows reusing a specification for another Type by applying it to a property
+            of the Type being targetted by the new specification.
+            </summary>
+            <typeparam name="T">The type of the new LinqSpec to be created</typeparam>
+            <typeparam name="TNestedEntity">The type of the property on the T which is being accessed</typeparam>
+            <param name="propertyExpression">The property expression to access property on T. Usually a lambda like t => t.MyProp</param>
+            <param name="spec">A LinqSpec for type TNestedEntity</param>
+        </member>
         <member name="T:LinqSpec`1">
             <summary>
             Base class for query specifications that can be combined using logical And and Or 
             operators. For custom ad-hoc queries, use the static <see cref="M:LinqSpec.For``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})"/> method.
             </summary>
+        </member>
+        <member name="P:LinqSpec`1.Expression">
+            <summary>
+            Gets the expression that defines this query. Typically accessing 
+            this property is not needed as the query spec can be converted 
+            implicitly to an expression by just assigning it or passing it as 
+            such to another method.
+            </summary>
+        </member>
+        <member name="M:LinqSpec`1.IsSatisfiedBy(`0)">
+            <summary>
+            The classic specification pattern evaluator.
+            This compiles and invokes the expression from the LinqSpec
+            so that is can be evaluated in code rather than passed to LinqToX.
+            If you find yourself doing this frequently you may want to consider
+            using a non-Linq specification which does not store the rule as an
+            expression, but as a compiled method instead.
+            </summary>
+            <param name="entity">The T under test</param>
         </member>
         <member name="M:LinqSpec`1.op_BitwiseAnd(LinqSpec{`0},LinqSpec{`0})">
             <summary>
@@ -52,14 +80,6 @@
         <member name="M:LinqSpec`1.op_Implicit(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})~LinqSpec{`0}">
             <summary>
             Performs an implicit conversion from a linq expression to <see cref="T:LinqSpec`1"/>.
-            </summary>
-        </member>
-        <member name="P:LinqSpec`1.Expression">
-            <summary>
-            Gets the expression that defines this query. Typically accessing 
-            this property is not needed as the query spec can be converted 
-            implicitly to an expression by just assigning it or passing it as 
-            such to another method.
             </summary>
         </member>
         <member name="T:LinqSpec`1.AndSpec">
