@@ -17,10 +17,13 @@
         </member>
         <member name="M:LinqSpec.Spec``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
-            Converts the given expression to a linq query specification. Typically 
-            not needed as the expression can be converted implicitly to a linq 
+            Converts the given expression to a linq query specification. Typically
+            not needed as the expression can be converted implicitly to a linq
             specification by just assigning it or passing it as such to another method.
             </summary>
+            <typeparam name="T">Type of specification value being constrained.</typeparam>
+            <param name="specification" this="true">The specification expression to convert to a spec.</param>
+            <nuget id="netfx-Patterns.LinqSpecs"/>
         </member>
         <member name="M:LinqSpec.OnProperty``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},LinqSpec{``1})">
             <summary>
