@@ -28,6 +28,7 @@
   <PropertyGroup>
     <CompileDependsOn>
       GenerateStringResources;
+      CompileStringResources;
       $(CompileDependsOn)
     </CompileDependsOn>
   </PropertyGroup>
@@ -64,26 +65,25 @@
       <Public>True</Public>
       <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(Link)'))</CanonicalRelativeDir>
     </ResxCode>
-
-    <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
   </ItemGroup>
 
   <Target Name="GenerateStringResources"
           BeforeTargets="BuildOnlySettings"
           Inputs="@(ResxCode)"
-          Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)%(Filename).Strings$(DefaultLanguageSourceExtension)"
+          Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)"
           Returns="@(TypedResx)">
     <StringResources RootNamespace="$(RootNamespace)"
                OutputPath="$(IntermediateOutputPath)"
                Language="$(Language)"
                FileExtension="$(DefaultLanguageSourceExtension)"
                ResxFiles="@(ResxCode)">
-      <Output TaskParameter="GeneratedFiles" ItemName="StringResource" />
-      <Output TaskParameter="GeneratedFiles" ItemName="Compile" />
+      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
     </StringResources>
+  </Target>
 
+  <Target Name="CompileStringResources">
     <ItemGroup>
-      <FileWrites Include="@(StringResource)" />
+      <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
     </ItemGroup>
   </Target>
 

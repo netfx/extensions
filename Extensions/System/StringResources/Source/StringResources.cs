@@ -74,11 +74,19 @@ namespace NetFx
 					targetNamespace = RootNamespace + "." + relativeDir
 						.TrimEnd (Path.DirectorySeparatorChar)
 						.Replace (Path.DirectorySeparatorChar, '.');
+
+					Log.LogMessage (MessageImportance.Low, "No CustomToolNamespace metadata found, determined TargetNamespace=" + targetNamespace);
+				} else {
+					Log.LogMessage (MessageImportance.Low, "Using provided CustomToolNamespace={0} metadata as TargetNamespace for {1}", targetNamespace, resx.ItemSpec);
 				}
 
 				var targetClassName = resx.GetMetadata("TargetClassName");
-				if (string.IsNullOrEmpty (targetClassName))
+				if (string.IsNullOrEmpty (targetClassName)) {
 					targetClassName = DefaultClassName;
+					Log.LogMessage (MessageImportance.Low, "No TargetClassName metadata found, using default class name " + DefaultClassName);
+				} else {
+					Log.LogMessage (MessageImportance.Low, "Using provided TargetClassName={0} metadata for {1}", targetClassName);
+				}
 
 				var rootArea = ResourceFile.Build (resxFile, targetClassName);
 				var generator = Generator.Create (Language, targetNamespace, resourcesTypeName, targetClassName, bool.Parse (resx.GetMetadata ("Public")), rootArea);
@@ -90,9 +98,9 @@ namespace NetFx
 					Directory.CreateDirectory (Path.GetDirectoryName (targetFile));
 
 				File.WriteAllText (targetFile, output);
-				var generatedItem = new TaskItem(targetFile);
-				resx.CopyMetadataTo (generatedItem);
-				generatedFiles.Add (generatedItem);
+				generatedFiles.Add (new TaskItem (resx) {
+					ItemSpec = targetFile
+				});
 			}
 
 			GeneratedFiles = generatedFiles.ToArray ();
