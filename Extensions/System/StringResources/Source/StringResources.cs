@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -57,6 +58,8 @@ namespace NetFx
 		/// <remarks>a remark</remarks>
 		public override bool Execute ()
 		{
+			var generatedFiles = new List<ITaskItem> (ResxFiles.Length);
+
 			foreach (var resx in ResxFiles) {
 				var resxFile = resx.GetMetadata ("FullPath");
 				// Same logic as ResXFileCodeGenerator.
@@ -87,7 +90,12 @@ namespace NetFx
 					Directory.CreateDirectory (Path.GetDirectoryName (targetFile));
 
 				File.WriteAllText (targetFile, output);
+				var generatedItem = new TaskItem(targetFile);
+				resx.CopyMetadataTo (generatedItem);
+				generatedFiles.Add (generatedItem);
 			}
+
+			GeneratedFiles = generatedFiles.ToArray ();
 
 			return true;
 		}
