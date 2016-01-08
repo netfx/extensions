@@ -388,48 +388,49 @@ this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", value.Forma
         #line hidden
         
         #line 93 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
-this.Write(")\r\n\t{\r\n\t\treturn ");
+this.Write(")\r\n\t{\r\n\t\t// NOTE: if you use named format strings, you need to manually install t" +
+        "he package netfx-System.StringFormatWith\r\n\t\treturn ");
 
         
         #line default
         #line hidden
         
-        #line 95 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 96 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(ResourcesTypeName));
 
         
         #line default
         #line hidden
         
-        #line 95 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 96 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(".");
 
         
         #line default
         #line hidden
         
-        #line 95 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 96 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(area.Prefix));
 
         
         #line default
         #line hidden
         
-        #line 95 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 96 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(value.Name));
 
         
         #line default
         #line hidden
         
-        #line 95 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 96 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(".FormatWith(new \r\n\t\t{\r\n");
 
         
         #line default
         #line hidden
         
-        #line 97 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 98 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 
 for (int i = 0; i < value.Format.Count; i++)
 {
@@ -438,42 +439,42 @@ for (int i = 0; i < value.Format.Count; i++)
         #line default
         #line hidden
         
-        #line 100 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 101 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write("\t\t\t");
 
         
         #line default
         #line hidden
         
-        #line 101 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 102 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write(this.ToStringHelper.ToStringWithCulture(value.Format[i]));
-
-        
-        #line default
-        #line hidden
-        
-        #line 101 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
-this.Write(" = ");
-
-        
-        #line default
-        #line hidden
-        
-        #line 101 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
-this.Write(this.ToStringHelper.ToStringWithCulture(value.Format[i]));
-
-        
-        #line default
-        #line hidden
-        
-        #line 101 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
-this.Write(",\r\n");
 
         
         #line default
         #line hidden
         
         #line 102 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+this.Write(" = ");
+
+        
+        #line default
+        #line hidden
+        
+        #line 102 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+this.Write(this.ToStringHelper.ToStringWithCulture(value.Format[i]));
+
+        
+        #line default
+        #line hidden
+        
+        #line 102 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+this.Write(",\r\n");
+
+        
+        #line default
+        #line hidden
+        
+        #line 103 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 
 }
 
@@ -481,14 +482,14 @@ this.Write(",\r\n");
         #line default
         #line hidden
         
-        #line 104 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 105 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write("\t\t});\r\n\t}\r\n");
 
         
         #line default
         #line hidden
         
-        #line 107 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 108 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 
 		}
 	}
@@ -502,14 +503,14 @@ this.Write("\t\t});\r\n\t}\r\n");
         #line default
         #line hidden
         
-        #line 115 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 116 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 this.Write("}\r\n");
 
         
         #line default
         #line hidden
         
-        #line 117 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
+        #line 118 "C:\Code\Personal\netfx\Extensions\System\StringResources\Source\CsTypedResx.tt"
 
 	PopIndent();
 }

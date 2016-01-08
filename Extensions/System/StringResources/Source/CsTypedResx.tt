@@ -92,6 +92,7 @@ private void RenderArea(ResourceArea area, string visibility)
 	/// </summary>
 	public static string <#= value.Name #>(<#= string.Join(", ", value.Format.Select(s => "object " + s)) #>)
 	{
+		// NOTE: if you use named format strings, you need to manually install the package netfx-System.StringFormatWith
 		return <#= ResourcesTypeName #>.<#= area.Prefix #><#= value.Name #>.FormatWith(new 
 		{
 <#+
