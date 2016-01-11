@@ -87,4 +87,5 @@
     </ItemGroup>
   </Target>
 
+  <Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
 </Project>
