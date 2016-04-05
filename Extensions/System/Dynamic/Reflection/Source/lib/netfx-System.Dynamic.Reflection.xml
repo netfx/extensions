@@ -76,7 +76,7 @@
             of the wrapped dynamic such as in our own DynamicReflectionObject type.
             </summary>
         </member>
-        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Collections.Generic.List{System.Type},System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Dynamic.DynamicReflection.DynamicReflectionObject.MatchingStyle)">
             <summary>
             Finds the best match among the candidates.
             </summary>
@@ -84,7 +84,8 @@
             <param name="args">The args passed in to the invocation.</param>
             <param name="genericArgs">The generic args if any.</param>
             <param name="candidates">The candidate methods to use for the match..</param>
-            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+            <param name="matching">if set to <c>MatchingStyle.AssignableFrom</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type, 
+            and <c>MatchingStyle.GenericTypeHint</c> tries to use the generic arguments as type hints if they match the # of args.</param>
         </member>
         <member name="T:System.Dynamic.RefValue">
             <summary>

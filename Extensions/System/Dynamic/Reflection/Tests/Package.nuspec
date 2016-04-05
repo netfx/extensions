@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>netfx-System.Dynamic.Reflection.Tests.xUnit</id>
-		<version>1.1.0.5</version>
+		<version>1.2</version>
 		<title>NETFx Dynamic Reflection xUnit Tests</title>
 		<description>xUnit tests for netfx-System.Dynamic.Reflection.</description>
 		<authors>Daniel Cazzulino, kzu, Clarius</authors>
@@ -17,6 +17,7 @@
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net40"/>
 			<frameworkAssembly assemblyName="System.Core" targetFramework="net40"/>
-		</frameworkAssemblies>
+            <frameworkAssembly assemblyName="EnvDTE" targetFramework="net40"/>
+        </frameworkAssemblies>
 	</metadata>
 </package>
