@@ -84,6 +84,7 @@
   <Target Name="CompileStringResources">
     <ItemGroup>
       <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
+      <FileWrites Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
     </ItemGroup>
   </Target>
 
