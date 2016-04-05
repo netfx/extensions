@@ -19,29 +19,7 @@
             <typeparam name="TBaseCommand">The base type that all commands inherit from, 
             or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
             common interface is needed.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="T:ICommandRegistry`1">
-            <summary>
-            Interface implemented by the component that executes 
-            the registered command handler for a given command.
-            </summary>
-            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
-            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
-            common interface is needed.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands"/>
-        </member>
-        <member name="M:ICommandRegistry`1.Execute(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Executes the specified command with a registered command handler.
-            </summary>
-            <param name="command">The command to execute.</param>
-            <param name="headers">The headers associated with the command.</param>
-            <remarks>
-            Implementations should throw if the command cannot be mapped to 
-            a registered handler, and also propagate any exceptions the handlers
-            might throw.
-            </remarks>
+            <nuget id="netfx-Patterns.DomainCommands.Core" />
         </member>
         <member name="M:CommandRegistry`1.#ctor(System.Collections.Generic.IEnumerable{ICommandHandler})">
             <summary>
@@ -128,32 +106,10 @@
             <typeparam name="TCommand">Type of command this handler can process.</typeparam>
             <nuget id="netfx-Patterns.DomainCommands.Core" />
         </member>
-        <member name="T:ICommandHandler`1">
-            <summary>
-            Base interface for domain command handlers that subscribe to specific type of command.
-            </summary>
-            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
-            <nuget id="netfx-Patterns.DomainCommands.Core" />
-        </member>
-        <member name="T:ICommandHandler">
-            <summary>
-            Base interface part of the infrastructure. Concrete 
-            handlers should inherit <see cref="T:CommandHandler`1"/> or 
-            implement <see cref="T:ICommandHandler`1"/> instead.
-            </summary>
-            <nuget id="netfx-Patterns.DomainCommands.Core"/>
-        </member>
-        <member name="P:ICommandHandler.IsAsync">
+        <member name="P:CommandHandler`1.IsAsync">
             <summary>
             Gets a value indicating whether this handler should be executed asynchronously.
             </summary>
-        </member>
-        <member name="M:ICommandHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Handles the specified command.
-            </summary>
-            <param name="command">The command to handle.</param>
-            <param name="headers">The headers associated with the command.</param>
         </member>
         <member name="M:CommandHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
@@ -161,11 +117,6 @@
             </summary>
             <param name="command">The command to handle.</param>
             <param name="headers">The headers associated with the command.</param>
-        </member>
-        <member name="P:CommandHandler`1.IsAsync">
-            <summary>
-            Gets a value indicating whether this handler should be executed asynchronously.
-            </summary>
         </member>
         <member name="T:CommandRegistryExtensions">
             <summary>
@@ -202,6 +153,55 @@
             <param name="registry">The command registry to execute the command on.</param>
             <param name="commands">The commands to execute.</param>
             <param name="headers">The headers for the commands.</param>
+        </member>
+        <member name="T:ICommandRegistry`1">
+            <summary>
+            Interface implemented by the component that executes 
+            the registered command handler for a given command.
+            </summary>
+            <typeparam name="TBaseCommand">The base type that all commands inherit from, 
+            or a common interface for all. Can even be <see cref="T:System.Object"/> if no 
+            common interface is needed.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands" />
+        </member>
+        <member name="M:ICommandRegistry`1.Execute(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Executes the specified command with a registered command handler.
+            </summary>
+            <param name="command">The command to execute.</param>
+            <param name="headers">The headers associated with the command.</param>
+            <remarks>
+            Implementations should throw if the command cannot be mapped to 
+            a registered handler, and also propagate any exceptions the handlers
+            might throw.
+            </remarks>
+        </member>
+        <member name="T:ICommandHandler">
+            <summary>
+            Base interface part of the infrastructure. Concrete 
+            handlers should inherit <see cref="T:CommandHandler`1"/> or 
+            implement <see cref="T:ICommandHandler`1"/> instead.
+            </summary>
+            <nuget id="netfx-Patterns.DomainCommands.Core" />
+        </member>
+        <member name="P:ICommandHandler.IsAsync">
+            <summary>
+            Gets a value indicating whether this handler should be executed asynchronously.
+            </summary>
+        </member>
+        <member name="T:ICommandHandler`1">
+            <summary>
+            Base interface for domain command handlers that subscribe to specific type of command.
+            </summary>
+            <typeparam name="TCommand">Type of command this handler can process.</typeparam>
+            <nuget id="netfx-Patterns.DomainCommands.Core" />
+        </member>
+        <member name="M:ICommandHandler`1.Handle(`0,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Handles the specified command.
+            </summary>
+            <param name="command">The command to handle.</param>
+            <param name="headers">The headers associated with the command.</param>
         </member>
         <member name="T:IMessageStore`1">
             <summary>
@@ -359,7 +359,7 @@
             No locking occurs, so the value may be calculated twice on concurrent scenarios. If you need 
             concurrency assurances, use a concurrent dictionary instead.
             </summary>
-            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd"/>
+            <nuget id="netfx-System.Collections.Generic.DictionaryGetOrAdd" />
             <param name="dictionary" this="true">The dictionary where the key/value pair will be added</param>
             <param name="key">The key to be added to the dictionary</param>
             <param name="valueFactory">The value factory</param>

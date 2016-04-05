@@ -16,6 +16,12 @@
             without introducing ambiguities.
             </remarks>
         </member>
+        <member name="P:NetFx.StringlyTyped.IStringlyScope.SafeImports">
+            <summary>
+            Gets the list of safe imports that have been determined so 
+            far given the added types.
+            </summary>
+        </member>
         <member name="M:NetFx.StringlyTyped.IStringlyScope.AddType(System.String)">
             <summary>
             Adds the given type to the scope if it wasn't added already.
@@ -25,12 +31,6 @@
             <summary>
             Gets the name of the type that can be used in code generation, considering 
             the already determined <see cref="P:NetFx.StringlyTyped.IStringlyScope.SafeImports"/>.
-            </summary>
-        </member>
-        <member name="P:NetFx.StringlyTyped.IStringlyScope.SafeImports">
-            <summary>
-            Gets the list of safe imports that have been determined so 
-            far given the added types.
             </summary>
         </member>
         <member name="T:NetFx.StringlyTyped.Stringly">
@@ -122,6 +122,11 @@
             All registered types so far with the scope.
             </summary>
         </member>
+        <member name="P:NetFx.StringlyTyped.Stringly.StringlyScope.SafeImports">
+            <summary>
+            Gets the list of safe imports for type map in use.
+            </summary>
+        </member>
         <member name="M:NetFx.StringlyTyped.Stringly.StringlyScope.GetTypeName(System.String)">
             <summary>
             Gets the name of the type that can be used in code generation, considering
@@ -146,11 +151,6 @@
             Sanitizes the generics.
             </summary>
             <param name="typeName">Name of the type.</param>
-        </member>
-        <member name="P:NetFx.StringlyTyped.Stringly.StringlyScope.SafeImports">
-            <summary>
-            Gets the list of safe imports for type map in use.
-            </summary>
         </member>
         <member name="T:NetFx.StringlyTyped.Stringly.StringlyScope.TypeName">
             <summary>
