@@ -55,6 +55,7 @@
 	
 	<Target Name="GenerateStringResources"
 			BeforeTargets="BuildOnlySettings"
+			DependsOnTargets="FixupStringResources"
 			Inputs="@(XResxCode)"
 			Outputs="$(IntermediateOutputPath)%(XResxCode.CanonicalRelativeDir)%(XResxCode.Filename).Strings$(DefaultLanguageSourceExtension)">
 		<StringResources RootNamespace="$(RootNamespace)"
