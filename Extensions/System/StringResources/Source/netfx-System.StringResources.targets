@@ -81,7 +81,9 @@
     </StringResources>
   </Target>
 
-  <Target Name="CompileStringResources">
+  <Target Name="CompileStringResources"
+          BeforeTargets="BuildOnlySettings"
+          DependsOnTargets="GenerateStringResources">
     <ItemGroup>
       <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
       <FileWrites Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
