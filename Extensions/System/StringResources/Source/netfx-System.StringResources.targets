@@ -26,11 +26,11 @@
   <UsingTask TaskName="NetFx.StringResources" AssemblyFile="netfx-System.StringResources.dll" />
 
   <PropertyGroup>
-    <CompileDependsOn>
+    <CoreCompileDependsOn>
       GenerateStringResources;
       CompileStringResources;
-      $(CompileDependsOn)
-    </CompileDependsOn>
+      $(CoreCompileDependsOn)
+    </CoreCompileDependsOn>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
