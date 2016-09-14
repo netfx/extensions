@@ -77,7 +77,8 @@
                Language="$(Language)"
                FileExtension="$(DefaultLanguageSourceExtension)"
                ResxFiles="@(ResxCode)">
-      <Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />
+      <!-- See https://mhut.ch/journal/2016/04/19/msbuild_code_generation_vs2015 -->
+      <!--<Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />-->
     </StringResources>
   </Target>
 
@@ -86,7 +87,6 @@
           DependsOnTargets="GenerateStringResources">
     <ItemGroup>
       <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
-      <FileWrites Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
     </ItemGroup>
   </Target>
 
