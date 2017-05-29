@@ -45,15 +45,30 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="@(EmbeddedResource)">
+      <IsPathRooted>$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))</IsPathRooted>
+      <IsProjectRelative>$([System.String]::new('%(RelativeDir)').StartsWith('%(DefiningProjectDirectory)'))</IsProjectRelative>
+    </EmbeddedResource>
+    <EmbeddedResource Update="@(EmbeddedResource)">
+      <Link Condition="'%(IsPathRooted)' == 'true' and '%(IsProjectRelative)' == 'true'">$([System.String]::new('%(RelativeDir)').Replace('%(DefiningProjectDirectory)', ''))%(Filename)%(Extension)</Link>
+      <Link Condition="'%(IsPathRooted)' == 'true' and '%(IsProjectRelative)' == 'false'">%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
+    <EmbeddedResource Update="@(EmbeddedResource)">
+      <!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs match when using shared projects (rooted paths) -->
+      <CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+    </EmbeddedResource>
+
     <_LinkedResx Include="@(EmbeddedResource -> HasMetadata('Link'))" />
     <_Resx Include="@(EmbeddedResource)" Exclude="@(_LinkedResx)" />
 
     <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
       <Public>False</Public>
-      <CanonicalRelativeDir>$([System.String]::new('%(RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
     </ResxCode>
     <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
       <Public>True</Public>
+    </ResxCode>
+    <ResxCode Update="@(ResxCode)">
       <CanonicalRelativeDir>$([System.String]::new('%(RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
     </ResxCode>
 
@@ -67,8 +82,24 @@
     </ResxCode>
   </ItemGroup>
 
+  <PropertyGroup>
+    <ResGenDependsOn>GenerateMissingResources;$(ResGenDependsOn)</ResGenDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GenerateMissingResources">
+    <ItemGroup>
+      <EmbeddedResource Condition="'%(IsPathRooted)' == 'true'">
+        <StronglyTypedClassName>%(Filename)</StronglyTypedClassName>
+        <StronglyTypedLanguage>C#</StronglyTypedLanguage>
+        <StronglyTypedFileName>$(IntermediateOutputPath)$([System.IO.Path]::ChangeExtension('%(EmbeddedResource.Link)', '.Designer.cs'))</StronglyTypedFileName>
+        <StronglyTypedNamespace>%(EmbeddedResource.CustomToolNamespace)</StronglyTypedNamespace>
+        <LogicalName>%(EmbeddedResource.CustomToolNamespace).%(Filename).resources</LogicalName>
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+
   <Target Name="GenerateStringResources"
-          BeforeTargets="BuildOnlySettings"
+          BeforeTargets="BuildOnlySettings;CoreCompile"
           Inputs="@(ResxCode)"
           Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)"
           Returns="@(TypedResx)">
