@@ -27,6 +27,7 @@
 
   <PropertyGroup>
     <CoreCompileDependsOn>
+      CollectResxCode;
       GenerateStringResources;
       CompileStringResources;
       $(CoreCompileDependsOn)
@@ -56,35 +57,51 @@
     <!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
     <EmbeddedResource Update="@(EmbeddedResource)">
       <!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs match when using shared projects (rooted paths) -->
-      <CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+      <CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
     </EmbeddedResource>
-
-    <_LinkedResx Include="@(EmbeddedResource -> HasMetadata('Link'))" />
-    <_Resx Include="@(EmbeddedResource)" Exclude="@(_LinkedResx)" />
-
-    <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
-      <Public>False</Public>
-    </ResxCode>
-    <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
-      <Public>True</Public>
-    </ResxCode>
-    <ResxCode Update="@(ResxCode)">
-      <CanonicalRelativeDir>$([System.String]::new('%(RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
-    </ResxCode>
-
-    <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
-      <Public>False</Public>
-      <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(Link)'))</CanonicalRelativeDir>
-    </ResxCode>
-    <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
-      <Public>True</Public>
-      <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(Link)'))</CanonicalRelativeDir>
-    </ResxCode>
   </ItemGroup>
 
   <PropertyGroup>
     <ResGenDependsOn>GenerateMissingResources;$(ResGenDependsOn)</ResGenDependsOn>
   </PropertyGroup>
+
+  <Target Name="CollectResxCode"
+          BeforeTargets="BuildOnlySettings;CoreCompile"        
+          Inputs="@(EmbeddedResource)" 
+          Outputs="@(EmbeddedResource->'%(Identity)-batch')" 
+          DependsOnTargets="ResGen" 
+          Returns="@(ResxCode)">
+    <Message Importance="high" Text="Identity=%(EmbeddedResource.Identity)
+Generator=%(EmbeddedResource.Generator)
+Link=%(EmbeddedResource.Link)
+IsPathRooted=%(EmbeddedResource.IsPathRooted)
+IsProjectRelative=%(EmbeddedResource.IsProjectRelative)
+CustomToolNamespace=%(EmbeddedResource.CustomToolNamespace)
+" />
+
+    <ItemGroup>
+      <_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Link)' != ''" />
+      <_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Link)' == ''">
+        <CanonicalRelativeDir>$([System.String]::new('%(EmbeddedResource.RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
+      </_Resx>
+
+      <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
+        <Public>False</Public>
+      </ResxCode>
+      <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
+        <Public>True</Public>
+      </ResxCode>
+
+      <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
+        <Public>False</Public>
+        <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
+      </ResxCode>
+      <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
+        <Public>True</Public>
+        <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
+      </ResxCode>
+    </ItemGroup>
+  </Target>
 
   <Target Name="GenerateMissingResources">
     <ItemGroup>
@@ -99,6 +116,7 @@
   </Target>
 
   <Target Name="GenerateStringResources"
+          DependsOnTargets="CollectResxCode"
           BeforeTargets="BuildOnlySettings;CoreCompile"
           Inputs="@(ResxCode)"
           Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)"
