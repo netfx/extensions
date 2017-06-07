@@ -69,16 +69,8 @@
           BeforeTargets="BuildOnlySettings;CoreCompile"        
           Inputs="@(EmbeddedResource)" 
           Outputs="@(EmbeddedResource->'%(Identity)-batch')" 
-          DependsOnTargets="ResGen" 
+          DependsOnTargets="PrepareResources" 
           Returns="@(ResxCode)">
-    <Message Importance="high" Text="Identity=%(EmbeddedResource.Identity)
-Generator=%(EmbeddedResource.Generator)
-Link=%(EmbeddedResource.Link)
-IsPathRooted=%(EmbeddedResource.IsPathRooted)
-IsProjectRelative=%(EmbeddedResource.IsProjectRelative)
-CustomToolNamespace=%(EmbeddedResource.CustomToolNamespace)
-" />
-
     <ItemGroup>
       <_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Link)' != ''" />
       <_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Link)' == ''">
