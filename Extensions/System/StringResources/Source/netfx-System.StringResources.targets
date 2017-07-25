@@ -50,7 +50,7 @@
   </PropertyGroup>
 
   <Target Name="CollectResxCode"
-          BeforeTargets="BuildOnlySettings;CoreCompile"        
+          BeforeTargets="CoreCompile"        
           Inputs="@(EmbeddedResource)" 
           Outputs="@(EmbeddedResource->'%(Identity)-batch')" 
           DependsOnTargets="PrepareResources" 
