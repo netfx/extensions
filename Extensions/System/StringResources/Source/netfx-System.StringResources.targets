@@ -23,112 +23,133 @@
 	SOFTWARE.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask TaskName="NetFx.StringResources" AssemblyFile="netfx-System.StringResources.dll" />
+	<UsingTask TaskName="NetFx.StringResources" AssemblyFile="netfx-System.StringResources.dll" />
 
-  <PropertyGroup>
-    <CoreCompileDependsOn>
-      CollectResxCode;
-      GenerateStringResources;
-      CompileStringResources;
-      $(CoreCompileDependsOn)
-    </CoreCompileDependsOn>
-  </PropertyGroup>
+	<PropertyGroup>
+		<StringResourceItemsPath Condition="'$(StringResourceItemsPath)' == ''">$(IntermediateOutputPath)\Strings.Resources.items</StringResourceItemsPath>
+	</PropertyGroup>
 
-  <ItemDefinitionGroup>
-    <ResxCode>
-      <!-- Whether the generated strong-typed class should be public or not.
+	<PropertyGroup>
+		<PrepareResourcesDependsOn>
+			GenerateStringResources;
+			$(PrepareResourcesDependsOn);
+		</PrepareResourcesDependsOn>
+
+		<CoreCompileDependsOn>
+			GenerateStringResources;
+			$(CoreCompileDependsOn);
+		</CoreCompileDependsOn>
+
+		<ResGenDependsOn>
+			_AugmentLinkedResources;
+			$(ResGenDependsOn)
+		</ResGenDependsOn>
+	</PropertyGroup>
+
+	<ItemDefinitionGroup>
+		<ResxCode>
+			<!-- Whether the generated strong-typed class should be public or not.
            Defaults to whatever the corresponding .resx file specifies. -->
-      <Public></Public>
-      <!-- Customize the generated class name to be something other than 'Strings' -->
-      <TargetClassName></TargetClassName>
-      <Generator>MSBuild:Compile</Generator>
-    </ResxCode>
-  </ItemDefinitionGroup>
+			<Public></Public>
+			<!-- Customize the generated class name to be something other than 'Strings' -->
+			<TargetClassName></TargetClassName>
+			<Generator>MSBuild:Compile</Generator>
+		</ResxCode>
+	</ItemDefinitionGroup>
 
-  <PropertyGroup>
-    <ResGenDependsOn>GenerateMissingResources;$(ResGenDependsOn)</ResGenDependsOn>
-  </PropertyGroup>
+	<Target Name="GenerateStringResources"
+					Condition="'$(GeneratingStringResources)' == ''">
 
-  <Target Name="CollectResxCode"
-          BeforeTargets="CoreCompile"        
-          Inputs="@(EmbeddedResource)" 
-          Outputs="@(EmbeddedResource->'%(Identity)-batch')" 
-          DependsOnTargets="PrepareResources" 
+		<MSBuild Projects="$(MSBuildProjectFullPath)"
+						 Targets="_GenerateStringResources"
+						 Properties="StringResourceItemsPath=$(StringResourceItemsPath);GeneratingStringResources=true;Configuration=$(Configuration);Platform=$(Platform)" />
+
+		<ReadLinesFromFile File="$(StringResourceItemsPath)" Condition="Exists('$(StringResourceItemsPath)')">
+			<Output TaskParameter="Lines" ItemName="Compile" />
+			<Output TaskParameter="Lines" ItemName="_GeneratedCodeFiles" />
+		</ReadLinesFromFile>
+
+	</Target>
+
+	<Target Name="_GenerateStringResources"
+					Condition="'$(GeneratingStringResources)' == 'true'"
+					DependsOnTargets="PrepareResources;_CollectStringResources;_GenearateStringResourcesFiles;_WriteStringResources" />
+
+	<Target Name="_CollectStringResources"
+          Inputs="@(EmbeddedResource)"
+          Outputs="@(EmbeddedResource->'%(Identity)-batch')"
           Returns="@(ResxCode)">
+		<ItemGroup>
+			<EmbeddedResource Update="@(EmbeddedResource)">
+				<IsPathRooted>$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))</IsPathRooted>
+				<IsProjectRelative>$([System.String]::new('%(RelativeDir)').StartsWith('%(DefiningProjectDirectory)'))</IsProjectRelative>
+			</EmbeddedResource>
+			<EmbeddedResource Update="@(EmbeddedResource)">
+				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'true'">$([System.String]::new('%(RelativeDir)').Replace('%(DefiningProjectDirectory)', ''))%(Filename)%(Extension)</Link>
+				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'false'">%(Filename)%(Extension)</Link>
+			</EmbeddedResource>
+			<!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
+			<EmbeddedResource Update="@(EmbeddedResource)">
+				<!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs match when using shared projects (rooted paths) -->
+				<CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+			</EmbeddedResource>
 
-    <ItemGroup>
-      <EmbeddedResource Update="@(EmbeddedResource)">
-        <IsPathRooted>$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))</IsPathRooted>
-        <IsProjectRelative>$([System.String]::new('%(RelativeDir)').StartsWith('%(DefiningProjectDirectory)'))</IsProjectRelative>
-      </EmbeddedResource>
-      <EmbeddedResource Update="@(EmbeddedResource)">
-        <Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'true'">$([System.String]::new('%(RelativeDir)').Replace('%(DefiningProjectDirectory)', ''))%(Filename)%(Extension)</Link>
-        <Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'false'">%(Filename)%(Extension)</Link>
-      </EmbeddedResource>
-      <!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
-      <EmbeddedResource Update="@(EmbeddedResource)">
-        <!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs match when using shared projects (rooted paths) -->
-        <CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
-      </EmbeddedResource>
-    
-      <_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' != ''" />
-      <_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' == ''">
-        <CanonicalRelativeDir>$([System.String]::new('%(EmbeddedResource.RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
-      </_Resx>
+			<_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' != ''" />
+			<_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' == ''">
+				<CanonicalRelativeDir>$([System.String]::new('%(EmbeddedResource.RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
+			</_Resx>
 
-      <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
-        <Public>False</Public>
-      </ResxCode>
-      <ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
-        <Public>True</Public>
-      </ResxCode>
+			<ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
+				<Public>False</Public>
+			</ResxCode>
+			<ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))">
+				<Public>True</Public>
+			</ResxCode>
 
-      <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
-        <Public>False</Public>
-        <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
-      </ResxCode>
-      <ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
-        <Public>True</Public>
-        <CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
-      </ResxCode>
-    </ItemGroup>
-  </Target>
+			<ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
+				<Public>False</Public>
+				<CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
+			</ResxCode>
+			<ResxCode Include="@(_LinkedResx -> WithMetadataValue('Generator', 'PublicResXFileCodeGenerator'))" Condition="'@(_LinkedResx)' != ''">
+				<Public>True</Public>
+				<CanonicalRelativeDir>$([System.IO.Path]::GetDirectoryName('%(_LinkedResx.Link)'))</CanonicalRelativeDir>
+			</ResxCode>
+		</ItemGroup>
+	</Target>
 
-  <Target Name="GenerateMissingResources">
-    <ItemGroup>
-      <EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true'">
-        <StronglyTypedClassName>%(Filename)</StronglyTypedClassName>
-        <StronglyTypedLanguage>C#</StronglyTypedLanguage>
-        <StronglyTypedFileName>$(IntermediateOutputPath)$([System.IO.Path]::ChangeExtension('%(EmbeddedResource.Link)', '.Designer.cs'))</StronglyTypedFileName>
-        <StronglyTypedNamespace>%(EmbeddedResource.CustomToolNamespace)</StronglyTypedNamespace>
-        <LogicalName>%(EmbeddedResource.CustomToolNamespace).%(Filename).resources</LogicalName>
-      </EmbeddedResource>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="GenerateStringResources"
-          DependsOnTargets="CollectResxCode"
-          BeforeTargets="BuildOnlySettings;CoreCompile"
+	<Target Name="_GenearateStringResourcesFiles"
           Inputs="@(ResxCode)"
           Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)"
           Returns="@(TypedResx)">
-    <StringResources RootNamespace="$(RootNamespace)"
+
+		<StringResources RootNamespace="$(RootNamespace)"
                OutputPath="$(IntermediateOutputPath)"
                Language="$(Language)"
                FileExtension="$(DefaultLanguageSourceExtension)"
-               ResxFiles="@(ResxCode)">
-      <!-- See https://mhut.ch/journal/2016/04/19/msbuild_code_generation_vs2015 -->
-      <!--<Output TaskParameter="GeneratedFiles" ItemName="FileWrites" />-->
-    </StringResources>
-  </Target>
+               ResxFiles="@(ResxCode)" />
 
-  <Target Name="CompileStringResources"
-          BeforeTargets="BuildOnlySettings;CoreCompile"
-          DependsOnTargets="GenerateStringResources">
-    <ItemGroup>
-      <Compile Include="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')" />
-    </ItemGroup>
-  </Target>
+	</Target>
 
-  <Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+	<Target Name="_WriteStringResources">
+
+		<WriteLinesToFile Lines="@(ResxCode -> '$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)')"
+											File="$(StringResourceItemsPath)" 
+											Overwrite="true" />
+
+	</Target>
+
+	<Target Name="_AugmentLinkedResources">
+		<ItemGroup>
+			<EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true'">
+				<StronglyTypedClassName>%(Filename)</StronglyTypedClassName>
+				<StronglyTypedLanguage>C#</StronglyTypedLanguage>
+				<StronglyTypedFileName>$(IntermediateOutputPath)$([System.IO.Path]::ChangeExtension('%(EmbeddedResource.Link)', '.Designer.cs'))</StronglyTypedFileName>
+				<StronglyTypedNamespace>%(EmbeddedResource.CustomToolNamespace)</StronglyTypedNamespace>
+				<LogicalName>%(EmbeddedResource.CustomToolNamespace).%(Filename).resources</LogicalName>
+			</EmbeddedResource>
+		</ItemGroup>
+	</Target>
+
+
+	<Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
 </Project>
