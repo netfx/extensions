@@ -30,6 +30,22 @@ static partial class LinqSpec
 	{
 		return specification;
 	}
+
+	/// <summary>
+	/// Allows reusing a specification for another Type by applying it to a property
+	/// of the Type being targetted by the new specification.
+	/// </summary>
+	/// <typeparam name="T">The type of the new LinqSpec to be created</typeparam>
+	/// <typeparam name="TNestedEntity">The type of the property on the T which is being accessed</typeparam>
+	/// <param name="propertyExpression">The property expression to access property on T. Usually a lambda like t => t.MyProp</param>
+	/// <param name="spec">A LinqSpec for type TNestedEntity</param>
+	public static LinqSpec<T> OnProperty<T, TNestedEntity>(Expression<Func<T, TNestedEntity>> propertyExpression, LinqSpec<TNestedEntity> spec)
+	{
+		var replacer = new ParameterReplaceVisitor(spec.Expression.Parameters.First(), propertyExpression.Body);
+		var newExpression = replacer.Visit(spec.Expression.Body);
+		var exp = Expression.Lambda<Func<T, bool>>(newExpression, propertyExpression.Parameters);
+		return For(exp);
+	}
 }
 
 /// <summary>
@@ -45,6 +61,20 @@ abstract partial class LinqSpec<T>
 	/// such to another method.
 	/// </summary>
 	public abstract Expression<Func<T, bool>> Expression { get; }
+
+	/// <summary>
+	/// The classic specification pattern evaluator.
+	/// This compiles and invokes the expression from the LinqSpec
+	/// so that is can be evaluated in code rather than passed to LinqToX.
+	/// If you find yourself doing this frequently you may want to consider
+	/// using a non-Linq specification which does not store the rule as an
+	/// expression, but as a compiled method instead.
+	/// </summary>
+	/// <param name="entity">The T under test</param>
+	public bool IsSatisfiedBy(T entity)
+	{
+		return Expression.Compile().Invoke(entity);
+	}
 
 	/// <summary>
 	/// Allows to combine two query specifications using a logical And operation.
