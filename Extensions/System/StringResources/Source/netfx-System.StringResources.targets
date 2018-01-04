@@ -22,7 +22,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 -->
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" InitialTargets="_PreserveOriginalDefiningProject" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="NetFx.StringResources" AssemblyFile="netfx-System.StringResources.dll" />
 
 	<PropertyGroup>
@@ -42,9 +42,10 @@
 		</CoreCompileDependsOn>
 
 		<ResGenDependsOn>
-			_AugmentLinkedResources;
-			$(ResGenDependsOn)
-		</ResGenDependsOn>
+      _CollectStringResources;
+      _AugmentLinkedResources;
+      $(ResGenDependsOn)
+    </ResGenDependsOn>
 	</PropertyGroup>
 
 	<ItemDefinitionGroup>
@@ -56,7 +57,14 @@
 			<TargetClassName></TargetClassName>
 			<Generator>MSBuild:Compile</Generator>
 		</ResxCode>
-	</ItemDefinitionGroup>
+
+    <EmbeddedResource>
+      <OriginalDefiningProjectDirectory />
+      <OriginalDefiningProjectExtension />
+      <OriginalDefiningProjectFullPath />
+      <OriginalDefiningProjectName />
+    </EmbeddedResource>
+  </ItemDefinitionGroup>
 
 	<Target Name="GenerateStringResources" Condition="'$(GenerateStringResources)' == 'true' and '$(_GeneratingStringResources)' == ''">
 
@@ -66,37 +74,60 @@
 
 		<ReadLinesFromFile File="$(StringResourceItemsPath)" Condition="Exists('$(StringResourceItemsPath)')">
 			<Output TaskParameter="Lines" ItemName="Compile" />
-			<Output TaskParameter="Lines" ItemName="_GeneratedCodeFiles" />
+			<!--<Output TaskParameter="Lines" ItemName="_GeneratedCodeFiles" Condition="'$(MSBuildProjectExtension)' == '.tmp_proj'" />-->
 		</ReadLinesFromFile>
 
 	</Target>
 
-	<Target Name="_GenerateStringResources"
+  <!-- Several targets replace wholesale the entire @(EmbeddedResource) items, causing the original project
+       information to be lost and replace with those target files instead, i.e. 
+       https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.CSharp.CurrentVersion.targets#L121-L125 and
+       https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.Common.CurrentVersion.targets#L1241-L1244
+       so you may end up with one or the other targets as the "DefiningProject" for @(EmbeddedResource), depending on 
+       which target run last.
+       So we instead preserve the original values before the build starts, so we can use our metadata later on.
+  -->
+  <Target Name="_PreserveOriginalDefiningProject">
+    <ItemGroup>
+      <EmbeddedResource>
+        <OriginalDefiningProjectDirectory>%(DefiningProjectDirectory)</OriginalDefiningProjectDirectory>
+        <OriginalDefiningProjectExtension>%(DefiningProjectExtension)</OriginalDefiningProjectExtension>
+        <OriginalDefiningProjectFullPath>%(DefiningProjectFullPath)</OriginalDefiningProjectFullPath>
+        <OriginalDefiningProjectName>%(DefiningProjectName)</OriginalDefiningProjectName>
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_GenerateStringResources"
 					Condition="'$(_GeneratingStringResources)' == 'true'"
-					DependsOnTargets="PrepareResources;_CollectStringResources;_GenearateStringResourcesFiles;_WriteStringResources" />
+					DependsOnTargets="PrepareResources;_CollectStringResources;_GenerateStringResourcesFiles;_WriteStringResources" />
 	
 	<Target Name="_CollectStringResources"
           Inputs="@(EmbeddedResource)"
           Outputs="@(EmbeddedResource->'%(Identity)-batch')"
           Returns="@(ResxCode)">
 		<ItemGroup>
-			<EmbeddedResource Update="@(EmbeddedResource)">
+			<EmbeddedResource>
 				<IsPathRooted>$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))</IsPathRooted>
-				<IsProjectRelative>$([System.String]::new('%(RelativeDir)').StartsWith('%(DefiningProjectDirectory)'))</IsProjectRelative>
+				<IsProjectRelative>$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').StartsWith('%(OriginalDefiningProjectDirectory)'))</IsProjectRelative>
 			</EmbeddedResource>
-			<EmbeddedResource Update="@(EmbeddedResource)">
-				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'true'">$([System.String]::new('%(RelativeDir)').Replace('%(DefiningProjectDirectory)', ''))%(Filename)%(Extension)</Link>
+			<EmbeddedResource>
+				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'true'">$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').Replace('%(OriginalDefiningProjectDirectory)', ''))%(Filename)%(Extension)</Link>
 				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'false'">%(Filename)%(Extension)</Link>
 			</EmbeddedResource>
 			<!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
-			<EmbeddedResource Update="@(EmbeddedResource)">
-				<!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs match when using shared projects (rooted paths) -->
-				<CustomToolNamespace Condition="'%(IsPathRooted)' == 'true' and '%(EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+			<EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">
+        <!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs so they match when using shared projects (rooted paths) -->
+        <CustomToolNamespace Condition="'$(Import_RootNamespace)' != ''">$(Import_RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+        <CustomToolNamespace Condition="'$(Import_RootNamespace)' == ''">$(RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
 			</EmbeddedResource>
+      <EmbeddedResource Condition="'%(EmbeddedResource.CustomToolNamespace)' != ''">
+        <CustomToolNamespace>$([MSBuild]::ValueOrDefault('%(EmbeddedResource.CustomToolNamespace)', '').TrimEnd('.'))</CustomToolNamespace>
+      </EmbeddedResource>
 
 			<_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' != ''" />
 			<_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' == ''">
-				<CanonicalRelativeDir>$([System.String]::new('%(EmbeddedResource.RelativeDir)').TrimEnd('\'))</CanonicalRelativeDir>
+				<CanonicalRelativeDir>$([MSBuild]::ValueOrDefault('%(EmbeddedResource.RelativeDir)', '').TrimEnd('\'))</CanonicalRelativeDir>
 			</_Resx>
 
 			<ResxCode Include="@(_Resx -> WithMetadataValue('Generator', 'ResXFileCodeGenerator'))">
@@ -117,7 +148,7 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_GenearateStringResourcesFiles"
+	<Target Name="_GenerateStringResourcesFiles"
           Inputs="@(ResxCode)"
           Outputs="$(IntermediateOutputPath)%(CanonicalRelativeDir)\%(Filename).Strings$(DefaultLanguageSourceExtension)"
           Returns="@(TypedResx)">
@@ -138,7 +169,7 @@
 
 	</Target>
 
-	<Target Name="_AugmentLinkedResources">
+	<Target Name="_AugmentLinkedResources" DependsOnTargets="_CollectStringResources">
 		<ItemGroup>
 			<EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true'">
 				<StronglyTypedClassName>%(Filename)</StronglyTypedClassName>
@@ -150,6 +181,5 @@
 		</ItemGroup>
 	</Target>
 
-
-	<Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+  <Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
 </Project>
