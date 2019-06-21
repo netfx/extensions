@@ -116,14 +116,14 @@
 				<Link Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.IsProjectRelative)' == 'false'">%(Filename)%(Extension)</Link>
 			</EmbeddedResource>
 			<!-- Need to apply the remaining metadata *after* defaulting %(Link) above to ensure it's available -->
-			<EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">
-        <!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs so they match when using shared projects (rooted paths) -->
-        <CustomToolNamespace Condition="'$(Import_RootNamespace)' != ''">$(Import_RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
-        <CustomToolNamespace Condition="'$(Import_RootNamespace)' == ''">$(RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+			<EmbeddedResource Condition="'%(EmbeddedResource.IsPathRooted)' == 'true' and '%(EmbeddedResource.Link)' != '' and '%(EmbeddedResource.CustomToolNamespace)' == ''">
+				<!-- Ensure we always assign a custom tool namespace to .Designer.cs and Strings.cs so they match when using shared projects (rooted paths) -->
+				<CustomToolNamespace Condition="'$(Import_RootNamespace)' != ''">$(Import_RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
+				<CustomToolNamespace Condition="'$(Import_RootNamespace)' == ''">$(RootNamespace).$([System.IO.Path]::GetDirectoryName('%(EmbeddedResource.Link)').Replace('\', '.'))</CustomToolNamespace>
 			</EmbeddedResource>
-      <EmbeddedResource Condition="'%(EmbeddedResource.CustomToolNamespace)' != ''">
-        <CustomToolNamespace>$([MSBuild]::ValueOrDefault('%(EmbeddedResource.CustomToolNamespace)', '').TrimEnd('.'))</CustomToolNamespace>
-      </EmbeddedResource>
+			<EmbeddedResource Condition="'%(EmbeddedResource.CustomToolNamespace)' != ''">
+				<CustomToolNamespace>$([MSBuild]::ValueOrDefault('%(EmbeddedResource.CustomToolNamespace)', '').TrimEnd('.'))</CustomToolNamespace>
+			</EmbeddedResource>
 
 			<_LinkedResx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' != ''" />
 			<_Resx Include="@(EmbeddedResource)" Condition="'%(EmbeddedResource.Type)' == 'Resx' and '%(EmbeddedResource.Link)' == ''">
