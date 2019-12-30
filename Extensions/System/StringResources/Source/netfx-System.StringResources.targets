@@ -185,5 +185,5 @@
 		</ItemGroup>
 	</Target>
 
-  <Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+  <Import Project="netfx-System.StringResources.xbuild" Condition="'$(MSBuildRuntimeType)' == ''" />
 </Project>
